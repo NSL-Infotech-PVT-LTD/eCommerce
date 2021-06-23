@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:funfy/ui/screens/auth/forgotpassword.dart';
 import 'package:funfy/ui/screens/auth/signin.dart';
+import 'package:funfy/ui/screens/auth/signup.dart';
 import 'package:funfy/ui/screens/splash.dart';
 
 import 'ui/screens/intro.dart';
@@ -18,9 +20,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      
-      home: signin(),
+      home: Splash(),
     );
   }
 }
-

@@ -10,4 +10,6 @@ class AppColors {
   static Color siginbackgrond = HexColor("#FF5349");
   static Color donthaveaccount = HexColor("#4F4E4D");
   static Color fbappletitle = HexColor("#171B2F");
+  static Color descriptionfirst = HexColor("#B4B4B4");
+  static Color blackBackground = HexColor("#070707");
 }

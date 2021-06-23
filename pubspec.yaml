@@ -62,6 +62,8 @@ flutter:
     - assets/AuthenticationIcon/APPLE.png
     - assets/AuthenticationIcon/LOGO.png
     - assets/AuthenticationIcon/SPLASH.png
+    - assets/AuthenticationIcon/BG_1.png
+    - assets/AuthenticationIcon/BG_2.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

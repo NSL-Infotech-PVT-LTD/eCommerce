@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:funfy/ui/screens/auth/forgotpassword.dart';
+import 'package:funfy/ui/screens/auth/signup.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/strings.dart';
 
-class signin extends StatefulWidget {
-  const signin({Key? key}) : super(key: key);
+class Signin extends StatefulWidget {
+  const Signin({Key? key}) : super(key: key);
 
   @override
-  _signinState createState() => _signinState();
+  _SigninState createState() => _SigninState();
 }
 
-class _signinState extends State<signin> {
-  @override   
+class _SigninState extends State<Signin> {
+  @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return SafeArea(
@@ -311,12 +313,18 @@ class _signinState extends State<signin> {
             Container(
               alignment: Alignment.bottomRight,
               width: size.width * 0.78,
-              child: Text(
-                Strings.forgotPassword,
-                style: TextStyle(
-                    fontFamily: Fonts.dmSansMedium,
-                    fontSize: size.width * 0.035,
-                    color: AppColors.forgotpassword),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => ForgotPassword()));
+                },
+                child: Text(
+                  Strings.forgotPassword,
+                  style: TextStyle(
+                      fontFamily: Fonts.dmSansMedium,
+                      fontSize: size.width * 0.035,
+                      color: AppColors.forgotpassword),
+                ),
               ),
             ),
 
@@ -358,13 +366,19 @@ class _signinState extends State<signin> {
                   SizedBox(
                     width: size.width * 0.01,
                   ),
-                  Text(
-                    Strings.signupUp,
-                    style: TextStyle(
-                        fontFamily: Fonts.dmSansBold,
-                        decoration: TextDecoration.underline,
-                        color: AppColors.white,
-                        fontSize: size.width * 0.04),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => SignUp()));
+                    },
+                    child: Text(
+                      Strings.signupUp,
+                      style: TextStyle(
+                          fontFamily: Fonts.dmSansBold,
+                          decoration: TextDecoration.underline,
+                          color: AppColors.white,
+                          fontSize: size.width * 0.04),
+                    ),
                   )
                 ],
               ),

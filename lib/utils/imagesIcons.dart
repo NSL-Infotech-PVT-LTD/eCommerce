@@ -6,4 +6,6 @@ class Images {
   static String appleIcon = "assets/AuthenticationIcon/APPLE.png";
   static String appLogo = "assets/AuthenticationIcon/LOGO.png";
   static String splashBackground = "assets/AuthenticationIcon/SPLASH.png";
+  static String intro1 = "assets/AuthenticationIcon/BG_1.png";
+  static String intro2 = "assets/AuthenticationIcon/BG_2.png";
 }

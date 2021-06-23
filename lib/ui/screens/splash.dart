@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:funfy/ui/screens/intro.dart';
+import 'package:funfy/utils/imagesIcons.dart';
 
 class Splash extends StatefulWidget {
   Splash({Key? key}) : super(key: key);
@@ -11,34 +12,43 @@ class Splash extends StatefulWidget {
 }
 
 class _SplashState extends State<Splash> {
-
   @override
-  void initState() { 
+  void initState() {
     super.initState();
-    // startTime();
-    
+    startTime();
   }
 
-  // startTime() async {
-  //   var duration = new Duration(seconds: 6);
-  //   return new Timer(duration, route());
-  // }
+  startTime() async {
+    var duration = new Duration(seconds: 6);
+    return new Timer(duration, route());
+  }
 
-  // route() {
-  //   Navigator.pushReplacement(context, MaterialPageRoute(
-  //       builder: (context) => Intro()
-  //     )
-  //   ); 
-  // }
+  route() {
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => Intro()));
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: Center(
-    child:  Container(
-     width: size.width * 0.3,
-      child: Image.asset("assets/images/logo.png",),)
-    ),);
+        backgroundColor: Colors.black,
+        body: Stack(children: [
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(Images.splashBackground),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          Center(
+              child: Container(
+            width: size.width * 0.55,
+            child: Image.asset(
+              Images.appLogo,
+            ),
+          )),
+        ]));
   }
 }

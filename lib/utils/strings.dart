@@ -11,4 +11,23 @@ class Strings {
   static String forgotPassword = "Forgot Password?";
   static String donthaveAccount = "Don't have account?";
   static String signupUp = "SIGN UP";
+  static String alreadyhaveaccount = "Already have account?";
+  static String backtoSignin = "BACK TO SIGN IN";
+  static String signup = "Sign Up";
+  static String quicklyOnboardto = "Quickly onboard to";
+  static String funfypartyApp = "Funfy Party App";
+  static String fullname = "Full Name";
+  static String fullnamehint = "Enter your full name";
+  static String dateofbirth = "Date of birth";
+  static String dateofbirthhint = "Enter your Date of birth";
+  static String gender = "Gender";
+  static String genderHint = "Enter your Gender";
+  static String byContinuingYouAgreetoOur = "By continuing you agree to our";
+  static String termsOfService = "Terms of Service";
+  static String and = "and";
+  static String privacypolicy = "Privacy Policy.";
+  static String forgotpassword = "Forgot Password";
+  static String rememberyourpassword = "Remember Your Password?";
+  static String backToSignIn = "BACK TO SIGN IN";
+  static String submit = "Submit";
 }
