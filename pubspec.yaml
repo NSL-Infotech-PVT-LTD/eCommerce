@@ -34,7 +34,7 @@ dependencies:
   connectivity: ^3.0.6
   shared_preferences:
   cached_network_image: ^2.0.0
-  fluttertoast: ^7.0.4
+  # fluttertoast: 
   
 
 dev_dependencies:

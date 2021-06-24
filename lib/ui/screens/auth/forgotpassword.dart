@@ -24,24 +24,32 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   bool _loading = false;
 
   emailvalider() {
-    _emailError = "";
-    if (_emailController.text == "") {
-      _emailError = Strings.pleaseEnterYourEmail;
-    } else if (emailvalid(_emailController.text) == false) {
-      _emailError = Strings.pleaseEnterValidEmail;
-    } else {
-      _forgotPassword();
-    }
+    setState(() {
+      _emailError = "";
+      if (_emailController.text == "") {
+        _emailError = Strings.pleaseEnterYourEmail;
+      } else if (emailvalid(_emailController.text) == false) {
+        _emailError = Strings.pleaseEnterValidEmail;
+      } else {
+        _forgotPassword();
+      }
+    });
   }
 
   _forgotPassword() async {
+    setState(() {
+      _loading = true;
+    });
     var net = await Internetcheck.check();
 
     if (net != false) {
       bool response = await forgotpasswordApiCall(email: _emailController.text);
+      setState(() {
+        _loading = false;
+      });
 
       if (response == true) {
-        toastshow(toasttext: Strings.wehavesentlinkonyouemail);
+        // toastshow(toasttext: Strings.wehavesentlinkonyouemail);
         Navigator.of(context)
             .pushReplacement(MaterialPageRoute(builder: (context) => Signin()));
       } else {
@@ -200,20 +208,25 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               height: size.height * 0.03,
             ),
 
-            roundedBox(
-                width: size.width * 0.78,
-                height: size.height * 0.058,
-                backgroundColor: AppColors.siginbackgrond,
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    Strings.signin,
-                    style: TextStyle(
-                        fontFamily: Fonts.dmSansMedium,
-                        fontSize: size.width * 0.05,
-                        color: AppColors.white),
-                  ),
-                )),
+            GestureDetector(
+              onTap: () {
+                emailvalider();
+              },
+              child: roundedBox(
+                  width: size.width * 0.78,
+                  height: size.height * 0.058,
+                  backgroundColor: AppColors.siginbackgrond,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      Strings.submit,
+                      style: TextStyle(
+                          fontFamily: Fonts.dmSansMedium,
+                          fontSize: size.width * 0.05,
+                          color: AppColors.white),
+                    ),
+                  )),
+            ),
 
             SizedBox(
               height: size.height * 0.05,
