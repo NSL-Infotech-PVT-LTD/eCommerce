@@ -1,12 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:funfy/apis/introApi.dart';
+import 'package:funfy/ui/screens/auth/signin.dart';
 import 'package:funfy/ui/screens/intro.dart';
+import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/imagesIcons.dart';
 
 class Splash extends StatefulWidget {
-  Splash({Key? key}) : super(key: key);
-
   @override
   _SplashState createState() => _SplashState();
 }
@@ -15,18 +16,30 @@ class _SplashState extends State<Splash> {
   @override
   void initState() {
     super.initState();
-    startTime();
+    next();
   }
 
-  startTime() async {
-    var duration = new Duration(seconds: 6);
-    return new Timer(duration, route());
+  next() async {
+    var net = await Internetcheck.check();
+    print("net = $net");
+
+    if (net != false) {
+      var introdata = await getIntrodata();
+
+      if (introdata != []) {
+        Navigator.of(context)
+            .pushReplacement(MaterialPageRoute(builder: (context) => Intro()));
+      } else {
+        print("no intro data");
+      }
+    } else {
+      Internetcheck.showdialog(context: context);
+    }
   }
 
-  route() {
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => Intro()));
-  }
+  //
+
+  // Create AlertDialog
 
   @override
   Widget build(BuildContext context) {

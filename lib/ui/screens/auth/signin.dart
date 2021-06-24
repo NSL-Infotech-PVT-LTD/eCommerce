@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:funfy/apis/signinApi.dart';
+import 'package:funfy/components/emailvalid.dart';
 import 'package:funfy/ui/screens/auth/forgotpassword.dart';
 import 'package:funfy/ui/screens/auth/signup.dart';
+import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
+import 'package:funfy/utils/Constants.dart';
+import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
@@ -15,6 +20,75 @@ class Signin extends StatefulWidget {
 }
 
 class _SigninState extends State<Signin> {
+  TextEditingController _emailController = TextEditingController();
+
+  TextEditingController _passwordController = TextEditingController();
+
+  String devicetype = "ios";
+  bool _passeye = false;
+  bool _credentialsError = false;
+  String _emailError = "";
+  String _passwordError = "";
+  bool _loading = false;
+
+  _signinValid() {
+    setState(() {
+      _emailError = "";
+      _passwordError = "";
+      _credentialsError = false;
+      if (_emailController.text == "") {
+        _emailError = Strings.pleaseEnterYourEmail;
+      } else if (emailvalid(_emailController.text) == false) {
+        _emailError = Strings.pleaseEnterValidEmail;
+      } else if (_passwordController.text == "") {
+        _passwordError = Strings.pleaseEnterYourpassword;
+      } else if (_passwordController.text.length < 6) {
+        _passwordError = Strings.pleaseEnterValidpassword;
+      } else {
+        _SigninUser();
+      }
+    });
+  }
+
+  _SigninUser() async {
+    var net = await Internetcheck.check();
+
+    if (net != false) {
+      setState(() {
+        _loading = true;
+      });
+      print("Sign in");
+
+      try {
+        var response = await signinUser(
+            email: _emailController.text,
+            password: _passwordController.text,
+            devicetype: devicetype);
+
+        if (response != false) {
+          print(response["data"]["token"]);
+          Constants.prefs?.setString("token", response["data"]["token"]);
+
+          Navigator.of(context)
+              .pushReplacement(MaterialPageRoute(builder: (context) => Home()));
+        } else {
+          setState(() {
+            _credentialsError = true;
+          });
+        }
+        setState(() {
+          _loading = false;
+        });
+      } catch (e) {
+        setState(() {
+          _loading = false;
+        });
+      }
+    } else {
+      Internetcheck.showdialog(context: context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -213,6 +287,7 @@ class _SigninState extends State<Signin> {
                       padding:
                           EdgeInsets.symmetric(horizontal: size.width * 0.01),
                       child: TextField(
+                        controller: _emailController,
                         style: TextStyle(
                           fontFamily: Fonts.dmSansRegular,
                           color: AppColors.inputHint,
@@ -230,6 +305,21 @@ class _SigninState extends State<Signin> {
                       ),
                     ),
                   ),
+
+                  // error email
+
+                  _emailError != ""
+                      ? Container(
+                          margin: EdgeInsets.only(top: size.height * 0.01),
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            _emailError,
+                            style: TextStyle(
+                                color: Colors.red,
+                                fontFamily: Fonts.dmSansMedium,
+                                fontSize: size.width * 0.035),
+                          ))
+                      : SizedBox(),
                 ],
               ),
             ),
@@ -256,49 +346,93 @@ class _SigninState extends State<Signin> {
                   SizedBox(
                     height: size.height * 0.01,
                   ),
-                  roundedBox(
-                    width: size.width * 0.78,
-                    height: size.height * 0.058,
-                    backgroundColor: AppColors.inputbackgroung,
-                    child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: size.width * 0.04),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            flex: 3,
-                            child: TextField(
-                              style: TextStyle(
-                                fontFamily: Fonts.dmSansRegular,
-                                color: AppColors.inputHint,
+                  Column(
+                    children: [
+                      roundedBox(
+                        width: size.width * 0.78,
+                        height: size.height * 0.058,
+                        backgroundColor: AppColors.inputbackgroung,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: size.width * 0.04),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                flex: 3,
+                                child: TextField(
+                                  controller: _passwordController,
+                                  obscureText: _passeye,
+                                  style: TextStyle(
+                                    fontFamily: Fonts.dmSansRegular,
+                                    color: AppColors.inputHint,
+                                  ),
+                                  keyboardType: TextInputType.emailAddress,
+                                  cursorColor: AppColors.white,
+                                  decoration: InputDecoration(
+                                    hintText: Strings.passwordhint,
+                                    border: InputBorder.none,
+                                    // contentPadding: EdgeInsets.only(
+                                    //     left: size.width * 0.04,
+                                    //     right: size.width * 0.04),
+
+                                    hintStyle:
+                                        TextStyle(color: AppColors.inputHint),
+                                  ),
+                                ),
                               ),
-                              keyboardType: TextInputType.emailAddress,
-                              cursorColor: AppColors.white,
-                              decoration: InputDecoration(
-                                hintText: Strings.passwordhint,
-                                border: InputBorder.none,
-                                // contentPadding: EdgeInsets.only(
-                                //     left: size.width * 0.04,
-                                //     right: size.width * 0.04),
-                                hintStyle:
-                                    TextStyle(color: AppColors.inputHint),
+                              SizedBox(
+                                width: size.width * 0.05,
                               ),
-                            ),
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _passeye == false
+                                        ? _passeye = true
+                                        : _passeye = false;
+                                  });
+                                },
+                                child: Container(
+                                  width: size.width * 0.07,
+                                  child: Image.asset(_passeye == false
+                                      ? Images.eyeclose
+                                      : Images.eyeOpen),
+                                ),
+                              ),
+                            ],
                           ),
-                          SizedBox(
-                            width: size.width * 0.05,
-                          ),
-                          GestureDetector(
-                            onTap: () {},
-                            child: Container(
-                              width: size.width * 0.07,
-                              child: Image.asset(
-                                  "assets/AuthenticationIcon/EYE_CLOSE.png"),
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
+
+                      // error email
+
+                      _passwordError != ""
+                          ? Container(
+                              margin: EdgeInsets.only(top: size.height * 0.01),
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                _passwordError,
+                                style: TextStyle(
+                                    color: Colors.red,
+                                    fontFamily: Fonts.dmSansMedium,
+                                    fontSize: size.width * 0.035),
+                              ))
+                          : SizedBox(),
+
+                      // error password
+
+                      _credentialsError
+                          ? Container(
+                              margin: EdgeInsets.only(top: size.height * 0.01),
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                Strings.CredentialsDoesnmatched,
+                                style: TextStyle(
+                                    color: Colors.red,
+                                    fontFamily: Fonts.dmSansMedium,
+                                    fontSize: size.width * 0.035),
+                              ))
+                          : SizedBox()
+                    ],
                   ),
                 ],
               ),
@@ -332,20 +466,26 @@ class _SigninState extends State<Signin> {
               height: size.height * 0.03,
             ),
 
-            roundedBox(
-                width: size.width * 0.78,
-                height: size.height * 0.058,
-                backgroundColor: AppColors.siginbackgrond,
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    Strings.signin,
-                    style: TextStyle(
-                        fontFamily: Fonts.dmSansMedium,
-                        fontSize: size.width * 0.05,
-                        color: AppColors.white),
-                  ),
-                )),
+// signin Button
+            GestureDetector(
+              onTap: () {
+                _signinValid();
+              },
+              child: roundedBox(
+                  width: size.width * 0.78,
+                  height: size.height * 0.058,
+                  backgroundColor: AppColors.siginbackgrond,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      Strings.signin,
+                      style: TextStyle(
+                          fontFamily: Fonts.dmSansMedium,
+                          fontSize: size.width * 0.05,
+                          color: AppColors.white),
+                    ),
+                  )),
+            ),
 
             SizedBox(
               height: size.height * 0.05,
@@ -366,7 +506,7 @@ class _SigninState extends State<Signin> {
                   SizedBox(
                     width: size.width * 0.01,
                   ),
-                  GestureDetector(
+                  InkWell(
                     onTap: () {
                       Navigator.of(context).push(
                           MaterialPageRoute(builder: (context) => SignUp()));
@@ -379,7 +519,7 @@ class _SigninState extends State<Signin> {
                           color: AppColors.white,
                           fontSize: size.width * 0.04),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -389,7 +529,12 @@ class _SigninState extends State<Signin> {
             ),
           ],
         ),
-      )
+      ),
+      _loading
+          ? Center(
+              child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.white)))
+          : SizedBox()
     ])));
   }
 }

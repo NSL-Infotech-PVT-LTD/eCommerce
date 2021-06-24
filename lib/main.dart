@@ -3,10 +3,13 @@ import 'package:funfy/ui/screens/auth/forgotpassword.dart';
 import 'package:funfy/ui/screens/auth/signin.dart';
 import 'package:funfy/ui/screens/auth/signup.dart';
 import 'package:funfy/ui/screens/splash.dart';
-
+import 'package:funfy/utils/Constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'ui/screens/intro.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  Constants.prefs = await SharedPreferences.getInstance();
   runApp(MyApp());
 }
 

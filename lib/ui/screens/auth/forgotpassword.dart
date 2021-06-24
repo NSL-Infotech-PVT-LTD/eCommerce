@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:funfy/apis/forgotpasswordApi.dart';
+import 'package:funfy/components/emailvalid.dart';
+import 'package:funfy/components/toast.dart';
 import 'package:funfy/ui/screens/auth/signin.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
+import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
@@ -14,6 +18,42 @@ class ForgotPassword extends StatefulWidget {
 }
 
 class _ForgotPasswordState extends State<ForgotPassword> {
+  TextEditingController _emailController = TextEditingController();
+
+  String _emailError = "";
+  bool _loading = false;
+
+  emailvalider() {
+    _emailError = "";
+    if (_emailController.text == "") {
+      _emailError = Strings.pleaseEnterYourEmail;
+    } else if (emailvalid(_emailController.text) == false) {
+      _emailError = Strings.pleaseEnterValidEmail;
+    } else {
+      _forgotPassword();
+    }
+  }
+
+  _forgotPassword() async {
+    var net = await Internetcheck.check();
+
+    if (net != false) {
+      bool response = await forgotpasswordApiCall(email: _emailController.text);
+
+      if (response == true) {
+        toastshow(toasttext: Strings.wehavesentlinkonyouemail);
+        Navigator.of(context)
+            .pushReplacement(MaterialPageRoute(builder: (context) => Signin()));
+      } else {
+        setState(() {
+          _emailError = Strings.pleaseEnterValidEmail;
+        });
+      }
+    } else {
+      Internetcheck.showdialog(context: context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -119,6 +159,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       padding:
                           EdgeInsets.symmetric(horizontal: size.width * 0.01),
                       child: TextField(
+                        controller: _emailController,
                         style: TextStyle(
                           fontFamily: Fonts.dmSansRegular,
                           color: AppColors.inputHint,
@@ -136,6 +177,21 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       ),
                     ),
                   ),
+
+                  // email error
+
+                  _emailError != ""
+                      ? Container(
+                          margin: EdgeInsets.only(top: size.height * 0.01),
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            _emailError,
+                            style: TextStyle(
+                                color: Colors.red,
+                                fontFamily: Fonts.dmSansMedium,
+                                fontSize: size.width * 0.035),
+                          ))
+                      : SizedBox(),
                 ],
               ),
             ),
@@ -197,7 +253,14 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             ),
           ],
         ),
-      )
+      ),
+
+// progress
+      _loading
+          ? Center(
+              child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.white)))
+          : SizedBox()
     ])));
   }
 }

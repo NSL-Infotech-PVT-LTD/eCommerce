@@ -30,4 +30,14 @@ class Strings {
   static String rememberyourpassword = "Remember Your Password?";
   static String backToSignIn = "BACK TO SIGN IN";
   static String submit = "Submit";
+  static String unabletoconnect = "Unable to connect";
+  static String pleaseCheckYourInternet =
+      "Please check your internet connection!";
+  static String ok = "OK";
+  static String CredentialsDoesnmatched = "credentials doesn't matched";
+  static String pleaseEnterYourEmail = "Please enter your email";
+  static String pleaseEnterValidEmail = "Please enter valid email";
+  static String pleaseEnterYourpassword = "Please enter your password";
+  static String pleaseEnterValidpassword = "Please enter valid password";
+  static String wehavesentlinkonyouemail = "We have sent link on your email";
 }

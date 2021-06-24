@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:funfy/ui/screens/auth/signin.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
@@ -6,8 +7,6 @@ import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/strings.dart';
 
 class SignUp extends StatefulWidget {
-  SignUp({Key? key}) : super(key: key);
-
   @override
   _SignUpState createState() => _SignUpState();
 }
@@ -37,39 +36,6 @@ class _SignUpState extends State<SignUp> {
               color: AppColors.blackBackground,
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(8), topRight: Radius.circular(8))),
-        ),
-      ),
-
-      // top right content
-
-      Container(
-        alignment: Alignment.topRight,
-        margin: EdgeInsets.only(right: size.width * 0.05),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            SizedBox(
-              height: size.height * 0.02,
-            ),
-            Text(
-              Strings.alreadyhaveaccount,
-              style: TextStyle(
-                fontSize: size.width * 0.035,
-                fontFamily: Fonts.dmSansRegular,
-                color: AppColors.inputTitle,
-              ),
-            ),
-            SizedBox(
-              height: size.height * 0.008,
-            ),
-            Text(
-              Strings.backtoSignin,
-              style: TextStyle(
-                  decoration: TextDecoration.underline,
-                  fontFamily: Fonts.dmSansBold,
-                  color: AppColors.white),
-            ),
-          ],
         ),
       ),
 
@@ -227,20 +193,27 @@ class _SignUpState extends State<SignUp> {
                     ),
 
                     // signup button
-                    roundedBox(
-                        // width: size.width * 0.78,
-                        height: size.height * 0.058,
-                        backgroundColor: AppColors.siginbackgrond,
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            Strings.signup,
-                            style: TextStyle(
-                                fontFamily: Fonts.dmSansMedium,
-                                fontSize: size.width * 0.05,
-                                color: AppColors.white),
-                          ),
-                        )),
+                    GestureDetector(
+                      onTap: () {
+                        print("ok");
+
+                        // Navigator.pop(context);
+                      },
+                      child: roundedBox(
+                          // width: size.width * 0.78,
+                          height: size.height * 0.058,
+                          backgroundColor: AppColors.siginbackgrond,
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              Strings.signup,
+                              style: TextStyle(
+                                  fontFamily: Fonts.dmSansMedium,
+                                  fontSize: size.width * 0.05,
+                                  color: AppColors.white),
+                            ),
+                          )),
+                    ),
 
                     SizedBox(
                       height: size.height * 0.03,
@@ -251,6 +224,45 @@ class _SignUpState extends State<SignUp> {
             )),
 
         //
+      ),
+
+      // top right content
+
+      Container(
+        alignment: Alignment.topRight,
+        margin: EdgeInsets.only(right: size.width * 0.05),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            SizedBox(
+              height: size.height * 0.02,
+            ),
+            Text(
+              Strings.alreadyhaveaccount,
+              style: TextStyle(
+                fontSize: size.width * 0.035,
+                fontFamily: Fonts.dmSansRegular,
+                color: AppColors.inputTitle,
+              ),
+            ),
+            SizedBox(
+              height: size.height * 0.008,
+            ),
+            InkWell(
+              onTap: () {
+                print("ok2");
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                Strings.backtoSignin,
+                style: TextStyle(
+                    decoration: TextDecoration.underline,
+                    fontFamily: Fonts.dmSansBold,
+                    color: AppColors.white),
+              ),
+            ),
+          ],
+        ),
       ),
     ])));
   }

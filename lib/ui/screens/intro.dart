@@ -1,6 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:funfy/apis/introApi.dart';
+import 'package:funfy/ui/screens/auth/signin.dart';
 import 'package:funfy/utils/imagesIcons.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
@@ -10,38 +13,17 @@ class Intro extends StatefulWidget {
 }
 
 class _IntroState extends State<Intro> {
-  String imageb = "assets/images/introimage.jpg";
-  //Lorem Ipsum is simply dummy text of the printing and.
-
-  List<Map<String, String>> introlist = [
-    {
-      "img": Images.intro1,
-      "titletxt": "Lorem Ipsum is simply dummy text of the printing and.",
-      "description":
-          "when an unknown printer took a galley of type and scrambled it"
-    },
-    {
-      "img": Images.intro2,
-      "titletxt": "It has survived not only five centuries.",
-      "description":
-          "the release of Letraset sheets containing Lorem Ipsum passages."
-    },
-  ];
-
-  List<String> images = [Images.intro1, Images.intro2];
-
-  int pageCount = 3;
-
   final introKey = GlobalKey<IntroductionScreenState>();
 
   void _onIntroEnd(context) {
+    print("done");
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => HomePage()),
+      MaterialPageRoute(builder: (context) => Signin()),
     );
   }
 
   Widget _buildFullscrenImage(imagename) {
-    return Image.asset(
+    return Image.network(
       imagename,
       fit: BoxFit.cover,
       height: double.infinity,
@@ -69,11 +51,12 @@ class _IntroState extends State<Intro> {
 
     List<PageViewModel> pages = [];
 
-    for (var introdata in introlist) {
+    for (var introdata in introdata) {
+      // String title = introdata.title.toString();
+
       pages.add(PageViewModel(
-          title: "1",
-          // body: "with some customizations possibilities",
-          image: _buildFullscrenImage(introdata["img"]),
+          title: "",
+          image: _buildFullscrenImage(introdata.image),
           bodyWidget: Align(
             alignment: Alignment.centerLeft,
             child: Column(
@@ -81,8 +64,9 @@ class _IntroState extends State<Intro> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  introdata["titletxt"].toString(),
-                  // introdata["tittletxt"],
+                  introdata.title.toString(),
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: size.width * 0.08,
@@ -91,8 +75,9 @@ class _IntroState extends State<Intro> {
                 SizedBox(
                   height: size.height * 0.03,
                 ),
-                Text(introdata["description"].toString(),
-                    // introdata["description"],
+                Text(introdata.description.toString(),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: Colors.grey[400],
                       fontSize: size.width * 0.05,
@@ -117,11 +102,12 @@ class _IntroState extends State<Intro> {
       pages: pages,
 
       onDone: () => _onIntroEnd(context),
-      //onSkip: () => _onIntroEnd(context), // You can override onSkip callback
+      onSkip: () => _onIntroEnd(context), // You can override onSkip callback
       showSkipButton: true,
       skipFlex: 0,
       nextFlex: 0,
       showNextButton: true,
+      showDoneButton: true,
       //rtl: true, // Display as right-to-left
       skip: const Text('Skip'),
       next: const Icon(Icons.arrow_forward),
