@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:funfy/ui/screens/auth/forgotpassword.dart';
-import 'package:funfy/ui/screens/auth/signin.dart';
-import 'package:funfy/ui/screens/auth/signup.dart';
 import 'package:funfy/ui/screens/splash.dart';
 import 'package:funfy/utils/Constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'ui/screens/intro.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,8 +17,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Funfy',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.red,
       ),
+
+      // theme: ThemeData.light(), // Provide light theme
+      darkTheme: ThemeData.dark(), //
       home: Splash(),
     );
   }

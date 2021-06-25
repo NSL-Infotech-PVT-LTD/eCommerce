@@ -16,8 +16,7 @@ class _IntroState extends State<Intro> {
   final introKey = GlobalKey<IntroductionScreenState>();
 
   void _onIntroEnd(context) {
-    print("done");
-    Navigator.of(context).push(
+    Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (context) => Signin()),
     );
   }
@@ -97,7 +96,7 @@ class _IntroState extends State<Intro> {
 
     return IntroductionScreen(
       key: introKey,
-      color: Colors.green,
+      color: Colors.white,
 
       pages: pages,
 
@@ -120,8 +119,9 @@ class _IntroState extends State<Intro> {
 
       dotsDecorator: const DotsDecorator(
         size: Size(10.0, 10.0),
-        color: Color(0xFFBDBDBD),
-        activeColor: Colors.green,
+        // color: Color(0xFFBDBDBD),
+        color: Colors.grey,
+        activeColor: Colors.white,
         activeSize: Size(22.0, 10.0),
         activeShape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(25.0)),

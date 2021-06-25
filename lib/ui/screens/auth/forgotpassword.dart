@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:funfy/apis/forgotpasswordApi.dart';
+import 'package:funfy/components/dialogs.dart';
 import 'package:funfy/components/emailvalid.dart';
 import 'package:funfy/components/toast.dart';
 import 'package:funfy/ui/screens/auth/signin.dart';
@@ -40,6 +41,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     setState(() {
       _loading = true;
     });
+
+    FocusScope.of(context).requestFocus(FocusNode());
     var net = await Internetcheck.check();
 
     if (net != false) {
@@ -49,9 +52,14 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       });
 
       if (response == true) {
-        // toastshow(toasttext: Strings.wehavesentlinkonyouemail);
-        Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (context) => Signin()));
+        Dialogs.simpledialogshow(
+            context: context,
+            title: Strings.Success,
+            description: Strings.wehavesentlinkonyouemail,
+            okfunc: () {
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => Signin()));
+            });
       } else {
         setState(() {
           _emailError = Strings.pleaseEnterValidEmail;

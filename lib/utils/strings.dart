@@ -21,7 +21,7 @@ class Strings {
   static String dateofbirth = "Date of birth";
   static String dateofbirthhint = "Enter your Date of birth";
   static String gender = "Gender";
-  static String genderHint = "Enter your Gender";
+  static String genderHint = "Choose your gender";
   static String byContinuingYouAgreetoOur = "By continuing you agree to our";
   static String termsOfService = "Terms of Service";
   static String and = "and";
@@ -40,4 +40,16 @@ class Strings {
   static String pleaseEnterYourpassword = "Please enter your password";
   static String pleaseEnterValidpassword = "Please enter valid password";
   static String wehavesentlinkonyouemail = "We have sent link on your email";
+  static String pleaseEnterYourfullname = "Please enter your full name";
+  static String yourNameMustBeAbove3Characters =
+      "Your name must be above 3 characters";
+  static String yourPasswordMustBeAbove3Characters =
+      "Your Password must be above 5 characters";
+  static String pleaseEnterYourGender = "Choose your gender";
+  static String pleaseEnterValidgender = "Please enter valid gender";
+  static String male = "Male";
+  static String female = "Female";
+  static String other = "Other";
+  static String dobtypehint = "YYYY-MM-DD";
+  static String Success = "Success";
 }

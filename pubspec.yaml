@@ -34,12 +34,17 @@ dependencies:
   connectivity: ^3.0.6
   shared_preferences:
   cached_network_image: ^2.0.0
-  # fluttertoast: 
+ 
+  
+  
+
   
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_html: 
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

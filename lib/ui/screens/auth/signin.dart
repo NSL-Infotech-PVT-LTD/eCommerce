@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:funfy/apis/signinApi.dart';
+import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/components/emailvalid.dart';
+import 'package:funfy/models/userModel.dart';
 import 'package:funfy/ui/screens/auth/forgotpassword.dart';
 import 'package:funfy/ui/screens/auth/signup.dart';
 import 'package:funfy/ui/screens/home.dart';
@@ -54,6 +56,7 @@ class _SigninState extends State<Signin> {
     var net = await Internetcheck.check();
 
     if (net != false) {
+      FocusScope.of(context).requestFocus(FocusNode());
       setState(() {
         _loading = true;
       });
@@ -68,6 +71,10 @@ class _SigninState extends State<Signin> {
         if (response != false) {
           print(response["data"]["token"]);
           Constants.prefs?.setString("token", response["data"]["token"]);
+
+          // Iterable userdata = response["data"];
+          // UserDataM.user =
+          //     userdata.map((model) => UserModel.fromJson(model)).toList();
 
           Navigator.of(context)
               .pushReplacement(MaterialPageRoute(builder: (context) => Home()));
@@ -182,7 +189,7 @@ class _SigninState extends State<Signin> {
                       SizedBox(
                         width: size.width * 0.1,
                       ),
-                      Container(child: Image.asset(Images.appleIcon)),
+                      Container(child: Image.asset(Images.fbIcon)),
                       SizedBox(
                         width: size.width * 0.03,
                       ),
@@ -215,7 +222,7 @@ class _SigninState extends State<Signin> {
                       SizedBox(
                         width: size.width * 0.1,
                       ),
-                      Container(child: Image.asset(Images.fbIcon)),
+                      Container(child: Image.asset(Images.appleIcon)),
                       SizedBox(
                         width: size.width * 0.07,
                       ),
@@ -366,7 +373,6 @@ class _SigninState extends State<Signin> {
                                     fontFamily: Fonts.dmSansRegular,
                                     color: AppColors.inputHint,
                                   ),
-                                  keyboardType: TextInputType.emailAddress,
                                   cursorColor: AppColors.white,
                                   decoration: InputDecoration(
                                     hintText: Strings.passwordhint,
