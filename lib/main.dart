@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/screens/splash.dart';
 import 'package:funfy/utils/Constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,7 +23,8 @@ class MyApp extends StatelessWidget {
 
       // theme: ThemeData.light(), // Provide light theme
       darkTheme: ThemeData.dark(), //
-      home: Splash(),
+      // home: Splash(),
+      home: Home(),
     );
   }
 }

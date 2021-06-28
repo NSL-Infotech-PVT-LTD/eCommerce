@@ -12,4 +12,7 @@ class AppColors {
   static Color fbappletitle = HexColor("#171B2F");
   static Color descriptionfirst = HexColor("#B4B4B4");
   static Color blackBackground = HexColor("#070707");
+  static Color homeTopbuttonbackground = HexColor("#302923");
+  static Color homeBackground = HexColor("#191512");
+  static Color tagBorder = HexColor("#FFEFBB");
 }

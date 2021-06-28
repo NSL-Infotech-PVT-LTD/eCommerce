@@ -109,7 +109,7 @@ class _SignUpState extends State<SignUp> {
           email: _emailController.text,
           password: _passwordController.text,
           dob: dob,
-          gender: gender,
+          gender: gender.toLowerCase(),
           devicetype: "Android",
         ).then((value) {
           if (value == true) {
@@ -353,7 +353,7 @@ class _SignUpState extends State<SignUp> {
                         hinttxt: Strings.fullnamehint,
                         inputError: _fullnameError,
                         readonly: false,
-                        ontapFun: () {}),
+                        ontapFun: null),
                     inputs(
                         context: context,
                         controller: _emailController,
@@ -361,7 +361,7 @@ class _SignUpState extends State<SignUp> {
                         titletxt: Strings.email,
                         hinttxt: Strings.emailHint,
                         inputError: _emailError,
-                        ontapFun: () {},
+                        ontapFun: null,
                         readonly: false),
                     inputs(
                         context: context,
@@ -370,7 +370,7 @@ class _SignUpState extends State<SignUp> {
                         titletxt: Strings.password,
                         hinttxt: Strings.passwordhint,
                         inputError: _passwordError,
-                        ontapFun: () {},
+                        ontapFun: null,
                         readonly: false),
                     inputs(
                         context: context,
@@ -419,7 +419,7 @@ class _SignUpState extends State<SignUp> {
                                   _showBottomSheet(
                                       context: context,
                                       titletext: Strings.termsOfService,
-                                      description: UserDataM.termsofservice);
+                                      description: UserData.termsofservice);
                                 },
                                 child: Text(
                                   Strings.termsOfService,
@@ -449,7 +449,7 @@ class _SignUpState extends State<SignUp> {
                                   _showBottomSheet(
                                       context: context,
                                       titletext: Strings.privacypolicy,
-                                      description: UserDataM.privacypolicy);
+                                      description: UserData.privacypolicy);
                                 },
                                 child: Text(
                                   Strings.privacypolicy,
@@ -590,7 +590,9 @@ Widget inputs(
             child: TextField(
               readOnly: readonly,
               onTap: () {
-                ontapFun(context);
+                if (ontapFun != null) {
+                  ontapFun(context);
+                }
               },
               obscureText: obscureTextBool,
               controller: controller,

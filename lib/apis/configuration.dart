@@ -11,11 +11,11 @@ class Configurations {
     var response = json.decode(res.body);
 
     if (response["status"] == true && response["code"] == 200) {
-      UserDataM.termsofservice = response["data"]["config"];
+      UserData.termsofservice = response["data"]["config"];
 
-      print(response);
+      // print(response);
     } else {
-      UserDataM.termsofservice = "no data";
+      UserData.termsofservice = "no data";
     }
   }
 
@@ -25,10 +25,10 @@ class Configurations {
     var response = json.decode(res.body);
 
     if (response["status"] == true && response["code"] == 200) {
-      UserDataM.privacypolicy = response["data"]["config"];
-      print(response);
+      UserData.privacypolicy = response["data"]["config"];
+      // print(response);
     } else {
-      UserDataM.privacypolicy = "no data";
+      UserData.privacypolicy = "no data";
     }
   }
 }

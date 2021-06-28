@@ -72,10 +72,6 @@ class _SigninState extends State<Signin> {
           print(response["data"]["token"]);
           Constants.prefs?.setString("token", response["data"]["token"]);
 
-          // Iterable userdata = response["data"];
-          // UserDataM.user =
-          //     userdata.map((model) => UserModel.fromJson(model)).toList();
-
           Navigator.of(context)
               .pushReplacement(MaterialPageRoute(builder: (context) => Home()));
         } else {

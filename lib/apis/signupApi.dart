@@ -34,6 +34,8 @@ Future<bool> signApiCall(
 
     Constants.prefs?.setString("token", response["data"]['token']);
 
+    print(response["data"]);
+
     // UserDataM.user =
     //     userdata.map((model) => UserModel.fromJson(model)).toList();
 
