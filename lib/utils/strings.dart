@@ -1,4 +1,5 @@
 class Strings {
+  static String funfy = "funfy";
   static String signin = "Sign In";
   static String welcometo = "Welcome to";
   static String funfypartyapp = "Funfy Party App";
@@ -62,6 +63,8 @@ class Strings {
   static String seeall = "SEE ALL";
   static String startingfrom = "STARTING FROM";
   static String booknow = "Book Now";
+  static String emailError = "The email has already been taken.";
+  static String dobError = "The dob must be a date before today.";
 
   // dummy
   static String garyadams = "Gary F. Adams";

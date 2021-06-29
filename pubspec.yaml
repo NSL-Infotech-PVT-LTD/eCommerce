@@ -35,6 +35,7 @@ dependencies:
   shared_preferences:
   cached_network_image: ^2.0.0
   flutter_rating_bar: 4.0.0
+  flutter_facebook_auth: 3.5.0
   
  
   

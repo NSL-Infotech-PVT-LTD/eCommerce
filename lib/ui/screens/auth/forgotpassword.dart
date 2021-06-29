@@ -113,7 +113,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   Text(
                     Strings.forgotpassword,
                     style: TextStyle(
-                        fontSize: size.width * 0.088,
+                        fontSize: size.width * 0.085,
                         fontFamily: Fonts.abrilFatface,
                         color: Colors.white),
                   ),
@@ -173,7 +173,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     backgroundColor: AppColors.inputbackgroung,
                     child: Padding(
                       padding:
-                          EdgeInsets.symmetric(horizontal: size.width * 0.01),
+                          EdgeInsets.symmetric(horizontal: size.width * 0.04),
                       child: TextField(
                         controller: _emailController,
                         style: TextStyle(
@@ -185,9 +185,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         decoration: InputDecoration(
                           hintText: Strings.emailHint,
                           border: InputBorder.none,
-                          contentPadding: EdgeInsets.only(
-                              left: size.width * 0.04,
-                              right: size.width * 0.04),
+                          // contentPadding: EdgeInsets.only(
+                          //     left: size.width * 0.04,
+                          //     right: size.width * 0.04),
                           hintStyle: TextStyle(color: AppColors.inputHint),
                         ),
                       ),

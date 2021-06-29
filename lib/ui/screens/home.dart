@@ -18,6 +18,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   bool fiestasButton = true;
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -33,7 +34,7 @@ class _HomeState extends State<Home> {
             // top bar
             Container(
               padding: EdgeInsets.symmetric(
-                  vertical: size.height * 0.025,
+                  vertical: size.height * 0.023,
                   horizontal: size.width * 0.045),
               width: size.width,
               height: size.height * 0.155,
@@ -53,7 +54,8 @@ class _HomeState extends State<Home> {
                             color: AppColors.white),
                       ),
                       Text(
-                        Strings.garyadams,
+                        // Strings.garyadams,
+                        UserData.facebookUserdata["name"] ?? Strings.garyadams,
                         style: TextStyle(
                             fontSize: size.width * 0.048,
                             fontFamily: Fonts.dmSansBold,
@@ -418,7 +420,7 @@ Widget fiestasItem(
         Container(
           padding: EdgeInsets.symmetric(
               horizontal: size.width * 0.03, vertical: size.height * 0.01),
-          height: size.height * 0.14,
+          height: size.height * 0.15,
           decoration: BoxDecoration(
               color: AppColors.homeBackground,
               border: Border(
@@ -429,7 +431,6 @@ Widget fiestasItem(
                 bottom: BorderSide(
                     width: size.height * 0.001, color: AppColors.tagBorder),
               )),
-          // color: Colors.green,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

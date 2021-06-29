@@ -6,4 +6,5 @@ class UserData {
   static String termsofservice = "";
   static String privacypolicy = "";
   static var userToken = Constants.prefs?.getString("token");
+  static Map facebookUserdata = {};
 }

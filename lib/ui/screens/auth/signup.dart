@@ -12,6 +12,7 @@ import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/strings.dart';
+import 'dart:io' show Platform;
 
 class SignUp extends StatefulWidget {
   @override
@@ -38,6 +39,7 @@ class _SignUpState extends State<SignUp> {
   String _passwordError = "";
   String _dobError = "";
   String _genderError = "";
+  String _signupError = "";
 
   signupUser() {
 // input validation ----------- //
@@ -110,11 +112,21 @@ class _SignUpState extends State<SignUp> {
           password: _passwordController.text,
           dob: dob,
           gender: gender.toLowerCase(),
-          devicetype: "Android",
+          devicetype: Platform.isAndroid ? "android" : "ios",
         ).then((value) {
-          if (value == true) {
+          if (value["bool"] == true) {
             Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (context) => Home()));
+          } else {
+            print(value["res"]["error"]);
+
+            setState(() {
+              if (value["res"]["error"] == Strings.emailError) {
+                _emailError = Strings.emailError;
+              } else if (value["res"]["error"] == Strings.dobError) {
+                _dobError = Strings.dobError;
+              }
+            });
           }
         });
 
@@ -144,11 +156,11 @@ class _SignUpState extends State<SignUp> {
     );
 
     if (picked != null && picked != selectedDate) {
-      String month = await zeroAdd(selectedDate.month);
-      String day = await zeroAdd(selectedDate.day);
+      String month = await zeroAdd(picked.month);
+      String day = await zeroAdd(picked.day);
       setState(() {
-        selectedDate = picked;
-        dob = "${selectedDate.year}-$month-$day";
+        // selectedDate = picked.;
+        dob = "${picked.year}-$month-$day";
         _dobController.text = dob;
 
         print(dob);
@@ -205,7 +217,7 @@ class _SignUpState extends State<SignUp> {
         context: context,
         builder: (context) {
           return Container(
-            height: size.height * 0.23,
+            height: size.height * 0.25,
             child: Column(
               children: [
                 ListTile(
@@ -390,6 +402,19 @@ class _SignUpState extends State<SignUp> {
                         inputError: _genderError,
                         ontapFun: _showBottomSheetgender,
                         readonly: true),
+
+                    _signupError != ""
+                        ? Container(
+                            margin: EdgeInsets.only(top: size.height * 0.01),
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              _signupError.toString(),
+                              style: TextStyle(
+                                  color: Colors.red,
+                                  fontFamily: Fonts.dmSansMedium,
+                                  fontSize: size.width * 0.035),
+                            ))
+                        : SizedBox(),
 
                     SizedBox(
                       height: size.height * 0.03,
@@ -586,7 +611,7 @@ Widget inputs(
           height: size.height * 0.058,
           backgroundColor: AppColors.inputbackgroung,
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: size.width * 0.01),
+            padding: EdgeInsets.symmetric(horizontal: size.width * 0.04),
             child: TextField(
               readOnly: readonly,
               onTap: () {
@@ -605,8 +630,8 @@ Widget inputs(
               decoration: InputDecoration(
                 hintText: hinttxt,
                 border: InputBorder.none,
-                contentPadding: EdgeInsets.only(
-                    left: size.width * 0.04, right: size.width * 0.04),
+                // contentPadding: EdgeInsets.only(
+                //     left: size.width * 0.04, right: size.width * 0.04),
                 hintStyle: TextStyle(color: AppColors.inputHint),
               ),
             ),

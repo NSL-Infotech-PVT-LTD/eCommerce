@@ -7,7 +7,7 @@ import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/urls.dart';
 import 'package:http/http.dart' as http;
 
-Future<bool> signApiCall(
+Future<Map> signApiCall(
     {String? fullname,
     String? email,
     String? password,
@@ -34,13 +34,13 @@ Future<bool> signApiCall(
 
     Constants.prefs?.setString("token", response["data"]['token']);
 
-    print(response["data"]);
+    // print(response["data"]);
 
     // UserDataM.user =
     //     userdata.map((model) => UserModel.fromJson(model)).toList();
 
-    return true;
+    return {"bool": true, "res": response};
   }
 
-  return false;
+  return {"bool": false, "res": response};
 }

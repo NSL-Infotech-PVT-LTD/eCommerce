@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:funfy/ui/screens/auth/signin.dart';
 import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/screens/splash.dart';
 import 'package:funfy/utils/Constants.dart';
+import 'package:funfy/utils/strings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
@@ -16,7 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Funfy',
+      title: "funfy",
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
@@ -24,7 +26,7 @@ class MyApp extends StatelessWidget {
       // theme: ThemeData.light(), // Provide light theme
       darkTheme: ThemeData.dark(), //
       // home: Splash(),
-      home: Home(),
+      home: Signin(),
     );
   }
 }

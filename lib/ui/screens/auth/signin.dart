@@ -13,6 +13,8 @@ import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/strings.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'dart:io' show Platform;
 
 class Signin extends StatefulWidget {
   const Signin({Key? key}) : super(key: key);
@@ -92,11 +94,47 @@ class _SigninState extends State<Signin> {
     }
   }
 
+  // facebook login
+
+  _facebookSignin() async {
+    _loading = true;
+    print("facebook signin");
+    FacebookAuth.instance.login(
+      permissions: ['email', 'public_profile'],
+    ).then((value) {
+      FacebookAuth.instance.getUserData().then((userdata) {
+        setState(() {
+          _loading = false;
+        });
+
+        UserData.facebookUserdata = userdata;
+
+        facebooklogincheck();
+
+        print(userdata);
+      });
+    });
+  }
+
+  facebooklogincheck() async {
+    final AccessToken? accessToken = await FacebookAuth.instance.accessToken;
+
+    if (accessToken != null) {
+      // user is logged
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (context) => Home()));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return SafeArea(
         child: Scaffold(
+            // floatingActionButton: FloatingActionButton(
+            //   onPressed: () {},
+            //   child: Icon(Icons.add),
+            // ),
             body: Stack(children: [
       Container(
         decoration: BoxDecoration(
@@ -173,65 +211,76 @@ class _SigninState extends State<Signin> {
 
             // facebook signup
 
-            roundedBox(
-                width: size.width * 0.78,
-                height: size.height * 0.053,
-                backgroundColor: Colors.white,
-                child: Container(
-                  margin: EdgeInsets.symmetric(vertical: size.height * 0.01),
-                  child: Row(
-                    // mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: size.width * 0.1,
-                      ),
-                      Container(child: Image.asset(Images.fbIcon)),
-                      SizedBox(
-                        width: size.width * 0.03,
-                      ),
-                      Text(
-                        Strings.signinwithfacebook,
-                        style: TextStyle(
-                          color: AppColors.fbappletitle,
-                          fontFamily: Fonts.dmSansMedium,
-                          fontSize: size.width * 0.045,
+            GestureDetector(
+              onTap: _facebookSignin,
+              child: roundedBox(
+                  width: size.width * 0.78,
+                  height: size.height * 0.053,
+                  backgroundColor: Colors.white,
+                  child: Container(
+                    margin: EdgeInsets.symmetric(vertical: size.height * 0.01),
+                    child: Row(
+                      // mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: size.width * 0.1,
                         ),
-                      )
-                    ],
-                  ),
-                )),
-
-            SizedBox(
-              height: size.height * 0.02,
+                        Container(child: Image.asset(Images.fbIcon)),
+                        SizedBox(
+                          width: size.width * 0.03,
+                        ),
+                        Text(
+                          Strings.signinwithfacebook,
+                          style: TextStyle(
+                            color: AppColors.fbappletitle,
+                            fontFamily: Fonts.dmSansMedium,
+                            // fontSize: size.width * 0.045,
+                            fontSize: size.width * 0.04,
+                          ),
+                        )
+                      ],
+                    ),
+                  )),
             ),
 
             // apple signup
 
-            roundedBox(
-                width: size.width * 0.78,
-                height: size.height * 0.053,
-                backgroundColor: Colors.white,
-                child: Container(
-                  margin: EdgeInsets.symmetric(vertical: size.height * 0.01),
-                  child: Row(
+            Platform.isIOS
+                ? Column(
                     children: [
                       SizedBox(
-                        width: size.width * 0.1,
+                        height: size.height * 0.02,
                       ),
-                      Container(child: Image.asset(Images.appleIcon)),
-                      SizedBox(
-                        width: size.width * 0.07,
-                      ),
-                      Text(
-                        Strings.signinwithApple,
-                        style: TextStyle(
-                            fontFamily: Fonts.dmSansMedium,
-                            fontSize: size.width * 0.045,
-                            color: AppColors.fbappletitle),
-                      )
+                      roundedBox(
+                          width: size.width * 0.78,
+                          height: size.height * 0.053,
+                          backgroundColor: Colors.white,
+                          child: Container(
+                            margin: EdgeInsets.symmetric(
+                                vertical: size.height * 0.01),
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  width: size.width * 0.1,
+                                ),
+                                Container(child: Image.asset(Images.appleIcon)),
+                                SizedBox(
+                                  width: size.width * 0.07,
+                                ),
+                                Text(
+                                  Strings.signinwithApple,
+                                  style: TextStyle(
+                                      fontFamily: Fonts.dmSansMedium,
+                                      // fontSize: size.width * 0.045,
+                                      fontSize: size.width * 0.04,
+                                      color: AppColors.fbappletitle),
+                                )
+                              ],
+                            ),
+                          )),
                     ],
-                  ),
-                )),
+                  )
+                : SizedBox(),
 
             SizedBox(
               height: size.height * 0.035,
@@ -283,27 +332,29 @@ class _SigninState extends State<Signin> {
                     height: size.height * 0.01,
                   ),
                   roundedBox(
-                    width: size.width * 0.78,
+                    // width: size.width * 0.78,
                     height: size.height * 0.058,
                     backgroundColor: AppColors.inputbackgroung,
                     child: Padding(
                       padding:
-                          EdgeInsets.symmetric(horizontal: size.width * 0.01),
-                      child: TextField(
-                        controller: _emailController,
-                        style: TextStyle(
-                          fontFamily: Fonts.dmSansRegular,
-                          color: AppColors.inputHint,
-                        ),
-                        keyboardType: TextInputType.emailAddress,
-                        cursorColor: AppColors.white,
-                        decoration: InputDecoration(
-                          hintText: Strings.emailHint,
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.only(
-                              left: size.width * 0.04,
-                              right: size.width * 0.04),
-                          hintStyle: TextStyle(color: AppColors.inputHint),
+                          EdgeInsets.symmetric(horizontal: size.width * 0.04),
+                      child: Expanded(
+                        child: TextField(
+                          controller: _emailController,
+                          style: TextStyle(
+                            fontFamily: Fonts.dmSansRegular,
+                            color: AppColors.inputHint,
+                          ),
+                          keyboardType: TextInputType.emailAddress,
+                          cursorColor: AppColors.white,
+                          decoration: InputDecoration(
+                            hintText: Strings.emailHint,
+                            border: InputBorder.none,
+                            // contentPadding: EdgeInsets.only(
+                            //     left: size.width * 0.04,
+                            //     right: size.width * 0.04),
+                            hintStyle: TextStyle(color: AppColors.inputHint),
+                          ),
                         ),
                       ),
                     ),
