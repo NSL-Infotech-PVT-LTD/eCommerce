@@ -15,4 +15,5 @@ class AppColors {
   static Color homeTopbuttonbackground = HexColor("#302923");
   static Color homeBackground = HexColor("#191512");
   static Color tagBorder = HexColor("#FFEFBB");
+  static Color bottomnavBackground = HexColor("#3E332B");
 }

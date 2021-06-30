@@ -65,6 +65,13 @@ class Strings {
   static String booknow = "Book Now";
   static String emailError = "The email has already been taken.";
   static String dobError = "The dob must be a date before today.";
+  static String pleaseEnterYourEmailToSignin =
+      "Please enter your email to sign in.";
+
+  static String bottomNavFiestas = "Fiestas";
+  static String bottomNavCart = "Cart";
+  static String bottomNavBookings = "Bookings";
+  static String bottomNavMyprofile = "My profile";
 
   // dummy
   static String garyadams = "Gary F. Adams";

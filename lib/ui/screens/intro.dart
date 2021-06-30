@@ -4,6 +4,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:funfy/apis/introApi.dart';
 import 'package:funfy/ui/screens/auth/signin.dart';
+import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
@@ -69,7 +70,9 @@ class _IntroState extends State<Intro> {
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: size.width * 0.08,
-                      fontWeight: FontWeight.bold),
+                      fontFamily: Fonts.abrilFatface
+                      // fontWeight: FontWeight.bold
+                      ),
                 ),
                 SizedBox(
                   height: size.height * 0.03,
@@ -78,9 +81,9 @@ class _IntroState extends State<Intro> {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      color: Colors.grey[400],
-                      fontSize: size.width * 0.05,
-                    )),
+                        color: Colors.grey[400],
+                        fontSize: size.width * 0.05,
+                        fontFamily: Fonts.dmSansRegular)),
               ],
             ),
           ),

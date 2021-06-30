@@ -32,14 +32,18 @@ dependencies:
   hexcolor: ^2.0.3
   http: ^0.13.3
   connectivity: ^3.0.6
-  shared_preferences:
-  cached_network_image: ^2.0.0
+  shared_preferences: ^2.0.6
+  cached_network_image: ^3.0.0
   flutter_rating_bar: 4.0.0
   flutter_facebook_auth: 3.5.0
-  
+  sign_in_with_apple: ^3.0.0
+  geolocator: ^7.2.0+1
+  geocoding: ^2.0.0
+  # location: ^1.4.0
+  # calendar_timeline: ^1.0.1-null-safety.0
+  # animated_horizontal_calendar: 0.0.2
+  # horizontal_calendar: ^0.0.4
  
-  
-  
 
   
 
