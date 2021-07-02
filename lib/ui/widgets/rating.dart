@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:funfy/utils/colors.dart';
 
 Widget ratingstars({size, ittempading, color, double rating = 1.0}) {
   return RatingBar.builder(
@@ -10,6 +11,7 @@ Widget ratingstars({size, ittempading, color, double rating = 1.0}) {
     direction: Axis.horizontal,
     allowHalfRating: true,
     itemCount: 5,
+    unratedColor: AppColors.starUnselect,
     itemPadding: EdgeInsets.symmetric(horizontal: ittempading),
     itemBuilder: (context, _) => Icon(
       Icons.star,

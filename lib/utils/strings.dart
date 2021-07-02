@@ -72,6 +72,12 @@ class Strings {
   static String bottomNavCart = "Cart";
   static String bottomNavBookings = "Bookings";
   static String bottomNavMyprofile = "My profile";
+  static String PostsEmpty = "Posts Empty";
+  static String from = "From";
+  static String preFiestasOffers = "Pre-Fiestas Offers";
+  static String euro = "€";
+  static String orderNow = "Order Now";
+  static String location = "Location";
 
   // dummy
   static String garyadams = "Gary F. Adams";

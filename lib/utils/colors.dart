@@ -16,4 +16,8 @@ class AppColors {
   static Color homeBackground = HexColor("#191512");
   static Color tagBorder = HexColor("#FFEFBB");
   static Color bottomnavBackground = HexColor("#3E332B");
+  static Color borderItem = Colors.yellow;
+  static Color itemDescription = HexColor("#C5C5C5");
+  static Color itemBackground = HexColor("#201E1E");
+  static Color starUnselect = HexColor("6F6D6C");
 }

@@ -9,11 +9,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
 
 Future<void> main() async {
-  // SystemChrome.setPreferredOrientations(
-  //     [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   Constants.prefs = await SharedPreferences.getInstance();
   runApp(MyApp());
 }
@@ -31,7 +29,7 @@ class MyApp extends StatelessWidget {
 
       // theme: ThemeData.light(), // Provide light theme
       darkTheme: ThemeData.dark(), //
-      home: Signin(),
+      home: Splash(),
       // home: MyHomePage(),
     );
   }

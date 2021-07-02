@@ -10,6 +10,10 @@ class Cartpage extends StatefulWidget {
 class _CartpageState extends State<Cartpage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      body: Center(
+        child: Text("Home"),
+      ),
+    );
   }
 }

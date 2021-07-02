@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:funfy/apis/configuration.dart';
 import 'package:funfy/apis/introApi.dart';
 import 'package:funfy/ui/screens/auth/signin.dart';
+import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/screens/intro.dart';
+import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/imagesIcons.dart';
 
@@ -30,8 +32,10 @@ class _SplashState extends State<Splash> {
       policy();
 
       if (introdata != []) {
-        Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (context) => Intro()));
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (context) => Constants.prefs?.getString("token") != null
+                ? Home()
+                : Intro()));
       } else {
         print("no intro data");
       }

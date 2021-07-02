@@ -1,3 +1,4 @@
+import 'package:funfy/utils/Constants.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 
@@ -36,9 +37,11 @@ Future<String> determinePosition() async {
   String address =
       "${placemark.locality},${placemark.administrativeArea}, ${placemark.country}";
 
-  print(address);
+  // print(address);
 
-  print(placemark);
+  // print(placemark);
+
+  Constants.prefs?.setString("addres", address);
 
   return address;
 }

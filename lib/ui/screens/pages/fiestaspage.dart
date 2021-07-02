@@ -1,12 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:funfy/apis/homeApis.dart';
 import 'package:funfy/apis/userdataM.dart';
-import 'package:funfy/ui/screens/home.dart';
+import 'package:funfy/components/locationget.dart';
+import 'package:funfy/models/fiestasmodel.dart';
+import 'package:funfy/models/preFiestasModel.dart';
 import 'package:funfy/ui/widgets/dateButton.dart';
+import 'package:funfy/ui/widgets/postsitems.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/ui/widgets/tagsButton.dart';
+import 'package:funfy/utils/Constants.dart';
+import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
+import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/strings.dart';
+import 'package:intl/intl.dart';
+
+String bannerImage =
+    "https://png.pngtree.com/thumb_back/fw800/back_our/20190621/ourmid/pngtree-tmall-beer-festival-e-commerce-carnival-banner-image_193689.jpg";
+
+String gradientbackgroundimage =
+    "https://www.teahub.io/photos/full/2-28293_1920x1080-wallpaper-linear-orange-gradient-red-dark-red.jpg";
 
 class FiestasPage extends StatefulWidget {
   const FiestasPage({Key? key}) : super(key: key);
@@ -17,8 +31,158 @@ class FiestasPage extends StatefulWidget {
 
 class _FiestasPageState extends State<FiestasPage> {
   bool fiestasButton = true;
+
+  FiestasModel? fiestasdata;
+  PrefiestasModel? prefiestasdata;
+
+  bool _postLoading = false;
+
+  fiestasgetPosts() async {
+    var net = await Internetcheck.check();
+    if (net == false) {
+      Internetcheck.showdialog(context: context);
+    }
+    {
+      setState(() {
+        _postLoading = true;
+      });
+      await fiestasPostGet().then((FiestasModel? posts) {
+        setState(() {
+          fiestasdata = posts;
+          _postLoading = false;
+        });
+      });
+
+      preFiestasPostget();
+    }
+  }
+
+  preFiestasPostget() async {
+    setState(() {
+      _postLoading = true;
+    });
+    await prefiestasPostGet().then((posts) {
+      setState(() {
+        prefiestasdata = posts;
+        _postLoading = false;
+      });
+    });
+
+    setState(() {
+      _postLoading = false;
+    });
+  }
+
+  DateTime nowdate = DateTime.now();
+  var _scrollController = ScrollController();
+
+  DateTime? selectedDate;
+  Map<String, dynamic> itemSelected = {};
+
+  var dates = [
+    {
+      "date": 2,
+      "month": "Jun",
+      "year": "2021",
+      "active": false,
+      "dateTime": DateTime
+    }
+  ];
+
+  // Getting the total number of days of the month
+
+  daysInMonth(DateTime date) {
+    dates = [];
+    print(date.toString());
+    print(DateFormat('EE, d MMM, yyyy').format(date));
+
+    var firstDayThisMonth = new DateTime(date.year, date.month, date.day);
+    var firstDayNextMonth = new DateTime(firstDayThisMonth.year,
+        firstDayThisMonth.month + 1, firstDayThisMonth.day);
+
+    int daysnum = firstDayNextMonth.difference(firstDayThisMonth).inDays;
+
+    for (var i = 1; i <= daysnum; i++) {
+      DateTime nowdate = DateTime(date.year, date.month, i);
+
+      setState(() {
+        dates.add({
+          "fulldate": nowdate,
+          "date": i,
+          "day": DateFormat('EE').format(nowdate),
+          "month": DateFormat('MMM').format(nowdate),
+          "year": date.year,
+          "active": false
+        });
+      });
+    }
+    print("noeDAte==>$nowdate");
+    itemSelected.clear();
+    itemSelected = {
+      "fulldate": nowdate,
+      "date": nowdate.day,
+      "month": "${nowdate.month}",
+      "year": "${nowdate.year}",
+      "active": true
+    };
+    print("selectDate==>$itemSelected");
+
+    for (var i = 0; i < daysnum; i++) {
+      if (dates[i]['date'] == itemSelected['date']) {
+        print("fhskhfkh-===" + dates[i].toString());
+        dates[i]['active'] = true;
+        _scrollController.animateTo(
+            i * MediaQuery.of(context).size.width * 0.13,
+            duration: new Duration(seconds: 2),
+            curve: Curves.ease);
+        break;
+      }
+    }
+
+    //
+  }
+
+  checkDateSelected(date) {
+    print(date);
+
+    for (var i in dates) {
+      // print(i["fulldate"]);
+      if (i["active"] == true) {
+        setState(() {
+          i["active"] = false;
+          return;
+        });
+      }
+    }
+  }
+
+  Future<void> selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: nowdate,
+      firstDate: DateTime(1950, 12),
+      currentDate: selectedDate,
+      lastDate: DateTime(2022, 12),
+    );
+
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        print(picked.toString());
+        nowdate = picked;
+        daysInMonth(picked);
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fiestasgetPosts();
+  }
+
   @override
   Widget build(BuildContext context) {
+    daysInMonth(nowdate);
     var size = MediaQuery.of(context).size;
     return Scaffold(
       body: Container(
@@ -36,7 +200,10 @@ class _FiestasPageState extends State<FiestasPage> {
                     horizontal: size.width * 0.045),
                 width: size.width,
                 height: size.height * 0.155,
-                color: Colors.green,
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: NetworkImage(gradientbackgroundimage),
+                        fit: BoxFit.cover)),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -53,8 +220,7 @@ class _FiestasPageState extends State<FiestasPage> {
                         ),
                         Text(
                           // Strings.garyadams,
-                          UserData.facebookUserdata["name"] ??
-                              Strings.garyadams,
+                          "${Constants.prefs?.getString("name")}",
                           style: TextStyle(
                               fontSize: size.width * 0.048,
                               fontFamily: Fonts.dmSansBold,
@@ -78,7 +244,9 @@ class _FiestasPageState extends State<FiestasPage> {
                               width: size.width * 0.01,
                             ),
                             Text(
-                              Strings.madridspain,
+                              Constants.prefs?.getString("addres") != null
+                                  ? "${Constants.prefs?.getString("addres")}"
+                                  : Strings.location, // Strings.madridspain,
                               style: TextStyle(
                                   fontSize: size.width * 0.034,
                                   fontFamily: Fonts.dmSansMedium,
@@ -115,7 +283,7 @@ class _FiestasPageState extends State<FiestasPage> {
 
               // body
 
-              // fiestas && pre-fiestas
+              // fiestas && pre-fiestas button
 
               Container(
                 padding: EdgeInsets.symmetric(
@@ -199,172 +367,396 @@ class _FiestasPageState extends State<FiestasPage> {
                 height: size.width * 0.015,
               ),
 
-              Container(
-                padding: EdgeInsets.symmetric(
-                    vertical: size.height * 0.01,
-                    horizontal: size.width * 0.04),
-                width: size.width,
-                height: size.height * 0.055,
-                child:
-                    // tags
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                      Expanded(
-                          child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) {
-                                return tagbutton(
-                                    context: context,
-                                    text: Strings.club,
-                                    borderColor: AppColors.white,
-                                    borderwidth: size.width * 0.001);
-                              })),
+              // body fiestas
 
-                      SizedBox(
-                        width: size.width * 0.02,
-                      ),
-
-                      // right button
-                      Container(
-                        margin: EdgeInsets.only(right: size.width * 0.01),
-                        alignment: Alignment.centerRight,
-                        child: Icon(
-                          Icons.grid_view,
-                          color: Colors.white,
-                        ),
-                      )
-                    ]),
-              ),
-
-              SizedBox(
-                height: size.height * 0.015,
-              ),
-
-              // pick fiesta's day
-
-              Container(
-                padding: EdgeInsets.symmetric(
-                    vertical: size.height * 0.01,
-                    horizontal: size.width * 0.04),
-                width: size.width,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      Strings.pickfiestasday,
-                      style: TextStyle(
-                          fontSize: size.width * 0.04,
-                          fontFamily: Fonts.dmSansMedium,
-                          color: AppColors.white),
-                    ),
-                    SizedBox(
-                      height: size.height * 0.015,
-                    ),
-                    Container(
-                        // color: Colors.blue,
-                        width: size.width,
-                        height: size.height * 0.07,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              flex: 12,
-                              child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemBuilder: (context, index) {
-                                    return Container(
-                                      margin: EdgeInsets.only(
-                                          left: size.width * 0.01),
-                                      child: dateButton(
-                                          context: context,
-                                          text: "22",
-                                          textColor: AppColors.white,
-                                          month: "JUN",
-                                          borderColor: AppColors.white,
-                                          borderwidth: size.width * 0.003,
-                                          backgroundColor:
-                                              AppColors.homeBackground),
-                                    );
-                                  }),
-                            ),
-                            SizedBox(
-                              width: size.width * 0.01,
-                            ),
-                            Expanded(
-                              flex: 2,
-                              child: GestureDetector(
-                                onTap: () {},
-                                child: roundedBox(
-                                    backgroundColor: AppColors.siginbackgrond,
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: Icon(
-                                        Icons.date_range,
-                                        color: Colors.white,
-                                        size: size.width * 0.07,
-                                      ),
-                                    )),
-                              ),
-                            )
-                          ],
-                        ))
-                  ],
-                ),
-              ),
-
-              SizedBox(
-                height: size.height * 0.04,
-              ),
-
-              // POSTS
-
-              Expanded(
-                child: Container(
-                    padding: EdgeInsets.symmetric(
-                        vertical: size.height * 0.01,
-                        horizontal: size.width * 0.04),
-                    // height: size.height,
-                    width: size.width,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+              fiestasButton
+                  ? Column(
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              Strings.nearbyfiestas,
-                              style: TextStyle(
-                                  fontSize: size.width * 0.045,
-                                  fontFamily: Fonts.dmSansBold,
-                                  color: AppColors.white),
-                            ),
-                            Text(
-                              Strings.seeall,
-                              style: TextStyle(
-                                  fontSize: size.width * 0.04,
-                                  fontFamily: Fonts.dmSansBold,
-                                  color: AppColors.siginbackgrond),
-                            ),
-                          ],
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              vertical: size.height * 0.01,
+                              horizontal: size.width * 0.04),
+                          width: size.width,
+                          height: size.height * 0.055,
+                          child:
+                              // tags
+                              Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                Expanded(
+                                    child: ListView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        itemBuilder: (context, index) {
+                                          return tagbutton(
+                                              context: context,
+                                              text: Strings.club,
+                                              borderColor: AppColors.white,
+                                              borderwidth: size.width * 0.001);
+                                        })),
+
+                                SizedBox(
+                                  width: size.width * 0.02,
+                                ),
+
+                                // right button
+                                Container(
+                                  margin:
+                                      EdgeInsets.only(right: size.width * 0.01),
+                                  alignment: Alignment.centerRight,
+                                  child: Icon(
+                                    Icons.grid_view,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              ]),
                         ),
                         SizedBox(
                           height: size.height * 0.015,
                         ),
-                        Expanded(
-                          child: ListView.builder(
-                              itemCount: 10,
-                              itemBuilder: (context, index) {
-                                return fiestasItem(context: context);
-                              }),
+
+                        // pick fiesta's day
+
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: size.height * 0.01,
+                                  horizontal: size.width * 0.04),
+                              width: size.width,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    Strings.pickfiestasday,
+                                    style: TextStyle(
+                                        fontSize: size.width * 0.04,
+                                        fontFamily: Fonts.dmSansMedium,
+                                        color: AppColors.white),
+                                  ),
+                                  SizedBox(
+                                    height: size.height * 0.015,
+                                  ),
+                                  Container(
+                                      // color: Colors.blue,
+                                      width: size.width,
+                                      height: size.height * 0.07,
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            flex: 12,
+                                            child: ListView.builder(
+                                                controller: _scrollController,
+                                                itemCount: dates.length,
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                itemBuilder: (context, index) {
+                                                  return GestureDetector(
+                                                    onTap: () {
+                                                      print(dates[index]
+                                                          ["fulldate"]);
+                                                      checkDateSelected(
+                                                          dates[index]
+                                                              ["fulldate"]);
+                                                      setState(() {
+                                                        dates[index]["active"] =
+                                                            true;
+                                                      });
+                                                    },
+                                                    child: Container(
+                                                      margin: EdgeInsets.only(
+                                                          left: size.width *
+                                                              0.01),
+                                                      child: dateButton(
+                                                          context: context,
+                                                          text: dates[index]
+                                                                  ["date"]
+                                                              .toString(),
+                                                          textColor: dates[index]
+                                                                      [
+                                                                      "active"] ==
+                                                                  true
+                                                              ? AppColors
+                                                                  .homeBackground
+                                                              : AppColors.white,
+                                                          month: dates[index]
+                                                                  ["month"]
+                                                              .toString(),
+                                                          borderColor:
+                                                              AppColors.white,
+                                                          borderwidth: size.width *
+                                                              0.003,
+                                                          backgroundColor:
+                                                              dates[index]["active"] ==
+                                                                      true
+                                                                  ? AppColors
+                                                                      .tagBorder
+                                                                  : AppColors
+                                                                      .homeBackground),
+                                                    ),
+                                                  );
+                                                }),
+                                          ),
+                                          SizedBox(
+                                            width: size.width * 0.01,
+                                          ),
+                                          Expanded(
+                                            flex: 2,
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                selectDate(context);
+                                              },
+                                              child: roundedBox(
+                                                  backgroundColor:
+                                                      AppColors.siginbackgrond,
+                                                  child: Align(
+                                                    alignment: Alignment.center,
+                                                    child: Icon(
+                                                      Icons.date_range,
+                                                      color: Colors.white,
+                                                      size: size.width * 0.07,
+                                                    ),
+                                                  )),
+                                            ),
+                                          )
+                                        ],
+                                      ))
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        // Container(
+                        //   padding: EdgeInsets.symmetric(
+                        //       vertical: size.height * 0.01,
+                        //       horizontal: size.width * 0.04),
+                        //   width: size.width,
+                        //   child: Column(
+                        //     crossAxisAlignment: CrossAxisAlignment.start,
+                        //     children: [
+                        //       Text(
+                        //         Strings.pickfiestasday,
+                        //         style: TextStyle(
+                        //             fontSize: size.width * 0.04,
+                        //             fontFamily: Fonts.dmSansMedium,
+                        //             color: AppColors.white),
+                        //       ),
+                        //       SizedBox(
+                        //         height: size.height * 0.015,
+                        //       ),
+                        //       Container(
+                        //           // color: Colors.blue,
+                        //           width: size.width,
+                        //           height: size.height * 0.07,
+                        //           child: Row(
+                        //             children: [
+                        //               Expanded(
+                        //                 flex: 12,
+                        //                 child: ListView.builder(
+                        //                     scrollDirection: Axis.horizontal,
+                        //                     itemBuilder: (context, index) {
+                        //                       return Container(
+                        //                         margin: EdgeInsets.only(
+                        //                             left: size.width * 0.01),
+                        //                         child: dateButton(
+                        //                             context: context,
+                        //                             text: "22",
+                        //                             textColor: AppColors.white,
+                        //                             month: "JUN",
+                        //                             borderColor:
+                        //                                 AppColors.white,
+                        //                             borderwidth:
+                        //                                 size.width * 0.003,
+                        //                             backgroundColor: AppColors
+                        //                                 .homeBackground),
+                        //                       );
+                        //                     }),
+                        //               ),
+                        //               SizedBox(
+                        //                 width: size.width * 0.01,
+                        //               ),
+                        //               Expanded(
+                        //                 flex: 2,
+                        //                 child: GestureDetector(
+                        //                   onTap: () {},
+                        //                   child: roundedBox(
+                        //                       backgroundColor:
+                        //                           AppColors.siginbackgrond,
+                        //                       child: Align(
+                        //                         alignment: Alignment.center,
+                        //                         child: Icon(
+                        //                           Icons.date_range,
+                        //                           color: Colors.white,
+                        //                           size: size.width * 0.07,
+                        //                         ),
+                        //                       )),
+                        //                 ),
+                        //               )
+                        //             ],
+                        //           ))
+                        //     ],
+                        //   ),
+                        // ),
+
+                        SizedBox(
+                          height: size.height * 0.04,
                         ),
                       ],
-                    )),
-              )
+                    )
+                  : SizedBox(),
+
+              // POSTS
+
+              fiestasButton
+                  ? Expanded(
+                      child: Container(
+                          padding: EdgeInsets.symmetric(
+                              vertical: size.height * 0.01,
+                              horizontal: size.width * 0.04),
+                          // height: size.height,
+                          width: size.width,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    Strings.nearbyfiestas,
+                                    style: TextStyle(
+                                        fontSize: size.width * 0.045,
+                                        fontFamily: Fonts.dmSansBold,
+                                        color: AppColors.white),
+                                  ),
+                                  Text(
+                                    Strings.seeall,
+                                    style: TextStyle(
+                                        fontSize: size.width * 0.04,
+                                        fontFamily: Fonts.dmSansBold,
+                                        color: AppColors.siginbackgrond),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: size.height * 0.015,
+                              ),
+                              Expanded(
+                                  child: _postLoading == true
+                                      ? Center(
+                                          child: CircularProgressIndicator(
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                      AppColors.white)))
+                                      : fiestasdata?.data?.data?.length == 0 &&
+                                              _postLoading == false
+                                          ? Center(
+                                              child: Text(
+                                                Strings.PostsEmpty,
+                                                style: TextStyle(
+                                                    color: AppColors.white,
+                                                    fontSize:
+                                                        size.width * 0.04),
+                                              ),
+                                            )
+                                          : ListView.builder(
+                                              physics: BouncingScrollPhysics(),
+                                              itemCount: fiestasdata
+                                                  ?.data?.data?.length,
+                                              itemBuilder: (context, index) {
+                                                return fiestasItem(
+                                                    context: context,
+                                                    postModeldata: fiestasdata
+                                                        ?.data?.data
+                                                        ?.elementAt(index));
+                                              })),
+                            ],
+                          )),
+
+                      //
+                    )
+                  : SizedBox(),
+
+              // pre fiestas
+
+              fiestasButton == false
+                  ? preFiestas(context, prefiestasdata, _postLoading)
+                  : SizedBox()
             ],
           ),
         ),
       ),
     );
   }
+}
+
+Widget preFiestas(context, PrefiestasModel? prefiestasdata, _postLoading) {
+  var size = MediaQuery.of(context).size;
+  return Column(
+    children: [
+      Container(
+          margin: EdgeInsets.symmetric(
+              horizontal: size.width * 0.03, vertical: size.height * 0.01),
+          width: size.width,
+          height: size.height * 0.17,
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: NetworkImage(bannerImage), fit: BoxFit.cover))),
+
+      // posts
+
+      Container(
+        margin: EdgeInsets.symmetric(
+          horizontal: size.width * 0.05,
+        ),
+        alignment: Alignment.topLeft,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: size.height * 0.03,
+            ),
+            Text(
+              Strings.preFiestasOffers,
+              style: TextStyle(
+                  fontSize: size.width * 0.043,
+                  fontFamily: Fonts.dmSansBold,
+                  color: AppColors.white),
+            ),
+            SizedBox(
+              height: size.height * 0.01,
+            ),
+            Container(
+                height: size.height * 0.35,
+                child: prefiestasdata?.data?.data?.length != 0 &&
+                        _postLoading == false
+                    ? ListView.builder(
+                        physics: BouncingScrollPhysics(),
+                        itemCount: prefiestasdata?.data?.data?.length,
+                        itemBuilder: (context, index) {
+                          return preFiestasItem(
+                              context, prefiestasdata?.data?.data?[index]);
+                        })
+                    : prefiestasdata?.data?.data?.length == 0 &&
+                            _postLoading == false
+                        ? Center(
+                            child: Text(
+                              Strings.PostsEmpty,
+                              style: TextStyle(
+                                  color: AppColors.white,
+                                  fontSize: size.width * 0.04),
+                            ),
+                          )
+                        : Center(
+                            child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    AppColors.white)))),
+          ],
+        ),
+      )
+    ],
+  );
 }
