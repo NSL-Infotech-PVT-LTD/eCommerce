@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:funfy/apis/homeApis.dart';
 import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/components/locationget.dart';
@@ -236,7 +237,8 @@ class _FiestasPageState extends State<FiestasPage> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Icon(
-                              Icons.fmd_good,
+                              // Icons.fmd_good,
+                              Icons.error,
                               size: size.width * 0.04,
                               color: AppColors.white,
                             ),
