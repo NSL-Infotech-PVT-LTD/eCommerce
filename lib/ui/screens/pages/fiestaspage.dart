@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:funfy/apis/homeApis.dart';
 import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/components/locationget.dart';
@@ -152,6 +153,11 @@ class _FiestasPageState extends State<FiestasPage> {
           i["active"] = false;
           return;
         });
+      } else {
+        setState(() {
+          i["active"] = true;
+          return;
+        });
       }
     }
   }
@@ -178,6 +184,7 @@ class _FiestasPageState extends State<FiestasPage> {
   void initState() {
     super.initState();
     fiestasgetPosts();
+    determinePosition();
   }
 
   @override
@@ -401,14 +408,18 @@ class _FiestasPageState extends State<FiestasPage> {
 
                                 // right button
                                 Container(
-                                  margin:
-                                      EdgeInsets.only(right: size.width * 0.01),
-                                  alignment: Alignment.centerRight,
-                                  child: Icon(
-                                    Icons.grid_view,
-                                    color: Colors.white,
-                                  ),
-                                )
+                                    margin: EdgeInsets.only(
+                                        right: size.width * 0.01),
+                                    alignment: Alignment.centerRight,
+                                    child:
+                                        // SvgPicture.asset(Images.filterSvg)
+
+                                        Image.asset(Images.filterPng)
+                                    //     Icon(
+                                    //   Icons.grid_view,
+                                    //   color: Colors.white,
+                                    // ),
+                                    )
                               ]),
                         ),
                         SizedBox(
@@ -454,14 +465,16 @@ class _FiestasPageState extends State<FiestasPage> {
                                                 itemBuilder: (context, index) {
                                                   return GestureDetector(
                                                     onTap: () {
-                                                      print(dates[index]
-                                                          ["fulldate"]);
-                                                      checkDateSelected(
-                                                          dates[index]
-                                                              ["fulldate"]);
+                                                      String pic = dates[index]
+                                                              ["fulldate"]
+                                                          .toString();
+                                                      DateTime picked =
+                                                          DateTime.parse(pic);
+
+                                                      print(picked);
                                                       setState(() {
-                                                        dates[index]["active"] =
-                                                            true;
+                                                        nowdate = picked;
+                                                        daysInMonth(picked);
                                                       });
                                                     },
                                                     child: Container(
@@ -507,17 +520,22 @@ class _FiestasPageState extends State<FiestasPage> {
                                               onTap: () {
                                                 selectDate(context);
                                               },
-                                              child: roundedBox(
-                                                  backgroundColor:
-                                                      AppColors.siginbackgrond,
-                                                  child: Align(
-                                                    alignment: Alignment.center,
-                                                    child: Icon(
-                                                      Icons.date_range,
-                                                      color: Colors.white,
-                                                      size: size.width * 0.07,
-                                                    ),
-                                                  )),
+                                              child: SvgPicture.asset(
+                                                Images.calenderSvg,
+                                                height: size.height * 0.1,
+                                              ),
+
+                                              // roundedBox(
+                                              //     backgroundColor:
+                                              //         AppColors.siginbackgrond,
+                                              //     child: Align(
+                                              //       alignment: Alignment.center,
+                                              //       child: Icon(
+                                              //         Icons.date_range,
+                                              //         color: Colors.white,
+                                              //         size: size.width * 0.07,
+                                              //       ),
+                                              //     )),
                                             ),
                                           )
                                         ],

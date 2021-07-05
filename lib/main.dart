@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
 
       // theme: ThemeData.light(), // Provide light theme
       darkTheme: ThemeData.dark(), //
-      home: Splash(),
+      home: Home(),
       // home: MyHomePage(),
     );
   }
