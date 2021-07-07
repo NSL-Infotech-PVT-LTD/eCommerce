@@ -14,10 +14,15 @@ class AppColors {
   static Color blackBackground = HexColor("#070707");
   static Color homeTopbuttonbackground = HexColor("#302923");
   static Color homeBackground = HexColor("#191512");
+  static Color homeBackgroundLite = HexColor("#26201B");
   static Color tagBorder = HexColor("#FFEFBB");
   static Color bottomnavBackground = HexColor("#3E332B");
   static Color borderItem = Colors.yellow;
   static Color itemDescription = HexColor("#C5C5C5");
   static Color itemBackground = HexColor("#201E1E");
   static Color starUnselect = HexColor("6F6D6C");
+  static Color green = HexColor("33BE46");
+  static Color brownlite = HexColor("#AB8C75");
+  static Color skin = HexColor("#FFEFBB");
+  static Color redlite = HexColor("#FF5349");
 }

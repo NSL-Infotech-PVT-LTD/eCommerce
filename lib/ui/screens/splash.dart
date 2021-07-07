@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:funfy/apis/configuration.dart';
 import 'package:funfy/apis/introApi.dart';
+import 'package:funfy/components/sizeclass/SizeConfig.dart';
 import 'package:funfy/ui/screens/auth/signin.dart';
 import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/screens/intro.dart';
@@ -58,6 +59,7 @@ class _SplashState extends State<Splash> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     var size = MediaQuery.of(context).size;
     return Scaffold(
         backgroundColor: Colors.black,

@@ -27,21 +27,22 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
+  cupertino_icons: ^1.0.3
   introduction_screen: ^2.1.0
-  hexcolor: ^2.0.3
+  hexcolor: ^2.0.4
   http: ^0.13.3
   connectivity: ^3.0.6
   shared_preferences: ^2.0.6
   cached_network_image: ^3.0.0
-  flutter_rating_bar: 4.0.0
-  flutter_facebook_auth: 3.5.0
+  flutter_rating_bar: ^4.0.0
+  flutter_facebook_auth: ^3.5.0
   sign_in_with_apple: ^3.0.0
   geolocator: ^7.2.0+1
-  geocoding: ^2.0.0 
+  geocoding: ^2.0.0
+  carousel_slider: ^4.0.0
   # date_picker_timeline: ^1.2.3
   calendar_timeline: ^1.0.1-null-safety.0
-  flutter_svg: 0.22.0
+  flutter_svg: ^0.22.0
  # material_design_icons_flutter: ^4.0.5955
   # calendar_timeline: ^0.7.1
   # location: ^1.4.0
@@ -54,7 +55,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_html: 
+  flutter_html: ^2.0.0 
   
 
 
@@ -76,10 +77,17 @@ flutter:
     - assets/images/introimage.jpg
     - assets/images/logo.png
     - assets/images/background.jpg
+    - assets/images/user.png
     - assets/pngicons/booking_ac.png
     - assets/pngicons/booking_unac.png
     - assets/pngicons/filter.png
-
+    - assets/svgicons/place_holder.svg
+    - assets/images/pricebanner.svg
+    - assets/svgicons/cartsvg.svg
+    - assets/images/ticket.svg
+    - assets/images/Rectangle.svg
+    - assets/images/Rectangle84.svg
+    - assets/svgicons/
     - assets/AuthenticationIcon/EYE_CLOSE.png
     - assets/AuthenticationIcon/EYE_OPEN.png
     - assets/AuthenticationIcon/SPLASH.png
@@ -122,6 +130,10 @@ flutter:
     - family: DM Sans Bold
       fonts:
         - asset: assets/FontFamily/DMSans/DMSans-Bold.ttf
+
+    - family: BabasNeue
+      fonts:
+        - asset: assets/FontFamily/Abril_Fatface/BebasNeue-Regular.ttf
 
 
       

@@ -78,6 +78,7 @@ class Strings {
   static String euro = "€";
   static String orderNow = "Order Now";
   static String location = "Location";
+  static String assetsSvgIcons = "assets/svgicons/";
 
   // dummy
   static String garyadams = "Gary F. Adams";

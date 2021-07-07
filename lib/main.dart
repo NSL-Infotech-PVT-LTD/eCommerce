@@ -8,6 +8,8 @@ import 'package:funfy/utils/strings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
 
+import 'ui/screens/splash.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
@@ -29,7 +31,7 @@ class MyApp extends StatelessWidget {
 
       // theme: ThemeData.light(), // Provide light theme
       darkTheme: ThemeData.dark(), //
-      home: Home(),
+      home: Splash(),
       // home: MyHomePage(),
     );
   }

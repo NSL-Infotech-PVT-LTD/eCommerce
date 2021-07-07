@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:funfy/components/navigation.dart';
 import 'package:funfy/models/fiestasmodel.dart';
 import 'package:funfy/models/preFiestasModel.dart';
+import 'package:funfy/ui/screens/pages/BookNow.dart';
 import 'package:funfy/ui/widgets/rating.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/colors.dart';
@@ -144,21 +146,26 @@ Widget fiestasItem({context, Datum? postModeldata}) {
                   SizedBox(
                     height: size.height * 0.01,
                   ),
-                  roundedBoxR(
-                      width: size.width * 0.23,
-                      height: size.height * 0.033,
-                      radius: 3.0,
-                      backgroundColor: AppColors.siginbackgrond,
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          Strings.booknow,
-                          style: TextStyle(
-                              fontSize: size.width * 0.03,
-                              fontFamily: Fonts.dmSansBold,
-                              color: AppColors.white),
-                        ),
-                      ))
+                  InkWell(
+                    onTap: (){
+                      navigatorPushFun(context,BookNow());
+                    },
+                    child: roundedBoxR(
+                        width: size.width * 0.23,
+                        height: size.height * 0.033,
+                        radius: 3.0,
+                        backgroundColor: AppColors.siginbackgrond,
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            Strings.booknow,
+                            style: TextStyle(
+                                fontSize: size.width * 0.03,
+                                fontFamily: Fonts.dmSansBold,
+                                color: AppColors.white),
+                          ),
+                        )),
+                  )
                 ],
               )
             ],
