@@ -20,4 +20,7 @@ class AppColors {
   static Color itemDescription = HexColor("#C5C5C5");
   static Color itemBackground = HexColor("#201E1E");
   static Color starUnselect = HexColor("6F6D6C");
+  static Color profileEmail = HexColor("#C5C5C5");
+  static Color profileBackground = HexColor("#191512");
+  static Color logoutBackground = HexColor("#483C33");
 }

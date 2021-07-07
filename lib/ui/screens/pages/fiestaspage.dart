@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:funfy/apis/homeApis.dart';
-import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/components/locationget.dart';
 import 'package:funfy/models/fiestasmodel.dart';
 import 'package:funfy/models/preFiestasModel.dart';
+import 'package:funfy/ui/screens/auth/signin.dart';
 import 'package:funfy/ui/widgets/dateButton.dart';
 import 'package:funfy/ui/widgets/postsitems.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
@@ -75,7 +75,7 @@ class _FiestasPageState extends State<FiestasPage> {
   }
 
   DateTime nowdate = DateTime.now();
-  var _scrollController = ScrollController();
+  ScrollController _scrollController = ScrollController();
 
   DateTime? selectedDate;
   Map<String, dynamic> itemSelected = {};
@@ -192,6 +192,17 @@ class _FiestasPageState extends State<FiestasPage> {
     daysInMonth(nowdate);
     var size = MediaQuery.of(context).size;
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          var name = Constants.prefs?.getString("name");
+
+          print(name);
+
+          // Navigator.of(context).pushReplacement(
+          //     MaterialPageRoute(builder: (context) => Signin()));
+        },
+        child: Icon(Icons.logout),
+      ),
       body: Container(
         color: AppColors.homeBackground,
         width: size.width,
@@ -209,7 +220,7 @@ class _FiestasPageState extends State<FiestasPage> {
                 height: size.height * 0.155,
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: NetworkImage(gradientbackgroundimage),
+                        image: AssetImage(Images.homeTopBannerPng),
                         fit: BoxFit.cover)),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -238,6 +249,7 @@ class _FiestasPageState extends State<FiestasPage> {
                         ),
 
                         // location choose
+
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.end,
@@ -250,14 +262,21 @@ class _FiestasPageState extends State<FiestasPage> {
                             SizedBox(
                               width: size.width * 0.01,
                             ),
-                            Text(
-                              Constants.prefs?.getString("addres") != null
-                                  ? "${Constants.prefs?.getString("addres")}"
-                                  : Strings.location, // Strings.madridspain,
-                              style: TextStyle(
-                                  fontSize: size.width * 0.034,
-                                  fontFamily: Fonts.dmSansMedium,
-                                  color: AppColors.white),
+                            Container(
+                              constraints: BoxConstraints(
+                                maxWidth: size.width * 0.4,
+                              ),
+                              child: Text(
+                                Constants.prefs?.getString("addres") != null
+                                    ? "${Constants.prefs?.getString("addres")}"
+                                    : Strings.location,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                style: TextStyle(
+                                    fontSize: size.width * 0.034,
+                                    fontFamily: Fonts.dmSansMedium,
+                                    color: AppColors.white),
+                              ),
                             ),
                             SizedBox(
                               width: size.width * 0.01,
@@ -268,7 +287,7 @@ class _FiestasPageState extends State<FiestasPage> {
                               color: AppColors.white,
                             ),
                           ],
-                        )
+                        ),
                       ],
                     ),
 
@@ -524,18 +543,6 @@ class _FiestasPageState extends State<FiestasPage> {
                                                 Images.calenderSvg,
                                                 height: size.height * 0.1,
                                               ),
-
-                                              // roundedBox(
-                                              //     backgroundColor:
-                                              //         AppColors.siginbackgrond,
-                                              //     child: Align(
-                                              //       alignment: Alignment.center,
-                                              //       child: Icon(
-                                              //         Icons.date_range,
-                                              //         color: Colors.white,
-                                              //         size: size.width * 0.07,
-                                              //       ),
-                                              //     )),
                                             ),
                                           )
                                         ],
@@ -545,78 +552,6 @@ class _FiestasPageState extends State<FiestasPage> {
                             ),
                           ],
                         ),
-
-                        // Container(
-                        //   padding: EdgeInsets.symmetric(
-                        //       vertical: size.height * 0.01,
-                        //       horizontal: size.width * 0.04),
-                        //   width: size.width,
-                        //   child: Column(
-                        //     crossAxisAlignment: CrossAxisAlignment.start,
-                        //     children: [
-                        //       Text(
-                        //         Strings.pickfiestasday,
-                        //         style: TextStyle(
-                        //             fontSize: size.width * 0.04,
-                        //             fontFamily: Fonts.dmSansMedium,
-                        //             color: AppColors.white),
-                        //       ),
-                        //       SizedBox(
-                        //         height: size.height * 0.015,
-                        //       ),
-                        //       Container(
-                        //           // color: Colors.blue,
-                        //           width: size.width,
-                        //           height: size.height * 0.07,
-                        //           child: Row(
-                        //             children: [
-                        //               Expanded(
-                        //                 flex: 12,
-                        //                 child: ListView.builder(
-                        //                     scrollDirection: Axis.horizontal,
-                        //                     itemBuilder: (context, index) {
-                        //                       return Container(
-                        //                         margin: EdgeInsets.only(
-                        //                             left: size.width * 0.01),
-                        //                         child: dateButton(
-                        //                             context: context,
-                        //                             text: "22",
-                        //                             textColor: AppColors.white,
-                        //                             month: "JUN",
-                        //                             borderColor:
-                        //                                 AppColors.white,
-                        //                             borderwidth:
-                        //                                 size.width * 0.003,
-                        //                             backgroundColor: AppColors
-                        //                                 .homeBackground),
-                        //                       );
-                        //                     }),
-                        //               ),
-                        //               SizedBox(
-                        //                 width: size.width * 0.01,
-                        //               ),
-                        //               Expanded(
-                        //                 flex: 2,
-                        //                 child: GestureDetector(
-                        //                   onTap: () {},
-                        //                   child: roundedBox(
-                        //                       backgroundColor:
-                        //                           AppColors.siginbackgrond,
-                        //                       child: Align(
-                        //                         alignment: Alignment.center,
-                        //                         child: Icon(
-                        //                           Icons.date_range,
-                        //                           color: Colors.white,
-                        //                           size: size.width * 0.07,
-                        //                         ),
-                        //                       )),
-                        //                 ),
-                        //               )
-                        //             ],
-                        //           ))
-                        //     ],
-                        //   ),
-                        // ),
 
                         SizedBox(
                           height: size.height * 0.04,
@@ -683,7 +618,8 @@ class _FiestasPageState extends State<FiestasPage> {
                                           : ListView.builder(
                                               physics: BouncingScrollPhysics(),
                                               itemCount: fiestasdata
-                                                  ?.data?.data?.length,
+                                                      ?.data?.data?.length ??
+                                                  0,
                                               itemBuilder: (context, index) {
                                                 return fiestasItem(
                                                     context: context,

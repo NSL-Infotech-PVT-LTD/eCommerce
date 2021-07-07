@@ -34,4 +34,30 @@ class Dialogs {
       },
     );
   }
+
+  static simpleAlertDialog({context, String? title, String? content, func}) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: new Text(title.toString()),
+          content: new Text(content.toString()),
+          actions: <Widget>[
+            TextButton(
+              child: new Text(Strings.no),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: new Text(Strings.yes),
+              onPressed: () {
+                func();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

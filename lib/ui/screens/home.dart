@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/models/fiestasmodel.dart';
+import 'package:funfy/ui/screens/pages/bookingpage.dart';
 import 'package:funfy/ui/screens/pages/cartpage.dart';
 import 'package:funfy/ui/screens/pages/fiestaspage.dart';
+import 'package:funfy/ui/screens/pages/profilepage.dart';
 import 'package:funfy/ui/widgets/dateButton.dart';
 import 'package:funfy/ui/widgets/rating.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
@@ -26,7 +28,12 @@ class _HomeState extends State<Home> {
   int pageIndex = 0;
   PageController? pageController;
 
-  List<Widget> tabpages = [FiestasPage(), Cartpage(), Cartpage(), Cartpage()];
+  List<Widget> tabpages = [
+    FiestasPage(),
+    Cartpage(),
+    BookingPage(),
+    Profilepage()
+  ];
 
   void onpageChange(int page) {
     setState(() {

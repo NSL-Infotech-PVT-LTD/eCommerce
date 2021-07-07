@@ -1,11 +1,11 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:funfy/apis/signupApi.dart';
 import 'package:funfy/apis/userdataM.dart';
-import 'package:funfy/components/emailvalid.dart';
+import 'package:funfy/components/inputvalid.dart';
 import 'package:funfy/components/zeroadd.dart';
 import 'package:funfy/ui/screens/auth/signin.dart';
-import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/widgets/inputtype.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/InternetCheck.dart';
@@ -32,8 +32,10 @@ class _SignUpState extends State<SignUp> {
   TextEditingController _dobController = TextEditingController();
   TextEditingController _genderController = TextEditingController();
   String dob = "";
+  DateTime dobDateTime = DateTime.now();
   String gender = "";
   bool _loading = false;
+  bool _passeye = true;
 
   String _fullnameError = "";
   String _emailError = "";
@@ -55,6 +57,8 @@ class _SignUpState extends State<SignUp> {
         _fullnameError = Strings.pleaseEnterYourfullname;
       } else if (_fullnameController.text.length < 3) {
         _fullnameError = Strings.yourNameMustBeAbove3Characters;
+      } else if (validateName(_fullnameController.text) != "") {
+        _fullnameError = validateName(_fullnameController.text);
       }
 // email
       if (_emailController.text == "") {
@@ -66,13 +70,15 @@ class _SignUpState extends State<SignUp> {
 // password
       if (_passwordController.text == "") {
         _passwordError = Strings.pleaseEnterYourpassword;
-      } else if (emailvalid(_emailController.text) == false) {
-        _passwordError = Strings.yourPasswordMustBeAbove3Characters;
+      } else if (_passwordController.text.length < 8) {
+        _passwordError = Strings.yourPasswordMustBeAbove8Characters;
       }
 
 // dob
       if (_dobController.text == "") {
-        _dobError = Strings.pleaseEnterYourpassword;
+        _dobError = Strings.dateofbirthhint;
+      } else if (calculateAge(dobDateTime) != "") {
+        _dobError = Strings.agemustbe18;
       }
 
 // gender
@@ -117,7 +123,9 @@ class _SignUpState extends State<SignUp> {
         ).then((value) {
           if (value["bool"] == true) {
             Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => Home()));
+                MaterialPageRoute(builder: (context) => Signin()));
+            // Navigator.of(context).pushReplacement(
+            //     MaterialPageRoute(builder: (context) => Home()));
           } else {
             print(value["res"]["error"]);
 
@@ -161,6 +169,7 @@ class _SignUpState extends State<SignUp> {
       String day = await zeroAdd(picked.day);
       setState(() {
         // selectedDate = picked.;
+        dobDateTime = picked;
         dob = "${picked.year}-$month-$day";
         _dobController.text = dob;
 
@@ -277,6 +286,35 @@ class _SignUpState extends State<SignUp> {
         });
   }
 
+  TapGestureRecognizer? _termsandConditions;
+  TapGestureRecognizer? _policy;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _termsandConditions = TapGestureRecognizer()
+      ..onTap = () {
+        _showBottomSheet(
+            context: context,
+            titletext: Strings.termsOfService,
+            description: UserData.termsofservice);
+      };
+
+    _policy = TapGestureRecognizer()
+      ..onTap = () {
+        _showBottomSheet(
+            context: context,
+            titletext: Strings.privacypolicy,
+            description: UserData.privacypolicy);
+      };
+  }
+
+  // terms
+  _terms() {
+    print("hello");
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -305,269 +343,375 @@ class _SignUpState extends State<SignUp> {
       ),
 
       SingleChildScrollView(
-        child: Container(
-            padding: EdgeInsets.symmetric(horizontal: size.width * 0.07),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: size.height * 0.1,
-                ),
-                // title
+        child: Column(
+          children: [
+            // top right content
 
-                Text(
-                  Strings.signup,
-                  style: TextStyle(
-                      fontSize: size.width * 0.088,
-                      fontFamily: Fonts.abrilFatface,
-                      color: Colors.white),
-                ),
-
-                SizedBox(
-                  height: size.height * 0.015,
-                ),
-
-                // description
-
-                Row(
-                  children: [
-                    Text(
-                      Strings.quicklyOnboardto,
-                      style: TextStyle(
-                          fontSize: size.width * 0.045,
-                          color: AppColors.descriptionfirst),
+            Container(
+              alignment: Alignment.topRight,
+              margin: EdgeInsets.only(
+                  right: size.width * 0.05, top: size.height * 0.02),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  SizedBox(
+                    height: size.height * 0.02,
+                  ),
+                  Text(
+                    Strings.alreadyhaveaccount,
+                    style: TextStyle(
+                      fontSize: size.width * 0.035,
+                      fontFamily: Fonts.dmSansRegular,
+                      color: AppColors.inputTitle,
                     ),
+                  ),
+                  SizedBox(
+                    height: size.height * 0.008,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      print("ok2");
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      Strings.backtoSignin,
+                      style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          fontFamily: Fonts.dmSansBold,
+                          color: AppColors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+                padding: EdgeInsets.symmetric(horizontal: size.width * 0.07),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     SizedBox(
-                      width: size.width * 0.015,
+                      height: size.height * 0.05,
                     ),
+                    // title
+
                     Text(
-                      Strings.funfypartyApp,
+                      Strings.signup,
                       style: TextStyle(
-                          fontSize: size.width * 0.045, color: Colors.white),
+                          fontSize: size.width * 0.088,
+                          fontFamily: Fonts.abrilFatface,
+                          color: Colors.white),
                     ),
-                  ],
-                ),
-
-                // inputs
-
-                SizedBox(
-                  height: size.height * 0.05,
-                ),
-
-                // full name
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    inputs(
-                        context: context,
-                        controller: _fullnameController,
-                        obscureTextBool: false,
-                        titletxt: Strings.fullname,
-                        hinttxt: Strings.fullnamehint,
-                        inputError: _fullnameError,
-                        readonly: false,
-                        ontapFun: null),
-                    inputs(
-                        context: context,
-                        controller: _emailController,
-                        obscureTextBool: false,
-                        titletxt: Strings.email,
-                        hinttxt: Strings.emailHint,
-                        inputError: _emailError,
-                        ontapFun: null,
-                        readonly: false),
-                    inputs(
-                        context: context,
-                        controller: _passwordController,
-                        obscureTextBool: false,
-                        titletxt: Strings.password,
-                        hinttxt: Strings.passwordhint,
-                        inputError: _passwordError,
-                        ontapFun: null,
-                        readonly: false),
-                    inputs(
-                        context: context,
-                        controller: _dobController,
-                        obscureTextBool: false,
-                        titletxt: Strings.dateofbirth,
-                        hinttxt: Strings.dobtypehint,
-                        inputError: _dobError,
-                        ontapFun: selectDate,
-                        readonly: true),
-                    inputs(
-                        context: context,
-                        controller: _genderController,
-                        obscureTextBool: false,
-                        titletxt: Strings.gender,
-                        hinttxt: Strings.genderHint,
-                        inputError: _genderError,
-                        ontapFun: _showBottomSheetgender,
-                        readonly: true),
-
-                    _signupError != ""
-                        ? Container(
-                            margin: EdgeInsets.only(top: size.height * 0.01),
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              _signupError.toString(),
-                              style: TextStyle(
-                                  color: Colors.red,
-                                  fontFamily: Fonts.dmSansMedium,
-                                  fontSize: size.width * 0.035),
-                            ))
-                        : SizedBox(),
 
                     SizedBox(
-                      height: size.height * 0.03,
+                      height: size.height * 0.015,
                     ),
 
-                    // bottom content
-                    Container(
-                      alignment: Alignment.center,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                    // description
+
+                    Row(
+                      children: [
+                        Text(
+                          Strings.quicklyOnboardto,
+                          style: TextStyle(
+                              fontSize: size.width * 0.045,
+                              color: AppColors.descriptionfirst),
+                        ),
+                        SizedBox(
+                          width: size.width * 0.015,
+                        ),
+                        Text(
+                          Strings.funfypartyApp,
+                          style: TextStyle(
+                              fontSize: size.width * 0.045,
+                              color: Colors.white),
+                        ),
+                      ],
+                    ),
+
+                    // inputs
+
+                    SizedBox(
+                      height: size.height * 0.05,
+                    ),
+
+                    // full name
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        inputs(
+                            context: context,
+                            controller: _fullnameController,
+                            obscureTextBool: false,
+                            titletxt: Strings.fullname,
+                            hinttxt: Strings.fullnamehint,
+                            inputError: _fullnameError,
+                            readonly: false,
+                            ontapFun: null),
+                        inputs(
+                            context: context,
+                            controller: _emailController,
+                            obscureTextBool: false,
+                            titletxt: Strings.email,
+                            hinttxt: Strings.emailHint,
+                            inputError: _emailError,
+                            ontapFun: null,
+                            readonly: false),
+                        // inputs(
+                        //     context: context,
+                        //     controller: _passwordController,
+                        //     obscureTextBool: false,
+                        //     titletxt: Strings.password,
+                        //     hinttxt: Strings.passwordhint,
+                        //     inputError: _passwordError,
+                        //     ontapFun: null,
+                        //     readonly: false),
+
+                        // password
+                        Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                Strings.byContinuingYouAgreetoOur,
+                                Strings.password,
                                 style: TextStyle(
                                     fontFamily: Fonts.dmSansMedium,
-                                    color: AppColors.donthaveaccount,
-                                    fontSize: size.width * 0.04),
+                                    fontSize: size.width * 0.04,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.inputTitle),
                               ),
                               SizedBox(
-                                width: size.width * 0.01,
+                                height: size.height * 0.01,
                               ),
-                              GestureDetector(
-                                onTap: () {
-                                  _showBottomSheet(
-                                      context: context,
-                                      titletext: Strings.termsOfService,
-                                      description: UserData.termsofservice);
-                                },
-                                child: Text(
-                                  Strings.termsOfService,
-                                  style: TextStyle(
-                                      fontFamily: Fonts.dmSansBold,
-                                      decoration: TextDecoration.underline,
-                                      color: AppColors.white,
-                                      fontSize: size.width * 0.033),
-                                ),
-                              )
+                              Column(
+                                children: [
+                                  roundedBox(
+                                    height: size.height * 0.058,
+                                    backgroundColor: AppColors.inputbackgroung,
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: size.width * 0.04),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            flex: 3,
+                                            child: TextField(
+                                              controller: _passwordController,
+                                              obscureText: _passeye,
+                                              style: TextStyle(
+                                                fontFamily: Fonts.dmSansRegular,
+                                                color: AppColors.inputHint,
+                                              ),
+                                              cursorColor: AppColors.white,
+                                              decoration: InputDecoration(
+                                                hintText: Strings.passwordhint,
+                                                border: InputBorder.none,
+                                                // contentPadding: EdgeInsets.only(
+                                                //     left: size.width * 0.04,
+                                                //     right: size.width * 0.04),
+
+                                                hintStyle: TextStyle(
+                                                    color: AppColors.inputHint,
+                                                    fontSize:
+                                                        size.width * 0.04),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: size.width * 0.05,
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                _passeye == false
+                                                    ? _passeye = true
+                                                    : _passeye = false;
+                                              });
+                                            },
+                                            child: Container(
+                                              width: size.width * 0.07,
+                                              child: Image.asset(
+                                                  _passeye != false
+                                                      ? Images.eyeclose
+                                                      : Images.eyeOpen),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+
+                                  // error password
+
+                                  _passwordError != ""
+                                      ? Container(
+                                          margin: EdgeInsets.only(
+                                              top: size.height * 0.01),
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            _passwordError,
+                                            style: TextStyle(
+                                                color: Colors.red,
+                                                fontFamily: Fonts.dmSansMedium,
+                                                fontSize: size.width * 0.035),
+                                          ))
+                                      : SizedBox(),
+                                ],
+                              ),
                             ],
                           ),
-                          Row(
-                            children: [
-                              Text(
-                                Strings.and,
-                                style: TextStyle(
-                                    fontFamily: Fonts.dmSansMedium,
-                                    color: AppColors.donthaveaccount,
-                                    fontSize: size.width * 0.04),
-                              ),
-                              SizedBox(
-                                width: size.width * 0.01,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  _showBottomSheet(
-                                      context: context,
-                                      titletext: Strings.privacypolicy,
-                                      description: UserData.privacypolicy);
-                                },
+                        ),
+                        inputs(
+                            context: context,
+                            controller: _dobController,
+                            obscureTextBool: false,
+                            titletxt: Strings.dateofbirth,
+                            hinttxt: Strings.dobtypehint,
+                            inputError: _dobError,
+                            ontapFun: selectDate,
+                            readonly: true),
+                        inputs(
+                            context: context,
+                            controller: _genderController,
+                            obscureTextBool: false,
+                            titletxt: Strings.gender,
+                            hinttxt: Strings.genderHint,
+                            inputError: _genderError,
+                            ontapFun: _showBottomSheetgender,
+                            readonly: true),
+
+                        _signupError != ""
+                            ? Container(
+                                margin:
+                                    EdgeInsets.only(top: size.height * 0.01),
+                                alignment: Alignment.centerLeft,
                                 child: Text(
-                                  Strings.privacypolicy,
+                                  _signupError.toString(),
+                                  style: TextStyle(
+                                      color: Colors.red,
+                                      fontFamily: Fonts.dmSansMedium,
+                                      fontSize: size.width * 0.035),
+                                ))
+                            : SizedBox(),
+
+                        SizedBox(
+                          height: size.height * 0.03,
+                        ),
+
+                        // bottom content
+                        Container(
+                          // alignment: Alignment.center,
+                          child: Text.rich(TextSpan(
+                              text: Strings.byContinuingYouAgreetoOur,
+                              style: TextStyle(
+                                  fontFamily: Fonts.dmSansMedium,
+                                  color: AppColors.donthaveaccount,
+                                  fontSize: size.width * 0.04),
+                              children: <InlineSpan>[
+                                TextSpan(
+                                  recognizer: _termsandConditions,
+                                  text: " ${Strings.termsOfService}",
                                   style: TextStyle(
                                       fontFamily: Fonts.dmSansBold,
                                       decoration: TextDecoration.underline,
                                       color: AppColors.white,
                                       fontSize: size.width * 0.033),
                                 ),
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
+                                TextSpan(
+                                    text: " ${Strings.and}",
+                                    style: TextStyle(
+                                        fontFamily: Fonts.dmSansMedium,
+                                        color: AppColors.donthaveaccount,
+                                        fontSize: size.width * 0.04)),
+                                TextSpan(
+                                  recognizer: _policy,
+                                  text: " ${Strings.privacypolicy}",
+                                  style: TextStyle(
+                                      fontFamily: Fonts.dmSansBold,
+                                      decoration: TextDecoration.underline,
+                                      color: AppColors.white,
+                                      fontSize: size.width * 0.033),
+                                ),
+                              ])),
+                        ),
 
-                    SizedBox(
-                      height: size.height * 0.01,
-                    ),
+                        SizedBox(
+                          height: size.height * 0.01,
+                        ),
 
-                    // signup button
-                    GestureDetector(
-                      onTap: () {
-                        print("signup");
+                        // signup button
+                        GestureDetector(
+                          onTap: () {
+                            print("signup");
 
-                        signupUser();
-                      },
-                      child: roundedBox(
-                          // width: size.width * 0.78,
-                          height: size.height * 0.058,
-                          backgroundColor: AppColors.siginbackgrond,
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              Strings.signup,
-                              style: TextStyle(
-                                  fontFamily: Fonts.dmSansMedium,
-                                  fontSize: size.width * 0.05,
-                                  color: AppColors.white),
-                            ),
-                          )),
-                    ),
+                            signupUser();
+                          },
+                          child: roundedBox(
+                              // width: size.width * 0.78,
+                              height: size.height * 0.058,
+                              backgroundColor: AppColors.siginbackgrond,
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  Strings.signup,
+                                  style: TextStyle(
+                                      fontFamily: Fonts.dmSansMedium,
+                                      fontSize: size.width * 0.05,
+                                      color: AppColors.white),
+                                ),
+                              )),
+                        ),
 
-                    SizedBox(
-                      height: size.height * 0.03,
+                        SizedBox(
+                          height: size.height * 0.03,
+                        ),
+                      ],
                     ),
                   ],
-                ),
-              ],
-            )),
+                )),
+          ],
+        ),
 
         //
       ),
 
-      // top right content
+      // // top right content
 
-      Container(
-        alignment: Alignment.topRight,
-        margin: EdgeInsets.only(right: size.width * 0.05),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            SizedBox(
-              height: size.height * 0.02,
-            ),
-            Text(
-              Strings.alreadyhaveaccount,
-              style: TextStyle(
-                fontSize: size.width * 0.035,
-                fontFamily: Fonts.dmSansRegular,
-                color: AppColors.inputTitle,
-              ),
-            ),
-            SizedBox(
-              height: size.height * 0.008,
-            ),
-            InkWell(
-              onTap: () {
-                print("ok2");
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                Strings.backtoSignin,
-                style: TextStyle(
-                    decoration: TextDecoration.underline,
-                    fontFamily: Fonts.dmSansBold,
-                    color: AppColors.white),
-              ),
-            ),
-          ],
-        ),
-      ),
+      // Container(
+      //   alignment: Alignment.topRight,
+      //   margin: EdgeInsets.only(right: size.width * 0.05),
+      //   child: Column(
+      //     crossAxisAlignment: CrossAxisAlignment.end,
+      //     children: [
+      //       SizedBox(
+      //         height: size.height * 0.02,
+      //       ),
+      //       Text(
+      //         Strings.alreadyhaveaccount,
+      //         style: TextStyle(
+      //           fontSize: size.width * 0.035,
+      //           fontFamily: Fonts.dmSansRegular,
+      //           color: AppColors.inputTitle,
+      //         ),
+      //       ),
+      //       SizedBox(
+      //         height: size.height * 0.008,
+      //       ),
+      //       InkWell(
+      //         onTap: () {
+      //           print("ok2");
+      //           Navigator.of(context).pop();
+      //         },
+      //         child: Text(
+      //           Strings.backtoSignin,
+      //           style: TextStyle(
+      //               decoration: TextDecoration.underline,
+      //               fontFamily: Fonts.dmSansBold,
+      //               color: AppColors.white),
+      //         ),
+      //       ),
+      //     ],
+      //   ),
+      // ),
 
       _loading
           ? Center(

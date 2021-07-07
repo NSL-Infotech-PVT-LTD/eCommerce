@@ -33,7 +33,8 @@ class _SplashState extends State<Splash> {
 
       if (introdata != []) {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => Constants.prefs?.getString("token") != null
+            builder: (context) => Constants.prefs?.getString("token") != null &&
+                    Constants.prefs?.getString("token") != ""
                 ? Home()
                 : Intro()));
       } else {

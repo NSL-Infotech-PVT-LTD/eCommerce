@@ -1,15 +1,18 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:funfy/components/dialogs.dart';
 import 'package:funfy/models/facebookSigninModel.dart';
 import 'package:funfy/models/userModel.dart';
+import 'package:funfy/ui/screens/auth/signin.dart';
 import 'package:funfy/utils/Constants.dart';
+import 'package:funfy/utils/strings.dart';
 import 'package:funfy/utils/urls.dart';
 import 'package:http/http.dart' as http;
 
 Future<UserModel?> signinUser(
     {String? email, String? password, String? devicetype}) async {
-  String _token =
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjA5Zjg5ZTVjM2E2MzMyNjgwODFkZTk2NzgxNzQ1MThlNWY0YzU0Y2FhOTQ1YmM5MzI1NWM0YWQ0NjQ5MGJiMjkyYjYyNmMyYmJlYjJlNGMxIn0.eyJhdWQiOiIxIiwianRpIjoiMDlmODllNWMzYTYzMzI2ODA4MWRlOTY3ODE3NDUxOGU1ZjRjNTRjYWE5NDViYzkzMjU1YzRhZDQ2NDkwYmIyOTJiNjI2YzJiYmViMmU0YzEiLCJpYXQiOjE2MjQ1MjY0NDQsIm5iZiI6MTYyNDUyNjQ0NCwiZXhwIjoxNjU2MDYyNDQ0LCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.u9B_xBDDYnakpG216XO4gj00JwD5tniwykBceknEywAT7vuwMnrCFJCY1pt0B4OILDeJxo2g888UTEZcbUQOaFkNrqgTvXbBuanknVerdhl4F5iFQI6rjqgPhkqNMiy-zWcKaEP5EFy29JMVrTkH5kkrlRKiB0H156IV9lj_Uctk6MAe1_dLctlcIOgt1NupOXwKwOXmhg7Rgg8Ur_hLE6nfyJzSjXJK2bdLR60tabr0V_q1neW8PV26Q2wGaowmiLV5OtslnwOFElKYyYAigIIzeAH3DwY7aHc2pb-Aq0nEZte4xiTpNnLkogtCdtiBsZsfmlmG1H_plUukwnB1pNXx74qU_8tYKZpYPtMi_6pCo2amcUdgWLZ7_t7Io8mnuNWjPemrOiUNIAoa9dJ6mwSlWB96H6B259DRyxMxDW53qgOqbDsEuundQxDmBEMqVIFuJlL6stoL6qmKHdmZAeiJ6p1qpKt-BL_Xdz00fM8siR0QQEw6dyBdR6RLNudH9B5RjY7ENACpvrLlaWzLFmad3R1i-0Ti_qg7ndnF3YokMMOcny54rvwNoQLAS6HHZ3qRXiE73yOzU8scF-4nF4O4zYEklmj1W_CWIw9usSafomiuGQ0QiDvdWuEJJKogppHl1e-_x9E8hAXWX8KD8DI_0ju2iIRtrlTMDZYfxto";
+  String _token = "test";
   var body = {
     "email": email,
     "password": password,
@@ -44,7 +47,12 @@ Future<FacebookSigninModel?> facebookLogin(
   };
 
   var res = await http.post(Uri.parse(Urls.faceBookSigninUrl), body: body);
-  print(res.body);
+  var jsondata = json.decode(res.body);
+  print(jsondata["data"]["user"]);
+  // var model = facebookSigninModelFromJson(res.body);
+
+  // print(model.data?.user?.name);
+
   if (res.statusCode == 201) {
     return facebookSigninModelFromJson(res.body);
   } else if (res.statusCode == 200) {
@@ -61,4 +69,24 @@ saveDataInshareP({String? name, String? email, String? token}) {
   Constants.prefs?.setString("name", "$name");
   // name email
   Constants.prefs?.setString("email", "$email");
+}
+
+logout(context) {
+  Dialogs.simpleAlertDialog(
+      context: context,
+      title: Strings.alert,
+      content: Strings.areYousureWantToLogout,
+      func: () {
+        // token
+        Constants.prefs?.setString("token", "");
+        // name name
+        Constants.prefs?.setString("name", "");
+        // name email
+        Constants.prefs?.setString("email", "");
+        // lacation
+        Constants.prefs?.setString("addres", "");
+
+        Navigator.of(context)
+            .pushReplacement(MaterialPageRoute(builder: (context) => Signin()));
+      });
 }

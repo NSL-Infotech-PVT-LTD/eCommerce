@@ -44,8 +44,8 @@ class Strings {
   static String pleaseEnterYourfullname = "Please enter your full name";
   static String yourNameMustBeAbove3Characters =
       "Your name must be above 3 characters";
-  static String yourPasswordMustBeAbove3Characters =
-      "Your Password must be above 5 characters";
+  static String yourPasswordMustBeAbove8Characters =
+      "Your Password must be above 8 characters";
   static String pleaseEnterYourGender = "Choose your gender";
   static String pleaseEnterValidgender = "Please enter valid gender";
   static String male = "Male";
@@ -67,6 +67,12 @@ class Strings {
   static String dobError = "The dob must be a date before today.";
   static String pleaseEnterYourEmailToSignin =
       "Please enter your email to sign in.";
+  static String namemustbeAtoZ = "Name must be a-z and A-Z";
+  static String agemustbe18 = "Age must be 18+";
+  static String alert = "Alert";
+  static String areYousureWantToLogout = "Are sure want to logout!";
+  static String yes = "Yes";
+  static String no = "No";
 
   static String bottomNavFiestas = "Fiestas";
   static String bottomNavCart = "Cart";
@@ -78,6 +84,14 @@ class Strings {
   static String euro = "€";
   static String orderNow = "Order Now";
   static String location = "Location";
+  static String logout = "Log Out";
+
+  static String orders = "Orders";
+  static String deliveryAddress = "Delivery Address";
+  static String paymentMethods = "Payment Methods";
+  static String notification = "Notifications";
+  static String help = "Help";
+  static String about = "About";
 
   // dummy
   static String garyadams = "Gary F. Adams";

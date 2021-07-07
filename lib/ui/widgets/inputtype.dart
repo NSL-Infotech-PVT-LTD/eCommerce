@@ -37,28 +37,38 @@ Widget inputs(
           height: size.height * 0.058,
           backgroundColor: AppColors.inputbackgroung,
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: size.width * 0.04),
-            child: TextField(
-              readOnly: readonly,
-              onTap: () {
-                if (ontapFun != null) {
-                  ontapFun(context);
-                }
-              },
-              obscureText: obscureTextBool,
-              controller: controller,
-              style: TextStyle(
-                fontFamily: Fonts.dmSansRegular,
-                color: AppColors.inputHint,
-              ),
-              keyboardType: TextInputType.emailAddress,
-              cursorColor: AppColors.white,
-              decoration: InputDecoration(
-                hintText: hinttxt,
-                border: InputBorder.none,
-                // contentPadding: EdgeInsets.only(
-                //     left: size.width * 0.04, right: size.width * 0.04),
-                hintStyle: TextStyle(color: AppColors.inputHint),
+            padding: EdgeInsets.symmetric(
+              horizontal: size.width * 0.04,
+            ),
+            child: Align(
+              alignment: Alignment.center,
+              child: TextField(
+                readOnly: readonly,
+                onTap: () {
+                  if (ontapFun != null) {
+                    ontapFun(context);
+                  }
+                },
+                obscureText: obscureTextBool,
+                controller: controller,
+                style: TextStyle(
+                  fontFamily: Fonts.dmSansRegular,
+                  color: AppColors.inputHint,
+                ),
+                keyboardType: TextInputType.emailAddress,
+                cursorColor: AppColors.white,
+                decoration: InputDecoration(
+                  hintText: hinttxt,
+                  border: InputBorder.none,
+                  // contentPadding:
+                  //     EdgeInsets.symmetric(vertical: size.height * 0.000001),
+                  // contentPadding: EdgeInsets.only(
+
+                  //     left: size.width * 0.04, right: size.width * 0.04
+                  //     ),
+                  hintStyle: TextStyle(
+                      color: AppColors.inputHint, fontSize: size.width * 0.04),
+                ),
               ),
             ),
           ),
@@ -138,7 +148,8 @@ Widget inputstype2(
                 border: InputBorder.none,
                 // contentPadding: EdgeInsets.only(
                 //     left: size.width * 0.04, right: size.width * 0.04),
-                hintStyle: TextStyle(color: AppColors.inputHint),
+                hintStyle: TextStyle(
+                    color: AppColors.inputHint, fontSize: size.width * 0.04),
               ),
             ),
           ),

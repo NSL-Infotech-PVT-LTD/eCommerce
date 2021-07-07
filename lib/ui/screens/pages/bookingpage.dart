@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:funfy/utils/imagesIcons.dart';
 
-class Cartpage extends StatefulWidget {
-  const Cartpage({Key? key}) : super(key: key);
+class BookingPage extends StatefulWidget {
+  const BookingPage({Key? key}) : super(key: key);
 
   @override
-  _CartpageState createState() => _CartpageState();
+  _BookingPageState createState() => _BookingPageState();
 }
 
-class _CartpageState extends State<Cartpage> {
+class _BookingPageState extends State<BookingPage> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -20,7 +20,7 @@ class _CartpageState extends State<Cartpage> {
           image: DecorationImage(
               image: AssetImage(Images.loginBackground), fit: BoxFit.cover)),
       child: Center(
-        child: Text("Processing in Cart",
+        child: Text("Processing in Bookings",
             style: TextStyle(
                 fontSize: size.width * 0.05,
                 color: Colors.white,

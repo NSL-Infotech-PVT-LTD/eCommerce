@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:funfy/apis/forgotpasswordApi.dart';
 import 'package:funfy/components/dialogs.dart';
-import 'package:funfy/components/emailvalid.dart';
-import 'package:funfy/components/toast.dart';
+import 'package:funfy/components/inputvalid.dart';
 import 'package:funfy/ui/screens/auth/signin.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/InternetCheck.dart';
