@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="56" height="56" viewBox="0 0 56 56">
+  <defs>
+    <clipPath id="clip-path">
+      <path id="Path_285" data-name="Path 285" d="M8,0H48a8,8,0,0,1,8,8V48a8,8,0,0,1-8,8H8a8,8,0,0,1-8-8V8A8,8,0,0,1,8,0Z" transform="translate(295 325)" fill="#3e332b"/>
+    </clipPath>
+    <linearGradient id="linear-gradient" x1="0.849" y1="0.184" x2="0.147" y2="0.891" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#ffefbb" stop-opacity="0.267"/>
+      <stop offset="1" stop-color="#80785e" stop-opacity="0.267"/>
+    </linearGradient>
+  </defs>
+  <g id="Group_1691" data-name="Group 1691" transform="translate(-5871 -1591)">
+    <g id="Group_1503" data-name="Group 1503" transform="translate(5599 1287)">
+      <path id="Path_193" data-name="Path 193" d="M8,0H48a8,8,0,0,1,8,8V48a8,8,0,0,1-8,8H8a8,8,0,0,1-8-8V8A8,8,0,0,1,8,0Z" transform="translate(272 304)" fill="#3e332b"/>
+    </g>
+    <g id="Mask_Group_7" data-name="Mask Group 7" transform="translate(5576 1266)" clip-path="url(#clip-path)">
+      <path id="ticket_3_" data-name="ticket (3)" d="M86.109,32.3a5.593,5.593,0,0,1,0-7.91l1.811-1.81L65.343,0l-1.81,1.811a5.556,5.556,0,0,1-3.955,1.638,5.556,5.556,0,0,1-3.955-1.638L53.811,0,45.979,7.831,49.6,11.454l-3.622,3.622-3.622-3.622L0,53.811,1.81,55.623a5.556,5.556,0,0,1,1.638,3.955A5.559,5.559,0,0,1,1.81,63.532L0,65.343,22.576,87.92l1.81-1.811a5.593,5.593,0,0,1,7.91,0l1.811,1.811L76.466,45.562,72.844,41.94l3.622-3.622,3.622,3.622,7.832-7.832ZM53.655,22.751l-3.838-3.838,3.622-3.622,3.838,3.838Zm7.676,7.676-3.838-3.838,3.622-3.622,3.838,3.838ZM69.006,38.1l-3.838-3.838,3.622-3.622,3.838,3.838Zm0,0" transform="translate(261.445 331.501) rotate(-45)" fill="url(#linear-gradient)"/>
+    </g>
+  </g>
+</svg>

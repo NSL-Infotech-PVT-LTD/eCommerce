@@ -13,6 +13,9 @@ import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/strings.dart';
+import 'package:flutter/cupertino.dart';
+
+
 import 'dart:io' show Platform;
 
 class SignUp extends StatefulWidget {
@@ -239,7 +242,8 @@ class _SignUpState extends State<SignUp> {
                     Navigator.of(context).pop();
                   },
                   leading: Icon(
-                    Icons.male,
+                    Icons.error,
+                  //  Icons.male,
                     // color: AppColors.siginbackgrond,
                   ),
                   title: Text(
@@ -258,7 +262,8 @@ class _SignUpState extends State<SignUp> {
                     });
                     Navigator.of(context).pop();
                   },
-                  leading: Icon(Icons.female),
+                  // leading: Icon(Icons.female),
+                  leading: Icon(Icons.error),
                   title: Text(Strings.female,
                       style: TextStyle(
                           fontFamily: Fonts.dmSansBold,
@@ -273,7 +278,8 @@ class _SignUpState extends State<SignUp> {
                     });
                     Navigator.of(context).pop();
                   },
-                  leading: Icon(Icons.female),
+                  // leading: Icon(Icons.female),
+                  leading: Icon(Icons.error),
                   title: Text(Strings.other,
                       style: TextStyle(
                           fontFamily: Fonts.dmSansBold,

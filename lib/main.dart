@@ -5,7 +5,11 @@ import 'package:funfy/utils/Constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
 
+// <<<<<<< HEAD
 DateTime date = DateTime(2007, 05, 2);
+// =======
+// import 'ui/screens/splash.dart';
+// >>>>>>> 98646ecb063f8fd22dd35f5ca7ec4c4bfb4487f5
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

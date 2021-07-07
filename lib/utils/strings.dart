@@ -69,8 +69,8 @@ class Strings {
       "Please enter your email to sign in.";
   static String namemustbeAtoZ = "Name must be a-z and A-Z";
   static String agemustbe18 = "Age must be 18+";
-  static String alert = "Alert";
-  static String areYousureWantToLogout = "Are sure want to logout!";
+  static String alert = "Logout";
+  static String areYousureWantToLogout = "Are you sure you want to logout.";
   static String yes = "Yes";
   static String no = "No";
 
@@ -84,6 +84,7 @@ class Strings {
   static String euro = "€";
   static String orderNow = "Order Now";
   static String location = "Location";
+
   static String logout = "Log Out";
 
   static String orders = "Orders";
@@ -92,6 +93,8 @@ class Strings {
   static String notification = "Notifications";
   static String help = "Help";
   static String about = "About";
+
+  static String assetsSvgIcons = "assets/svgicons/";
 
   // dummy
   static String garyadams = "Gary F. Adams";

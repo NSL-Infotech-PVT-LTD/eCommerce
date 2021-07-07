@@ -255,7 +255,8 @@ class _FiestasPageState extends State<FiestasPage> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Icon(
-                              Icons.fmd_good,
+                              // Icons.fmd_good,
+                              Icons.error,
                               size: size.width * 0.04,
                               color: AppColors.white,
                             ),
