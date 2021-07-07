@@ -21,4 +21,8 @@ class Images {
   static String bookingIconUnActSvg = "assets/svgicons/booking_unac.svg";
   static String profileIconActSvg = "assets/svgicons/profile_ac.svg";
   static String profileUnActSvg = "assets/svgicons/profile_unac.svg";
+
+  static String calenderSvg = "assets/svgicons/calender.svg";
+  static String filterSvg = "assets/svgicons/Filter.svg";
+  static String filterPng = "assets/pngicons/filter.png";
 }
