@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "185114239019",
+    "project_id": "funfy-app",
+    "storage_bucket": "funfy-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:185114239019:android:1435a08ca7c8fe429fca6e",
+        "android_client_info": {
+          "package_name": "com.funfy.funfy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "185114239019-97dbhfv877gt8qj8kv42oc53vu8ldb2t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.funfy.funfy",
+            "certificate_hash": "0c1f6e982a4549620c431d9fc904354d67f33e84"
+          }
+        },
+        {
+          "client_id": "185114239019-s7v6oat2rbjb03v9j5vf02i8b4f7se0a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCo_qXfXJ49uoxZUEvAHfPMpNdUa5oi8hA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "185114239019-s7v6oat2rbjb03v9j5vf02i8b4f7se0a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

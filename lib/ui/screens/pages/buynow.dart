@@ -4,9 +4,12 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:funfy/components/sizeclass/SizeConfig.dart';
 import 'package:funfy/utils/colors.dart';
+import 'package:funfy/utils/strings.dart';
+
+String bannerImage =
+    "https://png.pngtree.com/thumb_back/fw800/back_our/20190621/ourmid/pngtree-tmall-beer-festival-e-commerce-carnival-banner-image_193689.jpg";
 
 class BuyNow extends StatefulWidget {
-
   @override
   _BuyNowState createState() => _BuyNowState();
 }
@@ -106,6 +109,7 @@ class _BuyNowState extends State<BuyNow> {
           return Container();
       }
     }
+
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -120,8 +124,7 @@ class _BuyNowState extends State<BuyNow> {
         ),
       ),
       backgroundColor: AppColors.homeBackground,
-      body:
-      Column(
+      body: Column(
         children: [
           Container(
             height: SizeConfig.screenHeight * 0.20,
@@ -136,38 +139,36 @@ class _BuyNowState extends State<BuyNow> {
                         Container(
                           decoration: BoxDecoration(
                             color: AppColors.green,
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(6)),
+                            borderRadius: BorderRadius.all(Radius.circular(6)),
                           ),
                           height: SizeConfig.screenHeight * 0.03,
                           width: SizeConfig.screenWidth * 0.15,
                           child: Center(
                               child: Text(
-                                "OPEN",
-                                style: TextStyle(
-                                  fontFamily: "BabasNeue",
-                                  fontSize: 17,
-                                ),
-                              )),
+                            Strings.open,
+                            style: TextStyle(
+                              fontFamily: "BabasNeue",
+                              fontSize: 17,
+                            ),
+                          )),
                         ),
                         SizedBox(width: SizeConfig.screenWidth * 0.03),
                         Container(
                           decoration: BoxDecoration(
                             color: AppColors.homeBackground,
                             border: Border.all(color: AppColors.white),
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(6)),
+                            borderRadius: BorderRadius.all(Radius.circular(6)),
                           ),
                           height: SizeConfig.screenHeight * 0.03,
                           width: SizeConfig.screenWidth * 0.15,
                           child: Center(
                               child: Text(
-                                "Club",
-                                style: TextStyle(
-                                  fontFamily: "DM Sans Medium",
-                                  fontSize: 12,
-                                ),
-                              )),
+                            Strings.club,
+                            style: TextStyle(
+                              fontFamily: "DM Sans Medium",
+                              fontSize: 12,
+                            ),
+                          )),
                         ),
                       ],
                     ),
@@ -187,30 +188,29 @@ class _BuyNowState extends State<BuyNow> {
                       ),
                     ),
                     _ratingBar(1),
-
                   ],
                 ),
                 Stack(
                   children: [
                     Container(
-                      decoration:  BoxDecoration(
+                      decoration: BoxDecoration(
                         color: AppColors.homeBackgroundLite,
                         gradient: LinearGradient(
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                           // 10% of the width, so there are ten blinds.
-                          colors: <Color>[AppColors.homeBackgroundLite,Colors.transparent
+                          colors: <Color>[
+                            AppColors.homeBackgroundLite,
+                            Colors.transparent
                           ], // red to yellow
-                          tileMode: TileMode.repeated, // repeats the gradient over the canvas
+                          tileMode: TileMode
+                              .repeated, // repeats the gradient over the canvas
                         ),
                       ),
                       height: SizeConfig.screenHeight * 0.60,
-
                     ),
-
                   ],
                 )
-
               ],
             ),
           ),

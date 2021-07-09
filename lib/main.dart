@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:funfy/ui/screens/auth/signin.dart';
 import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/screens/splash.dart';
 import 'package:funfy/utils/Constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
 
-// <<<<<<< HEAD
 DateTime date = DateTime(2007, 05, 2);
-// =======
-// import 'ui/screens/splash.dart';
-// >>>>>>> 98646ecb063f8fd22dd35f5ca7ec4c4bfb4487f5
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,9 +27,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.red,
       ),
 
-      // theme: ThemeData.light(), // Provide light theme
       darkTheme: ThemeData.dark(), //
-      home: Splash(),
+      home: Signin(),
       // home: MyHomePage(),
     );
   }

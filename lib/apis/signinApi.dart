@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:funfy/components/dialogs.dart';
 import 'package:funfy/models/facebookSigninModel.dart';
+import 'package:funfy/models/googleSigninModel.dart';
 import 'package:funfy/models/userModel.dart';
 import 'package:funfy/ui/screens/auth/signin.dart';
 import 'package:funfy/utils/Constants.dart';
@@ -48,7 +49,8 @@ Future<FacebookSigninModel?> facebookLogin(
 
   var res = await http.post(Uri.parse(Urls.faceBookSigninUrl), body: body);
   var jsondata = json.decode(res.body);
-  print(jsondata["data"]["user"]);
+  print(jsondata);
+
   // var model = facebookSigninModelFromJson(res.body);
 
   // print(model.data?.user?.name);
@@ -62,13 +64,64 @@ Future<FacebookSigninModel?> facebookLogin(
   }
 }
 
-saveDataInshareP({String? name, String? email, String? token}) {
+Future<GoogleSigninModel?> googleLogin(
+    {String? name,
+    String? email,
+    String? googleid,
+    String? deviceType,
+    String? deviceToken,
+    String? profileImage}) async {
+  var body = {
+    "name": name,
+    "email": email,
+    "google_id": googleid,
+    "device_type": deviceType,
+    "device_token": deviceToken,
+    "image": profileImage
+  };
+  var res = await http.post(Uri.parse(Urls.googleSiginUrl), body: body);
+  var jsondata = json.decode(res.body);
+  print(jsondata);
+
+  // var model = facebookSigninModelFromJson(res.body);
+
+  // print(model.data?.user?.name);
+
+  if (res.statusCode == 201) {
+    return googleSigninModelFromJson(res.body);
+  } else if (res.statusCode == 200) {
+    return googleSigninModelFromJson(res.body);
+  } else {
+    print("Error in Facebook signin Api");
+  }
+}
+
+saveDataInshareP(
+    {String? name,
+    String? email,
+    String? token,
+    String? profileImage,
+    String? dob,
+    String? social,
+    String? gender}) {
   // token
   Constants.prefs?.setString("token", "$token");
   // name name
   Constants.prefs?.setString("name", "$name");
-  // name email
+  //  email
   Constants.prefs?.setString("email", "$email");
+
+  //  email
+  Constants.prefs?.setString("dob", "$dob");
+
+  // profileImage
+  Constants.prefs?.setString("profileImage", "$profileImage");
+
+  //  social
+  Constants.prefs?.setString("social", "$social");
+
+  //  gender
+  Constants.prefs?.setString("gender", "$gender");
 }
 
 logout(context) {
@@ -86,7 +139,25 @@ logout(context) {
         // lacation
         Constants.prefs?.setString("addres", "");
 
-        Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (context) => Signin()));
+        //  dob
+        Constants.prefs?.setString("dob", "");
+
+        //  gender
+        Constants.prefs?.setString("gender", "");
+
+        //  social
+        Constants.prefs?.setBool("social", false);
+
+        // profileImage
+        Constants.prefs?.setString("profileImage", "");
+
+        // (MaterialPageRoute(builder: (context) => Signin()));
+
+        // Navigator.of(context).pushAndRemoveUntil(newRoute, (route) => false)
+
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (BuildContext context) => Signin()),
+            (route) => false);
       });
 }

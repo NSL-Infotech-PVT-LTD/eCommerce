@@ -192,17 +192,6 @@ class _FiestasPageState extends State<FiestasPage> {
     daysInMonth(nowdate);
     var size = MediaQuery.of(context).size;
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          var name = Constants.prefs?.getString("name");
-
-          print(name);
-
-          // Navigator.of(context).pushReplacement(
-          //     MaterialPageRoute(builder: (context) => Signin()));
-        },
-        child: Icon(Icons.logout),
-      ),
       body: Container(
         color: AppColors.homeBackground,
         width: size.width,
@@ -254,18 +243,23 @@ class _FiestasPageState extends State<FiestasPage> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Icon(
-                              // Icons.fmd_good,
-                              Icons.error,
-                              size: size.width * 0.04,
-                              color: AppColors.white,
+                            // Icon(
+                            //   // Icons.fmd_good,
+                            //   Icons.error,
+                            //   size: size.width * 0.04,
+                            //   color: AppColors.white,
+                            // ),
+
+                            Container(
+                              width: size.width * 0.03,
+                              child: Image.asset(Images.locationspng),
                             ),
                             SizedBox(
                               width: size.width * 0.01,
                             ),
                             Container(
                               constraints: BoxConstraints(
-                                maxWidth: size.width * 0.4,
+                                maxWidth: size.width * 0.2,
                               ),
                               child: Text(
                                 Constants.prefs?.getString("addres") != null

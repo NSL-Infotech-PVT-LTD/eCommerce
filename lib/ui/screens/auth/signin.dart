@@ -13,6 +13,7 @@ import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/strings.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:io' show Platform;
 
 class Signin extends StatefulWidget {
@@ -79,7 +80,11 @@ class _SigninState extends State<Signin> {
             saveDataInshareP(
                 name: response?.data?.user?.name,
                 email: response?.data?.user?.email,
-                token: response?.data?.token);
+                token: response?.data?.token,
+                dob: response?.data?.user?.dob.toString(),
+                profileImage: response?.data?.user?.image,
+                gender: response?.data?.user?.gender,
+                social: "false");
 
             Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (context) => Home()));
@@ -160,16 +165,6 @@ class _SigninState extends State<Signin> {
     }
   }
 
-  facebooklogincheck() async {
-    final AccessToken? accessToken = await FacebookAuth.instance.accessToken;
-
-    if (accessToken != null) {
-      // user is logged
-      Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (context) => Home()));
-    }
-  }
-
   facebooksignWithApi(
       {String? name,
       String? email,
@@ -198,7 +193,9 @@ class _SigninState extends State<Signin> {
           saveDataInshareP(
               name: response?.data?.user?.name,
               email: response?.data?.user?.email,
-              token: response?.data?.token);
+              token: response?.data?.token,
+              profileImage: response?.data?.user?.image,
+              social: "true");
           Navigator.of(context)
               .pushReplacement(MaterialPageRoute(builder: (context) => Home()));
         }
@@ -344,6 +341,78 @@ class _SigninState extends State<Signin> {
     print(credential);
   }
 
+  // google sigin
+
+  Future _googleSignin() async {
+    print("google signin ---------------------");
+    GoogleSignIn _googleSignIn = GoogleSignIn(
+      scopes: [
+        'email',
+
+        // you can add extras if you require
+      ],
+    );
+
+    _googleSignIn.signIn().then((GoogleSignInAccount? acc) async {
+      setState(() {
+        _loading = true;
+      });
+      GoogleSignInAuthentication auth = await acc!.authentication;
+
+      print("data ---------------------");
+      print(acc.id);
+      print(acc.displayName);
+      print(acc.email);
+      print(acc.displayName);
+      print(acc.photoUrl);
+
+      setState(() {
+        _loading = false;
+      });
+
+      try {
+        setState(() {
+          _loading = true;
+        });
+        googleLogin(
+                name: acc.displayName,
+                email: acc.email,
+                googleid: acc.id,
+                deviceType: Platform.isAndroid ? "android" : "ios",
+                deviceToken: acc.id,
+                profileImage: acc.photoUrl)
+            .then((res) {
+          if (res?.code == 200 || res?.code == 201) {
+            saveDataInshareP(
+                name: res?.data?.user?.name,
+                email: res?.data?.user?.email,
+                token: res?.data?.token,
+                profileImage: res?.data?.user?.image,
+                social: "true");
+
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (BuildContext context) => Home()),
+                (route) => false);
+          } else {
+            setState(() {
+              _loading = false;
+            });
+          }
+        });
+      } catch (e) {
+        setState(() {
+          _loading = false;
+        });
+      }
+
+      acc.authentication.then((GoogleSignInAuthentication auth) async {
+        print(auth.idToken);
+        print(auth.accessToken);
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -430,83 +499,35 @@ class _SigninState extends State<Signin> {
 
                     // facebook signup
 
-                    GestureDetector(
-                      onTap: _facebookSignin,
-                      child: roundedBox(
-                          width: size.width * 0.78,
-                          height: size.height * 0.053,
-                          backgroundColor: Colors.white,
-                          child: Container(
-                            margin: EdgeInsets.symmetric(
-                                vertical: size.height * 0.01),
-                            child: Row(
-                              // mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  width: size.width * 0.1,
-                                ),
-                                Container(child: Image.asset(Images.fbIcon)),
-                                SizedBox(
-                                  width: size.width * 0.03,
-                                ),
-                                Text(
-                                  Strings.signinwithfacebook,
-                                  style: TextStyle(
-                                    color: AppColors.fbappletitle,
-                                    fontFamily: Fonts.dmSansMedium,
-                                    // fontSize: size.width * 0.045,
-                                    fontSize: size.width * 0.04,
-                                  ),
-                                )
-                              ],
-                            ),
-                          )),
+                    socialSigninButton(
+                        context: context,
+                        title: Strings.signinwithfacebook,
+                        iconImage: Images.fbIcon,
+                        func: _facebookSignin),
+
+                    SizedBox(
+                      height: size.height * 0.02,
+                    ),
+
+                    // Google signup
+                    socialSigninButton(
+                        context: context,
+                        title: Strings.signinwithgoogle,
+                        iconImage: Images.googleIconActPng,
+                        func: _googleSignin),
+
+                    SizedBox(
+                      height: size.height * 0.02,
                     ),
 
                     // apple signup
 
                     Platform.isIOS
-                        ? Column(
-                            children: [
-                              SizedBox(
-                                height: size.height * 0.02,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  appleSignin();
-                                },
-                                child: roundedBox(
-                                    width: size.width * 0.78,
-                                    height: size.height * 0.053,
-                                    backgroundColor: Colors.white,
-                                    child: Container(
-                                      margin: EdgeInsets.symmetric(
-                                          vertical: size.height * 0.01),
-                                      child: Row(
-                                        children: [
-                                          SizedBox(
-                                            width: size.width * 0.1,
-                                          ),
-                                          Container(
-                                              child: Image.asset(
-                                                  Images.appleIcon)),
-                                          SizedBox(
-                                            width: size.width * 0.07,
-                                          ),
-                                          Text(
-                                            Strings.signinwithApple,
-                                            style: TextStyle(
-                                                fontFamily: Fonts.dmSansMedium,
-                                                // fontSize: size.width * 0.045,
-                                                fontSize: size.width * 0.04,
-                                                color: AppColors.fbappletitle),
-                                          )
-                                        ],
-                                      ),
-                                    )),
-                              ),
-                            ],
-                          )
+                        ? socialSigninButton(
+                            context: context,
+                            title: Strings.signinwithApple,
+                            iconImage: Images.appleIcon,
+                            func: () {})
                         : SizedBox(),
 
                     SizedBox(
@@ -834,4 +855,43 @@ class _SigninState extends State<Signin> {
                   : SizedBox()
             ])));
   }
+}
+
+socialSigninButton({context, String? title, String? iconImage, func}) {
+  var size = MediaQuery.of(context).size;
+  return GestureDetector(
+    onTap: func,
+    child: Stack(
+      alignment: Alignment.centerLeft,
+      children: [
+        roundedBox(
+            width: size.width * 0.78,
+            height: size.height * 0.053,
+            backgroundColor: Colors.white,
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(
+                title.toString(),
+                style: TextStyle(
+                  color: AppColors.fbappletitle,
+                  fontFamily: Fonts.dmSansMedium,
+                  // fontSize: size.width * 0.045,
+                  fontSize: size.width * 0.04,
+                ),
+              ),
+            )),
+        Positioned(
+          left: size.width * 0.101,
+          child: Container(
+              width: size.width * 0.05,
+              child: Image.asset(
+                iconImage.toString(),
+                // height: size.height * 0.02,
+                width: size.width * 0.07,
+                fit: BoxFit.cover,
+              )),
+        ),
+      ],
+    ),
+  );
 }

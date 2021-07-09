@@ -93,8 +93,20 @@ class Strings {
   static String notification = "Notifications";
   static String help = "Help";
   static String about = "About";
-
-  static String assetsSvgIcons = "assets/svgicons/";
+  static String booking = "Booking";
+  static String description = "Description";
+  static String open = "OPEN";
+  static String myprofile = "My Profile";
+  static String update = "Update";
+  static String gallery = "Gallery";
+  static String camera = "Camera";
+  static String mycart = "My Cart";
+  static String signinwithgoogle = "Sign in with Google";
+  static String checkyourdeliverableordersstatus =
+      "Check your deliverable orders status";
+  static String nothingshowincartrightnow = "Nothing show in cart right now.";
+  static String buyFiestasandPreFiestasbestdealsinyourcart =
+      "Buy Fiestas and Pre-Fiestas best deals in your cart";
 
   // dummy
   static String garyadams = "Gary F. Adams";

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:funfy/apis/signinApi.dart';
+import 'package:funfy/ui/screens/profileEdit.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/strings.dart';
-import 'package:hexcolor/hexcolor.dart';
+import 'package:funfy/utils/Constants.dart';
 
 class Profilepage extends StatefulWidget {
   Profilepage({Key? key}) : super(key: key);
@@ -16,8 +17,6 @@ class Profilepage extends StatefulWidget {
 }
 
 class _ProfilepageState extends State<Profilepage> {
-  // logout
-
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -38,8 +37,8 @@ class _ProfilepageState extends State<Profilepage> {
                     CircleAvatar(
                       radius: size.width * 0.085,
                       backgroundImage: NetworkImage(
-                          'https://lenstax.com/auth/app-assets/images/profile/user-uploads/user-06.jpg'),
-                      backgroundColor: Colors.transparent,
+                          "${Constants.prefs?.getString('profileImage')}"),
+                      backgroundColor: Colors.white,
                     ),
 
                     SizedBox(
@@ -72,9 +71,17 @@ class _ProfilepageState extends State<Profilepage> {
                     ),
 
                     Expanded(
-                        child: Container(
-                            height: size.height * 0.03,
-                            child: Image.asset(Images.editpen)))
+                        child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => EditProfile()));
+                      },
+                      child: Container(
+                          height: size.height * 0.03,
+                          child: Image.asset(Images.editpen)),
+                    ))
                   ],
                   // edit
                 ),

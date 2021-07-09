@@ -1,14 +1,24 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/components/sizeclass/SizeConfig.dart';
-import 'package:funfy/utils/basic%20function.dart';
+import 'package:funfy/models/fiestasmodel.dart';
+import 'package:funfy/ui/widgets/basic%20function.dart';
 import 'package:funfy/utils/colors.dart';
+import 'package:funfy/utils/strings.dart';
 import 'buynow.dart';
 
+String bannerImage =
+    "https://png.pngtree.com/thumb_back/fw800/back_our/20190621/ourmid/pngtree-tmall-beer-festival-e-commerce-carnival-banner-image_193689.jpg";
+
 class BookNow extends StatefulWidget {
+  final Datum? fiestasModel;
+
+  const BookNow({Key? key, this.fiestasModel}) : super(key: key);
+
   @override
   _BookNowState createState() => _BookNowState();
 }
@@ -16,11 +26,7 @@ class BookNow extends StatefulWidget {
 class _BookNowState extends State<BookNow> {
   CarouselController _carouselController = CarouselController();
   List<Widget> cardList = [];
-  int _currentIndex = 0;
-  double _userRating = 3.0;
-  int _ratingBarMode = 1;
   double _initialRating = 2.0;
-  bool _isRTLMode = false;
   bool _isVertical = false;
   String name = "Loading...";
   String description = "Loading...";
@@ -165,11 +171,7 @@ class _BookNowState extends State<BookNow> {
                             pauseAutoPlayOnTouch: true,
                             aspectRatio: 2.0,
                             enableInfiniteScroll: false,
-                            onPageChanged: (index, reason) {
-                              setState(() {
-                                _currentIndex = index;
-                              });
-                            },
+                            onPageChanged: (index, reason) {},
                           ),
                           items: cardList //cardList
                           ),
@@ -237,7 +239,7 @@ class _BookNowState extends State<BookNow> {
                                   padding: EdgeInsets.only(
                                       left: SizeConfig.screenWidth * 0.02),
                                   child: Text(
-                                    "$name",
+                                    "${widget.fiestasModel?.name}",
                                     style: TextStyle(
                                       fontSize: 22,
                                       fontFamily: "DM Sans Bold",
@@ -268,7 +270,7 @@ class _BookNowState extends State<BookNow> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Text(
-                                      "STARTING FROM",
+                                      Strings.startingfrom,
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                           color: AppColors.brownlite,
@@ -297,10 +299,10 @@ class _BookNowState extends State<BookNow> {
                           indicatorColor: AppColors.siginbackgrond,
                           tabs: [
                             Tab(
-                              icon: Text("Booking"),
+                              icon: Text(Strings.booking),
                             ),
                             Tab(
-                              icon: Text("About"),
+                              icon: Text(Strings.about),
                             ),
                           ],
                         ),
@@ -333,7 +335,7 @@ class _BookNowState extends State<BookNow> {
                                     child: ListView(
                                       children: [
                                         Text(
-                                          "Description",
+                                          Strings.description,
                                           style: TextStyle(
                                               fontFamily: "Product",
                                               fontSize: 16,

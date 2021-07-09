@@ -15,7 +15,6 @@ import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/strings.dart';
 import 'package:flutter/cupertino.dart';
 
-
 import 'dart:io' show Platform;
 
 class SignUp extends StatefulWidget {
@@ -55,6 +54,7 @@ class _SignUpState extends State<SignUp> {
       _passwordError = "";
       _dobError = "";
       _genderError = "";
+
 // fullname
       if (_fullnameController.text == "") {
         _fullnameError = Strings.pleaseEnterYourfullname;
@@ -243,7 +243,7 @@ class _SignUpState extends State<SignUp> {
                   },
                   leading: Icon(
                     Icons.error,
-                  //  Icons.male,
+                    //  Icons.male,
                     // color: AppColors.siginbackgrond,
                   ),
                   title: Text(

@@ -1,6 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:funfy/apis/userdataM.dart';
+import 'package:funfy/models/updateModel.dart';
 import 'package:funfy/models/userModel.dart';
 import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/utils/Constants.dart';
@@ -43,4 +46,51 @@ Future<Map> signApiCall(
   }
 
   return {"bool": false, "res": response};
+}
+
+var headers = {
+  'Accept': 'application/json',
+  'Authorization': 'Bearer ${UserData.userToken}',
+};
+
+Future<UpdateProfileDataModel?> updateProfile(
+    {String? name, String? gender, File? imageFile, String? dob}) async {
+  print("update profile");
+
+  Map<String, String>? body = {
+    "name": name!,
+    "dob": dob.toString(),
+    "gender": gender!,
+  };
+  return updateUserApi(auth: UserData.userToken, file: imageFile, params: body);
+}
+
+Future<UpdateProfileDataModel?> updateUserApi(
+    {File? file, String? auth, Map<String, String>? params}) async {
+  print(auth);
+  final postUri = Uri.parse(Urls.updateProfileUrl);
+  UpdateProfileDataModel dataModel;
+  http.MultipartRequest request = http.MultipartRequest('POST', postUri);
+  request.headers['Authorization'] = "Bearer $auth";
+  request.fields.addAll(params!);
+  // print(updateUrl.toString());
+  if (file != null) {
+    http.MultipartFile multipartFile = await http.MultipartFile.fromPath(
+        'image', file.path); //returns a Future<MultipartFile>
+    request.files.add(multipartFile);
+  }
+  var streamedResponse = await request.send();
+  var response = await http.Response.fromStream(streamedResponse);
+  if (response.statusCode == 200 || response.statusCode == 201) {
+    print("${response.body}");
+    return dataModel = updateProfileDataModelFromJson(response.body);
+
+    // var map = Map<String, dynamic>.from(jsonData);
+    // return UpdateUserData.fromJson(map);
+    // return dataModel;
+  } else {
+    print(
+        "THERE IS AN ERROR IN THE UPDATE USER PROFILE API WITH STATUS CODE ${response.statusCode}");
+    print("${response.body}");
+  }
 }

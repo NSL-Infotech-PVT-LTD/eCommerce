@@ -17,6 +17,7 @@ class Images {
 
   static String bokkingIconActPng = "assets/pngicons/booking_ac.png";
   static String bookingIconUnActPng = "assets/pngicons/booking_unac.png";
+  static String googleIconActPng = "assets/pngicons/googleIcon.png";
 
   static String bookingIconActSvg = "assets/svgicons/booking_ac.svg";
   static String bookingIconUnActSvg = "assets/svgicons/booking_unac.svg";
@@ -34,4 +35,9 @@ class Images {
   static String locationspng = "assets/pngicons/locationIc.png";
   static String editpen = "assets/pngicons/editpen.png";
   static String logout = "assets/pngicons/logout.png";
+  static String assetsSvgIcons = "assets/svgicons/";
+
+  // dummy
+  static String profileImage =
+      'https://lenstax.com/auth/app-assets/images/profile/user-uploads/user-06.jpg';
 }
