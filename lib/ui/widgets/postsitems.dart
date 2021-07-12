@@ -148,8 +148,8 @@ Widget fiestasItem({context, Datum? postModeldata}) {
                   ),
                   InkWell(
                     onTap: () {
-                      navigatorPushFun(
-                          context, BookNow(fiestasModel: postModeldata));
+                      // navigatorPushFun(
+                      //     context, BookNow(fiestasModel: postModeldata));
                     },
                     child: roundedBoxR(
                         width: size.width * 0.23,

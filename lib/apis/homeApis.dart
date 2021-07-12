@@ -6,16 +6,14 @@ import 'package:funfy/models/preFiestasModel.dart';
 import 'package:funfy/utils/urls.dart';
 import 'package:http/http.dart' as http;
 
-Future<FiestasModel?> fiestasPostGet() async {
-  // var headers = {
-  //   'Content-Type': 'application/json',
-  //   'Accept': 'application/json',
-  //   'Authorization': 'Bearer ${UserData.userToken}',
-  // };
 
+Future<FiestasModel?> fiestasPostGet() async {
+  //print('token print here ---------  ${UserData.userToken}');
+
+
+ // print('token print here ---------  ${headers.toString()}');
   var headers = {
-    HttpHeaders.contentTypeHeader: "application/json",
-    HttpHeaders.authorizationHeader: "Bearer ${UserData.userToken}"
+    'Authorization': 'Bearer ${UserData.userToken}',
   };
   var res = await http.get(Uri.parse(Urls.fiestasPostUrl), headers: headers);
 
@@ -31,7 +29,11 @@ Future<FiestasModel?> fiestasPostGet() async {
 }
 
 Future<PrefiestasModel?> prefiestasPostGet() async {
-  var res = await http.get(Uri.parse(Urls.preFiestasPostsUrl));
+  var headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+  };
+  var res =
+      await http.get(Uri.parse(Urls.preFiestasPostsUrl), headers: headers);
 
   if (res.statusCode == 200) {
     return prefiestasModelFromJson(res.body);

@@ -56,13 +56,27 @@ var headers = {
 Future<UpdateProfileDataModel?> updateProfile(
     {String? name, String? gender, File? imageFile, String? dob}) async {
   print("update profile");
+  Map<String, String>? body;
+  
+  if(Constants.prefs?.getString("social") == "false"){
+   body = {
+      "name": name!,
+      "dob": dob.toString(),
+      "gender": gender!,
+     "is_social": "0"
+    };
 
-  Map<String, String>? body = {
-    "name": name!,
-    "dob": dob.toString(),
-    "gender": gender!,
-  };
-  return updateUserApi(auth: UserData.userToken, file: imageFile, params: body);
+
+  }else{
+    body = {
+      "name": name!,
+      "is_social": "1"
+
+    };
+  }
+
+
+  return await updateUserApi(auth: UserData.userToken, file: imageFile, params: body);
 }
 
 Future<UpdateProfileDataModel?> updateUserApi(

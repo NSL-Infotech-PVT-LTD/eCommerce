@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:funfy/apis/homeApis.dart';
+import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/components/locationget.dart';
 import 'package:funfy/models/fiestasmodel.dart';
 import 'package:funfy/models/preFiestasModel.dart';
@@ -185,6 +186,8 @@ class _FiestasPageState extends State<FiestasPage> {
     super.initState();
     fiestasgetPosts();
     determinePosition();
+
+    print(UserData.userToken);
   }
 
   @override

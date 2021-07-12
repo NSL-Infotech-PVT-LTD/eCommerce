@@ -9,7 +9,16 @@ import 'package:funfy/ui/screens/auth/signin.dart';
 import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/strings.dart';
 import 'package:funfy/utils/urls.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
+
+GoogleSignIn _googleSignIn = GoogleSignIn(
+  scopes: [
+    'email',
+
+    // you can add extras if you require
+  ],
+);
 
 Future<UserModel?> signinUser(
     {String? email, String? password, String? devicetype}) async {
@@ -92,7 +101,7 @@ Future<GoogleSigninModel?> googleLogin(
   } else if (res.statusCode == 200) {
     return googleSigninModelFromJson(res.body);
   } else {
-    print("Error in Facebook signin Api");
+    print("Error in Google signin Api");
   }
 }
 
@@ -146,10 +155,12 @@ logout(context) {
         Constants.prefs?.setString("gender", "");
 
         //  social
-        Constants.prefs?.setBool("social", false);
+        Constants.prefs?.setString("social", "false");
 
         // profileImage
         Constants.prefs?.setString("profileImage", "");
+
+        _googleSignIn.signOut();
 
         // (MaterialPageRoute(builder: (context) => Signin()));
 

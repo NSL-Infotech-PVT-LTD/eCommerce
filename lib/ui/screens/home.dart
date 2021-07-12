@@ -9,6 +9,7 @@ import 'package:funfy/ui/widgets/dateButton.dart';
 import 'package:funfy/ui/widgets/rating.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/ui/widgets/tagsButton.dart';
+import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
@@ -50,6 +51,8 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+    // token
+    UserData.userToken = Constants.prefs?.getString("token");
     pageController = PageController(initialPage: pageIndex);
   }
 

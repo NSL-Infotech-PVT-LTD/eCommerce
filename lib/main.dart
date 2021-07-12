@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
       ),
 
       darkTheme: ThemeData.dark(), //
-      home: Signin(),
+      home: Splash(),
       // home: MyHomePage(),
     );
   }

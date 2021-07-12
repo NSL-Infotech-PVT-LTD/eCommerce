@@ -28,8 +28,7 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-  String lorem =
-      "<p style=\"text-align: center; \"><span style=\"font-size: 1rem;\"><b>Terms and Conditions</b></span></p><div id=\"Content\" style=\"margin: 0px; padding: 0px; position: relative; font-family: \" open=\"\" sans\",=\"\" arial,=\"\" sans-serif;=\"\" font-size:=\"\" 14px;=\"\" text-align:=\"\" center;\"=\"\"><div id=\"Translation\" style=\"margin: 0px 28.7969px; padding: 0px; text-align: left;\"><p style=\"margin-right: 0px; margin-bottom: 15px; margin-left: 0px; padding: 0px; text-align: justify;\">On the other hand, we denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they cannot foresee the pain and trouble that are bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is the same as saying through shrinking from toil and pain. These cases are perfectly simple and easy to distinguish. In a free hour, when our power of choice is untrammeled and when nothing prevents our being able to do what we like best, every pleasure is to be welcomed and every pain avoided. But in certain circumstances and owing to the claims of duty or the obligations of business it will frequently occur that pleasures have to be repudiated and annoyances accepted. The wise man therefore always holds in these matters to this principle of selection: he rejects pleasures to secure other greater pleasures, or else he endures pains to avoid worse pains.\"</p><div><br></div></div></div><p><br></p><p><br></p><p><br></p>";
+
   final _scaffoldKey = new GlobalKey<ScaffoldState>();
   VoidCallback? _showPersistantBottomSheetCallBack;
 
@@ -46,18 +45,15 @@ class _EditProfileState extends State<EditProfile> {
   File? _image;
 
   String _fullnameError = "";
-  String _emailError = "";
-  String _passwordError = "";
   String _dobError = "";
   String _genderError = "";
   String _signupError = "";
 
   update() {
+    print("update");
 // input validation ----------- //
     setState(() {
       _fullnameError = "";
-      _emailError = "";
-      _passwordError = "";
       _dobError = "";
       _genderError = "";
 // fullname
@@ -68,6 +64,10 @@ class _EditProfileState extends State<EditProfile> {
       } else if (validateName(_fullnameController.text) != "") {
         _fullnameError = validateName(_fullnameController.text);
       }
+
+      if(Constants.prefs?.getString("social").toString() == "false"){
+
+
 
 // dob
       if (_dobController.text == "") {
@@ -80,12 +80,21 @@ class _EditProfileState extends State<EditProfile> {
       if (_genderController.text == "") {
         _genderError = Strings.pleaseEnterYourGender;
       }
-      if (_fullnameError == "" &&
-          _emailError == "" &&
-          _passwordError == "" &&
-          dob != "" &&
-          _genderError == "") {
+      if (_fullnameError == "" && _dobError == "" && _genderError == "") {
         _updateProfile();
+      } else {
+        print("error is here");
+      }}
+
+      // social Update
+
+      else{
+
+        print("social Update");
+
+        if(_fullnameError == ""){
+          _updateProfile();
+        }
       }
     });
   }
@@ -97,7 +106,6 @@ class _EditProfileState extends State<EditProfile> {
     setState(() {
       _loading = true;
     });
-
     var net = await Internetcheck.check();
 
     if (net == false) {
@@ -107,20 +115,22 @@ class _EditProfileState extends State<EditProfile> {
         _loading = true;
       });
       try {
-        await updateProfile(
-                name: _fullnameController.text,
-                gender: "male",
-                dob: dob,
-                imageFile: _image)
+        await updateProfile(name: _fullnameController.text, gender: "${_genderController.text}" , dob: "$dob", imageFile: _image)
             .then((response) {
           setState(() {
             _loading = false;
-            saveDataInshareP(
-                name: response?.data?.user?.name,
-                email: response?.data?.user?.email,
-                profileImage: response?.data?.user?.image,
-                gender: response?.data?.user?.gender,
-                social: "false");
+            if (response?.code == 201 && response?.status == true) {
+              saveDataInshareP(
+                  name: response?.data?.user?.name,
+                  email: response?.data?.user?.email,
+                  profileImage: response?.data?.user?.image,
+                  gender: response?.data?.user?.gender,
+                  dob: response?.data?.user?.dob.toString().split(" ")[0].toString(),
+                  social: Constants.prefs?.getString("social").toString() ==  "false"? "false":"true");
+              print( "newData + ${response?.data?.user?.dob.toString()}");
+            } else {
+              print("error in update Profile");
+            }
 
             setdataolddata();
           });
@@ -159,7 +169,7 @@ class _EditProfileState extends State<EditProfile> {
         dob = "${picked.year}-$month-$day";
         _dobController.text = dob;
 
-        print(dob);
+        print("dob + $dob");
       });
     }
   }
@@ -213,7 +223,7 @@ class _EditProfileState extends State<EditProfile> {
         context: context,
         builder: (context) {
           return Container(
-            height: size.height * 0.25,
+            height: size.height * 0.27,
             child: Column(
               children: [
                 ListTile(
@@ -335,17 +345,25 @@ class _EditProfileState extends State<EditProfile> {
   // set old data in vars
 
   setdataolddata() {
-    // Constants.prefs?.getString('profileImage');
+
 
     _fullnameController.text = "${Constants.prefs?.getString('name')}";
     _emailController.text = "${Constants.prefs?.getString('email')}";
 
     print("------------------------ ${Constants.prefs?.getString('dob')}");
-    _dobController.text = Constants.prefs?.getString('dob') == "null"
-        ? "0000-00-00"
-        : "${Constants.prefs?.getString('dob')}";
+    if (Constants.prefs?.getString('dob') != "null") {_dobController.text = "${Constants.prefs?.getString('dob').toString().split(" ").first.toString()}";
+      dobDateTime = DateTime.parse("${Constants.prefs?.getString('dob').toString().split(" ").first.toString()}");
+    dob =  "${Constants.prefs?.getString('dob').toString().split(" ").first.toString()}";}
 
-    _genderController.text = "${Constants.prefs?.getString('gender')}";
+    print(dob);
+
+    if (Constants.prefs?.getString('gender') != "null") {
+      _genderController.text = "${Constants.prefs?.getString('gender')}";
+    } else {
+      _genderController.text = Strings.genderHint;
+    }
+
+    // print('this is date $dobDateTime');
 
     //_dobController.text = "0000-00-00";
   }
@@ -354,9 +372,6 @@ class _EditProfileState extends State<EditProfile> {
   void initState() {
     super.initState();
     setdataolddata();
-    print("Image Link ---------------------- ");
-    print(Constants.prefs?.getString('profileImage'));
-    Constants.prefs?.getString('social');
   }
 
   @override
@@ -476,125 +491,74 @@ class _EditProfileState extends State<EditProfile> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         // name
-                        Constants.prefs?.getString('social') == "false"
-                            ? inputs(
-                                context: context,
-                                controller: _fullnameController,
-                                obscureTextBool: false,
-                                titletxt: Strings.fullname,
-                                hinttxt: Strings.fullnamehint,
-                                inputError: _fullnameError,
-                                readonly: false,
-                                ontapFun: null)
-                            : Container(
-                                margin:
-                                    EdgeInsets.only(top: size.height * 0.015),
-                                child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        Strings.fullname,
-                                        style: TextStyle(
-                                            fontFamily: Fonts.dmSansMedium,
-                                            fontSize: size.width * 0.04,
-                                            color: AppColors.inputTitle),
-                                      ),
-                                      SizedBox(
-                                        height: size.height * 0.01,
-                                      ),
-                                      roundedBox(
-                                        width: size.width,
-                                        height: size.height * 0.058,
-                                        backgroundColor:
-                                            AppColors.inputbackgroung,
-                                        child: Padding(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: size.width * 0.04,
-                                          ),
-                                          child: Align(
-                                            alignment: Alignment.center,
-                                            child: TextField(
-                                              readOnly: true,
-                                              obscureText: false,
-                                              controller: _fullnameController,
-                                              style: TextStyle(
-                                                fontFamily: Fonts.dmSansRegular,
-                                                color: Colors.black,
-                                              ),
-                                              keyboardType: TextInputType.text,
-                                              cursorColor: AppColors.white,
-                                              decoration: InputDecoration(
-                                                hintText: Strings.fullnamehint,
-                                                border: InputBorder.none,
-                                                hintStyle: TextStyle(
-                                                    color: AppColors.inputHint,
-                                                    fontSize:
-                                                        size.width * 0.04),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ])),
-                        // inputs(
-                        //     context: context,
-                        //     controller: _emailController,
-                        //     obscureTextBool: false,
-                        //     titletxt: Strings.email,
-                        //     hinttxt: Strings.emailHint,
-                        //     inputError: _emailError,
-                        //     ontapFun: null,
-                        //     readonly: true),
+                        inputs(
+                            context: context,
+                            controller: _fullnameController,
+                            obscureTextBool: false,
+                            titletxt: Strings.fullname,
+                            hinttxt: Strings.fullnamehint,
+                            inputError: _fullnameError,
+                            readonly: false,
+                            ontapFun: null),
 
-                        Container(
-                            margin: EdgeInsets.only(top: size.height * 0.015),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    Strings.email,
-                                    style: TextStyle(
-                                        fontFamily: Fonts.dmSansMedium,
-                                        fontSize: size.width * 0.04,
-                                        color: AppColors.inputTitle),
-                                  ),
-                                  SizedBox(
-                                    height: size.height * 0.01,
-                                  ),
-                                  roundedBox(
-                                    width: size.width,
-                                    height: size.height * 0.058,
-                                    backgroundColor: AppColors.inputbackgroung,
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: size.width * 0.04,
-                                      ),
-                                      child: Align(
-                                        alignment: Alignment.center,
-                                        child: TextField(
-                                          readOnly: true,
-                                          obscureText: false,
-                                          controller: _emailController,
-                                          style: TextStyle(
-                                            fontFamily: Fonts.dmSansRegular,
-                                            color: Colors.black,
-                                          ),
-                                          keyboardType:
-                                              TextInputType.emailAddress,
-                                          cursorColor: AppColors.white,
-                                          decoration: InputDecoration(
-                                            hintText: Strings.emailHint,
-                                            border: InputBorder.none,
-                                            hintStyle: TextStyle(
-                                                color: AppColors.inputHint,
-                                                fontSize: size.width * 0.04),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ])),
+                        inputs(
+                            context: context,
+                            controller: _emailController,
+                            obscureTextBool: false,
+                            titletxt: Strings.email,
+                            hinttxt: Strings.emailHint,
+                            inputError: "",
+                            ontapFun: null,
+                            readonly: true),
+
+                        // Container(
+                        //     margin: EdgeInsets.only(top: size.height * 0.015),
+                        //     child: Column(
+                        //         crossAxisAlignment: CrossAxisAlignment.start,
+                        //         children: [
+                        //           Text(
+                        //             Strings.email,
+                        //             style: TextStyle(
+                        //                 fontFamily: Fonts.dmSansMedium,
+                        //                 fontSize: size.width * 0.04,
+                        //                 color: AppColors.inputTitle),
+                        //           ),
+                        //           SizedBox(
+                        //             height: size.height * 0.01,
+                        //           ),
+                        //           roundedBox(
+                        //             width: size.width,
+                        //             height: size.height * 0.058,
+                        //             backgroundColor: AppColors.inputbackgroung,
+                        //             child: Padding(
+                        //               padding: EdgeInsets.symmetric(
+                        //                 horizontal: size.width * 0.04,
+                        //               ),
+                        //               child: Align(
+                        //                 alignment: Alignment.center,
+                        //                 child: TextField(
+                        //                   readOnly: true,
+                        //                   obscureText: false,
+                        //                   controller: _emailController,
+                        //                   style: TextStyle(
+                        //                     fontFamily: Fonts.dmSansRegular,
+                        //                     color: Colors.black,
+                        //                   ),
+                        //                   keyboardType:
+                        //                       TextInputType.emailAddress,
+                        //                   cursorColor: AppColors.white,
+                        //                   decoration: InputDecoration(
+                        //                     hintText: Strings.emailHint,
+                        //                     border: InputBorder.none,
+                        //                     hintStyle: TextStyle(
+                        //                         color: AppColors.inputHint,
+                        //                         fontSize: size.width * 0.04),
+                        //                   ),
+                        //                 ),
+                        //               ),
+                        //             ),
+                        //           ),
+                        //         ])),
 
                         Constants.prefs?.getString('social') == "false"
                             ? inputs(
@@ -644,6 +608,7 @@ class _EditProfileState extends State<EditProfile> {
                         // update button
                         GestureDetector(
                           onTap: () {
+                            print("update call");
                             update();
                           },
                           child: roundedBox(

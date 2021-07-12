@@ -344,6 +344,9 @@ class _SigninState extends State<Signin> {
   // google sigin
 
   Future _googleSignin() async {
+    setState(() {
+      _loading = true;
+    });
     print("google signin ---------------------");
     GoogleSignIn _googleSignIn = GoogleSignIn(
       scopes: [
@@ -355,7 +358,7 @@ class _SigninState extends State<Signin> {
 
     _googleSignIn.signIn().then((GoogleSignInAccount? acc) async {
       setState(() {
-        _loading = true;
+        _loading = false;
       });
       GoogleSignInAuthentication auth = await acc!.authentication;
 
@@ -383,6 +386,7 @@ class _SigninState extends State<Signin> {
                 profileImage: acc.photoUrl)
             .then((res) {
           if (res?.code == 200 || res?.code == 201) {
+            print("userToken google - ${res?.data?.token}");
             saveDataInshareP(
                 name: res?.data?.user?.name,
                 email: res?.data?.user?.email,
@@ -850,8 +854,8 @@ class _SigninState extends State<Signin> {
               _loading
                   ? Center(
                       child: CircularProgressIndicator(
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(AppColors.white)))
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                              AppColors.siginbackgrond)))
                   : SizedBox()
             ])));
   }

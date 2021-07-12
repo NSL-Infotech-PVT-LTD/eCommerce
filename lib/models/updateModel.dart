@@ -57,40 +57,73 @@ class Data {
 
 class User {
   User({
+    this.id,
     this.name,
     this.email,
-    this.status,
-    this.image,
     this.mobile,
     this.gender,
-    this.socialLogin,
+    this.dob,
+    this.status,
+    this.image,
+    this.isNotify,
+    this.stripeAccountId,
+    this.isAvailable,
+    this.location,
+    this.latitude,
+    this.longitude,
+    this.radius,
   });
 
+  int? id;
   String? name;
   String? email;
+  dynamic mobile;
+  String? gender;
+  DateTime? dob;
   String? status;
   String? image;
-  String? mobile;
-  String? gender;
-  bool? socialLogin;
+  String? isNotify;
+  dynamic stripeAccountId;
+  String? isAvailable;
+  dynamic location;
+  dynamic latitude;
+  dynamic longitude;
+  dynamic radius;
 
   factory User.fromJson(Map<String, dynamic> json) => User(
+        id: json["id"],
         name: json["name"],
         email: json["email"],
-        status: json["status"],
-        image: json["image"],
         mobile: json["mobile"],
         gender: json["gender"],
-        socialLogin: json["social_login"],
+        dob: DateTime.parse(json["dob"]),
+        status: json["status"],
+        image: json["image"],
+        isNotify: json["is_notify"],
+        stripeAccountId: json["stripe_account_id"],
+        isAvailable: json["is_available"],
+        location: json["location"],
+        latitude: json["latitude"],
+        longitude: json["longitude"],
+        radius: json["radius"],
       );
 
   Map<String, dynamic> toJson() => {
+        "id": id,
         "name": name,
         "email": email,
-        "status": status,
-        "image": image,
         "mobile": mobile,
         "gender": gender,
-        "social_login": socialLogin,
+        "dob":
+            "${dob?.year.toString().padLeft(4, '0')}-${dob?.month.toString().padLeft(2, '0')}-${dob?.day.toString().padLeft(2, '0')}",
+        "status": status,
+        "image": image,
+        "is_notify": isNotify,
+        "stripe_account_id": stripeAccountId,
+        "is_available": isAvailable,
+        "location": location,
+        "latitude": latitude,
+        "longitude": longitude,
+        "radius": radius,
       };
 }

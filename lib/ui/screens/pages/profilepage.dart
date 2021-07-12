@@ -76,7 +76,14 @@ class _ProfilepageState extends State<Profilepage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => EditProfile()));
+                                builder: (context) => EditProfile())).then((value){
+
+                                  setState(() {
+
+                                  });
+
+
+                        });
                       },
                       child: Container(
                           height: size.height * 0.03,

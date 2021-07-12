@@ -31,4 +31,7 @@ class AppColors {
   static Color skin = HexColor("#FFEFBB");
   static Color redlite = HexColor("#FF5349");
 
+  static Color brownLite = HexColor("#695E4C");
+
+
 }
