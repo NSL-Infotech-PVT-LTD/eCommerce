@@ -28,7 +28,6 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-
   final _scaffoldKey = new GlobalKey<ScaffoldState>();
   VoidCallback? _showPersistantBottomSheetCallBack;
 
@@ -65,34 +64,31 @@ class _EditProfileState extends State<EditProfile> {
         _fullnameError = validateName(_fullnameController.text);
       }
 
-      if(Constants.prefs?.getString("social").toString() == "false"){
-
-
-
+      if (Constants.prefs?.getString("social").toString() == "false") {
 // dob
-      if (_dobController.text == "") {
-        _dobError = Strings.dateofbirthhint;
-      } else if (calculateAge(dobDateTime) != "") {
-        _dobError = Strings.agemustbe18;
-      }
+        if (_dobController.text == "") {
+          _dobError = Strings.dateofbirthhint;
+        } else if (calculateAge(dobDateTime) != "") {
+          _dobError = Strings.agemustbe18;
+        }
 
 // gender
-      if (_genderController.text == "") {
-        _genderError = Strings.pleaseEnterYourGender;
+        if (_genderController.text == "") {
+          _genderError = Strings.pleaseEnterYourGender;
+        }
+        if (_fullnameError == "" && _dobError == "" && _genderError == "") {
+          _updateProfile();
+        } else {
+          print("error is here");
+        }
       }
-      if (_fullnameError == "" && _dobError == "" && _genderError == "") {
-        _updateProfile();
-      } else {
-        print("error is here");
-      }}
 
       // social Update
 
-      else{
-
+      else {
         print("social Update");
 
-        if(_fullnameError == ""){
+        if (_fullnameError == "") {
           _updateProfile();
         }
       }
@@ -115,7 +111,11 @@ class _EditProfileState extends State<EditProfile> {
         _loading = true;
       });
       try {
-        await updateProfile(name: _fullnameController.text, gender: "${_genderController.text}" , dob: "$dob", imageFile: _image)
+        await updateProfile(
+                name: _fullnameController.text,
+                gender: "${_genderController.text}",
+                dob: "$dob",
+                imageFile: _image)
             .then((response) {
           setState(() {
             _loading = false;
@@ -125,9 +125,15 @@ class _EditProfileState extends State<EditProfile> {
                   email: response?.data?.user?.email,
                   profileImage: response?.data?.user?.image,
                   gender: response?.data?.user?.gender,
-                  dob: response?.data?.user?.dob.toString().split(" ")[0].toString(),
-                  social: Constants.prefs?.getString("social").toString() ==  "false"? "false":"true");
-              print( "newData + ${response?.data?.user?.dob.toString()}");
+                  dob: response?.data?.user?.dob
+                      .toString()
+                      .split(" ")[0]
+                      .toString(),
+                  social:
+                      Constants.prefs?.getString("social").toString() == "false"
+                          ? "false"
+                          : "true");
+              print("newData + ${response?.data?.user?.dob.toString()}");
             } else {
               print("error in update Profile");
             }
@@ -345,15 +351,18 @@ class _EditProfileState extends State<EditProfile> {
   // set old data in vars
 
   setdataolddata() {
-
-
     _fullnameController.text = "${Constants.prefs?.getString('name')}";
     _emailController.text = "${Constants.prefs?.getString('email')}";
 
     print("------------------------ ${Constants.prefs?.getString('dob')}");
-    if (Constants.prefs?.getString('dob') != "null") {_dobController.text = "${Constants.prefs?.getString('dob').toString().split(" ").first.toString()}";
-      dobDateTime = DateTime.parse("${Constants.prefs?.getString('dob').toString().split(" ").first.toString()}");
-    dob =  "${Constants.prefs?.getString('dob').toString().split(" ").first.toString()}";}
+    if (Constants.prefs?.getString('dob') != "null") {
+      _dobController.text =
+          "${Constants.prefs?.getString('dob').toString().split(" ").first.toString()}";
+      dobDateTime = DateTime.parse(
+          "${Constants.prefs?.getString('dob').toString().split(" ").first.toString()}");
+      dob =
+          "${Constants.prefs?.getString('dob').toString().split(" ").first.toString()}";
+    }
 
     print(dob);
 

@@ -37,6 +37,14 @@ class Images {
   static String logout = "assets/pngicons/logout.png";
   static String assetsSvgIcons = "assets/svgicons/";
 
+  static String aboutcalender = "assets/pngicons/aboutCalender.png";
+  static String aboutProfile = "assets/pngicons/aboutProfile.png";
+  static String aboutWatch = "assets/pngicons/aboutWatch.png";
+  static String aboutcalenderSvg = "assets/svgicons/aboutCalenderSvg.svg";
+  static String aboutProfileSvg = "assets/svgicons/aboutAttendiesSvg.svg";
+  static String aboutWatchSvg = "assets/svgicons/aboutTimeSvg.svg";
+  static String bookingSuccessfullSvg = "assets/svgicons/bookingSuccessful.svg";
+
   // dummy
   static String profileImage =
       'https://lenstax.com/auth/app-assets/images/profile/user-uploads/user-06.jpg';

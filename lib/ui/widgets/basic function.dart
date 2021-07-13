@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:funfy/components/sizeclass/SizeConfig.dart';
 import 'package:funfy/utils/colors.dart';
@@ -33,145 +34,155 @@ class _TicketFunState extends State<TicketFun> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        width: SizeConfig.screenWidth,
-        child: Column(
-          children: [
-            //  SizedBox(height: SizeConfig.screenHeight * 0.02,),
-            Stack(
-              children: [
-                SizedBox(
-                    width: SizeConfig.screenWidth,
-                    child: SvgPicture.asset(
-                      "assets/images/Rectangle84.svg",
-                      fit: BoxFit.fill,
-                    )),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Container(
-                    height: SizeConfig.screenHeight * 0.10,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          SvgPicture.asset("assets/images/ticket.svg"),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+    return Container(
+      width: SizeConfig.screenWidth,
+      child: Column(
+        children: [
+          //  SizedBox(height: SizeConfig.screenHeight * 0.02,),
+          Stack(
+            children: [
+              SizedBox(
+                  width: SizeConfig.screenWidth,
+                  child: SvgPicture.asset(
+                    "assets/images/Rectangle84.svg",
+                    fit: BoxFit.fill,
+                  )),
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: Container(
+                 height: SizeConfig.screenHeight * 0.13,
+                  child: Padding(
+                    // padding: const EdgeInsets.all(8.0),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: size.width * 0.05,
+                        vertical: size.height * 0.001),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                            margin: EdgeInsets.only(top: size.height * 0.005),
+                            child:
+                                SvgPicture.asset("assets/images/ticket.svg")),
+                        SizedBox(
+                          width: size.width * 0.02,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Container(
+                              alignment: Alignment.topCenter,
+                              width: SizeConfig.screenWidth * 0.40,
+                              child: Text(
+                                "Tickdfgsdfgsdfgdfgetwewfrhtjykkuk",
+                                style: TextStyle(
+                                  color: AppColors.white,
+                                  fontSize: 22,
+                                  fontFamily: "DM Sans Bold",
+                                ),
+                                textAlign: TextAlign.start,
+                                maxLines: 1,
+                                softWrap: true,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            Container(
+                              width: SizeConfig.screenWidth * 0.40,
+                              child: Text(
+                                "You will enjoy an entranceentranceentranceentranceentranceentranceentranceentranceentranceentrance",
+                                textAlign: TextAlign.start,
+                                maxLines: 2,
+                                softWrap: true,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    color: AppColors.brownlite, fontSize: 14),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Spacer(),
+                        Column(
+                          children: [
+                            Text(
+                              "€ 12.29",
+                              style: TextStyle(
+                                  color: AppColors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              height: SizeConfig.screenHeight * 0.03,
+                            ),
+
+                            // + - buttons
+                            Row(
                               children: [
                                 Container(
-                                  width: SizeConfig.screenWidth * 0.50,
-                                  child: Flexible(
-                                    child: Text(
-                                      "Tickdfgsdfgsdfgdfget",
-                                      style: TextStyle(
-                                        fontSize: 22,
-                                        fontFamily: "DM Sans Bold",
-                                      ),
-                                      textAlign: TextAlign.start,
-                                      maxLines: 1,
-                                      softWrap: true,
-                                      overflow: TextOverflow.clip,
-                                    ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.transparent,
+                                    border: Border.all(color: AppColors.white),
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(size.width * 0.01)),
                                   ),
+                                  height: SizeConfig.screenHeight * 0.04,
+                                  width: SizeConfig.screenWidth * 0.08,
+                                  child: Center(
+                                      child: Text(
+                                    "-",
+                                    style: TextStyle(
+                                      color: AppColors.white,
+                                      fontFamily: "DM Sans Medium",
+                                      fontSize: size.width * 0.04,
+                                    ),
+                                  )),
+                                ),
+                                SizedBox(
+                                  width: SizeConfig.screenWidth * 0.03,
                                 ),
 
-                                
+                                // center number
+                                Text(
+                                  "0",
+                                  style: TextStyle(
+                                      fontFamily: "DM Sans Medium",
+                                      fontSize: size.width * 0.04,
+                                      color: AppColors.white),
+                                ),
+                                SizedBox(
+                                  width: SizeConfig.screenWidth * 0.03,
+                                ),
                                 Container(
-                                  width: SizeConfig.screenWidth * 0.50,
-                                  child: Flexible(
-                                    child: Text(
-                                      "You will enjoy an entranceentranceentranceentranceentranceentranceentranceentranceentranceentrance",
-                                      textAlign: TextAlign.start,
-                                      maxLines: 1,
-                                      softWrap: true,
-                                      overflow: TextOverflow.clip,
-                                      style: TextStyle(
-                                          color: AppColors.brownlite,
-                                          fontSize: 14),
-                                    ),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.skin,
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(size.width * 0.01)),
                                   ),
+                                  height: SizeConfig.screenHeight * 0.04,
+                                  width: SizeConfig.screenWidth * 0.08,
+                                  child: Center(
+                                      child: Text(
+                                    "+",
+                                    style: TextStyle(
+                                        fontFamily: "DM Sans Medium",
+                                        fontSize: size.width * 0.04,
+                                        color: AppColors.homeBackground),
+                                  )),
                                 ),
                               ],
-                            ),
-                          ),
-                          Spacer(),
-                          Column(
-                            children: [
-                              Text(
-                                "€ 12.29",
-                                style: TextStyle(
-                                    color: AppColors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(
-                                height: SizeConfig.screenHeight * 0.01,
-                              ),
-                              Row(
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: AppColors.homeBackground,
-                                      border:
-                                          Border.all(color: AppColors.white),
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(6)),
-                                    ),
-                                    height: SizeConfig.screenHeight * 0.03,
-                                    width: SizeConfig.screenWidth * 0.08,
-                                    child: Center(
-                                        child: Text(
-                                      "-",
-                                      style: TextStyle(
-                                        fontFamily: "DM Sans Medium",
-                                        fontSize: 12,
-                                      ),
-                                    )),
-                                  ),
-                                  SizedBox(
-                                    width: SizeConfig.screenWidth * 0.03,
-                                  ),
-                                  Text("0"),
-                                  SizedBox(
-                                    width: SizeConfig.screenWidth * 0.03,
-                                  ),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: AppColors.skin,
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(6)),
-                                    ),
-                                    height: SizeConfig.screenHeight * 0.03,
-                                    width: SizeConfig.screenWidth * 0.08,
-                                    child: Center(
-                                        child: Text(
-                                      "+",
-                                      style: TextStyle(
-                                          fontFamily: "DM Sans Medium",
-                                          fontSize: 12,
-                                          color: AppColors.homeBackground),
-                                    )),
-                                  ),
-                                ],
-                              )
-                            ],
-                          )
-                        ],
-                      ),
+                            )
+                          ],
+                        )
+                      ],
                     ),
                   ),
                 ),
-              ],
-            ),
-            SizedBox(
-              height: SizeConfig.screenHeight * 0.02,
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+          // SizedBox(
+          //   height: SizeConfig.screenHeight * 0.02,
+          // ),
+        ],
       ),
     );
   }

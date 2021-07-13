@@ -7,8 +7,14 @@ import 'package:funfy/components/navigation.dart';
 import 'package:funfy/components/sizeclass/SizeConfig.dart';
 import 'package:funfy/models/fiestasmodel.dart';
 import 'package:funfy/ui/widgets/basic%20function.dart';
+import 'package:funfy/ui/widgets/rating.dart';
+import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/colors.dart';
+import 'package:funfy/utils/fontsname.dart';
+import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/strings.dart';
+
+import '../buynow.dart';
 import 'buynow.dart';
 
 String bannerImage =
@@ -42,96 +48,8 @@ class _BookNowState extends State<BookNow> {
 
   @override
   Widget build(BuildContext context) {
-    Widget _ratingBar(int mode) {
-      switch (mode) {
-        case 1:
-          return RatingBar.builder(
-            initialRating: _initialRating,
-            minRating: 1,
-            direction: _isVertical ? Axis.vertical : Axis.horizontal,
-            allowHalfRating: true,
-            unratedColor: Colors.amber.withAlpha(50),
-            itemCount: 5,
-            itemSize: 22.0,
-            itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-            itemBuilder: (context, _) => Icon(
-              Icons.star,
-              color: Colors.amber,
-            ),
-            onRatingUpdate: (rating) {
-              setState(() {
-                //_rating = rating;
-              });
-            },
-            updateOnDrag: true,
-          );
-        case 2:
-          return RatingBar(
-            initialRating: _initialRating,
-            direction: _isVertical ? Axis.vertical : Axis.horizontal,
-            allowHalfRating: true,
-            itemCount: 5,
-            ratingWidget: RatingWidget(
-              full: Icon(Icons.star),
-              half: Icon(Icons.star_half),
-              empty: Icon(Icons.star_border_outlined),
-            ),
-            itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-            onRatingUpdate: (rating) {
-              setState(() {
-                //   _rating = rating;
-              });
-            },
-            updateOnDrag: true,
-          );
-        case 3:
-          return RatingBar.builder(
-            initialRating: _initialRating,
-            direction: _isVertical ? Axis.vertical : Axis.horizontal,
-            itemCount: 5,
-            itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-            itemBuilder: (context, index) {
-              switch (index) {
-                case 0:
-                  return Icon(
-                    Icons.sentiment_very_dissatisfied,
-                    color: Colors.red,
-                  );
-                case 1:
-                  return Icon(
-                    Icons.sentiment_dissatisfied,
-                    color: Colors.redAccent,
-                  );
-                case 2:
-                  return Icon(
-                    Icons.sentiment_neutral,
-                    color: Colors.amber,
-                  );
-                case 3:
-                  return Icon(
-                    Icons.sentiment_satisfied,
-                    color: Colors.lightGreen,
-                  );
-                case 4:
-                  return Icon(
-                    Icons.sentiment_very_satisfied,
-                    color: Colors.green,
-                  );
-                default:
-                  return Container();
-              }
-            },
-            onRatingUpdate: (rating) {
-              setState(() {
-                //   _rating = rating;
-              });
-            },
-            updateOnDrag: true,
-          );
-        default:
-          return Container();
-      }
-    }
+    var size = MediaQuery.of(context).size;
+
 
     return SafeArea(
       child: DefaultTabController(
@@ -203,8 +121,9 @@ class _BookNowState extends State<BookNow> {
                                         child: Text(
                                       "OPEN",
                                       style: TextStyle(
+                                        color: AppColors.white,
                                         fontFamily: "BabasNeue",
-                                        fontSize: 17,
+                                        fontSize: size.width * 0.045,
                                       ),
                                     )),
                                   ),
@@ -224,8 +143,9 @@ class _BookNowState extends State<BookNow> {
                                         child: Text(
                                       "Club",
                                       style: TextStyle(
+                                        color: AppColors.white,
                                         fontFamily: "DM Sans Medium",
-                                        fontSize: 12,
+                                        fontSize: size.width * 0.03,
                                       ),
                                     )),
                                   ),
@@ -237,12 +157,14 @@ class _BookNowState extends State<BookNow> {
                                 //   height: SizeConfig.screenHeight,
                                 child: Padding(
                                   padding: EdgeInsets.only(
-                                      left: SizeConfig.screenWidth * 0.02),
+                                      left: SizeConfig.screenWidth * 0.02, top: size.width * 0.01),
                                   child: Text(
                                     "${widget.fiestasModel?.name}",
                                     style: TextStyle(
-                                      fontSize: 22,
+
+                                      fontSize: size.width * 0.058,
                                       fontFamily: "DM Sans Bold",
+                                      color: AppColors.white
                                     ),
                                     maxLines: 1,
                                     softWrap: true,
@@ -250,7 +172,11 @@ class _BookNowState extends State<BookNow> {
                                   ),
                                 ),
                               ),
-                              _ratingBar(1),
+                              // _ratingBar(1),
+
+                              SizedBox(height: size.height * 0.005,),
+
+                              ratingstars(size:size.width * 0.06, ittempading: size.width * 0.005, color: AppColors.tagBorder, rating: 3.0)
                             ],
                           ),
                           Spacer(),
@@ -310,49 +236,107 @@ class _BookNowState extends State<BookNow> {
                     ),
                     Expanded(
                       child: TabBarView(children: [
-                        ListView.builder(
-                            itemCount: 4,
-                            itemBuilder: (BuildContext context, index) {
-                              return TicketFun();
-                            }),
+                        //   Text(""),
+                        Column(
+                          children: [
+                            Expanded(
+                              child: ListView.builder(
+                                  itemCount: 4,
+                                  itemBuilder: (BuildContext context, index) {
+                                    return TicketFun();
+                                  }),
+                            ),
+                            SizedBox(
+                              height: size.height * 0.1,
+                            )
+                          ],
+                        ),
+
                         // first tab bar view widget
-                        Container(
-                          color: AppColors.homeBackground,
-                          child: Padding(
-                            padding:
-                                EdgeInsets.all(SizeConfig.screenWidth * 0.06),
-                            child: Container(
-                              width: SizeConfig.screenWidth * 0.70,
-                              height: null,
-                              child: Card(
-                                color: AppColors.homeBackgroundLite,
-                                shadowColor: Colors.black26,
-                                elevation: 10.0,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    height: SizeConfig.screenHeight * 0.40,
-                                    child: ListView(
-                                      children: [
-                                        Text(
-                                          Strings.description,
-                                          style: TextStyle(
-                                              fontFamily: "Product",
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        SizedBox(
-                                            height:
-                                                SizeConfig.screenHeight * 0.02),
-                                        Text(
-                                            "Dummy text   Dummy text   Dummy text   Dummy text   Dummy text   Dummy text   Dummy text   Dummy text   Dummy text   Dummy text   ",
-                                            style: TextStyle(
-                                                fontFamily: "Product",
-                                                fontSize: 14,
-                                                color: AppColors.white)),
-                                      ],
+                        SingleChildScrollView(
+                          child: Container(
+                            color: AppColors.homeBackground,
+                            child: Padding(
+                              padding:
+                                  EdgeInsets.all(SizeConfig.screenWidth * 0.06),
+                              child: Container(
+                                width: SizeConfig.screenWidth * 0.70,
+                                height: null,
+                                child: Column(
+                                  children: [
+                                    // about items
+
+                                    Container(
+                                      width: size.width * 0.75,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          aboutItem(
+                                              context: context,
+                                              imageName:
+                                                  Images.aboutcalenderSvg,
+                                              text1: "23",
+                                              text2: "June"),
+                                          aboutItem(
+                                              context: context,
+                                              imageName: Images.aboutProfileSvg,
+                                              text1: "23",
+                                              text2: "June"),
+                                          aboutItem(
+                                              context: context,
+                                              imageName: Images.aboutWatchSvg,
+                                              text1: "23",
+                                              text2: "June"),
+                                        ],
+                                      ),
                                     ),
-                                  ),
+
+                                    SizedBox(
+                                      height: size.height * 0.03,
+                                    ),
+
+                                    Card(
+                                      color: AppColors.homeBackgroundLite,
+                                      shadowColor: Colors.black26,
+                                      elevation: 10.0,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                          // height:
+                                          //     SizeConfig.screenHeight * 0.40,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                Strings.description,
+                                                style: TextStyle(
+                                                    color: AppColors.white,
+                                                    fontFamily: "Product",
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              SizedBox(
+                                                  height:
+                                                      SizeConfig.screenHeight *
+                                                          0.02),
+                                              Text(Strings.lorem,
+                                                  style: TextStyle(
+                                                      fontFamily: "Product",
+                                                      fontSize: 14,
+                                                      color: AppColors.white)),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+
+                                    SizedBox(
+                                      height: size.height * 0.1,
+                                    )
+                                  ],
                                 ),
                               ),
                             ),
@@ -378,6 +362,7 @@ class _BookNowState extends State<BookNow> {
                 left: SizeConfig.screenWidth * 0.03,
                 child: Container(
                   width: SizeConfig.screenWidth,
+                  padding: EdgeInsets.symmetric(horizontal: size.width * 0.03, vertical: size.height * 0.01),
                   child: Row(
                     children: [
                       Column(
@@ -387,33 +372,36 @@ class _BookNowState extends State<BookNow> {
                             "Added to cart",
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                                color: AppColors.brownlite, fontSize: 8),
+                                color: AppColors.brownlite, fontSize: size.width * 0.03),
                           ),
                           SizedBox(
                             height: SizeConfig.screenHeight * 0.01,
                           ),
-                          SvgPicture.asset("assets/images/ticket.svg"),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                              children:[SvgPicture.asset("assets/images/ticket.svg", width: size.width * 0.07,),
+                                SizedBox(width: size.width * 0.02,),
+                                Container(
+                            // width: SizeConfig.screenWidth * 0.40,
+                            child: Text(
+                              "Ticket * 10",
+                              style: TextStyle(
+                                color: AppColors.white,
+                                fontSize: size.width * 0.05,
+                                fontFamily: "DM Sans Bold",
+                              ),
+                              textAlign: TextAlign.start,
+                              maxLines: 1,
+                              softWrap: true,
+                              overflow: TextOverflow.clip,
+                            ),
+                          ),]),
                         ],
                       ),
                       SizedBox(
                         width: SizeConfig.screenWidth * 0.04,
                       ),
-                      Container(
-                        width: SizeConfig.screenWidth * 0.40,
-                        child: Flexible(
-                          child: Text(
-                            "ticket * 10",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontFamily: "DM Sans Bold",
-                            ),
-                            textAlign: TextAlign.start,
-                            maxLines: 1,
-                            softWrap: true,
-                            overflow: TextOverflow.clip,
-                          ),
-                        ),
-                      ),
+
                       Spacer(),
                       ElevatedButton(
                         child: Text(
@@ -440,4 +428,50 @@ class _BookNowState extends State<BookNow> {
       ),
     );
   }
+}
+
+Widget aboutItem({context, String? imageName, String? text1, String? text2}) {
+  var size = MediaQuery.of(context).size;
+
+  return Column(
+    children: [
+      roundedBoxR(
+          width: size.width * 0.15,
+          height: size.height * 0.07,
+          backgroundColor: AppColors.homeBackgroundLite,
+          radius: size.width * 0.01,
+          child: Container(
+              margin: EdgeInsets.symmetric(
+                  vertical: size.height * 0.02, horizontal: size.width * 0.04),
+              // color: AppColors.white,
+              child: SvgPicture.asset(
+                "$imageName",
+                width: size.width * 0.01,
+              )
+
+              // Image.asset(
+              //   "$imageName",
+              //   width: size.width * 0.01,
+              // )
+
+              )),
+      SizedBox(
+        height: size.height * 0.008,
+      ),
+      Text(
+        "$text1",
+        style: TextStyle(
+            color: Colors.white,
+            fontFamily: Fonts.dmSansBold,
+            fontSize: size.width * 0.05),
+      ),
+      Text(
+        "$text2",
+        style: TextStyle(
+            color: Colors.white,
+            fontFamily: Fonts.dmSansRegular,
+            fontSize: size.width * 0.03),
+      )
+    ],
+  );
 }

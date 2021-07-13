@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="19.5" height="21.5" viewBox="0 0 19.5 21.5">
+  <g id="aboutCalenderSvg" transform="translate(-13.25 -12.25)">
+    <g id="Group_1508" data-name="Group 1508" transform="translate(14 13)">
+      <path id="Path_200" data-name="Path 200" d="M3.093,9.4H20.917" transform="translate(-3 -2)" fill="none" stroke="#ffefbb" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+      <path id="Path_201" data-name="Path 201" d="M16.442,13.31h.009" transform="translate(-3 -2)" fill="none" stroke="#ffefbb" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+      <path id="Path_202" data-name="Path 202" d="M12,13.31h.009" transform="translate(-3 -2)" fill="none" stroke="#ffefbb" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+      <path id="Path_203" data-name="Path 203" d="M7.558,13.31h.009" transform="translate(-3 -2)" fill="none" stroke="#ffefbb" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+      <path id="Path_204" data-name="Path 204" d="M16.442,17.2h.009" transform="translate(-3 -2)" fill="none" stroke="#ffefbb" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+      <path id="Path_205" data-name="Path 205" d="M12,17.2h.009" transform="translate(-3 -2)" fill="none" stroke="#ffefbb" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+      <path id="Path_206" data-name="Path 206" d="M7.558,17.2h.009" transform="translate(-3 -2)" fill="none" stroke="#ffefbb" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+      <path id="Path_207" data-name="Path 207" d="M16.044,2V5.291" transform="translate(-3 -2)" fill="none" stroke="#ffefbb" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+      <path id="Path_208" data-name="Path 208" d="M7.965,2V5.291" transform="translate(-3 -2)" fill="none" stroke="#ffefbb" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+      <path id="Path_209" data-name="Path 209" d="M16.238,3.579H7.771C4.834,3.579,3,5.215,3,8.222v9.05C3,20.326,4.834,22,7.771,22h8.458C19.175,22,21,20.355,21,17.347V8.222C21.009,5.215,19.184,3.579,16.238,3.579Z" transform="translate(-3 -2)" fill="none" stroke="#ffefbb" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" fill-rule="evenodd"/>
+    </g>
+  </g>
+</svg>

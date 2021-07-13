@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:funfy/ui/screens/auth/signin.dart';
+import 'package:funfy/ui/screens/bookingSuccess.dart';
 import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/screens/splash.dart';
 import 'package:funfy/utils/Constants.dart';

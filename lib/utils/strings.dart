@@ -108,7 +108,18 @@ class Strings {
   static String buyFiestasandPreFiestasbestdealsinyourcart =
       "Buy Fiestas and Pre-Fiestas best deals in your cart";
 
+  static String bookingSuccessfull = "Booking Successful";
+  static String seeReceipt = "See Receipt";
+  static String backtoHome = "Back to home";
+  static String yourCart = "Your Cart";
+  static String ticket = "Ticket";
+  static String qty = "Qty";
+  static String proceedtopay = "Proceed to pay";
+  static String thisisthefinalstepafteryoutouchingPayNowbuttonthepaymentwillbetransaction = "This is the final step, after you touching Pay Now button, the payment will be transaction";
+
   // dummy
   static String garyadams = "Gary F. Adams";
   static String madridspain = "Madrid, Spain";
+  static String lorem =
+      "Lorem Ipsum is simply dummy text of the printing and typesetting standard. Lorem Ipsum has been the industry's standardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially";
 }

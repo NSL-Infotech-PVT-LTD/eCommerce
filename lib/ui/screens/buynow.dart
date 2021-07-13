@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:funfy/components/navigation.dart';
+import 'package:funfy/ui/screens/CreditCardDetails.dart';
 import 'package:funfy/components/sizeclass/SizeConfig.dart';
+import 'package:funfy/ui/widgets/rating.dart';
 import 'package:funfy/utils/colors.dart';
+import 'package:funfy/utils/fontsname.dart';
+import 'package:funfy/utils/strings.dart';
 
 
 class BuyNow extends StatefulWidget {
@@ -18,102 +22,18 @@ class _BuyNowState extends State<BuyNow> {
   double _initialRating = 2.0;
   @override
   Widget build(BuildContext context) {
-    Widget _ratingBar(int mode) {
-      switch (mode) {
-        case 1:
-          return RatingBar.builder(
-            initialRating: _initialRating,
-            minRating: 1,
-            direction: _isVertical ? Axis.vertical : Axis.horizontal,
-            allowHalfRating: true,
-            unratedColor: Colors.amber.withAlpha(50),
-            itemCount: 5,
-            itemSize: 22.0,
-            itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-            itemBuilder: (context, _) => Icon(
-              Icons.star,
-              color: Colors.amber,
-            ),
-            onRatingUpdate: (rating) {
-              setState(() {
-                //_rating = rating;
-              });
-            },
-            updateOnDrag: true,
-          );
-        case 2:
-          return RatingBar(
-            initialRating: _initialRating,
-            direction: _isVertical ? Axis.vertical : Axis.horizontal,
-            allowHalfRating: true,
-            itemCount: 5,
-            ratingWidget: RatingWidget(
-              full: Icon(Icons.star),
-              half: Icon(Icons.star_half),
-              empty: Icon(Icons.star_border_outlined),
-            ),
-            itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-            onRatingUpdate: (rating) {
-              setState(() {
-                //   _rating = rating;
-              });
-            },
-            updateOnDrag: true,
-          );
-        case 3:
-          return RatingBar.builder(
-            initialRating: _initialRating,
-            direction: _isVertical ? Axis.vertical : Axis.horizontal,
-            itemCount: 5,
-            itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-            itemBuilder: (context, index) {
-              switch (index) {
-                case 0:
-                  return Icon(
-                    Icons.sentiment_very_dissatisfied,
-                    color: Colors.red,
-                  );
-                case 1:
-                  return Icon(
-                    Icons.sentiment_dissatisfied,
-                    color: Colors.redAccent,
-                  );
-                case 2:
-                  return Icon(
-                    Icons.sentiment_neutral,
-                    color: Colors.amber,
-                  );
-                case 3:
-                  return Icon(
-                    Icons.sentiment_satisfied,
-                    color: Colors.lightGreen,
-                  );
-                case 4:
-                  return Icon(
-                    Icons.sentiment_very_satisfied,
-                    color: Colors.green,
-                  );
-                default:
-                  return Container();
-              }
-            },
-            onRatingUpdate: (rating) {
-              setState(() {
-                //   _rating = rating;
-              });
-            },
-            updateOnDrag: true,
-          );
-        default:
-          return Container();
-      }
-    }
+
+    var size = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
         actions: [
-          SvgPicture.asset(
-            "assets/svgicons/hearticon.svg",
-            color: Colors.white,
+          Container(
+            margin: EdgeInsets.only(right: size.width * 0.02),
+            child: SvgPicture.asset(
+              "assets/svgicons/hearticon.svg",
+              color: Colors.white,
+            ),
           )
         ],
         backgroundColor: AppColors.homeBackground,
@@ -146,10 +66,12 @@ class _BuyNowState extends State<BuyNow> {
                           width: SizeConfig.screenWidth * 0.15,
                           child: Center(
                               child: Text(
+
                                 "OPEN",
                                 style: TextStyle(
+                                  color: AppColors.white,
                                   fontFamily: "BabasNeue",
-                                  fontSize: 17,
+                                  fontSize: size.width * 0.043,
                                 ),
                               )),
                         ),
@@ -167,29 +89,36 @@ class _BuyNowState extends State<BuyNow> {
                               child: Text(
                                 "Club",
                                 style: TextStyle(
+                                  color: AppColors.white,
                                   fontFamily: "DM Sans Medium",
-                                  fontSize: 12,
+                                  fontSize: size.width * 0.035,
                                 ),
                               )),
                         ),
                       ],
                     ),
+
+
                     Container(
                       // cvfbgtkl;./
                       width: SizeConfig.screenWidth * 0.60,
+
+                      margin: EdgeInsets.only(top: size.height * 0.01),
+
                       //   height: SizeConfig.screenHeight,
                       child: Text(
                         "Teatro Barceló",
                         style: TextStyle(
-                          fontSize: 22,
+                          fontSize: size.width * 0.08,
                           fontFamily: "DM Sans Bold",
+                          color: AppColors.white
                         ),
                         maxLines: 1,
                         softWrap: true,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    _ratingBar(1),
+                    ratingstars(size:size.width * 0.06, ittempading: size.width * 0.005, color: AppColors.tagBorder, rating: 3.0)
                   ],
                 ),
               ],
@@ -198,6 +127,7 @@ class _BuyNowState extends State<BuyNow> {
           Stack(
             children: [
               Container(
+
                 decoration:  BoxDecoration(
                   color: AppColors.homeBackgroundLite,
                   gradient: LinearGradient(
@@ -220,28 +150,31 @@ class _BuyNowState extends State<BuyNow> {
               padding: EdgeInsets.all(SizeConfig.screenWidth * 0.04),
               child: SvgPicture.asset("assets/svgicons/cartsvg.svg"),
             ),SizedBox(
-                        width: SizeConfig.screenWidth * 0.03,
+                        width: SizeConfig.screenWidth * 0.003,
                       ),
-                      Text("Your Cart"),
+                      Text(Strings.yourCart, style: TextStyle(
+                        color: AppColors.white,
+                          fontFamily: Fonts.dmSansMedium, fontSize: size.width * 0.04),),
                     ],),
                     Container(
                       decoration: BoxDecoration(
                           color:AppColors.brownLite,
                           border: Border.all(
                           ),
-                          borderRadius: BorderRadius.all(Radius.circular(10))
+                          borderRadius: BorderRadius.all(Radius.circular(size.width * 0.02))
                       ),
 
                       height: SizeConfig.screenHeight * 0.20,
-                      width: SizeConfig.screenWidth * 0.80,
+                      width: SizeConfig.screenWidth * 0.92,
                       child:  Padding(
-                        padding: EdgeInsets.fromLTRB(8.0,SizeConfig.screenHeight * 0.02,8.0,SizeConfig.screenHeight * 0.04),
+                        // padding: EdgeInsets.fromLTRB(8.0,SizeConfig.screenHeight * 0.02,8.0,SizeConfig.screenHeight * 0.04),
+                        padding: EdgeInsets.symmetric(vertical: size.height * 0.015, horizontal: size.width * 0.03),
                         child:
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                         //  mainAxisSize: MainAxisSize.min,
                           children: [
-                            SvgPicture.asset("assets/images/ticket.svg",),
+                            SvgPicture.asset("assets/images/ticket.svg",width: size.width * 0.1,),
                             SizedBox(
                               width: SizeConfig.screenWidth * 0.03,
                             ),
@@ -249,8 +182,12 @@ class _BuyNowState extends State<BuyNow> {
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("Ticket"),
-                                Text("Qty:2"),
+                                Text(Strings.yourCart, style: TextStyle(
+                                    color: AppColors.white,
+                                    fontFamily: Fonts.dmSansMedium, fontSize: size.width * 0.04),),
+                                Text(Strings.qty+":2", style:TextStyle(
+    color: AppColors.white,
+    fontFamily: Fonts.dmSansMedium, fontSize: size.width * 0.03)),
                                 SizedBox(
                                   height: SizeConfig.screenHeight * 0.02,
                                 ),
@@ -261,23 +198,29 @@ class _BuyNowState extends State<BuyNow> {
                                         color: AppColors.brownLite,
                                         border: Border.all(color: AppColors.white),
                                         borderRadius:
-                                        BorderRadius.all(Radius.circular(6)),
+                                        BorderRadius.all(Radius.circular(size.width * 0.01)),
                                       ),
-                                      height: SizeConfig.screenHeight * 0.03,
+                                      height: SizeConfig.screenHeight * 0.04,
                                       width: SizeConfig.screenWidth * 0.08,
                                       child: Center(
                                           child: Text(
                                             "-",
                                             style: TextStyle(
+                                              color: AppColors.white,
                                             fontFamily: "DM Sans Medium",
-                                            fontSize: 12,
+                                            fontSize: size.width * 0.04,
                                             ),
                                           )),
                                     ),
                                     SizedBox(
                                       width: SizeConfig.screenWidth * 0.03,
                                     ),
-                                    Text("0"),
+                                    Text("0", style: TextStyle(
+
+                                        fontFamily: "DM Sans Medium",
+                                        fontSize: size.width * 0.04,
+                                        color: AppColors.white
+                                    ),),
                                     SizedBox(
                                       width: SizeConfig.screenWidth * 0.03,
                                     ),
@@ -286,17 +229,17 @@ class _BuyNowState extends State<BuyNow> {
                                         color: AppColors.skin,
                                         borderRadius:
                                         BorderRadius.all(
-                                            Radius.circular(6)
+                                            Radius.circular(size.width * 0.01)
                                         ),
                                       ),
-                                      height: SizeConfig.screenHeight * 0.03,
+                                      height: SizeConfig.screenHeight * 0.04,
                                       width: SizeConfig.screenWidth * 0.08,
                                       child: Center(
                                           child: Text(
                                             "+",
                                             style: TextStyle(
                                                 fontFamily: "DM Sans Medium",
-                                                fontSize: 12,
+                                                fontSize: size.width * 0.04,
                                                 color: AppColors.homeBackground
                                             ),
                                           )),
@@ -304,7 +247,11 @@ class _BuyNowState extends State<BuyNow> {
                                   ],
                                 )
                               ],
-                            ), Spacer(), Text("€ 29.99")
+                            ), Spacer(), Text("€ 29.99", style: TextStyle(
+                                fontFamily: Fonts.dmSansMedium,
+                                fontSize: size.width * 0.055,
+                                color: AppColors.white
+                            ),)
                           ],
                         ),
                       ),)
@@ -315,16 +262,20 @@ class _BuyNowState extends State<BuyNow> {
             ],
           ),
           SizedBox(
-            width: SizeConfig.screenWidth * 0.80,
+            width: SizeConfig.screenWidth * 0.90,
             child: ElevatedButton(
+
               child: Text(
-                'Proceed to pay',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                Strings.proceedtopay,
+                style: TextStyle(
+                  color: AppColors.white,
+                    fontSize: size.width * 0.05, fontFamily: Fonts.dmSansBold),
               ),
               onPressed: () {
-                // navigatorPushFun(context, CreditCard());
+                navigatorPushFun(context, CreditCard());
               },
               style: ElevatedButton.styleFrom(
+
                 padding: EdgeInsets.symmetric(
                     horizontal: SizeConfig.screenWidth * 0.06,
                     vertical: SizeConfig.screenHeight * 0.02),
@@ -332,12 +283,16 @@ class _BuyNowState extends State<BuyNow> {
               ),
             ),
           ),
-          SizedBox(height: SizeConfig.screenHeight * 0.20,),
+          SizedBox(height: SizeConfig.screenHeight * 0.22,),
           ConstrainedBox(
               constraints: BoxConstraints(
                 maxWidth: SizeConfig.screenWidth * 0.80,
               ),
-              child: Text("This is the final step, after you touching Pay Now button, the payment will be transaction",))
+              child: Text(Strings.thisisthefinalstepafteryoutouchingPayNowbuttonthepaymentwillbetransaction,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: AppColors.descriptionfirst,
+                  fontSize: size.width * 0.035, fontFamily: Fonts.dmSansMedium),))
         ],
       ),
     );
