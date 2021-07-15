@@ -32,6 +32,8 @@ class AppColors {
   static Color redlite = HexColor("#FF5349");
 
   static Color brownLite = HexColor("#695E4C");
-
-
+  static Color priceColor = HexColor("#87807b");
+  static Color borderColor = HexColor("#FFEFBB");
+  static Color grayFont = HexColor("8D8D8D");
+  static Color greenCont = HexColor("#31BE43");
 }

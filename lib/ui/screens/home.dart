@@ -92,9 +92,11 @@ class _HomeState extends State<Home> {
           ),
           BottomNavigationBarItem(
             activeIcon:
-                buttomIconImagePng(size: size, image: Images.bokkingIconActPng),
-            icon: buttomIconImagePng(
-                size: size, image: Images.bookingIconUnActPng),
+                buttomIconImage(size: size, svgimage: Images.bookingIconActSvg),
+            icon: buttomIconImage(
+                size: size,
+                // image: Images.bookingIconUnActPng
+                svgimage: Images.bookingIconUnActSvg),
             label: Strings.bottomNavBookings,
           ),
           BottomNavigationBarItem(

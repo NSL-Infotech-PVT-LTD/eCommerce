@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:funfy/apis/userdataM.dart';
+import 'package:funfy/components/addProductFuctions.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/components/sizeclass/SizeConfig.dart';
 import 'package:funfy/models/fiestasmodel.dart';
@@ -13,9 +15,7 @@ import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/strings.dart';
-
 import '../buynow.dart';
-import 'buynow.dart';
 
 String bannerImage =
     "https://png.pngtree.com/thumb_back/fw800/back_our/20190621/ourmid/pngtree-tmall-beer-festival-e-commerce-carnival-banner-image_193689.jpg";
@@ -34,10 +34,31 @@ class _BookNowState extends State<BookNow> {
   List<Widget> cardList = [];
   double _initialRating = 2.0;
   bool _isVertical = false;
-  String name = "Loading...";
+  // String name = "Loading...";
   String description = "Loading...";
   String freeDeliveryReturn = "Loading...";
   String price = "Loading...";
+
+  List tiketList = [
+    {
+      "image": Images.ticketImageSvg,
+      "name": Strings.ticket,
+      "description": Strings.ticketDescription,
+      "price": "100.00" //"${widget.fiestasModel?.ticketPrice}"
+    },
+    {
+      "image": Images.standardImageSvg,
+      "name": Strings.standard,
+      "description": Strings.standardDescription,
+      "price": "200.00" //"${widget.fiestasModel?.ticketPrice}"
+    },
+    {
+      "image": Images.vIPTableImageSvg,
+      "name": Strings.vipTable,
+      "description": Strings.vipTableDescription,
+      "price": "300.00" //"${widget.fiestasModel?.ticketPrice}"
+    }
+  ];
 
   @override
   void initState() {
@@ -46,10 +67,43 @@ class _BookNowState extends State<BookNow> {
     super.initState();
   }
 
+  // - + funtion
+
+  addTicket({int? index, String? name, int? count, int? price}) {
+    print("add button press");
+
+    setState(() {
+      if (UserData.ticketcartMap.containsKey(index)) {
+        UserData.ticketcartMap[index]["tiketCount"] =
+            UserData.ticketcartMap[index]["tiketCount"] + 1;
+      } else {
+        UserData.ticketcartMap[index] = {
+          "ticketname": name,
+          "tiketCount": count,
+          "tiketPrice": price,
+        };
+      }
+    });
+  }
+
+  // remove button
+
+  ticketRemove({String? name, int? index}) {
+    print("remove");
+    setState(() {
+      if (UserData.ticketcartMap.containsKey(index) &&
+          UserData.ticketcartMap[index]["tiketCount"] < 0) {
+        UserData.ticketcartMap[index]["tiketCount"] =
+            UserData.ticketcartMap[index]["tiketCount"] - 1;
+      } else {
+        UserData.ticketcartMap[index]["tiketCount"] = 0;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-
 
     return SafeArea(
       child: DefaultTabController(
@@ -157,26 +211,28 @@ class _BookNowState extends State<BookNow> {
                                 //   height: SizeConfig.screenHeight,
                                 child: Padding(
                                   padding: EdgeInsets.only(
-                                      left: SizeConfig.screenWidth * 0.02, top: size.width * 0.01),
+                                      left: SizeConfig.screenWidth * 0.02,
+                                      top: size.width * 0.01),
                                   child: Text(
                                     "${widget.fiestasModel?.name}",
                                     style: TextStyle(
-
-                                      fontSize: size.width * 0.058,
-                                      fontFamily: "DM Sans Bold",
-                                      color: AppColors.white
-                                    ),
+                                        fontSize: size.width * 0.058,
+                                        fontFamily: "DM Sans Bold",
+                                        color: AppColors.white),
                                     maxLines: 1,
                                     softWrap: true,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                               ),
-                              // _ratingBar(1),
-
-                              SizedBox(height: size.height * 0.005,),
-
-                              ratingstars(size:size.width * 0.06, ittempading: size.width * 0.005, color: AppColors.tagBorder, rating: 3.0)
+                              SizedBox(
+                                height: size.height * 0.005,
+                              ),
+                              ratingstars(
+                                  size: size.width * 0.06,
+                                  ittempading: size.width * 0.005,
+                                  color: AppColors.tagBorder,
+                                  rating: 3.0)
                             ],
                           ),
                           Spacer(),
@@ -240,10 +296,21 @@ class _BookNowState extends State<BookNow> {
                         Column(
                           children: [
                             Expanded(
+                              //     child: Column(
+                              //   children: [TicketFun(), TicketFun(), TicketFun()],
+                              // )
                               child: ListView.builder(
-                                  itemCount: 4,
-                                  itemBuilder: (BuildContext context, index) {
-                                    return TicketFun();
+                                  itemCount: tiketList.length,
+                                  itemBuilder: (
+                                    BuildContext context,
+                                    index,
+                                  ) {
+                                    return ticket(
+                                        context: context,
+                                        index: index,
+                                        mapdata: tiketList[index],
+                                        addFunc: addTicket,
+                                        removeFunc: ticketRemove);
                                   }),
                             ),
                             SizedBox(
@@ -261,7 +328,6 @@ class _BookNowState extends State<BookNow> {
                                   EdgeInsets.all(SizeConfig.screenWidth * 0.06),
                               child: Container(
                                 width: SizeConfig.screenWidth * 0.70,
-                                height: null,
                                 child: Column(
                                   children: [
                                     // about items
@@ -362,7 +428,9 @@ class _BookNowState extends State<BookNow> {
                 left: SizeConfig.screenWidth * 0.03,
                 child: Container(
                   width: SizeConfig.screenWidth,
-                  padding: EdgeInsets.symmetric(horizontal: size.width * 0.03, vertical: size.height * 0.01),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: size.width * 0.03,
+                      vertical: size.height * 0.01),
                   child: Row(
                     children: [
                       Column(
@@ -372,36 +440,43 @@ class _BookNowState extends State<BookNow> {
                             "Added to cart",
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                                color: AppColors.brownlite, fontSize: size.width * 0.03),
+                                color: AppColors.brownlite,
+                                fontSize: size.width * 0.03),
                           ),
                           SizedBox(
                             height: SizeConfig.screenHeight * 0.01,
                           ),
                           Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                              children:[SvgPicture.asset("assets/images/ticket.svg", width: size.width * 0.07,),
-                                SizedBox(width: size.width * 0.02,),
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                SvgPicture.asset(
+                                  "assets/images/ticket.svg",
+                                  width: size.width * 0.07,
+                                ),
+                                SizedBox(
+                                  width: size.width * 0.02,
+                                ),
                                 Container(
-                            // width: SizeConfig.screenWidth * 0.40,
-                            child: Text(
-                              "Ticket * 10",
-                              style: TextStyle(
-                                color: AppColors.white,
-                                fontSize: size.width * 0.05,
-                                fontFamily: "DM Sans Bold",
-                              ),
-                              textAlign: TextAlign.start,
-                              maxLines: 1,
-                              softWrap: true,
-                              overflow: TextOverflow.clip,
-                            ),
-                          ),]),
+                                  // width: SizeConfig.screenWidth * 0.40,
+                                  child: Text(
+                                    "Ticket * 10",
+                                    style: TextStyle(
+                                      color: AppColors.white,
+                                      fontSize: size.width * 0.05,
+                                      fontFamily: "DM Sans Bold",
+                                    ),
+                                    textAlign: TextAlign.start,
+                                    maxLines: 1,
+                                    softWrap: true,
+                                    overflow: TextOverflow.clip,
+                                  ),
+                                ),
+                              ]),
                         ],
                       ),
                       SizedBox(
                         width: SizeConfig.screenWidth * 0.04,
                       ),
-
                       Spacer(),
                       ElevatedButton(
                         child: Text(
@@ -428,6 +503,94 @@ class _BookNowState extends State<BookNow> {
       ),
     );
   }
+}
+
+Widget buyBottomPop({context, size}) {
+  return Stack(
+    children: [
+      Positioned(
+          bottom: 0.0,
+          child: Container(
+              width: SizeConfig.screenWidth,
+              height: SizeConfig.screenHeight * 0.10,
+              child: SvgPicture.asset(
+                "assets/images/Rectangle.svg",
+                fit: BoxFit.fill,
+              ))),
+      Positioned(
+        bottom: SizeConfig.screenHeight * 0.01,
+        right: SizeConfig.screenWidth * 0.03,
+        left: SizeConfig.screenWidth * 0.03,
+        child: Container(
+          width: SizeConfig.screenWidth,
+          padding: EdgeInsets.symmetric(
+              horizontal: size.width * 0.03, vertical: size.height * 0.01),
+          child: Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Added to cart",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: AppColors.brownlite,
+                        fontSize: size.width * 0.03),
+                  ),
+                  SizedBox(
+                    height: SizeConfig.screenHeight * 0.01,
+                  ),
+                  Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                    SvgPicture.asset(
+                      "assets/images/ticket.svg",
+                      width: size.width * 0.07,
+                    ),
+                    SizedBox(
+                      width: size.width * 0.02,
+                    ),
+                    Container(
+                      // width: SizeConfig.screenWidth * 0.40,
+                      child: Text(
+                        "Ticket * 10",
+                        style: TextStyle(
+                          color: AppColors.white,
+                          fontSize: size.width * 0.05,
+                          fontFamily: "DM Sans Bold",
+                        ),
+                        textAlign: TextAlign.start,
+                        maxLines: 1,
+                        softWrap: true,
+                        overflow: TextOverflow.clip,
+                      ),
+                    ),
+                  ]),
+                ],
+              ),
+              SizedBox(
+                width: SizeConfig.screenWidth * 0.04,
+              ),
+              Spacer(),
+              ElevatedButton(
+                child: Text(
+                  'Buy Now',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                onPressed: () {
+                  navigatorPushFun(context, BuyNow());
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.screenWidth * 0.06,
+                      vertical: SizeConfig.screenHeight * 0.02),
+                  primary: AppColors.redlite,
+                ),
+              ),
+            ],
+          ),
+        ),
+      )
+    ],
+  );
 }
 
 Widget aboutItem({context, String? imageName, String? text1, String? text2}) {

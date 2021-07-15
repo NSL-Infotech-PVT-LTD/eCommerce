@@ -19,8 +19,8 @@ class Images {
   static String bookingIconUnActPng = "assets/pngicons/booking_unac.png";
   static String googleIconActPng = "assets/pngicons/googleIcon.png";
 
-  static String bookingIconActSvg = "assets/svgicons/booking_ac.svg";
-  static String bookingIconUnActSvg = "assets/svgicons/booking_unac.svg";
+  static String bookingIconActSvg = "assets/svgicons/bookingactive.svg";
+  static String bookingIconUnActSvg = "assets/svgicons/bookingunActive.svg";
   static String profileIconActSvg = "assets/svgicons/profile_ac.svg";
   static String profileUnActSvg = "assets/svgicons/profile_unac.svg";
 
@@ -44,8 +44,17 @@ class Images {
   static String aboutProfileSvg = "assets/svgicons/aboutAttendiesSvg.svg";
   static String aboutWatchSvg = "assets/svgicons/aboutTimeSvg.svg";
   static String bookingSuccessfullSvg = "assets/svgicons/bookingSuccessful.svg";
+  static String ticketImageSvg = "assets/images/ticket.svg";
+  static String standardImageSvg = "assets/svgicons/standard.svg";
+  static String vIPTableImageSvg = "assets/svgicons/vipTable.svg";
+  static String ticketWhiteImageSvg = "assets/svgicons/ticketWhite.svg";
+  static String qrZoomIn = "assets/svgicons/qrzoomIn.svg";
+  static String qrZoomOut = "assets/svgicons/qrZoomOut.svg";
 
   // dummy
   static String profileImage =
       'https://lenstax.com/auth/app-assets/images/profile/user-uploads/user-06.jpg';
+
+  static String beerNetwork =
+      "https://www.searchpng.com/wp-content/uploads/2019/02/beer-bottle-PNG-Clipart-715x1679.png";
 }

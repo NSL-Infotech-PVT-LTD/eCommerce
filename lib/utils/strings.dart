@@ -112,10 +112,41 @@ class Strings {
   static String seeReceipt = "See Receipt";
   static String backtoHome = "Back to home";
   static String yourCart = "Your Cart";
-  static String ticket = "Ticket";
+
   static String qty = "Qty";
   static String proceedtopay = "Proceed to pay";
-  static String thisisthefinalstepafteryoutouchingPayNowbuttonthepaymentwillbetransaction = "This is the final step, after you touching Pay Now button, the payment will be transaction";
+  static String
+      thisisthefinalstepafteryoutouchingPayNowbuttonthepaymentwillbetransaction =
+      "This is the final step, after you touching Pay Now button, the payment will be transaction";
+  static String mybookings = "My Bookings";
+  static String checkyourticketsyouboughtforFiestas =
+      "Check your tickets you bought for Fiestas";
+  static String fiestasOrders = "Fiestas Orders";
+  static String preFiestasOrders = "Pre-Fiestas Orders";
+  static String moreDetails = "More details";
+  static String orderDetails = "Order Details";
+
+  static String ticket = "Ticket";
+  static String ticketDescription =
+      "You will enjoy an entrance to the club with two drinks.";
+
+  static String standard = "Standard";
+  static String standardDescription =
+      "Enjoy traditional alcohol brands at a cheaper price.";
+
+  static String vipTable = "VIP Table";
+  static String vipTableDescription =
+      "You will enjoy the first alcohol brands, and a quality location.";
+
+  static String youreTicket = "You E-Ticket";
+  static String seeClubProfile = "See Club Profile";
+  static String date = "Date";
+  static String time = "Time";
+  static String checkinType = "Check In Type";
+  static String orderId = "Order ID";
+
+  static String hyphens =
+      "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -";
 
   // dummy
   static String garyadams = "Gary F. Adams";

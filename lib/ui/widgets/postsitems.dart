@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/models/fiestasmodel.dart';
 import 'package:funfy/models/preFiestasModel.dart';
+import 'package:funfy/ui/screens/bookNowBeta.dart';
 import 'package:funfy/ui/screens/pages/BookNow.dart';
 import 'package:funfy/ui/widgets/rating.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
@@ -149,7 +150,7 @@ Widget fiestasItem({context, Datum? postModeldata}) {
                   InkWell(
                     onTap: () {
                       navigatorPushFun(
-                          context, BookNow(fiestasModel: postModeldata));
+                          context, BookNowBeta(fiestasModel: postModeldata));
                     },
                     child: roundedBoxR(
                         width: size.width * 0.23,
