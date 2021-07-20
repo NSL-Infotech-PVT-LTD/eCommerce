@@ -147,10 +147,34 @@ class Strings {
 
   static String hyphens =
       "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -";
+  static String alcohol = "Alcohol";
+  static String change = "Change";
+  static String mix = "Mix";
+  static String extras = "Extras";
 
+  static String
+      thisisFinalstepafteryouTouchingpaynowbuttonthepaymentwillbetransation =
+      "This is the final step, after you touching Pay Now button, the payment will be transaction";
+
+  static String Includesbottles =
+      "Includes bottles with mix, classic American beers, games and much more ";
+
+  static String notifications = "Notifications";
+  static String today = "Today";
+  static String earlier = "Earlier";
+  static String doYouLikeOurService = "Do you Like our Service ?";
+  static String submitReview = "Submit Review";
+  static String mixes = "Mixes";
+  static String muchMore = "much more";
+
+  static String alcohols = "alcohol";
+  static String extrass = "extras";
+  static String mixs = "mix";
+  static String nodataFound = "No Data Found!";
   // dummy
   static String garyadams = "Gary F. Adams";
   static String madridspain = "Madrid, Spain";
+
   static String lorem =
       "Lorem Ipsum is simply dummy text of the printing and typesetting standard. Lorem Ipsum has been the industry's standardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially";
 }

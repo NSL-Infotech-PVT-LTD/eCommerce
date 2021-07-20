@@ -3,9 +3,11 @@ import 'package:flutter_svg/svg.dart';
 import 'package:funfy/apis/homeApis.dart';
 import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/components/locationget.dart';
+import 'package:funfy/components/navigation.dart';
 import 'package:funfy/models/fiestasmodel.dart';
 import 'package:funfy/models/preFiestasModel.dart';
 import 'package:funfy/ui/screens/auth/signin.dart';
+import 'package:funfy/ui/screens/notifications.dart';
 import 'package:funfy/ui/widgets/dateButton.dart';
 import 'package:funfy/ui/widgets/postsitems.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
@@ -290,12 +292,17 @@ class _FiestasPageState extends State<FiestasPage> {
                     ),
 
                     // notification icon
-                    Container(
-                      margin: EdgeInsets.only(right: size.width * 0.03),
-                      child: Icon(
-                        Icons.notifications,
-                        size: size.width * 0.08,
-                        color: AppColors.white,
+                    GestureDetector(
+                      onTap: () {
+                        navigatorPushFun(context, Notifications());
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(right: size.width * 0.03),
+                        child: Icon(
+                          Icons.notifications,
+                          size: size.width * 0.08,
+                          color: AppColors.white,
+                        ),
                       ),
                     )
                   ],

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:funfy/ui/screens/auth/signin.dart';
-import 'package:funfy/ui/screens/bookingSuccess.dart';
-import 'package:funfy/ui/screens/home.dart';
+import 'package:funfy/ui/screens/notifications.dart';
 import 'package:funfy/ui/screens/splash.dart';
 import 'package:funfy/utils/Constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,6 +12,7 @@ Future<void> main() async {
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   Constants.prefs = await SharedPreferences.getInstance();
+
   runApp(MyApp());
 }
 
@@ -30,7 +29,6 @@ class MyApp extends StatelessWidget {
 
       darkTheme: ThemeData.dark(), //
       home: Splash(),
-      // home: MyHomePage(),
     );
   }
 }

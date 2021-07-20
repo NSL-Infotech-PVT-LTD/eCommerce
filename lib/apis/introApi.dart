@@ -9,13 +9,21 @@ List<IntroModel> introdata = [];
 Future<List<IntroModel>> getIntrodata() async {
   var res = await http.get(Uri.parse(Urls.introUrl));
 
-  var response = json.decode(res.body);
+  try {
+    var response = json.decode(res.body);
 
-  if (response["status"] == true && response["code"] == 200) {
-    Iterable itresponse = response["data"];
+    print(response);
 
-    introdata = itresponse.map((model) => IntroModel.fromJson(model)).toList();
+    if (response["status"] == true && response["code"] == 200) {
+      Iterable itresponse = response["data"];
 
+      introdata =
+          itresponse.map((model) => IntroModel.fromJson(model)).toList();
+
+      return introdata;
+    }
+  } catch (e) {
+    print(e);
     return introdata;
   }
 

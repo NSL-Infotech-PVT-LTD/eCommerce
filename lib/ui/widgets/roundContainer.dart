@@ -13,7 +13,14 @@ Widget roundedBox({width, height, child, backgroundColor}) {
 }
 
 Widget roundedBoxBorder(
-    {context, width, height, child, backgroundColor, borderColor, borderSize}) {
+    {context,
+    width,
+    height,
+    child,
+    backgroundColor,
+    borderColor,
+    borderSize,
+    radius}) {
   var size = MediaQuery.of(context).size;
   return Container(
     width: width,
@@ -25,7 +32,8 @@ Widget roundedBoxBorder(
           color: borderColor, //                   <--- border color
           width: borderSize,
         ),
-        borderRadius: BorderRadius.all(Radius.circular(size.width * 0.01))),
+        borderRadius: BorderRadius.all(
+            Radius.circular(radius != null ? radius : size.width * 0.01))),
   );
 }
 

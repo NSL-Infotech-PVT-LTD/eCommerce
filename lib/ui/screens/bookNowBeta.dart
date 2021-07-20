@@ -35,49 +35,36 @@ class BookNowBeta extends StatefulWidget {
 class _BookNowBetaState extends State<BookNowBeta> {
   CarouselController _carouselController = CarouselController();
   List<Widget> cardList = [];
-  double _initialRating = 2.0;
-  bool _isVertical = false;
+  // double _initialRating = 2.0;
+  // bool _isVertical = false;
 
-  String description = "Loading...";
-  String freeDeliveryReturn = "Loading...";
-  String price = "Loading...";
-
-  List tiketList = [
-    {
-      "image": Images.ticketImageSvg,
-      "name": Strings.ticket,
-      "description": Strings.ticketDescription,
-      "price": "100.00" //"${widget.fiestasModel?.ticketPrice}"
-    },
-    {
-      "image": Images.standardImageSvg,
-      "name": Strings.standard,
-      "description": Strings.standardDescription,
-      "price": "200.00" //"${widget.fiestasModel?.ticketPrice}"
-    },
-    {
-      "image": Images.vIPTableImageSvg,
-      "name": Strings.vipTable,
-      "description": Strings.vipTableDescription,
-      "price": "300.00" //"${widget.fiestasModel?.ticketPrice}"
-    }
-  ];
+  // String description = "Loading...";
+  // String freeDeliveryReturn = "Loading...";
+  // String price = "Loading...";
 
   // - + funtion
 
-  addTicket({int? index, String? name, int? count, int? price}) {
+  addTicket({int? index, String? name, int? count, var price, String? image}) {
     print("add button press");
 
     setState(() {
       if (UserData.ticketcartMap.containsKey(index)) {
-        UserData.ticketcartMap[index]["tiketCount"] =
-            UserData.ticketcartMap[index]["tiketCount"] + 1;
+        UserData.ticketcartMap[index]["ticketCount"] =
+            UserData.ticketcartMap[index]["ticketCount"] + 1;
+
+        UserData.ticketcartMap[index]["ticketPrice"] =
+            UserData.ticketcartMap[index]["ticketCount"] *
+                UserData.tiketList[index!]["price"];
+        totalTicket();
       } else {
         UserData.ticketcartMap[index] = {
           "ticketname": name,
-          "tiketCount": count,
-          "tiketPrice": price,
+          "ticketCount": count,
+          "ticketPrice": price,
+          "ticketimage": image
         };
+
+        totalTicket();
       }
     });
   }
@@ -88,13 +75,35 @@ class _BookNowBetaState extends State<BookNowBeta> {
     print("remove");
     setState(() {
       if (UserData.ticketcartMap.containsKey(index) &&
-          UserData.ticketcartMap[index]["tiketCount"] < 0) {
-        UserData.ticketcartMap[index]["tiketCount"] =
-            UserData.ticketcartMap[index]["tiketCount"] - 1;
+          UserData.ticketcartMap[index]["ticketCount"] > 1) {
+        UserData.ticketcartMap[index]["ticketCount"] =
+            UserData.ticketcartMap[index]["ticketCount"] - 1;
+
+        UserData.ticketcartMap[index]["ticketPrice"] =
+            UserData.ticketcartMap[index]["ticketCount"] *
+                UserData.tiketList[index!]["price"];
+        totalTicket();
       } else {
-        UserData.ticketcartMap[index]["tiketCount"] = 0;
+        UserData.ticketcartMap.remove(index);
+        totalTicket();
       }
     });
+  }
+
+  // total ticket count
+
+  totalTicket() {
+    // UserData.totalTicketNum = 0;
+
+    num tot = 0;
+
+    // print(UserData.totalTicketNum);
+    for (var i in UserData.ticketcartMap.values.toList()) {
+      // print(i["ticketCount"] + 1);
+      tot = tot + i["ticketCount"];
+    }
+
+    UserData.totalTicketNum = tot;
   }
 
   @override
@@ -311,7 +320,7 @@ class _BookNowBetaState extends State<BookNowBeta> {
                     children: [
                       Expanded(
                         child: ListView.builder(
-                            itemCount: tiketList.length,
+                            itemCount: UserData.tiketList.length,
                             itemBuilder: (
                               BuildContext context,
                               index,
@@ -319,98 +328,106 @@ class _BookNowBetaState extends State<BookNowBeta> {
                               return ticket(
                                   context: context,
                                   index: index,
-                                  mapdata: tiketList[index],
+                                  mapdata: UserData.tiketList[index],
                                   addFunc: addTicket,
                                   removeFunc: ticketRemove);
                             }),
                       ),
                     ],
                   ),
-                  Positioned(
-                      bottom: 0.0,
-                      child: Container(
-                          width: SizeConfig.screenWidth,
-                          height: SizeConfig.screenHeight * 0.10,
-                          child: SvgPicture.asset(
-                            "assets/images/Rectangle.svg",
-                            fit: BoxFit.fill,
-                          ))),
-                  Positioned(
-                    bottom: SizeConfig.screenHeight * 0.01,
-                    right: SizeConfig.screenWidth * 0.03,
-                    left: SizeConfig.screenWidth * 0.03,
-                    child: Container(
-                      width: SizeConfig.screenWidth,
-                      padding: EdgeInsets.symmetric(
-                          horizontal: size.width * 0.03,
-                          vertical: size.height * 0.01),
-                      child: Row(
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                  UserData.ticketcartMap.isEmpty
+                      ? SizedBox()
+                      : Positioned(
+                          bottom: 0.0,
+                          child: Stack(
                             children: [
-                              Text(
-                                "Added to cart",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: AppColors.brownlite,
-                                    fontSize: size.width * 0.03),
-                              ),
-                              SizedBox(
-                                height: SizeConfig.screenHeight * 0.01,
-                              ),
-                              Row(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
+                              Container(
+                                  width: SizeConfig.screenWidth,
+                                  height: SizeConfig.screenHeight * 0.10,
+                                  child: SvgPicture.asset(
+                                    "assets/images/Rectangle.svg",
+                                    fit: BoxFit.fill,
+                                  )),
+                              Container(
+                                width: SizeConfig.screenWidth,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: size.width * 0.03,
+                                    vertical: size.height * 0.01),
+                                child: Row(
                                   children: [
-                                    SvgPicture.asset(
-                                      "assets/images/ticket.svg",
-                                      width: size.width * 0.07,
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Added to cart",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: AppColors.brownlite,
+                                              fontSize: size.width * 0.03),
+                                        ),
+                                        SizedBox(
+                                          height:
+                                              SizeConfig.screenHeight * 0.01,
+                                        ),
+                                        Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              SvgPicture.asset(
+                                                "assets/images/ticket.svg",
+                                                width: size.width * 0.07,
+                                              ),
+                                              SizedBox(
+                                                width: size.width * 0.02,
+                                              ),
+                                              Container(
+                                                // width: SizeConfig.screenWidth * 0.40,
+                                                child: Text(
+                                                  "${Strings.ticket} * ${UserData.totalTicketNum}",
+                                                  style: TextStyle(
+                                                    color: AppColors.white,
+                                                    fontSize: size.width * 0.05,
+                                                    fontFamily: "DM Sans Bold",
+                                                  ),
+                                                  textAlign: TextAlign.start,
+                                                  maxLines: 1,
+                                                  softWrap: true,
+                                                  overflow: TextOverflow.clip,
+                                                ),
+                                              ),
+                                            ]),
+                                      ],
                                     ),
                                     SizedBox(
-                                      width: size.width * 0.02,
+                                      width: SizeConfig.screenWidth * 0.04,
                                     ),
-                                    Container(
-                                      // width: SizeConfig.screenWidth * 0.40,
+                                    Spacer(),
+                                    ElevatedButton(
                                       child: Text(
-                                        "Ticket * 10",
+                                        'Buy Now',
                                         style: TextStyle(
-                                          color: AppColors.white,
-                                          fontSize: size.width * 0.05,
-                                          fontFamily: "DM Sans Bold",
-                                        ),
-                                        textAlign: TextAlign.start,
-                                        maxLines: 1,
-                                        softWrap: true,
-                                        overflow: TextOverflow.clip,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      onPressed: () {
+                                        navigatorPushFun(context, BuyNow());
+                                        //    navigatorPushFun(context, BuyNow());
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal:
+                                                SizeConfig.screenWidth * 0.06,
+                                            vertical:
+                                                SizeConfig.screenHeight * 0.02),
+                                        primary: AppColors.redlite,
                                       ),
                                     ),
-                                  ]),
+                                  ],
+                                ),
+                              )
                             ],
                           ),
-                          SizedBox(
-                            width: SizeConfig.screenWidth * 0.04,
-                          ),
-                          Spacer(),
-                          ElevatedButton(
-                            child: Text(
-                              'Buy Now',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            onPressed: () {
-                              navigatorPushFun(context, YourOrderSum());
-                              //    navigatorPushFun(context, BuyNow());
-                            },
-                            style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: SizeConfig.screenWidth * 0.06,
-                                  vertical: SizeConfig.screenHeight * 0.02),
-                              primary: AppColors.redlite,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
+                        ),
                 ],
               ),
 

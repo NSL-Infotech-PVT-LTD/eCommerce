@@ -57,4 +57,7 @@ class Images {
 
   static String beerNetwork =
       "https://www.searchpng.com/wp-content/uploads/2019/02/beer-bottle-PNG-Clipart-715x1679.png";
+
+  static String beer2nettwork =
+      "https://i0.wp.com/www.lavenderandlovage.com/wp-content/uploads/2014/06/Iceberg-Beer.jpg";
 }

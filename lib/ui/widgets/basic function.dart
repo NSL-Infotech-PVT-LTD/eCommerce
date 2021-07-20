@@ -113,7 +113,7 @@ Widget ticket({context, index, mapdata, addFunc, removeFunc}) {
                       Column(
                         children: [
                           Text(
-                            Strings.euro + " " + mapdata["price"],
+                            Strings.euro + " " + "${mapdata["price"]}",
                             style: TextStyle(
                                 color: AppColors.white,
                                 fontSize: 20,
@@ -159,7 +159,7 @@ Widget ticket({context, index, mapdata, addFunc, removeFunc}) {
                               Text(
                                 UserData.ticketcartMap.containsKey(index)
                                     ? UserData.ticketcartMap[index]
-                                            ["tiketCount"]
+                                            ["ticketCount"]
                                         .toString()
                                     : "0",
                                 style: TextStyle(
@@ -176,7 +176,8 @@ Widget ticket({context, index, mapdata, addFunc, removeFunc}) {
                                       index: index,
                                       name: mapdata["name"],
                                       count: 1,
-                                      price: 100);
+                                      price: 100,
+                                      image: mapdata["image"]);
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(

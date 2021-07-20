@@ -5,6 +5,7 @@ import 'package:funfy/models/fiestasmodel.dart';
 import 'package:funfy/models/preFiestasModel.dart';
 import 'package:funfy/ui/screens/bookNowBeta.dart';
 import 'package:funfy/ui/screens/pages/BookNow.dart';
+import 'package:funfy/ui/screens/preFistaOrderMix.dart';
 import 'package:funfy/ui/widgets/rating.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/colors.dart';
@@ -199,13 +200,15 @@ Widget preFiestasItem(context, ProductInfo? prefiestasdata) {
               Stack(
                 alignment: Alignment.center,
                 children: [
-                  SvgPicture.asset(
-                    Images.offeryellowBackgroundSvg,
-                    fit: BoxFit.cover,
-                    width: size.width * 0.11,
+                  Positioned(
+                    child: SvgPicture.asset(
+                      Images.offeryellowBackgroundSvg,
+                      fit: BoxFit.cover,
+                      width: size.width * 0.11,
+                    ),
                   ),
                   Container(
-                    height: size.height * 0.07,
+                    height: size.height * 0.055,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.end,
@@ -280,21 +283,28 @@ Widget preFiestasItem(context, ProductInfo? prefiestasdata) {
                       ),
 
                       // order Now
-                      roundedBoxR(
-                          radius: size.width * 0.005,
-                          width: size.width * 0.2,
-                          height: size.height * 0.04,
-                          backgroundColor: AppColors.siginbackgrond,
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              Strings.orderNow,
-                              style: TextStyle(
-                                  color: AppColors.white,
-                                  fontSize: size.width * 0.03,
-                                  fontFamily: Fonts.dmSansBold),
-                            ),
-                          ))
+                      GestureDetector(
+                        onTap: () {
+                          print(prefiestasdata?.id);
+                          navigatorPushFun(context,
+                              PreFistaOrder(prefiestasModel: prefiestasdata));
+                        },
+                        child: roundedBoxR(
+                            radius: size.width * 0.005,
+                            width: size.width * 0.2,
+                            height: size.height * 0.04,
+                            backgroundColor: AppColors.siginbackgrond,
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                Strings.orderNow,
+                                style: TextStyle(
+                                    color: AppColors.white,
+                                    fontSize: size.width * 0.03,
+                                    fontFamily: Fonts.dmSansBold),
+                              ),
+                            )),
+                      )
                     ],
                   )),
 
@@ -306,8 +316,10 @@ Widget preFiestasItem(context, ProductInfo? prefiestasdata) {
                 width: size.width * 0.25,
                 decoration: BoxDecoration(),
                 child: Image.network(
-                  "${prefiestasdata?.image}",
-                  fit: BoxFit.cover,
+                  prefiestasdata?.image != ""
+                      ? "${prefiestasdata?.image}"
+                      : Images.beerNetwork,
+                  // fit: BoxFit.cover,
                 ),
               )
             ],

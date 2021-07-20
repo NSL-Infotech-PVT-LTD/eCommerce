@@ -2,8 +2,10 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:funfy/components/sizeclass/SizeConfig.dart';
+import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
@@ -15,6 +17,84 @@ class YourOrderSum extends StatefulWidget {
 }
 
 class _YourOrderSumState extends State<YourOrderSum> {
+  bool ratting = false;
+  double currentRating = 3.0;
+
+  // rating popup
+
+  Widget ratingPopup({
+    size,
+  }) {
+    return Container(
+      child: Column(
+        children: [
+          roundedBoxR(
+              radius: size.width * 0.02,
+              width: size.width,
+              height: size.width * 0.4,
+              backgroundColor: AppColors.ratingPopupbackground,
+              child: Container(
+                alignment: Alignment.center,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      Strings.doYouLikeOurService,
+                      style: TextStyle(
+                          color: AppColors.white,
+                          fontFamily: Fonts.dmSansMedium,
+                          fontSize: size.width * 0.045),
+                    ),
+                    SizedBox(
+                      height: size.height * 0.02,
+                    ),
+                    RatingBar.builder(
+                      itemSize: size.width * 0.15,
+                      initialRating: currentRating,
+                      // ignoreGestures: true,
+                      minRating: 1,
+                      direction: Axis.horizontal,
+                      allowHalfRating: true,
+                      itemCount: 5,
+                      unratedColor: AppColors.starUnselect,
+                      itemPadding:
+                          EdgeInsets.symmetric(horizontal: size.width * 0.01),
+                      itemBuilder: (context, _) => Icon(
+                        Icons.star,
+                        color: AppColors.ratingYellow,
+                      ),
+                      onRatingUpdate: (rating) {
+                        print(rating);
+                        setState(() {
+                          currentRating = rating;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              )),
+          SizedBox(
+            height: size.height * 0.02,
+          ),
+          roundedBoxR(
+              width: size.width * 0.7,
+              height: size.height * 0.06,
+              radius: size.width * 0.02,
+              backgroundColor: AppColors.siginbackgrond,
+              child: Center(
+                child: Text(
+                  Strings.submitReview,
+                  style: TextStyle(
+                      fontFamily: Fonts.dmSansBold,
+                      fontSize: size.width * 0.04,
+                      color: AppColors.white),
+                ),
+              ))
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -36,6 +116,13 @@ class _YourOrderSumState extends State<YourOrderSum> {
             padding: EdgeInsets.all(9.0),
             child: Column(
               children: [
+                // rating popup
+
+                ratingPopup(size: size),
+
+                SizedBox(
+                  height: size.height * 0.02,
+                ),
                 Container(
                   padding: EdgeInsets.all(20),
                   decoration: BoxDecoration(

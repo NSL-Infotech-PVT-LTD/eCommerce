@@ -20,8 +20,322 @@ class _CartpageState extends State<Cartpage> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
-        backgroundColor: HexColor("#191512"), body: ordernow(context));
+        backgroundColor: HexColor("#191512"),
+        body: SingleChildScrollView(
+          child: SafeArea(
+            child: Container(
+                width: size.width,
+                height: size.height,
+                child: Column(children: [
+                  // top bar
+                  Container(
+                      padding: EdgeInsets.symmetric(
+                          vertical: size.height * 0.023,
+                          horizontal: size.width * 0.06),
+                      width: size.width,
+                      height: size.height * 0.155,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: AssetImage(Images.homeTopBannerPng),
+                              fit: BoxFit.cover)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                Strings.mycart,
+                                style: TextStyle(
+                                    fontFamily: Fonts.dmSansBold,
+                                    color: AppColors.white,
+                                    fontSize: size.width * 0.065),
+                              ),
+                              Text(
+                                Strings.checkyourdeliverableordersstatus,
+                                style: TextStyle(
+                                    fontFamily: Fonts.dmSansRegular,
+                                    color: AppColors.white,
+                                    fontSize: size.width * 0.036),
+                              )
+                            ],
+                          ),
+                          SvgPicture.asset(
+                            Images.cartIconUnActSvg,
+                            width: size.width * 0.07,
+                          ),
+                        ],
+                      )),
+
+                  SizedBox(
+                    height: size.height * 0.03,
+                  ),
+
+                  // center content
+
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: size.width * 0.03),
+                    width: size.width,
+                    child: Column(
+                      children: [
+                        roundedBoxBorder(
+                            context: context,
+                            width: size.width,
+                            height: size.height * 0.58,
+                            borderColor: AppColors.tagBorder,
+                            backgroundColor: AppColors.homeBackgroundLite,
+                            borderSize: size.width * 0.002,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: size.width * 0.04,
+                                  vertical: size.height * 0.015),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        width: size.width * 0.6,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Pack 'La havanna'",
+                                              style: TextStyle(
+                                                  color: AppColors.white,
+                                                  fontFamily: Fonts.dmSansBold,
+                                                  fontSize: size.width * 0.055),
+                                            ),
+                                            SizedBox(
+                                              height: size.height * 0.008,
+                                            ),
+                                            Text(
+                                              Strings.lorem,
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                  color: AppColors.white,
+                                                  fontFamily:
+                                                      Fonts.dmSansRegular,
+                                                  fontSize: size.width * 0.035),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Spacer(),
+                                      Container(
+                                          height: size.height * 0.09,
+                                          child: Image.network(
+                                              Images.beer2nettwork))
+                                    ],
+                                  ),
+
+                                  // items
+                                  SizedBox(
+                                    height: size.height * 0.035,
+                                  ),
+                                  listItem(size: size),
+                                  SizedBox(
+                                    height: size.height * 0.03,
+                                  ),
+                                  listItem(size: size, boolCount: true),
+                                  SizedBox(
+                                    height: size.height * 0.03,
+                                  ),
+                                  listItem(size: size, boolCount: true)
+                                ],
+                              ),
+                            )),
+                        SizedBox(height: size.height * 0.02),
+                        Text(
+                            Strings
+                                .thisisFinalstepafteryouTouchingpaynowbuttonthepaymentwillbetransation,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: AppColors.itemDescription,
+                                fontFamily: Fonts.dmSansRegular,
+                                fontSize: size.width * 0.03)),
+                        SizedBox(height: size.height * 0.03),
+
+                        // button
+                        roundedBoxR(
+                          width: size.width,
+                          height: size.height * 0.07,
+                          radius: size.width * 0.02,
+                          backgroundColor: AppColors.siginbackgrond,
+                          child: Center(
+                            child: Text(
+                              Strings.proceedtopay,
+                              style: TextStyle(
+                                  color: AppColors.white,
+                                  fontFamily: Fonts.dmSansBold,
+                                  fontSize: size.width * 0.045),
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(height: size.height * 0.05),
+                      ],
+                    ),
+                  )
+                ])),
+          ),
+        ));
   }
+}
+
+Widget listItem(
+    {size,
+    String? topTile,
+    String? title,
+    String? descriptionTitle,
+    bool? boolCount}) {
+  return Container(
+    width: size.width,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "(${Strings.alcohol})",
+          style: TextStyle(
+              color: AppColors.itemDescription,
+              fontFamily: Fonts.dmSansRegular,
+              fontSize: size.width * 0.03),
+        ),
+        SizedBox(
+          height: size.height * 0.001,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Text(
+                  "Ron Bucanero Anejo",
+                  style: TextStyle(
+                      color: AppColors.white,
+                      fontFamily: Fonts.dmSansBold,
+                      fontSize: size.width * 0.045),
+                ),
+                SizedBox(
+                  width: size.width * 0.03,
+                ),
+                Text(
+                  Strings.change,
+                  style: TextStyle(
+                      color: AppColors.siginbackgrond,
+                      decoration: TextDecoration.underline,
+                      fontFamily: Fonts.dmSansBold,
+                      fontSize: size.width * 0.03),
+                ),
+              ],
+            ),
+            Icon(
+              Icons.close,
+              size: size.width * 0.06,
+              color: AppColors.tagBorder,
+            )
+          ],
+        ),
+        SizedBox(
+          height: size.height * 0.005,
+        ),
+        Text(
+          "70 CL",
+          style: TextStyle(
+              color: AppColors.itemDescription,
+              fontFamily: Fonts.dmSansRegular,
+              fontSize: size.width * 0.035),
+        ),
+        SizedBox(
+          height: size.height * 0.003,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              Strings.euro + " " + "28.99",
+              style: TextStyle(
+                  color: AppColors.white,
+                  fontFamily: Fonts.dmSansBold,
+                  fontSize: size.width * 0.056),
+            ),
+
+            // + - buttons
+
+            boolCount == null
+                ? SizedBox()
+                : Container(
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {},
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              border: Border.all(color: AppColors.white),
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(size.width * 0.01)),
+                            ),
+                            height: SizeConfig.screenHeight * 0.035,
+                            width: SizeConfig.screenWidth * 0.075,
+                            child: Center(
+                                child: Text(
+                              "-",
+                              style: TextStyle(
+                                color: AppColors.white,
+                                fontFamily: "DM Sans Medium",
+                                fontSize: size.width * 0.04,
+                              ),
+                            )),
+                          ),
+                        ),
+                        SizedBox(
+                          width: SizeConfig.screenWidth * 0.03,
+                        ),
+
+                        // center number
+                        Text(
+                          "0",
+                          style: TextStyle(
+                              fontFamily: "DM Sans Medium",
+                              fontSize: size.width * 0.04,
+                              color: AppColors.white),
+                        ),
+                        SizedBox(
+                          width: SizeConfig.screenWidth * 0.03,
+                        ),
+                        GestureDetector(
+                          onTap: () {},
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.skin,
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(size.width * 0.01)),
+                            ),
+                            height: SizeConfig.screenHeight * 0.035,
+                            width: SizeConfig.screenWidth * 0.075,
+                            child: Center(
+                                child: Text(
+                              "+",
+                              style: TextStyle(
+                                  fontFamily: "DM Sans Medium",
+                                  fontSize: size.width * 0.04,
+                                  color: AppColors.homeBackground),
+                            )),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+          ],
+        ),
+      ],
+    ),
+  );
 }
 
 Widget ordernow(context) {

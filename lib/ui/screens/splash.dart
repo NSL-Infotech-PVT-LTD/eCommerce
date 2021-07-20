@@ -29,10 +29,11 @@ class _SplashState extends State<Splash> {
 
     if (net != false) {
       var introdata = await getIntrodata();
-      term();
-      policy();
 
-      if (introdata != []) {
+      // term();
+      // policy();
+
+      if (introdata.length != 0 && introdata != []) {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (context) => Constants.prefs?.getString("token") != null &&
                     Constants.prefs?.getString("token") != ""
@@ -40,6 +41,12 @@ class _SplashState extends State<Splash> {
                 : Intro()));
       } else {
         print("no intro data");
+
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (context) => Constants.prefs?.getString("token") != null &&
+                    Constants.prefs?.getString("token") != ""
+                ? Home()
+                : Signin()));
       }
     } else {
       Internetcheck.showdialog(context: context);

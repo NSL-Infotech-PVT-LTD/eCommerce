@@ -48,6 +48,7 @@ dependencies:
   qr_flutter: ^4.0.0
   dotted_line: ^3.0.0
   dotted_border: ^2.0.0
+  video_player: ^2.1.10
 
  
 

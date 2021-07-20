@@ -36,4 +36,7 @@ class AppColors {
   static Color borderColor = HexColor("#FFEFBB");
   static Color grayFont = HexColor("8D8D8D");
   static Color greenCont = HexColor("#31BE43");
+  static Color notificatonActive = HexColor("#4c4437");
+  static Color ratingPopupbackground = HexColor("#2b2725");
+  static Color ratingYellow = HexColor("#ffc400");
 }
