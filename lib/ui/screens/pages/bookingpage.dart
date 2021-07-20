@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:funfy/apis/bookingApi.dart';
 import 'package:funfy/components/navigation.dart';
+import 'package:funfy/models/fiestasBookingListModel.dart';
 import 'package:funfy/ui/screens/Your%20order%20Summery.dart';
 import 'package:funfy/ui/screens/fiestasMoreOrderDetails.dart';
 import 'package:funfy/ui/widgets/postsitems.dart';
 import 'package:funfy/ui/widgets/rating.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
+import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
@@ -21,6 +24,42 @@ class BookingPage extends StatefulWidget {
 
 class _BookingPageState extends State<BookingPage> {
   bool fiestasButton = true;
+
+  FiestasBookingList? fiestasBookingListModel = FiestasBookingList();
+  bool _loading = false;
+
+  bookingListget() async {
+    var net = await Internetcheck.check();
+
+    if (net != true) {
+      Internetcheck.showdialog(context: context);
+    } else {
+      setState(() {
+        _loading = true;
+      });
+      try {
+        await fiestasBookingList().then((res) {
+          if (res?.code == 200 && res?.status == true) {
+            // print("after return  ${res?.toJson().toString()}");
+
+            setState(() {
+              fiestasBookingListModel = res;
+              _loading = false;
+            });
+          }
+        });
+      } catch (e) {
+        print("error in booking list $e");
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    bookingListget();
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -151,20 +190,31 @@ class _BookingPageState extends State<BookingPage> {
             // fiestas orders list
 
             fiestasButton
-                ? fiestasOrdersItem(context)
+                ? Expanded(
+                    child: ListView.builder(
+                        itemCount: fiestasBookingListModel?.data?.data?.length,
+                        itemBuilder: (context, index) {
+                          return fiestasOrdersItem(
+                              context: context,
+                              index: index,
+                              model: fiestasBookingListModel);
+                        }))
                 : preFiestasOrderItem(context)
           ],
         )));
   }
 }
 
-Widget fiestasOrdersItem(context) {
+Widget fiestasOrdersItem({context, index, FiestasBookingList? model}) {
   var size = MediaQuery.of(context).size;
+
+  var data = model?.data?.data?.elementAt(index);
+
   return Container(
     // color: AppColors.brownLite,
     color: HexColor("#38332f"),
     margin: EdgeInsets.symmetric(
-        vertical: size.height * 0.02, horizontal: size.width * 0.03),
+        vertical: size.height * 0.01, horizontal: size.width * 0.03),
     padding: EdgeInsets.symmetric(
         vertical: size.height * 0.02, horizontal: size.width * 0.04),
     alignment: Alignment.topLeft,
@@ -191,11 +241,11 @@ Widget fiestasOrdersItem(context) {
           height: size.height * 0.003,
         ),
         Text(
-          "Teatro Barcelo",
+          "${data?.fiestaDetail?.name}",
           style: TextStyle(
               fontFamily: Fonts.dmSansBold,
               color: AppColors.white,
-              fontSize: size.width * 0.075),
+              fontSize: size.width * 0.072),
         ),
         SizedBox(
           height: size.height * 0.003,
@@ -238,7 +288,7 @@ Widget fiestasOrdersItem(context) {
             ),
             Spacer(),
             Text(
-              Strings.euro + "24.99",
+              Strings.euro + "${data?.totalPrice}",
               style: TextStyle(
                   fontFamily: Fonts.dmSansMedium,
                   color: AppColors.white,

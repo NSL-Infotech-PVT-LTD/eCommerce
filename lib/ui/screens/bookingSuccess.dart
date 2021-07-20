@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
@@ -46,28 +47,46 @@ class _BookingSuccessState extends State<BookingSuccess> {
               SizedBox(
                 height: size.height * 0.2,
               ),
-              roundedBoxR(
-                  backgroundColor: AppColors.siginbackgrond,
-                  width: size.width * 0.88,
-                  height: size.height * 0.06,
-                  radius: size.width * 0.007,
-                  child: Align(
-                    child: Text(
-                      Strings.seeReceipt,
-                      style: TextStyle(
-                          color: AppColors.white,
-                          fontFamily: Fonts.dmSansBold,
-                          fontSize: size.width * 0.045),
-                    ),
-                  )),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => Home()),
+                      (route) => false);
+                },
+                child: roundedBoxR(
+                    backgroundColor: AppColors.siginbackgrond,
+                    width: size.width * 0.88,
+                    height: size.height * 0.06,
+                    radius: size.width * 0.007,
+                    child: Align(
+                      child: Text(
+                        Strings.seeReceipt,
+                        style: TextStyle(
+                            color: AppColors.white,
+                            fontFamily: Fonts.dmSansBold,
+                            fontSize: size.width * 0.045),
+                      ),
+                    )),
+              ),
               SizedBox(
                 height: size.height * 0.02,
               ),
-              Text(Strings.backtoHome,
-                  style: TextStyle(
-                      color: AppColors.white,
-                      fontFamily: Fonts.dmSansRegular,
-                      fontSize: size.width * 0.04))
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => Home()),
+                      (route) => false);
+                },
+                child: Text(Strings.backtoHome,
+                    style: TextStyle(
+                        color: AppColors.white,
+                        fontFamily: Fonts.dmSansRegular,
+                        fontSize: size.width * 0.04)),
+              )
             ],
           ),
         ),

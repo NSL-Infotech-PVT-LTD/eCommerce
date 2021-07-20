@@ -49,14 +49,17 @@ class _BookNowBetaState extends State<BookNowBeta> {
 
     setState(() {
       if (UserData.ticketcartMap.containsKey(index)) {
+        print("old add");
         UserData.ticketcartMap[index]["ticketCount"] =
             UserData.ticketcartMap[index]["ticketCount"] + 1;
 
         UserData.ticketcartMap[index]["ticketPrice"] =
             UserData.ticketcartMap[index]["ticketCount"] *
                 UserData.tiketList[index!]["price"];
+
         totalTicket();
       } else {
+        print("new add $index");
         UserData.ticketcartMap[index] = {
           "ticketname": name,
           "ticketCount": count,
@@ -67,12 +70,15 @@ class _BookNowBetaState extends State<BookNowBeta> {
         totalTicket();
       }
     });
+
+    print(UserData.ticketcartMap);
   }
 
   // remove button
 
   ticketRemove({String? name, int? index}) {
     print("remove");
+    print(UserData.ticketcartMap);
     setState(() {
       if (UserData.ticketcartMap.containsKey(index) &&
           UserData.ticketcartMap[index]["ticketCount"] > 1) {
@@ -410,8 +416,16 @@ class _BookNowBetaState extends State<BookNowBeta> {
                                             fontWeight: FontWeight.bold),
                                       ),
                                       onPressed: () {
-                                        navigatorPushFun(context, BuyNow());
-                                        //    navigatorPushFun(context, BuyNow());
+                                        Navigator.of(context)
+                                            .push(MaterialPageRoute(
+                                                builder: (context) => BuyNow(
+                                                    fiestasId: widget
+                                                        .fiestasModel?.id)))
+                                            .then((value) {
+                                          setState(() {
+                                            totalTicket();
+                                          });
+                                        });
                                       },
                                       style: ElevatedButton.styleFrom(
                                         padding: EdgeInsets.symmetric(

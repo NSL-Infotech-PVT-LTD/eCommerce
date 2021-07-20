@@ -130,7 +130,7 @@ Widget fiestasItem({context, Datum? postModeldata}) {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "€",
+                        Strings.euro,
                         style: TextStyle(
                             fontSize: size.width * 0.04,
                             fontFamily: Fonts.dmSansBold,

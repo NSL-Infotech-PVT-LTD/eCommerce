@@ -25,9 +25,10 @@ class _SplashState extends State<Splash> {
 
   next() async {
     var net = await Internetcheck.check();
-    print("net = $net");
 
-    if (net != false) {
+    if (net != true) {
+      Internetcheck.showdialog(context: context);
+    } else {
       var introdata = await getIntrodata();
 
       // term();
@@ -48,8 +49,6 @@ class _SplashState extends State<Splash> {
                 ? Home()
                 : Signin()));
       }
-    } else {
-      Internetcheck.showdialog(context: context);
     }
   }
 

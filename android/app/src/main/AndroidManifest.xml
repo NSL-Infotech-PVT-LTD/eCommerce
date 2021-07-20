@@ -6,7 +6,9 @@
 <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
    <application
         android:label="funfy"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="true"
+        >
 
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
 

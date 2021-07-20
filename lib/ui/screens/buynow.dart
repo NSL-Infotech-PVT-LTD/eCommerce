@@ -1,17 +1,26 @@
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:funfy/apis/bookingApi.dart';
 import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/ui/screens/CreditCardDetails.dart';
 import 'package:funfy/components/sizeclass/SizeConfig.dart';
+import 'package:funfy/ui/screens/bookingSuccess.dart';
+import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/widgets/rating.dart';
+import 'package:funfy/utils/Constants.dart';
+import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/strings.dart';
 
 class BuyNow extends StatefulWidget {
+  final fiestasId;
+
+  const BuyNow({Key? key, this.fiestasId}) : super(key: key);
   @override
   _BuyNowState createState() => _BuyNowState();
 }
@@ -19,6 +28,8 @@ class BuyNow extends StatefulWidget {
 class _BuyNowState extends State<BuyNow> {
   bool _isVertical = false;
   double _initialRating = 2.0;
+
+  bool _loading = false;
 
   // - + funtion
 
@@ -62,7 +73,71 @@ class _BuyNowState extends State<BuyNow> {
       } else {
         UserData.ticketcartMap.remove(index);
       }
+
+      if (UserData.ticketcartMap.isEmpty) {
+        navigatePopFun(context);
+      }
     });
+  }
+
+  // booking api call
+
+  fiestasBookingApi() async {
+    setState(() {
+      _loading = true;
+    });
+    var net = await Internetcheck.check();
+    try {
+      if (net != true) {
+        Internetcheck.showdialog(context: context);
+      } else {
+        // filter cart value
+        String ticket = "";
+        String standard = "";
+        String vip = "";
+
+        UserData.ticketcartMap.forEach((key, value) {
+          if (value["ticketname"] == "Ticket") {
+            ticket = value["ticketCount"].toString();
+          }
+          if (value["ticketname"] == "Standard") {
+            standard = value["ticketCount"].toString();
+          }
+
+          if (value["ticketname"] == "VIP Table") {
+            vip = value["ticketCount"].toString();
+          }
+        });
+
+        await fiestasBooking(
+                id: widget.fiestasId.toString(),
+                ticketcount: ticket,
+                standardticketcount: standard,
+                vipticketcount: vip)
+            .then((res) {
+          setState(() {
+            _loading = false;
+          });
+
+          if (res?.status == true && res?.code == 201) {
+            setState(() {
+              UserData.ticketcartMap.clear();
+            });
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => BookingSuccess()),
+                (route) => false);
+          }
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _loading = false;
+      });
+
+      print("Error in book fiestas-------------$e");
+    }
   }
 
   @override
@@ -93,219 +168,229 @@ class _BuyNowState extends State<BuyNow> {
       //   },
       //   child: Icon(Icons.ac_unit),
       // ),
-      body: Container(
-        width: size.width,
-        height: size.height,
-        child: Stack(
-          children: [
-            SingleChildScrollView(
-              child: Column(
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(SizeConfig.screenHeight * 0.02),
-                    height: SizeConfig.screenHeight * 0.20,
-                    child: Row(
-                      children: [
-                        Column(
-                          // mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+      body: Stack(
+        children: [
+          Container(
+            width: size.width,
+            height: size.height,
+            child: Stack(
+              children: [
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(SizeConfig.screenHeight * 0.02),
+                        height: SizeConfig.screenHeight * 0.20,
+                        child: Row(
                           children: [
-                            Row(
+                            Column(
+                              // mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: AppColors.green,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(6)),
-                                  ),
-                                  height: SizeConfig.screenHeight * 0.03,
-                                  width: SizeConfig.screenWidth * 0.15,
-                                  child: Center(
-                                      child: Text(
-                                    "OPEN",
-                                    style: TextStyle(
-                                      color: AppColors.white,
-                                      fontFamily: "BabasNeue",
-                                      fontSize: size.width * 0.043,
+                                Row(
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: AppColors.green,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(6)),
+                                      ),
+                                      height: SizeConfig.screenHeight * 0.03,
+                                      width: SizeConfig.screenWidth * 0.15,
+                                      child: Center(
+                                          child: Text(
+                                        "OPEN",
+                                        style: TextStyle(
+                                          color: AppColors.white,
+                                          fontFamily: "BabasNeue",
+                                          fontSize: size.width * 0.043,
+                                        ),
+                                      )),
                                     ),
-                                  )),
-                                ),
-                                SizedBox(width: SizeConfig.screenWidth * 0.03),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: AppColors.homeBackground,
-                                    border: Border.all(color: AppColors.white),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(6)),
-                                  ),
-                                  height: SizeConfig.screenHeight * 0.03,
-                                  width: SizeConfig.screenWidth * 0.15,
-                                  child: Center(
-                                      child: Text(
-                                    "Club",
-                                    style: TextStyle(
-                                      color: AppColors.white,
-                                      fontFamily: "DM Sans Medium",
-                                      fontSize: size.width * 0.035,
+                                    SizedBox(
+                                        width: SizeConfig.screenWidth * 0.03),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: AppColors.homeBackground,
+                                        border:
+                                            Border.all(color: AppColors.white),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(6)),
+                                      ),
+                                      height: SizeConfig.screenHeight * 0.03,
+                                      width: SizeConfig.screenWidth * 0.15,
+                                      child: Center(
+                                          child: Text(
+                                        "Club",
+                                        style: TextStyle(
+                                          color: AppColors.white,
+                                          fontFamily: "DM Sans Medium",
+                                          fontSize: size.width * 0.035,
+                                        ),
+                                      )),
                                     ),
-                                  )),
+                                  ],
                                 ),
+                                Container(
+                                  // cvfbgtkl;./
+                                  width: SizeConfig.screenWidth * 0.60,
+
+                                  margin:
+                                      EdgeInsets.only(top: size.height * 0.01),
+
+                                  //   height: SizeConfig.screenHeight,
+                                  child: Text(
+                                    "Teatro Barceló",
+                                    style: TextStyle(
+                                        fontSize: size.width * 0.08,
+                                        fontFamily: "DM Sans Bold",
+                                        color: AppColors.white),
+                                    maxLines: 1,
+                                    softWrap: true,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                ratingstars(
+                                    size: size.width * 0.06,
+                                    ittempading: size.width * 0.005,
+                                    color: AppColors.tagBorder,
+                                    rating: 3.0)
                               ],
                             ),
-                            Container(
-                              // cvfbgtkl;./
-                              width: SizeConfig.screenWidth * 0.60,
-
-                              margin: EdgeInsets.only(top: size.height * 0.01),
-
-                              //   height: SizeConfig.screenHeight,
-                              child: Text(
-                                "Teatro Barceló",
-                                style: TextStyle(
-                                    fontSize: size.width * 0.08,
-                                    fontFamily: "DM Sans Bold",
-                                    color: AppColors.white),
-                                maxLines: 1,
-                                softWrap: true,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            ratingstars(
-                                size: size.width * 0.06,
-                                ittempading: size.width * 0.005,
-                                color: AppColors.tagBorder,
-                                rating: 3.0)
                           ],
                         ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // here sart bottom content
-
-            Positioned(
-              bottom: 0,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: AppColors.homeBackgroundLite,
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-
-                    colors: <Color>[
-                      AppColors.homeBackgroundLite,
-                      Colors.transparent
+                      ),
                     ],
-                    tileMode: TileMode
-                        .repeated, // repeats the gradient over the canvas
                   ),
                 ),
-                height: size.height * 0.7,
-                width: size.width,
-                child: Column(
-                  children: [
-                    // cart title
-                    Row(
-                      children: [
-                        Padding(
-                          padding:
-                              EdgeInsets.all(SizeConfig.screenWidth * 0.04),
-                          child:
-                              SvgPicture.asset("assets/svgicons/cartsvg.svg"),
-                        ),
-                        SizedBox(
-                          width: SizeConfig.screenWidth * 0.003,
-                        ),
-                        Text(
-                          Strings.yourCart,
-                          style: TextStyle(
-                              color: AppColors.white,
-                              fontFamily: Fonts.dmSansMedium,
-                              fontSize: size.width * 0.04),
-                        ),
-                      ],
-                    ),
 
-                    // Cart list
-                    Expanded(
-                      // height: size.height * 0.5,
-                      child: ListView.builder(
-                          itemCount: UserData.ticketcartMap.values.length,
-                          itemBuilder: (context, index) {
-                            var data =
-                                UserData.ticketcartMap.values.elementAt(index);
-                            var indexKey =
-                                UserData.ticketcartMap.keys.toList()[index];
+                // here sart bottom content
 
-                            // print(indexKey);
-                            return cartItem(
-                                size: size,
-                                index: indexKey,
-                                title: data["ticketname"],
-                                image: data["ticketimage"],
-                                count: data["ticketCount"],
-                                price: data["ticketPrice"],
-                                remove: ticketRemove,
-                                add: addTicket);
-                          }),
-                    ),
+                Positioned(
+                  bottom: 0,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.homeBackgroundLite,
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
 
-                    // proceed to pay
-
-                    SizedBox(
-                      height: SizeConfig.screenHeight * 0.02,
-                    ),
-
-                    SizedBox(
-                      width: SizeConfig.screenWidth * 0.90,
-                      child: ElevatedButton(
-                        child: Text(
-                          Strings.proceedtopay,
-                          style: TextStyle(
-                              color: AppColors.white,
-                              fontSize: size.width * 0.05,
-                              fontFamily: Fonts.dmSansBold),
-                        ),
-                        onPressed: () {
-                          navigatorPushFun(context, CreditCard());
-                        },
-                        style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: SizeConfig.screenWidth * 0.06,
-                              vertical: SizeConfig.screenHeight * 0.02),
-                          primary: AppColors.redlite,
-                        ),
+                        colors: <Color>[
+                          AppColors.homeBackgroundLite,
+                          Colors.transparent
+                        ],
+                        tileMode: TileMode
+                            .repeated, // repeats the gradient over the canvas
                       ),
                     ),
-                    SizedBox(
-                      height: SizeConfig.screenHeight * 0.02,
-                    ),
-                    ConstrainedBox(
-                        constraints: BoxConstraints(
-                          maxWidth: SizeConfig.screenWidth * 0.80,
+                    height: size.height * 0.7,
+                    width: size.width,
+                    child: Column(
+                      children: [
+                        // cart title
+                        Row(
+                          children: [
+                            Padding(
+                              padding:
+                                  EdgeInsets.all(SizeConfig.screenWidth * 0.04),
+                              child: SvgPicture.asset(
+                                  "assets/svgicons/cartsvg.svg"),
+                            ),
+                            SizedBox(
+                              width: SizeConfig.screenWidth * 0.003,
+                            ),
+                            Text(
+                              Strings.yourCart,
+                              style: TextStyle(
+                                  color: AppColors.white,
+                                  fontFamily: Fonts.dmSansMedium,
+                                  fontSize: size.width * 0.04),
+                            ),
+                          ],
                         ),
-                        child: Text(
-                          Strings
-                              .thisisthefinalstepafteryoutouchingPayNowbuttonthepaymentwillbetransaction,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: AppColors.descriptionfirst,
-                              fontSize: size.width * 0.035,
-                              fontFamily: Fonts.dmSansMedium),
-                        )),
 
-                    SizedBox(
-                      height: SizeConfig.screenHeight * 0.02,
+                        // Cart list
+                        Expanded(
+                          // height: size.height * 0.5,
+                          child: ListView.builder(
+                              itemCount: UserData.ticketcartMap.values.length,
+                              itemBuilder: (context, index) {
+                                var data = UserData.ticketcartMap.values
+                                    .elementAt(index);
+                                var indexKey =
+                                    UserData.ticketcartMap.keys.toList()[index];
+
+                                // print(indexKey);
+                                return cartItem(
+                                    size: size,
+                                    index: indexKey,
+                                    title: data["ticketname"],
+                                    image: data["ticketimage"],
+                                    count: data["ticketCount"],
+                                    price: data["ticketPrice"],
+                                    remove: ticketRemove,
+                                    add: addTicket);
+                              }),
+                        ),
+
+                        // proceed to pay
+
+                        SizedBox(
+                          height: SizeConfig.screenHeight * 0.02,
+                        ),
+
+                        SizedBox(
+                          width: SizeConfig.screenWidth * 0.90,
+                          child: ElevatedButton(
+                            child: Text(
+                              Strings.proceedtopay,
+                              style: TextStyle(
+                                  color: AppColors.white,
+                                  fontSize: size.width * 0.05,
+                                  fontFamily: Fonts.dmSansBold),
+                            ),
+                            onPressed: () {
+                              fiestasBookingApi();
+
+                              // navigatorPushFun(context, CreditCard());
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: SizeConfig.screenWidth * 0.06,
+                                  vertical: SizeConfig.screenHeight * 0.02),
+                              primary: AppColors.redlite,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: SizeConfig.screenHeight * 0.02,
+                        ),
+                        ConstrainedBox(
+                            constraints: BoxConstraints(
+                              maxWidth: SizeConfig.screenWidth * 0.80,
+                            ),
+                            child: Text(
+                              Strings
+                                  .thisisthefinalstepafteryoutouchingPayNowbuttonthepaymentwillbetransaction,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: AppColors.descriptionfirst,
+                                  fontSize: size.width * 0.035,
+                                  fontFamily: Fonts.dmSansMedium),
+                            )),
+
+                        SizedBox(
+                          height: SizeConfig.screenHeight * 0.02,
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
+          ),
+          _loading ? Center(child: CircularProgressIndicator()) : SizedBox()
+        ],
       ),
     );
   }

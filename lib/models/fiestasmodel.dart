@@ -114,7 +114,7 @@ class Datum {
   String? name;
   int? clubId;
   DateTime? timestamp;
-  String? image;
+  dynamic image;
   String? ticketPrice;
   String? ticketPriceStandard;
   String? ticketPriceVip;
@@ -144,7 +144,7 @@ class Datum {
         "id": id,
         "name": name,
         "club_id": clubId,
-        "timestamp": timestamp.toString(),
+        "timestamp": timestamp?.toIso8601String(),
         "image": image,
         "ticket_price": ticketPrice,
         "ticket_price_standard": ticketPriceStandard,
