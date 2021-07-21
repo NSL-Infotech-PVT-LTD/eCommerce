@@ -122,6 +122,7 @@ class _BuyNowState extends State<BuyNow> {
           if (res?.status == true && res?.code == 201) {
             setState(() {
               UserData.ticketcartMap.clear();
+              UserData.totalTicketNum = 0;
             });
             Navigator.pushAndRemoveUntil(
                 context,

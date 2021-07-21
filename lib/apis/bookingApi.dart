@@ -57,9 +57,32 @@ Future<FiestasBookingList?> fiestasBookingList() async {
   var response = Map<String, dynamic>.from(jsonRes);
 
   if (res.statusCode == 200) {
-    // print("newModle" + res.body);
+    print("newModle" + res.body);
     return FiestasBookingList.fromJson(response);
   } else {
     // print(res.body);
   }
+}
+
+Future preFiestaBookingApi({String? preFiestaID, String? quantity}) async {
+  var headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+  };
+
+  var body = {};
+
+  if (quantity != null) {
+    body = {"pre_fiesta_id": preFiestaID, "quantity": quantity};
+  } else {
+    body = {"pre_fiesta_id": preFiestaID};
+  }
+
+  var res = await http.post(Uri.parse(Urls.preFiestasBookingUrl),
+      body: body, headers: headers);
+
+  print(res.body);
+
+  var jsonBody = json.decode(res.body);
+
+  return jsonBody;
 }

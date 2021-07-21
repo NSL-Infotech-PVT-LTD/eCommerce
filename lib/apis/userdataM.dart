@@ -11,6 +11,9 @@ class UserData {
   static Map facebookUserdata = {};
   static Map ticketcartMap = {};
   static num totalTicketNum = 0;
+  static String preFiestasAlcoholCart = "";
+  static Map preFiestasMixesTicketCart = {};
+  static Map preFiestasExtrasTicketCart = {};
 
   static List tiketList = [
     {

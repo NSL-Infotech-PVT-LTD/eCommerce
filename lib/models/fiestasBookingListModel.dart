@@ -32,7 +32,7 @@ class Data {
   String? nextPageUrl;
   String? path;
   int? perPage;
-  Null? prevPageUrl;
+  String? prevPageUrl;
   int? to;
   int? total;
 
@@ -95,14 +95,14 @@ class DataListFiesta {
   int? userId;
   int? fiestaId;
   String? totalPrice;
-  Null paymentParams;
-  Null paymentMode;
+  String? paymentParams;
+  String? paymentMode;
   String? bookingStatus;
-  Null params;
+  String? params;
   String? status;
   String? createdAt;
   String? updatedAt;
-  Null deletedAt;
+  String? deletedAt;
   FiestaDetail? fiestaDetail;
 
   DataListFiesta(
@@ -164,7 +164,7 @@ class FiestaDetail {
   String? name;
   int? clubId;
   String? timestamp;
-  Null image;
+  String? image;
   String? ticketPrice;
   String? ticketPriceStandard;
   String? ticketPriceVip;
@@ -239,8 +239,8 @@ class ClubDetail {
   String? capacity;
   String? description;
   String? location;
-  Null latitude;
-  Null longitude;
+  double? latitude;
+  double? longitude;
 
   ClubDetail(
       {this.id,

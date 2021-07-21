@@ -50,6 +50,7 @@ class Images {
   static String ticketWhiteImageSvg = "assets/svgicons/ticketWhite.svg";
   static String qrZoomIn = "assets/svgicons/qrzoomIn.svg";
   static String qrZoomOut = "assets/svgicons/qrZoomOut.svg";
+  static String playSvg = "assets/svgicons/play.svg";
 
   // dummy
   static String profileImage =

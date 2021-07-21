@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="44" height="45.197" viewBox="0 0 44 45.197">
+  <defs>
+    <filter id="Icon_awesome-play" x="10.276" y="9.172" width="33.02" height="36.025" filterUnits="userSpaceOnUse">
+      <feOffset dx="2" dy="5" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feFlood flood-opacity="0.259"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="Group_1602" data-name="Group 1602" transform="translate(-166 -156)">
+    <path id="Path_376" data-name="Path 376" d="M22,0A22,22,0,1,1,0,22,22,22,0,0,1,22,0Z" transform="translate(166 156)" fill="#fff" opacity="0.59"/>
+    <g transform="matrix(1, 0, 0, 1, 166, 156)" filter="url(#Icon_awesome-play)">
+      <path id="Icon_awesome-play-2" data-name="Icon awesome-play" d="M19.914,10.075,3.4.31A2.24,2.24,0,0,0,0,2.248V21.772A2.25,2.25,0,0,0,3.4,23.71l16.516-9.76a2.25,2.25,0,0,0,0-3.876Z" transform="translate(14.28 10.17)" fill="#fff"/>
+    </g>
+  </g>
+</svg>

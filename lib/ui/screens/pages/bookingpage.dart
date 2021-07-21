@@ -191,14 +191,23 @@ class _BookingPageState extends State<BookingPage> {
 
             fiestasButton
                 ? Expanded(
-                    child: ListView.builder(
-                        itemCount: fiestasBookingListModel?.data?.data?.length,
-                        itemBuilder: (context, index) {
-                          return fiestasOrdersItem(
-                              context: context,
-                              index: index,
-                              model: fiestasBookingListModel);
-                        }))
+                    child: Stack(
+                    children: [
+                      // loading
+                      _loading
+                          ? Center(child: CircularProgressIndicator())
+                          : SizedBox(),
+                      ListView.builder(
+                          itemCount:
+                              fiestasBookingListModel?.data?.data?.length ?? 0,
+                          itemBuilder: (context, index) {
+                            return fiestasOrdersItem(
+                                context: context,
+                                index: index,
+                                model: fiestasBookingListModel);
+                          }),
+                    ],
+                  ))
                 : preFiestasOrderItem(context)
           ],
         )));

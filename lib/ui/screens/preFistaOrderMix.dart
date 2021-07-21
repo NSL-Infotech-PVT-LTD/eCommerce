@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
+import 'package:funfy/apis/bookingApi.dart';
 import 'package:funfy/apis/homeApis.dart';
+import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/models/fiestasmodel.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,6 +16,8 @@ import 'package:funfy/components/sizeclass/SizeConfig.dart';
 import 'package:funfy/models/fiestasmodel.dart';
 import 'package:funfy/models/preFiestasModel.dart';
 import 'package:funfy/models/prifiestasAlMxEx.dart';
+import 'package:funfy/ui/screens/bookNowBeta.dart';
+import 'package:funfy/ui/screens/bookingSuccess.dart';
 import 'package:funfy/ui/screens/pages/BookNow.dart';
 import 'package:funfy/ui/widgets/basic%20function.dart';
 import 'package:funfy/ui/widgets/rating.dart';
@@ -38,15 +44,8 @@ class PreFistaOrder extends StatefulWidget {
 }
 
 class _PreFistaOrderState extends State<PreFistaOrder> {
-  int? groupValue = 4;
-  int? initvalue = 1;
-
-  void _handleRadioValueChange(int? value) {
-    setState(() {
-      print(value);
-      groupValue = value;
-    });
-  }
+  int? groupValue = -1;
+  int? initvalue = 0;
 
   CarouselController _carouselController = CarouselController();
   List<Widget> cardList = [];
@@ -58,12 +57,37 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
   String price = "Loading...";
   List<Widget> alcoholList = [];
   VideoPlayerController? _controller;
+  bool pauseBool = false;
 
 // model data
   PrefiestasAlMxExModel? alcohol;
   PrefiestasAlMxExModel? mix;
   PrefiestasAlMxExModel? extras;
   bool _loading = false;
+
+  bool _loadingCenter = false;
+
+  void _handleRadioValueChange(int? value) {
+    setState(() {
+      print(value);
+      groupValue = value;
+      UserData.preFiestasAlcoholCart = alcohol!.data!.data!
+          .elementAt(int.parse(value.toString()))
+          .id
+          .toString();
+
+      totalCount();
+    });
+  }
+
+  clearCart() {
+    setState(() {
+      UserData.preFiestasAlcoholCart = "";
+      UserData.preFiestasExtrasTicketCart.clear();
+      UserData.preFiestasMixesTicketCart.clear();
+      UserData.totalTicketNum = 0;
+    });
+  }
 
   @override
   void initState() {
@@ -76,19 +100,28 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
     _controller = VideoPlayerController.network(
         'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_20mb.mp4')
       ..initialize().then((_) {
-        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
         setState(() {});
       });
   }
 
+  pauseButtonHide() {
+    Timer(Duration(seconds: 3), () {
+      setState(() {
+        pauseBool = false;
+      });
+    });
+  }
+
   // + - count button
-  Widget insdecButton() {
+  Widget insdecButton({int? index, String? pid, add, remove, Map? cart}) {
     var size = MediaQuery.of(context).size;
     return Container(
       child: Row(
         children: [
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              remove(index: index, id: pid, cart: cart);
+            },
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.transparent,
@@ -115,7 +148,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
 
           // center number
           Text(
-            "0",
+            cart!.containsKey(index) ? "${cart[index]["preticketCount"]}" : "0",
             style: TextStyle(
                 fontFamily: "DM Sans Medium",
                 fontSize: size.width * 0.04,
@@ -125,7 +158,9 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
             width: SizeConfig.screenWidth * 0.03,
           ),
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              add(index: index, id: pid, cart: cart);
+            },
             child: Container(
               decoration: BoxDecoration(
                 color: AppColors.skin,
@@ -154,7 +189,10 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
       String? title,
       String? subtitle,
       PrefiestasAlMxExModel? model,
-      bool? numCount}) {
+      bool? numCount,
+      Map? cart,
+      addFunc,
+      removeFunc}) {
     var size = MediaQuery.of(context).size;
     var data = model?.data?.data;
     return ListTile(
@@ -175,7 +213,12 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                 onChanged: _handleRadioValueChange)
             : Container(
                 width: size.width * 0.25,
-                child: insdecButton(),
+                child: insdecButton(
+                    add: addFunc,
+                    remove: removeFunc,
+                    index: index,
+                    cart: cart,
+                    pid: data[index].id.toString()),
               ));
   }
 
@@ -211,10 +254,17 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
             id: widget.prefiestasModel?.id.toString(),
             categoriesName: Strings.alcohols)
         .then((res) {
-      setState(() {
-        alcohol = res;
-        _loading = false;
-      });
+      if (res?.status == true) {
+        setState(() {
+          alcohol = res;
+          _loading = false;
+        });
+      } else {
+        setState(() {
+          alcohol = PrefiestasAlMxExModel();
+          _loading = false;
+        });
+      }
     });
   }
 
@@ -225,10 +275,17 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
             id: widget.prefiestasModel?.id.toString(),
             categoriesName: Strings.mixs)
         .then((res) {
-      setState(() {
-        mix = res;
-        _loading = false;
-      });
+      if (res?.status == true) {
+        setState(() {
+          mix = res;
+          _loading = false;
+        });
+      } else {
+        setState(() {
+          mix = PrefiestasAlMxExModel();
+          _loading = false;
+        });
+      }
     });
   }
 
@@ -239,11 +296,258 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
             id: widget.prefiestasModel?.id.toString(),
             categoriesName: Strings.extrass)
         .then((res) {
-      setState(() {
-        extras = res;
-        _loading = false;
-      });
+      if (res?.status == true) {
+        setState(() {
+          extras = res;
+          _loading = false;
+        });
+      } else {
+        setState(() {
+          extras = PrefiestasAlMxExModel();
+          _loading = false;
+        });
+      }
     });
+  }
+
+  // - + funtion
+
+  addTicket({int? index, String? id, var cart}) {
+    print("add button press  index: $index  id: $id");
+
+    setState(() {
+      if (cart!.containsKey(index)) {
+        cart[index]["preticketCount"] = cart[index]["preticketCount"] + 1;
+      } else {
+        cart[index] = {
+          "id": id,
+          "preticketCount": 1,
+        };
+      }
+    });
+
+    totalCount();
+    print(cart);
+  }
+
+  // remove button
+
+  ticketRemove({String? id, int? index, var cart}) {
+    print("remove id: $id  index: $index");
+
+    setState(() {
+      if (cart.isNotEmpty) {
+        if (cart.containsKey(index) && cart[index]["preticketCount"] > 1) {
+          cart[index]["preticketCount"] = cart[index]["preticketCount"] - 1;
+        } else {
+          cart.remove(index);
+        }
+      } else {
+        // clearCart();
+      }
+    });
+    totalCount();
+    print(cart);
+  }
+
+  // bottom popup
+
+  Widget bottomSheet() {
+    var size = MediaQuery.of(context).size;
+
+    return Container(
+      height: size.height * 0.1,
+      child: Stack(
+        children: [
+          Container(
+              width: SizeConfig.screenWidth,
+              height: SizeConfig.screenHeight * 0.10,
+              child: SvgPicture.asset(
+                "assets/images/Rectangle.svg",
+                fit: BoxFit.fill,
+              )),
+          Container(
+            width: SizeConfig.screenWidth,
+            padding: EdgeInsets.symmetric(
+                horizontal: size.width * 0.03, vertical: size.height * 0.01),
+            child: Row(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Added to cart",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: AppColors.brownlite,
+                          fontSize: size.width * 0.03),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.screenHeight * 0.01,
+                    ),
+                    Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                      SvgPicture.asset(
+                        "assets/images/ticket.svg",
+                        width: size.width * 0.07,
+                      ),
+                      SizedBox(
+                        width: size.width * 0.02,
+                      ),
+                      Container(
+                        // width: SizeConfig.screenWidth * 0.40,
+                        child: Text(
+                          "${Strings.ticket} * ${UserData.totalTicketNum}",
+                          style: TextStyle(
+                            color: AppColors.white,
+                            fontSize: size.width * 0.05,
+                            fontFamily: "DM Sans Bold",
+                          ),
+                          textAlign: TextAlign.start,
+                          maxLines: 1,
+                          softWrap: true,
+                          overflow: TextOverflow.clip,
+                        ),
+                      ),
+                    ]),
+                  ],
+                ),
+                SizedBox(
+                  width: SizeConfig.screenWidth * 0.04,
+                ),
+                Spacer(),
+                ElevatedButton(
+                  child: Text(
+                    'Buy Now',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  onPressed: () {
+                    preFiestaCartBookingCart();
+                    // Navigator.of(context)
+                    //     .push(MaterialPageRoute(
+                    //         builder: (context) => BuyNow(
+                    //             fiestasId: widget
+                    //                 .fiestasModel?.id)))
+                    //     .then((value) {
+                    //   setState(() {
+                    //     totalTicket();
+                    //   });
+                    // });
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.screenWidth * 0.06,
+                        vertical: SizeConfig.screenHeight * 0.02),
+                    primary: AppColors.redlite,
+                  ),
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  // total count
+  totalCount() {
+    print("total Count run");
+
+    setState(() {
+      num tot = 0;
+
+      if (UserData.preFiestasAlcoholCart != "") {
+        tot = tot + 1;
+      }
+
+      if (UserData.preFiestasMixesTicketCart.isNotEmpty) {
+        for (var i in UserData.preFiestasMixesTicketCart.values.toList()) {
+          tot = tot + i["preticketCount"];
+        }
+      }
+
+      if (UserData.preFiestasMixesTicketCart.isNotEmpty) {
+        for (var i in UserData.preFiestasExtrasTicketCart.values.toList()) {
+          tot = tot + i["preticketCount"];
+        }
+      }
+
+      UserData.totalTicketNum = tot;
+
+      print(UserData.totalTicketNum);
+    });
+  }
+
+  // pre fiesta cart booking cart
+
+  preFiestaCartBookingCart() async {
+    var net = await Internetcheck.check();
+
+    if (net != true) {
+      Internetcheck.showdialog(context: context);
+    } else {
+      setState(() {
+        _loadingCenter = true;
+      });
+      try {
+        String? statusCode = "0";
+        if (UserData.preFiestasAlcoholCart != "") {
+          await preFiestaBookingApi(preFiestaID: UserData.preFiestasAlcoholCart)
+              .then((res) {
+            setState(() {
+              statusCode = res?["code"].toString();
+            });
+          });
+        }
+
+        if (UserData.preFiestasMixesTicketCart.isNotEmpty) {
+          for (var i in UserData.preFiestasMixesTicketCart.values.toList()) {
+            await preFiestaBookingApi(
+                    preFiestaID: i["id"],
+                    quantity: i["preticketCount"].toString())
+                .then((res) {
+              setState(() {
+                statusCode = res?["code"].toString();
+              });
+            });
+          }
+        }
+
+        if (UserData.preFiestasExtrasTicketCart.isNotEmpty) {
+          for (var i in UserData.preFiestasMixesTicketCart.values.toList()) {
+            await preFiestaBookingApi(
+                    preFiestaID: i["id"],
+                    quantity: i["preticketCount"].toString())
+                .then((res) {
+              setState(() {
+                statusCode = res?["code"].toString();
+              });
+            });
+          }
+        }
+
+        // preFiestaBookingApi().then((res){});
+
+        if (statusCode == "201") {
+          setState(() {
+            _loadingCenter = false;
+            clearCart();
+          });
+
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => BookingSuccess()),
+              (route) => false);
+        } else {
+          print(statusCode);
+        }
+      } catch (e) {
+        setState(() {
+          _loadingCenter = false;
+        });
+        print("error in preFiesta Bokking $e");
+      }
+    }
   }
 
   @override
@@ -321,270 +625,337 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
     return SafeArea(
       child: Scaffold(
           backgroundColor: AppColors.homeBackground,
-          body: DefaultTabController(
-            length: 3,
-            child: NestedScrollView(
-              headerSliverBuilder:
-                  (BuildContext context, bool innerBoxIsScrolled) {
-                return [
-                  SliverAppBar(
-                    // backgroundColor: AppColors.white,
-                    collapsedHeight: 150.0,
-                    expandedHeight: 200.0,
-                    floating: true,
-                    pinned: true,
-                    snap: true,
-                    actions: [
-                      Container(
-                        margin: EdgeInsets.only(right: size.width * 0.04),
-                        child: SvgPicture.asset(
-                          "assets/svgicons/hearticon.svg",
-                          color: Colors.white,
-                        ),
-                      )
-                    ],
-                    actionsIconTheme: IconThemeData(opacity: 0.0),
-                    flexibleSpace: Stack(
-                      children: <Widget>[
-                        Container(
-                            color: AppColors.blackBackground,
-                            height: size.height,
-                            width: size.width),
-                        Positioned.fill(
-                            child: _controller!.value.isInitialized
-                                ? Stack(
-                                    children: [
-                                      Center(
-                                          child: _controller!
-                                                  .value.isInitialized
-                                              ? AspectRatio(
-                                                  aspectRatio: _controller!
-                                                      .value.aspectRatio,
-                                                  child:
-                                                      VideoPlayer(_controller!),
+          bottomSheet: UserData.preFiestasExtrasTicketCart.isNotEmpty ||
+                  UserData.preFiestasMixesTicketCart.isNotEmpty ||
+                  UserData.preFiestasAlcoholCart != ""
+              ? bottomSheet()
+              : SizedBox(),
+          body: Stack(
+            children: [
+              DefaultTabController(
+                length: 3,
+                child: NestedScrollView(
+                  headerSliverBuilder:
+                      (BuildContext context, bool innerBoxIsScrolled) {
+                    return [
+                      SliverAppBar(
+                        // backgroundColor: AppColors.white,
+                        collapsedHeight: 150.0,
+                        expandedHeight: 200.0,
+                        floating: true,
+                        pinned: true,
+                        snap: true,
+                        actions: [
+                          Container(
+                            margin: EdgeInsets.only(right: size.width * 0.04),
+                            child: SvgPicture.asset(
+                              "assets/svgicons/hearticon.svg",
+                              color: Colors.white,
+                            ),
+                          )
+                        ],
+                        actionsIconTheme: IconThemeData(opacity: 0.0),
+                        flexibleSpace: Stack(
+                          children: <Widget>[
+                            Container(
+                                color: AppColors.blackBackground,
+                                height: size.height,
+                                width: size.width),
+                            Positioned.fill(
+                                child: _controller!.value.isInitialized
+                                    ? Stack(
+                                        children: [
+                                          Center(
+                                              child: _controller!
+                                                      .value.isInitialized
+                                                  ? AspectRatio(
+                                                      aspectRatio: _controller!
+                                                          .value.aspectRatio,
+                                                      child: VideoPlayer(
+                                                          _controller!),
+                                                    )
+                                                  : Container()),
+                                          Center(
+                                            child: InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    _controller!.value.isPlaying
+                                                        ? _controller?.pause()
+                                                        : _controller?.play();
+                                                  });
+                                                },
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    _controller!.value.isPlaying
+                                                        ? Icon(
+                                                            Icons.pause,
+                                                            color:
+                                                                AppColors.white,
+                                                            size: size.width *
+                                                                0.11,
+                                                          )
+                                                        : SizedBox(),
+                                                    _controller!.value
+                                                                .isPlaying ==
+                                                            false
+                                                        ? Container(
+                                                            child: SvgPicture
+                                                                .asset(
+                                                              Images.playSvg,
+                                                              width:
+                                                                  size.width *
+                                                                      0.11,
+                                                            ),
+                                                          )
+                                                        : SizedBox(),
+                                                  ],
                                                 )
-                                              : Container()),
-                                      Center(
-                                        child: InkWell(
-                                          onTap: () {
-                                            setState(() {
-                                              _controller!.value.isPlaying
-                                                  ? _controller?.pause()
-                                                  : _controller?.play();
-                                            });
-                                          },
-                                          child: _controller!.value.isPlaying
-                                              ? Icon(
-                                                  Icons.pause,
-                                                  color: Colors.white,
-                                                )
-                                              : Icon(
-                                                  Icons.play_arrow,
-                                                  color: Colors.white,
+
+                                                // child: _controller!.value.isPlaying
+                                                //     ?  Icon(
+                                                //         Icons.pause,
+                                                //         color: AppColors.white,
+                                                //         size: size.width * 0.11,
+                                                //       )
+                                                //     :  Container(
+                                                //         child: SvgPicture.asset(
+                                                //           Images.playSvg,
+                                                //           width: size.width * 0.11,
+                                                //         ),
+                                                //       )
+
+                                                //  Icon(
+                                                //     Icons.play_arrow,
+                                                //     color: Colors.white,
+                                                //   ),
                                                 ),
-                                        ),
+                                          )
+                                        ],
                                       )
-                                    ],
-                                  )
-                                : Center(
-                                    child: CircularProgressIndicator(
-                                      color: AppColors.white,
-                                    ),
-                                  )),
-                        Positioned(bottom: 0.0, child: Text(""))
-                      ],
-                    ),
-                  ),
-                  SliverPadding(
-                    padding: EdgeInsets.all(16.0),
-                    sliver: SliverList(
-                      delegate: SliverChildListDelegate([
-                        Container(
-                          color: AppColors.homeBackground,
-                          padding: EdgeInsets.all(8.0),
-                          child: Row(
-                            children: [
-                              Column(
-                                // mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    // cvfbgtkl;./
-                                    width: SizeConfig.screenWidth * 0.60,
-                                    //   height: SizeConfig.screenHeight,
-                                    child: Padding(
-                                      padding: EdgeInsets.only(
-                                          // left: SizeConfig.screenWidth * 0.02,
-                                          top: size.width * 0.01),
-                                      child: Text(
-                                        "${widget.prefiestasModel?.name ?? "Name"}",
-                                        style: TextStyle(
-                                            fontSize: size.width * 0.058,
-                                            fontFamily: "DM Sans Bold",
-                                            color: AppColors.white),
-                                        maxLines: 1,
-                                        softWrap: true,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    // cvfbgtkl;./
-                                    width: SizeConfig.screenWidth * 0.85,
-                                    //   height: SizeConfig.screenHeight,
-                                    child: Padding(
-                                      padding: EdgeInsets.only(
-                                          // left: SizeConfig.screenWidth * 0.02,
-                                          top: size.width * 0.01),
-                                      child: topHeadingContent(
-                                          description: widget
-                                              .prefiestasModel?.description,
-                                          textEnd: " ${Strings.muchMore}"),
-                                    ),
-                                  ),
-                                  SizedBox(height: size.height * 0.005),
-                                ],
-                              ),
-                              Spacer(),
-                            ],
-                          ),
-                        ),
-                        TabBar(
-                          unselectedLabelColor: Colors.grey,
-                          indicatorColor: AppColors.siginbackgrond,
-                          // labelColor: Colors.black87,
-                          // unselectedLabelColor: Colors.grey,
-                          tabs: [
-                            Tab(
-                              icon: Text(Strings.alcohol),
-                            ),
-                            Tab(
-                              icon: Text(Strings.mixes),
-                            ),
-                            Tab(
-                              icon: Text(Strings.extras),
-                            ),
+                                    : Center(
+                                        child: CircularProgressIndicator(
+                                          color: AppColors.white,
+                                        ),
+                                      )),
+                            Positioned(bottom: 0.0, child: Text(""))
                           ],
                         ),
-                      ]),
-                    ),
-                  ),
-                ];
-              },
-              body: TabBarView(children: [
-                _loading == true
-                    ? Center(child: CircularProgressIndicator())
-                    : _loading == false && alcohol?.data?.data == []
-                        ? Center(
-                            child: Text(
-                              Strings.nodataFound,
-                              style: TextStyle(
-                                  color: AppColors.descriptionfirst,
-                                  fontFamily: Fonts.dmSansBold,
-                                  fontSize: size.width * 0.045),
-                            ),
-                          )
-                        : Container(
-                            color: AppColors.homeBackgroundLite,
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  height: SizeConfig.screenHeight * 0.03,
-                                ),
-                                SizedBox(
-                                  width: SizeConfig.screenWidth * 0.95,
-                                  child: richText("Select at most ", "One",
-                                      " from Alcohols"),
-                                ),
-                                Expanded(
-                                  child: ListView.builder(
-                                    itemCount: alcohol?.data?.data?.length ?? 0,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return alcoholGradientFunction(
-                                          index: index,
-                                          numCount: false,
-                                          model: alcohol);
-                                    },
+                      ),
+                      SliverPadding(
+                        padding: EdgeInsets.all(16.0),
+                        sliver: SliverList(
+                          delegate: SliverChildListDelegate([
+                            Container(
+                              color: AppColors.homeBackground,
+                              padding: EdgeInsets.all(8.0),
+                              child: Row(
+                                children: [
+                                  Column(
+                                    // mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        // cvfbgtkl;./
+                                        width: SizeConfig.screenWidth * 0.60,
+                                        //   height: SizeConfig.screenHeight,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                              // left: SizeConfig.screenWidth * 0.02,
+                                              top: size.width * 0.01),
+                                          child: Text(
+                                            "${widget.prefiestasModel?.name ?? "Name"}",
+                                            style: TextStyle(
+                                                fontSize: size.width * 0.058,
+                                                fontFamily: "DM Sans Bold",
+                                                color: AppColors.white),
+                                            maxLines: 1,
+                                            softWrap: true,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        // cvfbgtkl;./
+                                        width: SizeConfig.screenWidth * 0.85,
+                                        //   height: SizeConfig.screenHeight,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                              // left: SizeConfig.screenWidth * 0.02,
+                                              top: size.width * 0.01),
+                                          child: topHeadingContent(
+                                              description: widget
+                                                  .prefiestasModel?.description,
+                                              textEnd: " ${Strings.muchMore}"),
+                                        ),
+                                      ),
+                                      SizedBox(height: size.height * 0.005),
+                                    ],
                                   ),
+                                  Spacer(),
+                                ],
+                              ),
+                            ),
+                            TabBar(
+                              unselectedLabelColor: Colors.grey,
+                              indicatorColor: AppColors.siginbackgrond,
+                              // labelColor: Colors.black87,
+                              // unselectedLabelColor: Colors.grey,
+                              tabs: [
+                                Tab(
+                                  icon: Text(Strings.alcohol),
+                                ),
+                                Tab(
+                                  icon: Text(Strings.mixes),
+                                ),
+                                Tab(
+                                  icon: Text(Strings.extras),
                                 ),
                               ],
                             ),
-                          ),
-                _loading == true
-                    ? Center(child: CircularProgressIndicator())
-                    : _loading == false && mix?.data?.data == []
-                        ? Center(
-                            child: Text(
-                              Strings.nodataFound,
-                              style: TextStyle(
-                                  color: AppColors.descriptionfirst,
-                                  fontFamily: Fonts.dmSansBold,
-                                  fontSize: size.width * 0.045),
-                            ),
-                          )
-                        : Container(
-                            padding: EdgeInsets.all(8.0),
-                            color: AppColors.homeBackgroundLite,
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                    width: SizeConfig.screenWidth * 0.95,
-                                    child: richText("Select at most ", "Two",
-                                        " from Mixes")),
-                                Expanded(
-                                  child: ListView.builder(
-                                    itemCount: mix?.data?.data?.length ?? 0,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return alcoholGradientFunction(
-                                          index: index,
-                                          model: mix,
-                                          numCount: true);
-                                    },
-                                  ),
+                          ]),
+                        ),
+                      ),
+                    ];
+                  },
+                  body: TabBarView(children: [
+                    _loading == true
+                        ? Center(child: CircularProgressIndicator())
+                        : _loading == false && alcohol?.data?.data == []
+                            ? Center(
+                                child: Text(
+                                  Strings.nodataFound,
+                                  style: TextStyle(
+                                      color: AppColors.descriptionfirst,
+                                      fontFamily: Fonts.dmSansBold,
+                                      fontSize: size.width * 0.045),
                                 ),
-                              ],
-                            ),
-                          ),
-                _loading == true
-                    ? Center(child: CircularProgressIndicator())
-                    : _loading == false && extras?.data?.data == []
-                        ? Center(
-                            child: Text(
-                              Strings.nodataFound,
-                              style: TextStyle(
-                                  color: AppColors.descriptionfirst,
-                                  fontFamily: Fonts.dmSansBold,
-                                  fontSize: size.width * 0.045),
-                            ),
-                          )
-                        : Container(
-                            color: AppColors.homeBackgroundLite,
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  width: SizeConfig.screenWidth * 0.95,
-                                  child: richText(
-                                      "Select at most ", "One", " from Mixes"),
+                              )
+                            : Container(
+                                color: AppColors.homeBackgroundLite,
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      height: SizeConfig.screenHeight * 0.03,
+                                    ),
+                                    SizedBox(
+                                      width: SizeConfig.screenWidth * 0.95,
+                                      child: richText("Select at most ", "One",
+                                          " from Alcohols"),
+                                    ),
+                                    Expanded(
+                                      child: ListView.builder(
+                                        itemCount:
+                                            alcohol?.data?.data?.length ?? 0,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return alcoholGradientFunction(
+                                              index: index,
+                                              numCount: false,
+                                              cart: UserData
+                                                  .preFiestasExtrasTicketCart,
+                                              model: alcohol);
+                                        },
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                Expanded(
-                                  child: ListView.builder(
-                                    itemCount: extras?.data?.data?.length ?? 0,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return alcoholGradientFunction(
-                                          index: index,
-                                          model: extras,
-                                          numCount: true);
-                                    },
-                                  ),
+                              ),
+                    _loading == true
+                        ? Center(child: CircularProgressIndicator())
+                        : _loading == false && mix?.data?.data == []
+                            ? Center(
+                                child: Text(
+                                  Strings.nodataFound,
+                                  style: TextStyle(
+                                      color: AppColors.descriptionfirst,
+                                      fontFamily: Fonts.dmSansBold,
+                                      fontSize: size.width * 0.045),
                                 ),
-                              ],
-                            ),
-                          ),
-              ]),
-            ),
+                              )
+                            : Container(
+                                padding: EdgeInsets.all(8.0),
+                                color: AppColors.homeBackgroundLite,
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                        width: SizeConfig.screenWidth * 0.95,
+                                        child: richText("Select at most ",
+                                            "Two", " from Mixes")),
+                                    Expanded(
+                                      child: ListView.builder(
+                                        itemCount: mix?.data?.data?.length ?? 0,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return alcoholGradientFunction(
+                                              index: index,
+                                              model: mix,
+                                              cart: UserData
+                                                  .preFiestasMixesTicketCart,
+                                              addFunc: addTicket,
+                                              removeFunc: ticketRemove,
+                                              numCount: true);
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                    // extras
+                    _loading == true
+                        ? Center(child: CircularProgressIndicator())
+                        : _loading == false && extras?.data?.data == []
+                            ? Center(
+                                child: Text(
+                                  Strings.nodataFound,
+                                  style: TextStyle(
+                                      color: AppColors.descriptionfirst,
+                                      fontFamily: Fonts.dmSansBold,
+                                      fontSize: size.width * 0.045),
+                                ),
+                              )
+                            : Container(
+                                color: AppColors.homeBackgroundLite,
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      width: SizeConfig.screenWidth * 0.95,
+                                      child: richText("Select at most ", "One",
+                                          " from Mixes"),
+                                    ),
+                                    Expanded(
+                                      child: ListView.builder(
+                                        itemCount:
+                                            extras?.data?.data?.length ?? 0,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return alcoholGradientFunction(
+                                              index: index,
+                                              model: extras,
+                                              addFunc: addTicket,
+                                              cart: UserData
+                                                  .preFiestasExtrasTicketCart,
+                                              removeFunc: ticketRemove,
+                                              numCount: true);
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                  ]),
+                ),
+              ),
+
+              // loading
+
+              _loadingCenter
+                  ? Center(child: CircularProgressIndicator())
+                  : SizedBox()
+            ],
           )),
     );
   }

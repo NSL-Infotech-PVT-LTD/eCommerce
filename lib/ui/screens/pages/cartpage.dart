@@ -19,171 +19,169 @@ class _CartpageState extends State<Cartpage> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return Scaffold(
-        backgroundColor: HexColor("#191512"),
-        body: SingleChildScrollView(
-          child: SafeArea(
-            child: Container(
-                width: size.width,
-                height: size.height,
-                child: Column(children: [
-                  // top bar
-                  Container(
-                      padding: EdgeInsets.symmetric(
-                          vertical: size.height * 0.023,
-                          horizontal: size.width * 0.06),
-                      width: size.width,
-                      height: size.height * 0.155,
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage(Images.homeTopBannerPng),
-                              fit: BoxFit.cover)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                Strings.mycart,
-                                style: TextStyle(
-                                    fontFamily: Fonts.dmSansBold,
-                                    color: AppColors.white,
-                                    fontSize: size.width * 0.065),
-                              ),
-                              Text(
-                                Strings.checkyourdeliverableordersstatus,
-                                style: TextStyle(
-                                    fontFamily: Fonts.dmSansRegular,
-                                    color: AppColors.white,
-                                    fontSize: size.width * 0.036),
-                              )
-                            ],
-                          ),
-                          SvgPicture.asset(
-                            Images.cartIconUnActSvg,
-                            width: size.width * 0.07,
-                          ),
-                        ],
-                      )),
-
-                  SizedBox(
-                    height: size.height * 0.03,
-                  ),
-
-                  // center content
-
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: size.width * 0.03),
+    return Container(
+      color: AppColors.blackBackground,
+      child: SafeArea(
+        child: Scaffold(
+            backgroundColor: HexColor("#191512"),
+            body: SingleChildScrollView(
+              child: Column(children: [
+                // top bar
+                Container(
+                    padding: EdgeInsets.symmetric(
+                        vertical: size.height * 0.023,
+                        horizontal: size.width * 0.06),
                     width: size.width,
-                    child: Column(
+                    height: size.height * 0.155,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage(Images.homeTopBannerPng),
+                            fit: BoxFit.cover)),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        roundedBoxBorder(
-                            context: context,
-                            width: size.width,
-                            height: size.height * 0.58,
-                            borderColor: AppColors.tagBorder,
-                            backgroundColor: AppColors.homeBackgroundLite,
-                            borderSize: size.width * 0.002,
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: size.width * 0.04,
-                                  vertical: size.height * 0.015),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        width: size.width * 0.6,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              "Pack 'La havanna'",
-                                              style: TextStyle(
-                                                  color: AppColors.white,
-                                                  fontFamily: Fonts.dmSansBold,
-                                                  fontSize: size.width * 0.055),
-                                            ),
-                                            SizedBox(
-                                              height: size.height * 0.008,
-                                            ),
-                                            Text(
-                                              Strings.lorem,
-                                              maxLines: 2,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                  color: AppColors.white,
-                                                  fontFamily:
-                                                      Fonts.dmSansRegular,
-                                                  fontSize: size.width * 0.035),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Spacer(),
-                                      Container(
-                                          height: size.height * 0.09,
-                                          child: Image.network(
-                                              Images.beer2nettwork))
-                                    ],
-                                  ),
-
-                                  // items
-                                  SizedBox(
-                                    height: size.height * 0.035,
-                                  ),
-                                  listItem(size: size),
-                                  SizedBox(
-                                    height: size.height * 0.03,
-                                  ),
-                                  listItem(size: size, boolCount: true),
-                                  SizedBox(
-                                    height: size.height * 0.03,
-                                  ),
-                                  listItem(size: size, boolCount: true)
-                                ],
-                              ),
-                            )),
-                        SizedBox(height: size.height * 0.02),
-                        Text(
-                            Strings
-                                .thisisFinalstepafteryouTouchingpaynowbuttonthepaymentwillbetransation,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: AppColors.itemDescription,
-                                fontFamily: Fonts.dmSansRegular,
-                                fontSize: size.width * 0.03)),
-                        SizedBox(height: size.height * 0.03),
-
-                        // button
-                        roundedBoxR(
-                          width: size.width,
-                          height: size.height * 0.07,
-                          radius: size.width * 0.02,
-                          backgroundColor: AppColors.siginbackgrond,
-                          child: Center(
-                            child: Text(
-                              Strings.proceedtopay,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              Strings.mycart,
                               style: TextStyle(
-                                  color: AppColors.white,
                                   fontFamily: Fonts.dmSansBold,
-                                  fontSize: size.width * 0.045),
+                                  color: AppColors.white,
+                                  fontSize: size.width * 0.065),
                             ),
+                            Text(
+                              Strings.checkyourdeliverableordersstatus,
+                              style: TextStyle(
+                                  fontFamily: Fonts.dmSansRegular,
+                                  color: AppColors.white,
+                                  fontSize: size.width * 0.036),
+                            )
+                          ],
+                        ),
+                        SvgPicture.asset(
+                          Images.cartIconUnActSvg,
+                          width: size.width * 0.07,
+                        ),
+                      ],
+                    )),
+                SizedBox(
+                  height: size.height * 0.03,
+                ),
+                // center content
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: size.width * 0.03),
+                  width: size.width,
+                  child: Column(
+                    children: [
+                      roundedBoxBorder(
+                          context: context,
+                          width: size.width,
+                          // height: size.height * 0.58,
+                          borderColor: AppColors.tagBorder,
+                          backgroundColor: AppColors.homeBackgroundLite,
+                          borderSize: size.width * 0.002,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: size.width * 0.04,
+                                vertical: size.height * 0.015),
+                            child: Column(
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      width: size.width * 0.6,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Pack 'La havanna'",
+                                            style: TextStyle(
+                                                color: AppColors.white,
+                                                fontFamily: Fonts.dmSansBold,
+                                                fontSize: size.width * 0.055),
+                                          ),
+                                          SizedBox(
+                                            height: size.height * 0.008,
+                                          ),
+                                          Text(
+                                            Strings.lorem,
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                color: AppColors.white,
+                                                fontFamily: Fonts.dmSansRegular,
+                                                fontSize: size.width * 0.035),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    Container(
+                                        height: size.height * 0.09,
+                                        child:
+                                            Image.network(Images.beer2nettwork))
+                                  ],
+                                ),
+
+                                // items
+                                SizedBox(
+                                  height: size.height * 0.035,
+                                ),
+                                listItem(size: size),
+                                SizedBox(
+                                  height: size.height * 0.03,
+                                ),
+                                listItem(size: size, boolCount: true),
+                                SizedBox(
+                                  height: size.height * 0.03,
+                                ),
+                                listItem(size: size, boolCount: true),
+                              ],
+                            ),
+                          )),
+                      SizedBox(height: size.height * 0.02),
+                      Text(
+                          Strings
+                              .thisisFinalstepafteryouTouchingpaynowbuttonthepaymentwillbetransation,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: AppColors.itemDescription,
+                              fontFamily: Fonts.dmSansRegular,
+                              fontSize: size.width * 0.03)),
+                      SizedBox(height: size.height * 0.03),
+
+                      // button
+                      roundedBoxR(
+                        width: size.width,
+                        height: size.height * 0.07,
+                        radius: size.width * 0.02,
+                        backgroundColor: AppColors.siginbackgrond,
+                        child: Center(
+                          child: Text(
+                            Strings.proceedtopay,
+                            style: TextStyle(
+                                color: AppColors.white,
+                                fontFamily: Fonts.dmSansBold,
+                                fontSize: size.width * 0.045),
                           ),
                         ),
+                      ),
 
-                        SizedBox(height: size.height * 0.05),
-                      ],
-                    ),
-                  )
-                ])),
-          ),
-        ));
+                      //  SizedBox(height: size.height * 0.05),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 50,
+                ),
+              ]),
+            )),
+      ),
+    );
   }
 }
 
