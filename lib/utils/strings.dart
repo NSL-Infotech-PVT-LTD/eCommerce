@@ -171,6 +171,10 @@ class Strings {
   static String extrass = "extras";
   static String mixs = "mix";
   static String nodataFound = "No Data Found!";
+  static String addtocart = "Added to cart";
+  static String buyNow = "Buy Now";
+  static String doYouWantTOExit = "Do you want to exit?";
+  static String exit = "Exit";
   // dummy
   static String garyadams = "Gary F. Adams";
   static String madridspain = "Madrid, Spain";

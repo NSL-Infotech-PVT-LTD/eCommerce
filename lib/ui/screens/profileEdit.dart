@@ -466,7 +466,7 @@ class _EditProfileState extends State<EditProfile> {
                               radius: size.width * 0.15,
                               backgroundColor: AppColors.white,
                               backgroundImage: NetworkImage(
-                                  "${Constants.prefs?.getString('profileImage')}"),
+                                  "${Constants.prefs?.getString('profileImage') ?? Images.profileNetwork}"),
                             ),
                       Positioned(
                         bottom: 0,

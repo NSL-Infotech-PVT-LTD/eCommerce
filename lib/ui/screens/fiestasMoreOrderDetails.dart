@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:funfy/components/navigation.dart';
+import 'package:funfy/models/fiestasBookingListModel.dart';
 import 'package:funfy/ui/screens/qrCodeZoomin.dart';
 import 'package:funfy/ui/widgets/rating.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
@@ -9,10 +10,14 @@ import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/strings.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:intl/intl.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class FiestasMoreOrderDetail extends StatefulWidget {
-  const FiestasMoreOrderDetail({Key? key}) : super(key: key);
+  final DataListFiesta? fiestaData;
+
+  const FiestasMoreOrderDetail({Key? key, this.fiestaData}) : super(key: key);
 
   @override
   _FiestasMoreOrderDetailState createState() => _FiestasMoreOrderDetailState();
@@ -22,6 +27,16 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+
+    DateTime? dateTime =
+        DateTime.parse("${widget.fiestaData?.fiestaDetail?.timestamp}");
+
+    String date = DateFormat('ddd MMM yyyy').format(dateTime);
+
+    String time = DateFormat('hh:mm a').format(dateTime);
+
+    // print("Look here" + "$date");
+
     return Scaffold(
       backgroundColor: AppColors.siginbackgrond,
       appBar: AppBar(
@@ -115,7 +130,15 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                           Spacer(),
                           GestureDetector(
                             onTap: () {
-                              navigatorPushFun(context, QrCodeZoomIn());
+                              Navigator.push(
+                                  context,
+                                  PageTransition(
+                                      duration: Duration(milliseconds: 500),
+                                      type: PageTransitionType.topToBottom,
+                                      child: QrCodeZoomIn(
+                                          qrId: widget.fiestaData?.id)));
+
+                              // navigatorPushFun(context, QrCodeZoomIn());
                             },
                             child: Container(
                               alignment: Alignment.topRight,
@@ -142,7 +165,7 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                         height: size.height * 0.16,
                         // color: Colors.yellow,
                         child: QrImage(
-                          data: "1234567890",
+                          data: "${widget.fiestaData?.id}",
                           version: QrVersions.auto,
                           size: size.width * 0.5,
                         ),
@@ -163,7 +186,7 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                           children: [
                             // title
                             Text(
-                              "Teatro Barcelo",
+                              "${widget.fiestaData?.fiestaDetail?.name}",
                               style: TextStyle(
                                   fontFamily: Fonts.dmSansBold,
                                   fontSize: size.width * 0.07,
@@ -193,7 +216,9 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                                 ),
                                 SizedBox(width: size.width * 0.025),
                                 Text(
-                                  Strings.euro + " " + "24.99",
+                                  Strings.euro +
+                                      " " +
+                                      "${widget.fiestaData?.totalPrice}",
                                   style: TextStyle(
                                       fontFamily: Fonts.dmSansMedium,
                                       fontSize: size.width * 0.055,
@@ -217,7 +242,7 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                                     content(
                                         size: size,
                                         title: Strings.date,
-                                        description: "25 June 2021"),
+                                        description: "$date"),
                                     SizedBox(
                                       height: size.height * 0.025,
                                     ),
@@ -236,14 +261,14 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                                     content(
                                         size: size,
                                         title: Strings.time,
-                                        description: "08:30 PM"),
+                                        description: "$time"),
                                     SizedBox(
                                       height: size.height * 0.025,
                                     ),
                                     content(
                                         size: size,
                                         title: Strings.orderId,
-                                        description: "ENHDJ6787")
+                                        description: "${widget.fiestaData?.id}")
                                   ],
                                 )
                               ],

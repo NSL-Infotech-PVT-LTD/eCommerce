@@ -21,7 +21,7 @@ class SlidingBannerProviderDetails extends StatelessWidget {
       child: FadeInImage(
         width: SizeConfig.screenWidth,
         placeholder: NetworkImage(bannerImage),
-        image: NetworkImage(bannerImage),
+        image: NetworkImage(image ?? bannerImage),
         fit: BoxFit.cover,
       ),
     );

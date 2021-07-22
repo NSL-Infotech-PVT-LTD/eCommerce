@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:funfy/apis/bookingApi.dart';
 import 'package:funfy/apis/homeApis.dart';
 import 'package:funfy/apis/userdataM.dart';
+import 'package:funfy/components/shortPrices.dart';
 import 'package:funfy/models/fiestasmodel.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
@@ -69,12 +70,10 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
 
   void _handleRadioValueChange(int? value) {
     setState(() {
-      print(value);
       groupValue = value;
-      UserData.preFiestasAlcoholCart = alcohol!.data!.data!
-          .elementAt(int.parse(value.toString()))
-          .id
-          .toString();
+
+      UserData.preFiestasAlcoholCart =
+          "${alcohol!.data!.data!.elementAt(int.parse(value.toString())).id}";
 
       totalCount();
     });
@@ -376,7 +375,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Added to cart",
+                      Strings.addtocart,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           color: AppColors.brownlite,
@@ -465,7 +464,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
         }
       }
 
-      if (UserData.preFiestasMixesTicketCart.isNotEmpty) {
+      if (UserData.preFiestasExtrasTicketCart.isNotEmpty) {
         for (var i in UserData.preFiestasExtrasTicketCart.values.toList()) {
           tot = tot + i["preticketCount"];
         }

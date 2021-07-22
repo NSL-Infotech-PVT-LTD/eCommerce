@@ -10,7 +10,9 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class QrCodeZoomIn extends StatefulWidget {
-  const QrCodeZoomIn({Key? key}) : super(key: key);
+  final qrId;
+
+  const QrCodeZoomIn({Key? key, this.qrId}) : super(key: key);
 
   @override
   _QrCodeZoomInState createState() => _QrCodeZoomInState();
@@ -55,13 +57,18 @@ class _QrCodeZoomInState extends State<QrCodeZoomIn> {
                     Row(
                       children: [
                         Spacer(),
-                        Container(
-                          alignment: Alignment.topRight,
-                          width: size.width * 0.06,
-                          height: size.height * 0.03,
-                          child: SvgPicture.asset(
-                            Images.qrZoomOut,
-                            width: size.width * 0.055,
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Container(
+                            alignment: Alignment.topRight,
+                            width: size.width * 0.06,
+                            height: size.height * 0.03,
+                            child: SvgPicture.asset(
+                              Images.qrZoomOut,
+                              width: size.width * 0.055,
+                            ),
                           ),
                         ),
                       ],
@@ -79,7 +86,7 @@ class _QrCodeZoomInState extends State<QrCodeZoomIn> {
                       // height: size.height * 0.16,
                       // color: Colors.yellow,
                       child: QrImage(
-                        data: "1234567890",
+                        data: "${widget.qrId}",
                         version: QrVersions.auto,
                         size: size.width * 0.75,
                       ),

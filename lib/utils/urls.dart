@@ -14,6 +14,7 @@ class Urls {
   static String googleSiginUrl = baseUrl + "customer/register/google";
   static String preFiestachildlistUrl =
       baseUrl + "customer/preFiesta/child/list";
+  static String preFiestasBookingListUrl = baseUrl + "customer/order/list";
 
   static String fiestasBookingUrl = baseUrl + "customer/booking/store";
   static String fiestasBookingListUrl = baseUrl + "customer/booking/list";

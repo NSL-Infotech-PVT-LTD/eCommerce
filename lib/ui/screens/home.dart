@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:funfy/apis/userdataM.dart';
+import 'package:funfy/components/dialogs.dart';
 import 'package:funfy/models/fiestasmodel.dart';
 import 'package:funfy/ui/screens/pages/bookingpage.dart';
 import 'package:funfy/ui/screens/pages/cartpage.dart';
@@ -56,56 +58,88 @@ class _HomeState extends State<Home> {
     pageController = PageController(initialPage: pageIndex);
   }
 
+  Future<bool> backPress() async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: new Text(Strings.exit),
+          content: new Text(Strings.doYouWantTOExit),
+          actions: <Widget>[
+            TextButton(
+              child: new Text(Strings.no),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: new Text(Strings.yes),
+              onPressed: () {
+                SystemNavigator.pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return Scaffold(
-      body: PageView(
-        physics: NeverScrollableScrollPhysics(),
-        controller: pageController,
-        children: tabpages,
-        onPageChanged: onpageChange,
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        unselectedItemColor: AppColors.white,
-        selectedItemColor: AppColors.white,
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: AppColors.bottomnavBackground,
-        currentIndex: pageIndex,
-        onTap: (i) {
-          ontabTap(i);
-        },
-        items: [
-          BottomNavigationBarItem(
-            activeIcon:
-                buttomIconImage(size: size, svgimage: Images.fiestasIconActSvg),
-            icon: buttomIconImage(
-                size: size, svgimage: Images.fiestasIconUnActSvg),
-            label: Strings.bottomNavFiestas,
-          ),
-          BottomNavigationBarItem(
-            activeIcon:
-                buttomIconImage(size: size, svgimage: Images.cartIconActSvg),
-            icon:
-                buttomIconImage(size: size, svgimage: Images.cartIconUnActSvg),
-            label: Strings.bottomNavCart,
-          ),
-          BottomNavigationBarItem(
-            activeIcon:
-                buttomIconImage(size: size, svgimage: Images.bookingIconActSvg),
-            icon: buttomIconImage(
-                size: size,
-                // image: Images.bookingIconUnActPng
-                svgimage: Images.bookingIconUnActSvg),
-            label: Strings.bottomNavBookings,
-          ),
-          BottomNavigationBarItem(
-            activeIcon:
-                buttomIconImage(size: size, svgimage: Images.profileIconActSvg),
-            icon: buttomIconImage(size: size, svgimage: Images.profileUnActSvg),
-            label: Strings.bottomNavMyprofile,
-          ),
-        ],
+    return WillPopScope(
+      onWillPop: backPress,
+      child: Scaffold(
+        body: PageView(
+          physics: NeverScrollableScrollPhysics(),
+          controller: pageController,
+          children: tabpages,
+          onPageChanged: onpageChange,
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          unselectedItemColor: AppColors.white,
+          selectedItemColor: AppColors.white,
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: AppColors.bottomnavBackground,
+          currentIndex: pageIndex,
+          onTap: (i) {
+            ontabTap(i);
+          },
+          items: [
+            BottomNavigationBarItem(
+              activeIcon: buttomIconImage(
+                  size: size, svgimage: Images.fiestasIconActSvg),
+              icon: buttomIconImage(
+                  size: size, svgimage: Images.fiestasIconUnActSvg),
+              label: Strings.bottomNavFiestas,
+            ),
+            BottomNavigationBarItem(
+              activeIcon:
+                  buttomIconImage(size: size, svgimage: Images.cartIconActSvg),
+              icon: buttomIconImage(
+                  size: size, svgimage: Images.cartIconUnActSvg),
+              label: Strings.bottomNavCart,
+            ),
+            BottomNavigationBarItem(
+              activeIcon: buttomIconImage(
+                  size: size, svgimage: Images.bookingIconActSvg),
+              icon: buttomIconImage(
+                  size: size,
+                  // image: Images.bookingIconUnActPng
+                  svgimage: Images.bookingIconUnActSvg),
+              label: Strings.bottomNavBookings,
+            ),
+            BottomNavigationBarItem(
+              activeIcon: buttomIconImage(
+                  size: size, svgimage: Images.profileIconActSvg),
+              icon:
+                  buttomIconImage(size: size, svgimage: Images.profileUnActSvg),
+              label: Strings.bottomNavMyprofile,
+            ),
+          ],
+        ),
       ),
     );
   }

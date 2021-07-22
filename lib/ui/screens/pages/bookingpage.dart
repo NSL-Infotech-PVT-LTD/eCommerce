@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:funfy/apis/bookingApi.dart';
+import 'package:funfy/apis/homeApis.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/models/fiestasBookingListModel.dart';
+import 'package:funfy/models/preFiestasListModel.dart';
 import 'package:funfy/ui/screens/Your%20order%20Summery.dart';
 import 'package:funfy/ui/screens/fiestasMoreOrderDetails.dart';
 import 'package:funfy/ui/widgets/postsitems.dart';
@@ -14,6 +16,7 @@ import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/strings.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:page_transition/page_transition.dart';
 
 class BookingPage extends StatefulWidget {
   const BookingPage({Key? key}) : super(key: key);
@@ -26,7 +29,11 @@ class _BookingPageState extends State<BookingPage> {
   bool fiestasButton = true;
 
   FiestasBookingList? fiestasBookingListModel = FiestasBookingList();
+  PreFiestasBookingListModel? preFiestasBookingList =
+      PreFiestasBookingListModel();
   bool _loading = false;
+
+  bool _preFiestasLoading = false;
 
   bookingListget() async {
     var net = await Internetcheck.check();
@@ -36,6 +43,7 @@ class _BookingPageState extends State<BookingPage> {
     } else {
       setState(() {
         _loading = true;
+        _preFiestasLoading = true;
       });
       try {
         await fiestasBookingList().then((res) {
@@ -48,10 +56,29 @@ class _BookingPageState extends State<BookingPage> {
             });
           }
         });
+
+        priFiestasBookings();
       } catch (e) {
+        setState(() {
+          _loading = false;
+          _preFiestasLoading = false;
+        });
         print("error in booking list $e");
       }
     }
+  }
+
+  priFiestasBookings() async {
+    await preFiestaBookingListApi().then((res) {
+      if (res?.code == 200 && res?.status == true) {
+        // print("after return  ${res?.toJson().toString()}");
+
+        setState(() {
+          preFiestasBookingList = res;
+          _preFiestasLoading = false;
+        });
+      }
+    });
   }
 
   @override
@@ -208,7 +235,24 @@ class _BookingPageState extends State<BookingPage> {
                           }),
                     ],
                   ))
-                : preFiestasOrderItem(context)
+                : Expanded(
+                    child: Stack(
+                    children: [
+                      // loading
+                      _preFiestasLoading
+                          ? Center(child: CircularProgressIndicator())
+                          : SizedBox(),
+                      ListView.builder(
+                          itemCount:
+                              preFiestasBookingList?.data?.data?.length ?? 0,
+                          itemBuilder: (context, index) {
+                            return preFiestasOrderItem(
+                                context: context,
+                                index: index,
+                                model: preFiestasBookingList);
+                          }),
+                    ],
+                  ))
           ],
         )));
   }
@@ -311,7 +355,8 @@ Widget fiestasOrdersItem({context, index, FiestasBookingList? model}) {
         Center(
           child: GestureDetector(
             onTap: () {
-              navigatorPushFun(context, FiestasMoreOrderDetail());
+              navigatorPushFun(
+                  context, FiestasMoreOrderDetail(fiestaData: data));
             },
             child: Text(
               Strings.moreDetails,
@@ -328,9 +373,14 @@ Widget fiestasOrdersItem({context, index, FiestasBookingList? model}) {
 }
 
 Widget preFiestasOrderItem(
-  context,
-) {
+    {context, int? index, PreFiestasBookingListModel? model}) {
   var size = MediaQuery.of(context).size;
+
+  var data = model?.data?.data
+      ?.elementAt(int.parse(index.toString()))
+      .orderItem
+      ?.elementAt(int.parse(index.toString()))
+      .preFiesta;
 
   return Container(
     margin: EdgeInsets.only(top: size.height * 0.02),
@@ -355,7 +405,7 @@ Widget preFiestasOrderItem(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Pack 'La havanna'",
+                        "${data?.name}",
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -367,7 +417,7 @@ Widget preFiestasOrderItem(
                         height: size.height * 0.008,
                       ),
                       Text(
-                        Strings.lorem,
+                        "${data?.description}",
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(

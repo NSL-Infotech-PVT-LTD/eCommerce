@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:funfy/components/navigation.dart';
+import 'package:funfy/components/shortPrices.dart';
 import 'package:funfy/models/fiestasmodel.dart';
 import 'package:funfy/models/preFiestasModel.dart';
 import 'package:funfy/ui/screens/bookNowBeta.dart';
@@ -27,13 +28,15 @@ Widget fiestasItem({context, Datum? postModeldata}) {
 
   String month = DateFormat('MMM').format(date!);
 
+  String price = k_m_b_generator(int.parse("${postModeldata?.ticketPrice}"));
+
   return Container(
     margin: EdgeInsets.only(top: size.width * 0.04),
     width: size.width,
     height: size.height * 0.28,
     decoration: BoxDecoration(
         image: DecorationImage(
-            image: AssetImage(Images.intro1), fit: BoxFit.cover)),
+            image: NetworkImage("${postModeldata?.image}"), fit: BoxFit.cover)),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -128,6 +131,7 @@ Widget fiestasItem({context, Datum? postModeldata}) {
                   ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(
                         Strings.euro,
@@ -137,7 +141,12 @@ Widget fiestasItem({context, Datum? postModeldata}) {
                             color: AppColors.white),
                       ),
                       Text(
-                        "29",
+                        // postModeldata!.ticketPrice!.length > 9
+                        //     ? "${postModeldata.ticketPrice?.substring(0, 9)}"
+                        //     : "${postModeldata.ticketPrice}",
+                        "$price",
+                        maxLines: 1,
+                        overflow: TextOverflow.clip,
                         style: TextStyle(
                             fontSize: size.width * 0.068,
                             fontFamily: Fonts.dmSansBold,
