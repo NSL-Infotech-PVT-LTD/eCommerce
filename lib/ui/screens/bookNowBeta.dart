@@ -123,11 +123,11 @@ class _BookNowBetaState extends State<BookNowBeta> {
   setPriceToList() {
     setState(() {
       UserData.tiketList[0]["price"] =
-          int.parse('${widget.fiestasModel?.ticketPrice}');
-      UserData.tiketList[1]["price"] =
-          int.parse('${widget.fiestasModel?.ticketPriceStandard}');
+          k_m_b_generator(int.parse('${widget.fiestasModel?.ticketPrice}'));
+      UserData.tiketList[1]["price"] = k_m_b_generator(
+          int.parse('${widget.fiestasModel?.ticketPriceStandard}'));
       UserData.tiketList[2]["price"] =
-          int.parse('${widget.fiestasModel?.ticketPriceVip}');
+          k_m_b_generator(int.parse('${widget.fiestasModel?.ticketPriceVip}'));
     });
   }
 

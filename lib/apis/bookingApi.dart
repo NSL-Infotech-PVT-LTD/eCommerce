@@ -1,11 +1,14 @@
 import 'dart:convert';
 
 import 'package:funfy/apis/userdataM.dart';
+import 'package:funfy/models/createcartPreFiestasModel.dart';
 import 'package:funfy/models/fiestasBooking.dart';
 import 'package:funfy/models/fiestasBookingListModel.dart';
+import 'package:funfy/models/makePrefiestasmodel.dart';
 import 'package:funfy/models/preFiestasListModel.dart';
 import 'package:funfy/utils/urls.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 Future<FistaBooking?> fiestasBooking(
     {String? id,
@@ -65,11 +68,13 @@ Future<FiestasBookingList?> fiestasBookingList() async {
   }
 }
 
-Future preFiestaBookingApi({String? preFiestaID, String? quantity}) async {
+Future<CreatePrefiestasCartModel> addproductinCartPrefiestas(
+    {String? preFiestaID, String? quantity}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
   };
 
+  // print("Bearer ${UserData.userToken}");
   var body = {};
 
   if (quantity != null) {
@@ -83,7 +88,8 @@ Future preFiestaBookingApi({String? preFiestaID, String? quantity}) async {
 
   print(res.body);
 
-  var jsonBody = json.decode(res.body);
+  CreatePrefiestasCartModel jsonBody =
+      createPrefiestasCartModelFromJson(res.body); // .decode(res.body);
 
   return jsonBody;
 }
@@ -101,5 +107,37 @@ Future<PreFiestasBookingListModel?> preFiestaBookingListApi() async {
     return preFiestasBookingListModelFromJson(res.body);
   } else {
     // print(res.body);
+  }
+}
+
+// make Order ------------------- //
+
+Future<MakeprefiestasOrderModel?> makeOrderApi(
+    {String? cartId, String? addressId}) async {
+  var headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+  };
+
+  DateTime datetime = DateTime.now();
+
+  String date = DateFormat('yyyy-MM-dd').format(datetime);
+
+  String time = DateFormat('kk:mm').format(datetime);
+
+  var body = {
+    "cart_id": cartId,
+    "date": date,
+    "time": time,
+    "address_id": addressId
+  };
+
+  var res = await http.post(Uri.parse(Urls.makeOrderUrl),
+      body: body, headers: headers);
+
+  if (res.statusCode == 201) {
+    print("workking------------ ");
+    return makeprefiestasOrderModelFromJson(res.body);
+  } else {
+    print("here is error ${res.body}");
   }
 }

@@ -59,6 +59,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
   List<Widget> alcoholList = [];
   VideoPlayerController? _controller;
   bool pauseBool = false;
+  bool _loadingMainCenter = false;
 
 // model data
   PrefiestasAlMxExModel? alcohol;
@@ -69,13 +70,19 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
   bool _loadingCenter = false;
 
   void _handleRadioValueChange(int? value) {
-    setState(() {
-      groupValue = value;
+    addToCart(
+            id: "${alcohol!.data!.data!.elementAt(int.parse(value.toString())).id}",
+            cont: "1")
+        .then((res) {
+      if (res) {
+        setState(() {
+          groupValue = value;
+          UserData.preFiestasAlcoholCart =
+              "${alcohol!.data!.data!.elementAt(int.parse(value.toString())).id}";
 
-      UserData.preFiestasAlcoholCart =
-          "${alcohol!.data!.data!.elementAt(int.parse(value.toString())).id}";
-
-      totalCount();
+          totalCount();
+        });
+      }
     });
   }
 
@@ -85,6 +92,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
       UserData.preFiestasExtrasTicketCart.clear();
       UserData.preFiestasMixesTicketCart.clear();
       UserData.totalTicketNum = 0;
+      UserData.preFiestasCartid = "";
     });
   }
 
@@ -112,14 +120,15 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
   }
 
   // + - count button
-  Widget insdecButton({int? index, String? pid, add, remove, Map? cart}) {
+  Widget insdecButton(
+      {int? index, var count, String? pid, add, remove, Map? cart}) {
     var size = MediaQuery.of(context).size;
     return Container(
       child: Row(
         children: [
           GestureDetector(
             onTap: () {
-              remove(index: index, id: pid, cart: cart);
+              remove(index: index, id: pid, cart: cart, itemCount: count);
             },
             child: Container(
               decoration: BoxDecoration(
@@ -147,7 +156,9 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
 
           // center number
           Text(
-            cart!.containsKey(index) ? "${cart[index]["preticketCount"]}" : "0",
+            cart!.containsKey(index)
+                ? "${cart[index]["preticketCount"]}"
+                : count.toString(),
             style: TextStyle(
                 fontFamily: "DM Sans Medium",
                 fontSize: size.width * 0.04,
@@ -158,7 +169,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
           ),
           GestureDetector(
             onTap: () {
-              add(index: index, id: pid, cart: cart);
+              add(index: index, id: pid, cart: cart, itemCount: count);
             },
             child: Container(
               decoration: BoxDecoration(
@@ -191,7 +202,9 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
       bool? numCount,
       Map? cart,
       addFunc,
+      var count,
       removeFunc}) {
+    print("here is count value -------- $count");
     var size = MediaQuery.of(context).size;
     var data = model?.data?.data;
     return ListTile(
@@ -208,7 +221,9 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
         trailing: numCount != true
             ? Radio<int?>(
                 value: index,
-                groupValue: groupValue,
+                groupValue: groupValue != -1
+                    ? groupValue
+                    : count, //count == 1 && groupValue != -1 ? count : groupValue,
                 onChanged: _handleRadioValueChange)
             : Container(
                 width: size.width * 0.25,
@@ -216,6 +231,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                     add: addFunc,
                     remove: removeFunc,
                     index: index,
+                    count: count,
                     cart: cart,
                     pid: data[index].id.toString()),
               ));
@@ -311,17 +327,38 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
 
   // - + funtion
 
-  addTicket({int? index, String? id, var cart}) {
+  addTicket({int? index, int itemCount = 0, String? id, var cart}) async {
     print("add button press  index: $index  id: $id");
+    int cartCount;
 
+    try {
+      cartCount = cart[index]["preticketCount"];
+    } catch (e) {
+      cartCount = itemCount;
+    }
     setState(() {
-      if (cart!.containsKey(index)) {
-        cart[index]["preticketCount"] = cart[index]["preticketCount"] + 1;
-      } else {
-        cart[index] = {
-          "id": id,
-          "preticketCount": 1,
-        };
+      cartCount = cartCount + 1;
+    });
+
+    print("Cart Count: ${cartCount}");
+
+    await addToCart(id: id, cont: cartCount.toString()).then((value) {
+      print("this is value $value");
+      if (value) {
+        setState(() {
+          cart[index] = {
+            "id": id,
+            "preticketCount": cartCount,
+          };
+          // if (cart!.containsKey(index)) {
+          //   cart[index]["preticketCount"] = cart[index]["preticketCount"] + 1;
+          // } else {
+          //   cart[index] = {
+          //     "id": id,
+          //     "preticketCount": cartCount,
+          //   };
+          // }
+        });
       }
     });
 
@@ -331,22 +368,68 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
 
   // remove button
 
-  ticketRemove({String? id, int? index, var cart}) {
+  ticketRemove({String? id, int itemCount = 0, int? index, var cart}) async {
     print("remove id: $id  index: $index");
 
+    int cartCount;
+
+    try {
+      cartCount = cart[index]["preticketCount"];
+    } catch (e) {
+      cartCount = itemCount;
+    }
     setState(() {
-      if (cart.isNotEmpty) {
-        if (cart.containsKey(index) && cart[index]["preticketCount"] > 1) {
-          cart[index]["preticketCount"] = cart[index]["preticketCount"] - 1;
-        } else {
-          cart.remove(index);
-        }
-      } else {
-        // clearCart();
-      }
+      cartCount = cartCount - 1;
     });
+
+    if (cartCount > -1) {
+      await addToCart(id: id, cont: cartCount.toString()).then((value) {
+        print("this is value $value");
+        if (value) {
+          setState(() {
+            cart[index] = {
+              "id": id,
+              "preticketCount": cartCount,
+            };
+            // if (cart!.containsKey(index)) {
+            //   cart[index]["preticketCount"] = cart[index]["preticketCount"] + 1;
+            // } else {
+            //   cart[index] = {
+            //     "id": id,
+            //     "preticketCount": cartCount,
+            //   };
+            // }
+          });
+        }
+      });
+    } else {
+      print("Value is 0");
+    }
+
+    print("Cart Count: $cartCount");
+
+    if (cartCount <= 0 && cart.isNotEmpty && cart.containsKey(index)) {
+      setState(() {
+        cart.remove(index);
+      });
+    }
+
     totalCount();
     print(cart);
+
+    // setState(() {
+    //   if (cart.isNotEmpty) {
+    //     if (cart.containsKey(index) && cart[index]["preticketCount"] > 1) {
+    //       cart[index]["preticketCount"] = cart[index]["preticketCount"] - 1;
+    //     } else {
+    //       cart.remove(index);
+    //     }
+    //   } else {
+    //     // clearCart();
+    //   }
+    // });
+    // totalCount();
+    // print(cart);
   }
 
   // bottom popup
@@ -420,17 +503,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   onPressed: () {
-                    preFiestaCartBookingCart();
-                    // Navigator.of(context)
-                    //     .push(MaterialPageRoute(
-                    //         builder: (context) => BuyNow(
-                    //             fiestasId: widget
-                    //                 .fiestasModel?.id)))
-                    //     .then((value) {
-                    //   setState(() {
-                    //     totalTicket();
-                    //   });
-                    // });
+                    makeOrder();
                   },
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(
@@ -476,78 +549,158 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
     });
   }
 
-  // pre fiesta cart booking cart
+  // pre fiesta cart booking One Func
+  Future<bool> addToCart({String? id, String? cont}) async {
+    var net = await Internetcheck.check();
 
-  preFiestaCartBookingCart() async {
+    bool? returnV;
+
+    if (net != true) {
+      Internetcheck.showdialog(context: context);
+    } else {
+      print("run ---------- ");
+      setState(() {
+        _loadingCenter = true;
+      });
+      try {
+        await addproductinCartPrefiestas(preFiestaID: id, quantity: cont)
+            .then((res) {
+          setState(() {
+            _loadingCenter = false;
+          });
+          if (res.code == 201) {
+            returnV = true;
+            UserData.preFiestasCartid = "${res.data?.cart?.id}";
+          } else {
+            returnV = false;
+          }
+        });
+      } catch (e) {
+        print("Error $e");
+
+        setState(() {
+          _loadingCenter = false;
+          returnV = false;
+        });
+      }
+    }
+
+    return returnV!;
+  }
+
+  // Make Order
+
+  makeOrder() async {
     var net = await Internetcheck.check();
 
     if (net != true) {
       Internetcheck.showdialog(context: context);
     } else {
       setState(() {
-        _loadingCenter = true;
+        _loadingMainCenter = true;
       });
-      try {
-        String? statusCode = "0";
-        if (UserData.preFiestasAlcoholCart != "") {
-          await preFiestaBookingApi(preFiestaID: UserData.preFiestasAlcoholCart)
-              .then((res) {
-            setState(() {
-              statusCode = res?["code"].toString();
-            });
-          });
-        }
+    }
 
-        if (UserData.preFiestasMixesTicketCart.isNotEmpty) {
-          for (var i in UserData.preFiestasMixesTicketCart.values.toList()) {
-            await preFiestaBookingApi(
-                    preFiestaID: i["id"],
-                    quantity: i["preticketCount"].toString())
-                .then((res) {
-              setState(() {
-                statusCode = res?["code"].toString();
-              });
-            });
-          }
-        }
+    try {
+      await makeOrderApi(cartId: UserData.preFiestasCartid, addressId: "2")
+          .then((res) {
+        // print(res?.toJson().toString());
 
-        if (UserData.preFiestasExtrasTicketCart.isNotEmpty) {
-          for (var i in UserData.preFiestasMixesTicketCart.values.toList()) {
-            await preFiestaBookingApi(
-                    preFiestaID: i["id"],
-                    quantity: i["preticketCount"].toString())
-                .then((res) {
-              setState(() {
-                statusCode = res?["code"].toString();
-              });
-            });
-          }
-        }
+        setState(() {
+          _loadingMainCenter = false;
+          clearCart();
+        });
 
-        // preFiestaBookingApi().then((res){});
-
-        if (statusCode == "201") {
-          setState(() {
-            _loadingCenter = false;
-            clearCart();
-          });
-
+        if (res?.status == true && res?.code == 200) {
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
                   builder: (BuildContext context) => BookingSuccess()),
               (route) => false);
-        } else {
-          print(statusCode);
         }
-      } catch (e) {
-        setState(() {
-          _loadingCenter = false;
-        });
-        print("error in preFiesta Bokking $e");
-      }
+      });
+    } catch (e) {
+      setState(() {
+        _loadingMainCenter = false;
+      });
+      print("error $e");
     }
   }
+
+  // ------------------ //
+
+  // pre fiesta cart booking cart
+
+  // preFiestaCartBookingCart() async {
+  //   var net = await Internetcheck.check();
+
+  //   if (net != true) {
+  //     Internetcheck.showdialog(context: context);
+  //   } else {
+  //     setState(() {
+  //       _loadingCenter = true;
+  //     });
+  //     try {
+  //       String? statusCode = "0";
+  //       if (UserData.preFiestasAlcoholCart != "") {
+  //         await preFiestaBookingApi(preFiestaID: UserData.preFiestasAlcoholCart)
+  //             .then((res) {
+  //           setState(() {
+  //             statusCode = res?["code"].toString();
+  //           });
+  //         });
+  //       }
+
+  //       if (UserData.preFiestasMixesTicketCart.isNotEmpty) {
+  //         for (var i in UserData.preFiestasMixesTicketCart.values.toList()) {
+  //           await preFiestaBookingApi(
+  //                   preFiestaID: i["id"],
+  //                   quantity: i["preticketCount"].toString())
+  //               .then((res) {
+  //             setState(() {
+  //               statusCode = res?["code"].toString();
+  //             });
+  //           });
+  //         }
+  //       }
+
+  //       if (UserData.preFiestasExtrasTicketCart.isNotEmpty) {
+  //         for (var i in UserData.preFiestasMixesTicketCart.values.toList()) {
+  //           await preFiestaBookingApi(
+  //                   preFiestaID: i["id"],
+  //                   quantity: i["preticketCount"].toString())
+  //               .then((res) {
+  //             setState(() {
+  //               statusCode = res?["code"].toString();
+  //             });
+  //           });
+  //         }
+  //       }
+
+  //       // preFiestaBookingApi().then((res){});
+
+  //       if (statusCode == "201") {
+  //         setState(() {
+  //           _loadingCenter = false;
+  //           clearCart();
+  //         });
+
+  //         Navigator.pushAndRemoveUntil(
+  //             context,
+  //             MaterialPageRoute(
+  //                 builder: (BuildContext context) => BookingSuccess()),
+  //             (route) => false);
+  //       } else {
+  //         print(statusCode);
+  //       }
+  //     } catch (e) {
+  //       setState(() {
+  //         _loadingCenter = false;
+  //       });
+  //       print("error in preFiesta Bokking $e");
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -623,10 +776,16 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
 
     return SafeArea(
       child: Scaffold(
+          // floatingActionButton: FloatingActionButton(
+          //   onPressed: () {
+          //     clearCart();
+          //   },
+          //   child: Icon(Icons.add),
+          // ),
           backgroundColor: AppColors.homeBackground,
-          bottomSheet: UserData.preFiestasExtrasTicketCart.isNotEmpty ||
-                  UserData.preFiestasMixesTicketCart.isNotEmpty ||
-                  UserData.preFiestasAlcoholCart != ""
+          bottomSheet: UserData.preFiestasAlcoholCart != "" &&
+                  (UserData.preFiestasExtrasTicketCart.isNotEmpty ||
+                      UserData.preFiestasMixesTicketCart.isNotEmpty)
               ? bottomSheet()
               : SizedBox(),
           body: Stack(
@@ -819,139 +978,165 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                       ),
                     ];
                   },
-                  body: TabBarView(children: [
-                    _loading == true
-                        ? Center(child: CircularProgressIndicator())
-                        : _loading == false && alcohol?.data?.data == []
-                            ? Center(
-                                child: Text(
-                                  Strings.nodataFound,
-                                  style: TextStyle(
-                                      color: AppColors.descriptionfirst,
-                                      fontFamily: Fonts.dmSansBold,
-                                      fontSize: size.width * 0.045),
-                                ),
-                              )
-                            : Container(
-                                color: AppColors.homeBackgroundLite,
-                                child: Column(
-                                  children: [
-                                    SizedBox(
-                                      height: SizeConfig.screenHeight * 0.03,
+                  body: Stack(
+                    children: [
+                      TabBarView(children: [
+                        // alcohol
+                        _loading == true
+                            ? Center(child: CircularProgressIndicator())
+                            : _loading == false && alcohol?.data?.data == []
+                                ? Center(
+                                    child: Text(
+                                      Strings.nodataFound,
+                                      style: TextStyle(
+                                          color: AppColors.descriptionfirst,
+                                          fontFamily: Fonts.dmSansBold,
+                                          fontSize: size.width * 0.045),
                                     ),
-                                    SizedBox(
-                                      width: SizeConfig.screenWidth * 0.95,
-                                      child: richText("Select at most ", "One",
-                                          " from Alcohols"),
+                                  )
+                                : Container(
+                                    color: AppColors.homeBackgroundLite,
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height:
+                                              SizeConfig.screenHeight * 0.03,
+                                        ),
+                                        SizedBox(
+                                          width: SizeConfig.screenWidth * 0.95,
+                                          child: richText("Select at most ",
+                                              "One", " from Alcohols"),
+                                        ),
+                                        Expanded(
+                                          child: ListView.builder(
+                                            itemCount:
+                                                alcohol?.data?.data?.length ??
+                                                    0,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return alcoholGradientFunction(
+                                                  index: index,
+                                                  numCount: false,
+                                                  cart: UserData
+                                                      .preFiestasExtrasTicketCart,
+                                                  count: alcohol?.data?.data
+                                                              ?.elementAt(index)
+                                                              .isInMyCartQuantity ==
+                                                          1
+                                                      ? index
+                                                      : -1,
+                                                  model: alcohol);
+                                            },
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    Expanded(
-                                      child: ListView.builder(
-                                        itemCount:
-                                            alcohol?.data?.data?.length ?? 0,
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          return alcoholGradientFunction(
-                                              index: index,
-                                              numCount: false,
-                                              cart: UserData
-                                                  .preFiestasExtrasTicketCart,
-                                              model: alcohol);
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                    _loading == true
-                        ? Center(child: CircularProgressIndicator())
-                        : _loading == false && mix?.data?.data == []
-                            ? Center(
-                                child: Text(
-                                  Strings.nodataFound,
-                                  style: TextStyle(
-                                      color: AppColors.descriptionfirst,
-                                      fontFamily: Fonts.dmSansBold,
-                                      fontSize: size.width * 0.045),
-                                ),
-                              )
-                            : Container(
-                                padding: EdgeInsets.all(8.0),
-                                color: AppColors.homeBackgroundLite,
-                                child: Column(
-                                  children: [
-                                    SizedBox(
-                                        width: SizeConfig.screenWidth * 0.95,
-                                        child: richText("Select at most ",
-                                            "Two", " from Mixes")),
-                                    Expanded(
-                                      child: ListView.builder(
-                                        itemCount: mix?.data?.data?.length ?? 0,
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          return alcoholGradientFunction(
-                                              index: index,
-                                              model: mix,
-                                              cart: UserData
-                                                  .preFiestasMixesTicketCart,
-                                              addFunc: addTicket,
-                                              removeFunc: ticketRemove,
-                                              numCount: true);
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                                  ),
 
-                    // extras
-                    _loading == true
-                        ? Center(child: CircularProgressIndicator())
-                        : _loading == false && extras?.data?.data == []
-                            ? Center(
-                                child: Text(
-                                  Strings.nodataFound,
-                                  style: TextStyle(
-                                      color: AppColors.descriptionfirst,
-                                      fontFamily: Fonts.dmSansBold,
-                                      fontSize: size.width * 0.045),
-                                ),
-                              )
-                            : Container(
-                                color: AppColors.homeBackgroundLite,
-                                child: Column(
-                                  children: [
-                                    SizedBox(
-                                      width: SizeConfig.screenWidth * 0.95,
-                                      child: richText("Select at most ", "One",
-                                          " from Mixes"),
+                        // mix
+                        _loading == true
+                            ? Center(child: CircularProgressIndicator())
+                            : _loading == false && mix?.data?.data == []
+                                ? Center(
+                                    child: Text(
+                                      Strings.nodataFound,
+                                      style: TextStyle(
+                                          color: AppColors.descriptionfirst,
+                                          fontFamily: Fonts.dmSansBold,
+                                          fontSize: size.width * 0.045),
                                     ),
-                                    Expanded(
-                                      child: ListView.builder(
-                                        itemCount:
-                                            extras?.data?.data?.length ?? 0,
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          return alcoholGradientFunction(
-                                              index: index,
-                                              model: extras,
-                                              addFunc: addTicket,
-                                              cart: UserData
-                                                  .preFiestasExtrasTicketCart,
-                                              removeFunc: ticketRemove,
-                                              numCount: true);
-                                        },
-                                      ),
+                                  )
+                                : Container(
+                                    padding: EdgeInsets.all(8.0),
+                                    color: AppColors.homeBackgroundLite,
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                            width:
+                                                SizeConfig.screenWidth * 0.95,
+                                            child: richText("Select at most ",
+                                                "Two", " from Mixes")),
+                                        Expanded(
+                                          child: ListView.builder(
+                                            itemCount:
+                                                mix?.data?.data?.length ?? 0,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return alcoholGradientFunction(
+                                                  index: index,
+                                                  model: mix,
+                                                  cart: UserData
+                                                      .preFiestasMixesTicketCart,
+                                                  count: mix?.data?.data
+                                                      ?.elementAt(index)
+                                                      .isInMyCartQuantity,
+                                                  addFunc: addTicket,
+                                                  removeFunc: ticketRemove,
+                                                  numCount: true);
+                                            },
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              ),
-                  ]),
+                                  ),
+
+                        // extras
+                        _loading == true
+                            ? Center(child: CircularProgressIndicator())
+                            : _loading == false && extras?.data?.data == []
+                                ? Center(
+                                    child: Text(
+                                      Strings.nodataFound,
+                                      style: TextStyle(
+                                          color: AppColors.descriptionfirst,
+                                          fontFamily: Fonts.dmSansBold,
+                                          fontSize: size.width * 0.045),
+                                    ),
+                                  )
+                                : Container(
+                                    color: AppColors.homeBackgroundLite,
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          width: SizeConfig.screenWidth * 0.95,
+                                          child: richText("Select at most ",
+                                              "One", " from Mixes"),
+                                        ),
+                                        Expanded(
+                                          child: ListView.builder(
+                                            itemCount:
+                                                extras?.data?.data?.length ?? 0,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return alcoholGradientFunction(
+                                                  index: index,
+                                                  model: extras,
+                                                  addFunc: addTicket,
+                                                  cart: UserData
+                                                      .preFiestasExtrasTicketCart,
+                                                  count: mix?.data?.data
+                                                      ?.elementAt(index)
+                                                      .isInMyCartQuantity,
+                                                  removeFunc: ticketRemove,
+                                                  numCount: true);
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                      ]),
+                      _loadingCenter
+                          ? Center(child: CircularProgressIndicator())
+                          : SizedBox()
+                    ],
+                  ),
                 ),
               ),
 
               // loading
 
-              _loadingCenter
+              _loadingMainCenter
                   ? Center(child: CircularProgressIndicator())
                   : SizedBox()
             ],

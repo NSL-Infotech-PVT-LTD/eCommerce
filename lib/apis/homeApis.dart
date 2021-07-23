@@ -14,6 +14,8 @@ Future<FiestasModel?> fiestasPostGet() async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
   };
+
+  print("Token" + "${UserData.userToken}");
   var res = await http.post(Uri.parse(Urls.fiestasPostUrl), headers: headers);
 
   print("Fiestas posts-----------------------");

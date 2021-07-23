@@ -104,6 +104,8 @@ class Datum {
     this.description,
     this.image,
     this.price,
+    this.isInMyCart,
+    this.isInMyCartQuantity,
   });
 
   int? id;
@@ -113,6 +115,8 @@ class Datum {
   String? description;
   String? image;
   String? price;
+  bool? isInMyCart;
+  int? isInMyCartQuantity;
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
         id: json["id"],
@@ -122,6 +126,8 @@ class Datum {
         description: json["description"],
         image: json["image"],
         price: json["price"],
+        isInMyCart: json["is_in_my_cart"],
+        isInMyCartQuantity: json["is_in_my_cart_quantity"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -132,5 +138,7 @@ class Datum {
         "description": description,
         "image": image,
         "price": price,
+        "is_in_my_cart": isInMyCart,
+        "is_in_my_cart_quantity": isInMyCartQuantity,
       };
 }
