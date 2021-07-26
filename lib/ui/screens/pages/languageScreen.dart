@@ -208,7 +208,7 @@ var newValue ;
                     Center(
                       child: GestureDetector(
                         onTap: () {
-                          Constants.prefs?.setString(Strings.radioValue, newValue);
+                          Constants.prefs?.setString(Strings.radioValue, newValue ?? "es");
                           Navigator.pop(context);
                         },
                         child: roundedBox(
