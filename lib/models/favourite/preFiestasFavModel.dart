@@ -1,17 +1,17 @@
 // To parse this JSON data, do
 //
-//     final prefiestasModel = prefiestasModelFromJson(jsonString);
+//     final prefiestasFavouriteModel = prefiestasFavouriteModelFromJson(jsonString);
 
 import 'dart:convert';
 
-PrefiestasModel prefiestasModelFromJson(String str) =>
-    PrefiestasModel.fromJson(json.decode(str));
+PrefiestasFavouriteModel prefiestasFavouriteModelFromJson(String str) =>
+    PrefiestasFavouriteModel.fromJson(json.decode(str));
 
-String prefiestasModelToJson(PrefiestasModel data) =>
+String prefiestasFavouriteModelToJson(PrefiestasFavouriteModel data) =>
     json.encode(data.toJson());
 
-class PrefiestasModel {
-  PrefiestasModel({
+class PrefiestasFavouriteModel {
+  PrefiestasFavouriteModel({
     this.status,
     this.code,
     this.data,
@@ -21,8 +21,8 @@ class PrefiestasModel {
   int? code;
   Data? data;
 
-  factory PrefiestasModel.fromJson(Map<String, dynamic> json) =>
-      PrefiestasModel(
+  factory PrefiestasFavouriteModel.fromJson(Map<String, dynamic> json) =>
+      PrefiestasFavouriteModel(
         status: json["status"],
         code: json["code"],
         data: Data.fromJson(json["data"]),
@@ -52,7 +52,7 @@ class Data {
   });
 
   int? currentPage;
-  List<ProductInfo>? data;
+  List<Datum>? data;
   String? firstPageUrl;
   int? from;
   int? lastPage;
@@ -66,8 +66,7 @@ class Data {
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
         currentPage: json["current_page"],
-        data: List<ProductInfo>.from(
-            json["data"].map((x) => ProductInfo.fromJson(x))),
+        data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
         firstPageUrl: json["first_page_url"],
         from: json["from"],
         lastPage: json["last_page"],
@@ -96,15 +95,39 @@ class Data {
       };
 }
 
-class ProductInfo {
-  ProductInfo({
+class Datum {
+  Datum({
+    this.id,
+    this.preFiestaId,
+    this.userId,
+    this.preFiestaDetail,
+  });
+
+  int? id;
+  int? preFiestaId;
+  int? userId;
+  PreFiestaDetail? preFiestaDetail;
+
+  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+        id: json["id"],
+        preFiestaId: json["pre_fiesta_id"],
+        userId: json["user_id"],
+        preFiestaDetail: PreFiestaDetail.fromJson(json["pre_fiesta_detail"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "pre_fiesta_id": preFiestaId,
+        "user_id": userId,
+        "pre_fiesta_detail": preFiestaDetail?.toJson(),
+      };
+}
+
+class PreFiestaDetail {
+  PreFiestaDetail({
     this.id,
     this.name,
-    this.parentId,
-    this.categories,
-    this.description,
     this.image,
-    this.price,
     this.isInMyCart,
     this.isInMyCartQuantity,
     this.isFavourite,
@@ -112,23 +135,16 @@ class ProductInfo {
 
   int? id;
   String? name;
-  int? parentId;
-  dynamic categories;
-  String? description;
   String? image;
-  String? price;
   bool? isInMyCart;
   int? isInMyCartQuantity;
   bool? isFavourite;
 
-  factory ProductInfo.fromJson(Map<String, dynamic> json) => ProductInfo(
+  factory PreFiestaDetail.fromJson(Map<String, dynamic> json) =>
+      PreFiestaDetail(
         id: json["id"],
         name: json["name"],
-        parentId: json["parent_id"],
-        categories: json["categories"],
-        description: json["description"],
         image: json["image"],
-        price: json["price"],
         isInMyCart: json["is_in_my_cart"],
         isInMyCartQuantity: json["is_in_my_cart_quantity"],
         isFavourite: json["is_favourite"],
@@ -137,11 +153,7 @@ class ProductInfo {
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
-        "parent_id": parentId,
-        "categories": categories,
-        "description": description,
         "image": image,
-        "price": price,
         "is_in_my_cart": isInMyCart,
         "is_in_my_cart_quantity": isInMyCartQuantity,
         "is_favourite": isFavourite,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:funfy/apis/signinApi.dart';
+import 'package:funfy/components/navigation.dart';
+import 'package:funfy/ui/screens/favourite.dart';
 import 'package:funfy/ui/screens/profileEdit.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/Constants.dart';
@@ -74,15 +76,11 @@ class _ProfilepageState extends State<Profilepage> {
                         child: GestureDetector(
                       onTap: () {
                         Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => EditProfile())).then((value){
-
-                                  setState(() {
-
-                                  });
-
-
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => EditProfile()))
+                            .then((value) {
+                          setState(() {});
                         });
                       },
                       child: Container(
@@ -109,6 +107,16 @@ class _ProfilepageState extends State<Profilepage> {
                     context: context,
                     title: Strings.paymentMethods,
                     leftIconImage: Images.paymentIconpng),
+
+                GestureDetector(
+                  onTap: () {
+                    navigatorPushFun(context, Favourite());
+                  },
+                  child: centerlistItem(
+                      context: context,
+                      title: Strings.favourite,
+                      leftIconImage: Images.heart),
+                ),
 
                 centerlistItem(
                     context: context,

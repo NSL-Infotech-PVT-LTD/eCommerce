@@ -21,4 +21,12 @@ class Urls {
   static String fiestasBookingUrl = baseUrl + "customer/booking/store";
   static String fiestasBookingListUrl = baseUrl + "customer/booking/list";
   static String preFiestasBookingUrl = baseUrl + "customer/cart/store";
+  static String fiestasAddfavoriteUrl =
+      baseUrl + "customer/favourite/fiesta/add";
+  static String fiestasfavoriteListUrl =
+      baseUrl + "customer/favourite/fiesta/list";
+  static String preFiestasAddfavoriteUrl =
+      baseUrl + "customer/favourite/prefiesta/add";
+  static String preFiestasfavoriteListUrl =
+      baseUrl + "customer/favourite/prefiesta/list";
 }

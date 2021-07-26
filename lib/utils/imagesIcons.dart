@@ -35,6 +35,7 @@ class Images {
   static String locationspng = "assets/pngicons/locationIc.png";
   static String editpen = "assets/pngicons/editpen.png";
   static String logout = "assets/pngicons/logout.png";
+  static String heart = "assets/pngicons/hearticonbig.png";
   static String assetsSvgIcons = "assets/svgicons/";
 
   static String aboutcalender = "assets/pngicons/aboutCalender.png";

@@ -175,6 +175,9 @@ class Strings {
   static String buyNow = "Buy Now";
   static String doYouWantTOExit = "Do you want to exit?";
   static String exit = "Exit";
+  static String favourite = "Favourite";
+  static String listEmpty = "List is Empty";
+  static String empty = "Empty";
   // dummy
   static String garyadams = "Gary F. Adams";
   static String madridspain = "Madrid, Spain";

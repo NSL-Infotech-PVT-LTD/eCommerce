@@ -1,34 +1,265 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:funfy/apis/homeApis.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/components/shortPrices.dart';
-import 'package:funfy/models/fiestasmodel.dart';
-import 'package:funfy/models/preFiestasModel.dart';
+import 'package:funfy/models/favourite/fiestasFavouriteModel.dart';
+import 'package:funfy/models/favourite/preFiestasFavModel.dart';
 import 'package:funfy/ui/screens/bookNowBeta.dart';
-import 'package:funfy/ui/screens/pages/BookNow.dart';
 import 'package:funfy/ui/screens/preFistaOrderMix.dart';
+import 'package:funfy/ui/widgets/postsitems.dart';
 import 'package:funfy/ui/widgets/rating.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
+import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/strings.dart';
 import 'package:intl/intl.dart';
 
-String beerImageLink =
-    "https://freepngimg.com/thumb/bottle/67-beer-bottle-png-image.png";
+class Favourite extends StatefulWidget {
+  Favourite({Key? key}) : super(key: key);
 
-String yellowImageLink =
-    "https://i.pinimg.com/736x/e3/e7/d8/e3e7d871074c2b2256207b23a4eaeca4.jpg";
+  @override
+  _FavouriteState createState() => _FavouriteState();
+}
 
-Widget fiestasItem({context, Datum? postModeldata}) {
+class _FavouriteState extends State<Favourite> {
+  bool fiestasButton = true;
+  bool _loading = false;
+  bool prifestasLoading = false;
+
+  FiestasFavouriteModel? fiestasFavModel = FiestasFavouriteModel();
+  PrefiestasFavouriteModel? preFiestasFavModel = PrefiestasFavouriteModel();
+
+  @override
+  void initState() {
+    super.initState();
+
+    getFavouriteList();
+  }
+
+  getFavouriteList() async {
+    var net = await Internetcheck.check();
+
+    if (net != true) {
+      Internetcheck.showdialog(context: context);
+    } else {
+      setState(() {
+        _loading = true;
+      });
+
+      try {
+        fiestasFavouriteListApi().then((res) {
+          setState(() {
+            fiestasFavModel = res;
+            _loading = false;
+          });
+        });
+
+        prifiestaFavList();
+      } catch (e) {
+        setState(() {
+          _loading = false;
+        });
+
+        print(e);
+      }
+    }
+  }
+
+  prifiestaFavList() {
+    setState(() {
+      prifestasLoading = true;
+    });
+    try {
+      prefiestasFavouriteListApi().then((res) {
+        setState(() {
+          preFiestasFavModel = res;
+          prifestasLoading = false;
+        });
+      });
+    } catch (e) {
+      setState(() {
+        prifestasLoading = false;
+      });
+
+      print(e);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+    return Scaffold(
+      backgroundColor: AppColors.blackBackground,
+      appBar: AppBar(
+        backgroundColor: AppColors.blackBackground,
+        centerTitle: true,
+        title: Text(
+          Strings.favourite,
+          style: TextStyle(
+              color: AppColors.white,
+              fontFamily: Fonts.dmSansBold,
+              fontSize: size.width * 0.05),
+        ),
+      ),
+      body: Column(
+        children: [
+          // fiestas && pre-fiestas button
+
+          Container(
+            padding: EdgeInsets.symmetric(
+                vertical: size.height * 0.01, horizontal: size.width * 0.04),
+            // color: Colors.blue,
+            width: size.width,
+            height: size.height * 0.08,
+            child: roundedBox(
+                width: size.width * 0.8,
+                height: size.height * 0.06,
+                backgroundColor: AppColors.homeTopbuttonbackground,
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                      vertical: size.height * 0.01,
+                      horizontal: size.width * 0.022),
+                  child: Row(
+                    children: [
+                      // fiestas button
+
+                      Expanded(
+                        flex: 1,
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              fiestasButton = true;
+                            });
+                          },
+                          child: roundedBox(
+                              backgroundColor: fiestasButton
+                                  ? AppColors.siginbackgrond
+                                  : AppColors.homeTopbuttonbackground,
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  Strings.fiestas,
+                                  style: TextStyle(
+                                      fontSize: size.width * 0.035,
+                                      fontFamily: Fonts.dmSansMedium,
+                                      color: AppColors.white),
+                                ),
+                              )),
+                        ),
+                      ),
+
+                      SizedBox(
+                        width: size.width * 0.01,
+                      ),
+
+                      Expanded(
+                        flex: 1,
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              fiestasButton = false;
+                            });
+                          },
+                          child: roundedBox(
+                              // width: size.width * 0.44,
+                              backgroundColor: fiestasButton
+                                  ? AppColors.homeTopbuttonbackground
+                                  : AppColors.siginbackgrond,
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  Strings.preFiestas,
+                                  style: TextStyle(
+                                      fontSize: size.width * 0.035,
+                                      fontFamily: Fonts.dmSansMedium,
+                                      color: AppColors.white),
+                                ),
+                              )),
+                        ),
+                      )
+                    ],
+                  ),
+                )),
+          ),
+
+          // fiestas and prefiestas
+
+          fiestasButton
+              ? Expanded(
+                  child: Stack(
+                    children: [
+                      // loading
+                      _loading
+                          ? Center(child: CircularProgressIndicator())
+                          : _loading == false &&
+                                  fiestasFavModel?.data?.data?.length == 0
+                              ? Center(
+                                  child: Text(
+                                  "${Strings.listEmpty}",
+                                  style: TextStyle(
+                                      color: AppColors.white,
+                                      fontSize: size.width * 0.05),
+                                ))
+                              : ListView.builder(
+                                  itemCount:
+                                      fiestasFavModel?.data?.data?.length ?? 0,
+                                  itemBuilder: (context, index) {
+                                    return fiestasItemFav(
+                                        context: context,
+                                        index: index,
+                                        model: fiestasFavModel);
+                                  }),
+                    ],
+                  ),
+                )
+              : Expanded(
+                  child: Stack(
+                    children: [
+                      prifestasLoading
+                          ? Center(child: CircularProgressIndicator())
+                          : _loading == false &&
+                                  preFiestasFavModel?.data?.data?.length == 0
+                              ? Center(
+                                  child: Text(
+                                  "${Strings.listEmpty}",
+                                  style: TextStyle(
+                                      color: AppColors.white,
+                                      fontSize: size.width * 0.05),
+                                ))
+                              : ListView.builder(
+                                  itemCount:
+                                      preFiestasFavModel?.data?.data?.length,
+                                  itemBuilder: (context, index) {
+                                    return preFiestasItem(
+                                        context: context,
+                                        index: index,
+                                        prefiestasdata: preFiestasFavModel);
+                                  }),
+                    ],
+                  ),
+                )
+        ],
+      ),
+    );
+  }
+}
+
+// favorItem fiestas
+
+fiestasItemFav({context, int? index, FiestasFavouriteModel? model}) {
   var size = MediaQuery.of(context).size;
 
-  DateTime? date = DateTime.parse("${postModeldata?.timestamp}");
+  var data = model?.data?.data?.elementAt(index!);
+
+  DateTime? date = DateTime.parse("${data?.fiestaDetail?.timestamp}");
 
   String month = DateFormat('MMM').format(date);
 
-  String price = k_m_b_generator(int.parse("${postModeldata?.ticketPrice}"));
+  String price =
+      k_m_b_generator(int.parse("${data?.fiestaDetail?.ticketPrice}"));
 
   return Container(
     margin: EdgeInsets.only(top: size.width * 0.04),
@@ -36,7 +267,8 @@ Widget fiestasItem({context, Datum? postModeldata}) {
     height: size.height * 0.28,
     decoration: BoxDecoration(
         image: DecorationImage(
-            image: NetworkImage("${postModeldata?.image}"), fit: BoxFit.cover)),
+            image: NetworkImage("${data?.fiestaDetail?.image}"),
+            fit: BoxFit.cover)),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -91,7 +323,7 @@ Widget fiestasItem({context, Datum? postModeldata}) {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "${postModeldata?.name}",
+                    "${data?.fiestaDetail?.name}",
                     style: TextStyle(
                         fontSize: size.width * 0.045,
                         fontFamily: Fonts.dmSansBold,
@@ -101,7 +333,7 @@ Widget fiestasItem({context, Datum? postModeldata}) {
                     height: size.height * 0.004,
                   ),
                   Text(
-                    "${postModeldata?.distanceMiles}",
+                    "${data?.fiestaDetail?.distanceMiles}",
                     style: TextStyle(
                         fontSize: size.width * 0.03,
                         fontFamily: Fonts.dmSansMedium,
@@ -141,9 +373,10 @@ Widget fiestasItem({context, Datum? postModeldata}) {
                             color: AppColors.white),
                       ),
                       Text(
-                        // postModeldata!.ticketPrice!.length > 9
+                        // data?.fiestaDetail?.ticketPrice?.length > 9
                         //     ? "${postModeldata.ticketPrice?.substring(0, 9)}"
                         //     : "${postModeldata.ticketPrice}",
+
                         "$price",
                         maxLines: 1,
                         overflow: TextOverflow.clip,
@@ -159,8 +392,8 @@ Widget fiestasItem({context, Datum? postModeldata}) {
                   ),
                   InkWell(
                     onTap: () {
-                      navigatorPushFun(
-                          context, BookNowBeta(fiestasModel: postModeldata));
+                      // navigatorPushFun(context,
+                      //     BookNowBeta(fiestasModel: data?.fiestaDetail!));
                     },
                     child: roundedBoxR(
                         width: size.width * 0.23,
@@ -188,7 +421,10 @@ Widget fiestasItem({context, Datum? postModeldata}) {
   );
 }
 
-Widget preFiestasItem(context, ProductInfo? prefiestasdata) {
+// pre
+Widget preFiestasItem(
+    {context, int? index, PrefiestasFavouriteModel? prefiestasdata}) {
+  var data = prefiestasdata?.data?.data?.elementAt(index!);
   var size = MediaQuery.of(context).size;
 
   return Container(
@@ -266,7 +502,7 @@ Widget preFiestasItem(context, ProductInfo? prefiestasdata) {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "${prefiestasdata?.name}",
+                        "${data?.preFiestaDetail?.name}",
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -277,8 +513,11 @@ Widget preFiestasItem(context, ProductInfo? prefiestasdata) {
                       SizedBox(
                         height: size.height * 0.008,
                       ),
+
+                      // description
                       Text(
-                        "${prefiestasdata?.description}",
+                        '',
+                        // "${data?.preFiestaDetail?}",
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -294,9 +533,9 @@ Widget preFiestasItem(context, ProductInfo? prefiestasdata) {
                       // order Now
                       GestureDetector(
                         onTap: () {
-                          print(prefiestasdata?.id);
-                          navigatorPushFun(context,
-                              PreFistaOrder(prefiestasModel: prefiestasdata));
+                          // print(prefiestasdata?.id);
+                          // navigatorPushFun(context,
+                          //     PreFistaOrder(prefiestasModel: prefiestasdata));
                         },
                         child: roundedBoxR(
                             radius: size.width * 0.005,
@@ -326,11 +565,10 @@ Widget preFiestasItem(context, ProductInfo? prefiestasdata) {
                 width: size.width * 0.25,
                 decoration: BoxDecoration(),
                 child: Image.network(
-                  prefiestasdata?.image != ""
-                      ? "${prefiestasdata?.image}"
-                      : Images.beerNetwork,
-                  // fit: BoxFit.cover,
-                ),
+                    "${data?.preFiestaDetail?.image ?? Images.beerNetwork}"
+
+                    // fit: BoxFit.cover,
+                    ),
               )
             ],
           ),

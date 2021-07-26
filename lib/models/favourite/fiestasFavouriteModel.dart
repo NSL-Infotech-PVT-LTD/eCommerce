@@ -1,16 +1,17 @@
 // To parse this JSON data, do
 //
-//     final fiestasModel = fiestasModelFromJson(jsonString);
+//     final fiestasFavouriteModel = fiestasFavouriteModelFromJson(jsonString);
 
 import 'dart:convert';
 
-FiestasModel fiestasModelFromJson(String str) =>
-    FiestasModel.fromJson(json.decode(str));
+FiestasFavouriteModel fiestasFavouriteModelFromJson(String str) =>
+    FiestasFavouriteModel.fromJson(json.decode(str));
 
-String fiestasModelToJson(FiestasModel data) => json.encode(data.toJson());
+String fiestasFavouriteModelToJson(FiestasFavouriteModel data) =>
+    json.encode(data.toJson());
 
-class FiestasModel {
-  FiestasModel({
+class FiestasFavouriteModel {
+  FiestasFavouriteModel({
     this.status,
     this.code,
     this.data,
@@ -20,7 +21,8 @@ class FiestasModel {
   int? code;
   Data? data;
 
-  factory FiestasModel.fromJson(Map<String, dynamic> json) => FiestasModel(
+  factory FiestasFavouriteModel.fromJson(Map<String, dynamic> json) =>
+      FiestasFavouriteModel(
         status: json["status"],
         code: json["code"],
         data: Data.fromJson(json["data"]),
@@ -96,11 +98,39 @@ class Data {
 class Datum {
   Datum({
     this.id,
+    this.fiestaId,
+    this.userId,
+    this.fiestaDetail,
+  });
+
+  int? id;
+  int? fiestaId;
+  int? userId;
+  FiestaDetail? fiestaDetail;
+
+  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+        id: json["id"],
+        fiestaId: json["fiesta_id"],
+        userId: json["user_id"],
+        fiestaDetail: FiestaDetail.fromJson(json["fiesta_detail"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "fiesta_id": fiestaId,
+        "user_id": userId,
+        "fiesta_detail": fiestaDetail?.toJson(),
+      };
+}
+
+class FiestaDetail {
+  FiestaDetail({
+    this.id,
     this.name,
-    this.clubId,
-    this.description,
-    this.timestamp,
     this.image,
+    this.clubId,
+    this.timestamp,
+    this.description,
     this.ticketPrice,
     this.ticketPriceStandard,
     this.ticketPriceVip,
@@ -110,15 +140,14 @@ class Datum {
     this.distanceKm,
     this.distanceMiles,
     this.isFavourite,
-    this.clubDetail,
   });
 
   int? id;
   String? name;
-  int? clubId;
-  dynamic description;
-  String? timestamp;
   String? image;
+  int? clubId;
+  DateTime? timestamp;
+  dynamic description;
   String? ticketPrice;
   String? ticketPriceStandard;
   String? ticketPriceVip;
@@ -128,15 +157,14 @@ class Datum {
   String? distanceKm;
   String? distanceMiles;
   bool? isFavourite;
-  ClubDetail? clubDetail;
 
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+  factory FiestaDetail.fromJson(Map<String, dynamic> json) => FiestaDetail(
         id: json["id"],
         name: json["name"],
-        clubId: json["club_id"],
-        description: json["description"],
-        timestamp: json["timestamp"],
         image: json["image"],
+        clubId: json["club_id"],
+        timestamp: DateTime.parse(json["timestamp"]),
+        description: json["description"],
         ticketPrice: json["ticket_price"],
         ticketPriceStandard: json["ticket_price_standard"],
         ticketPriceVip: json["ticket_price_vip"],
@@ -146,16 +174,15 @@ class Datum {
         distanceKm: json["distance_km"],
         distanceMiles: json["distance_miles"],
         isFavourite: json["is_favourite"],
-        clubDetail: ClubDetail.fromJson(json["club_detail"]),
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
-        "club_id": clubId,
-        "description": description,
-        "timestamp": timestamp,
         "image": image,
+        "club_id": clubId,
+        "timestamp": timestamp?.toIso8601String(),
+        "description": description,
         "ticket_price": ticketPrice,
         "ticket_price_standard": ticketPriceStandard,
         "ticket_price_vip": ticketPriceVip,
@@ -165,50 +192,5 @@ class Datum {
         "distance_km": distanceKm,
         "distance_miles": distanceMiles,
         "is_favourite": isFavourite,
-        "club_detail": clubDetail?.toJson(),
-      };
-}
-
-class ClubDetail {
-  ClubDetail({
-    this.id,
-    this.name,
-    this.image,
-    this.capacity,
-    this.description,
-    this.location,
-    this.latitude,
-    this.longitude,
-  });
-
-  int? id;
-  String? name;
-  String? image;
-  String? capacity;
-  String? description;
-  String? location;
-  dynamic latitude;
-  dynamic longitude;
-
-  factory ClubDetail.fromJson(Map<String, dynamic> json) => ClubDetail(
-        id: json["id"],
-        name: json["name"],
-        image: json["image"],
-        capacity: json["capacity"],
-        description: json["description"],
-        location: json["location"],
-        latitude: json["latitude"],
-        longitude: json["longitude"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "image": image,
-        "capacity": capacity,
-        "description": description,
-        "location": location,
-        "latitude": latitude,
-        "longitude": longitude,
       };
 }

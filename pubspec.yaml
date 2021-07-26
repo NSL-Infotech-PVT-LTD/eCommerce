@@ -94,6 +94,7 @@ flutter:
     - assets/pngicons/locationIc.png
     - assets/pngicons/editpen.png
     - assets/pngicons/logout.png
+    - assets/pngicons/hearticonbig.png
     - assets/svgicons/place_holder.svg
     - assets/svgicons/bookingunActive.svg
     - assets/images/pricebanner.svg

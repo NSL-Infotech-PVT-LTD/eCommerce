@@ -69,6 +69,8 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
 
   bool _loadingCenter = false;
 
+  bool _favoriteBool = false;
+
   void _handleRadioValueChange(int? value) {
     addToCart(
             id: "${alcohol!.data!.data!.elementAt(int.parse(value.toString())).id}",
@@ -86,6 +88,47 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
     });
   }
 
+  // add favorite
+
+  addFavorite() async {
+    print("add to favorite");
+
+    var net = await Internetcheck.check();
+
+    if (net != true) {
+      Internetcheck.showdialog(context: context);
+    } else {
+      setState(() {
+        _loadingMainCenter = true;
+      });
+      try {
+        await prefiestasAddfavouriteApi(
+                id: widget.prefiestasModel?.id.toString())
+            .then((res) {
+          setState(() {
+            _loadingMainCenter = false;
+          });
+
+          if (res["status"] == true && res["code"] == 201) {
+            print("added in favorite");
+
+            setState(() {
+              _favoriteBool = true;
+            });
+          }
+          if (res["status"] == true && res["code"] == 200) {
+            print("removed in favorite");
+            _favoriteBool = false;
+          }
+        });
+      } catch (e) {
+        setState(() {
+          _loadingMainCenter = false;
+        });
+      }
+    }
+  }
+
   clearCart() {
     setState(() {
       UserData.preFiestasAlcoholCart = "";
@@ -98,6 +141,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
 
   @override
   void initState() {
+    _favoriteBool = widget.prefiestasModel!.isFavourite!;
     cardList = List<SlidingBannerProviderDetails>.generate(
         3, (index) => SlidingBannerProviderDetails());
     super.initState();
@@ -204,7 +248,6 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
       addFunc,
       var count,
       removeFunc}) {
-    print("here is count value -------- $count");
     var size = MediaQuery.of(context).size;
     var data = model?.data?.data;
     return ListTile(
@@ -219,12 +262,17 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                 fontFamily: Fonts.dmSansBold,
                 fontSize: SizeConfig.screenWidth * 0.040)),
         trailing: numCount != true
-            ? Radio<int?>(
-                value: index,
-                groupValue: groupValue != -1
-                    ? groupValue
-                    : count, //count == 1 && groupValue != -1 ? count : groupValue,
-                onChanged: _handleRadioValueChange)
+            ? Theme(
+                data: Theme.of(context).copyWith(
+                  unselectedWidgetColor: AppColors.white,
+                ),
+                child: Radio<int?>(
+                    value: index,
+                    groupValue: groupValue != -1
+                        ? groupValue
+                        : count, //count == 1 && groupValue != -1 ? count : groupValue,
+                    onChanged: _handleRadioValueChange),
+              )
             : Container(
                 width: size.width * 0.25,
                 child: insdecButton(
@@ -611,7 +659,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
           clearCart();
         });
 
-        if (res?.status == true && res?.code == 200) {
+        if (res?.status == true && res?.code == 201) {
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
@@ -804,11 +852,17 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                         pinned: true,
                         snap: true,
                         actions: [
-                          Container(
-                            margin: EdgeInsets.only(right: size.width * 0.04),
-                            child: SvgPicture.asset(
-                              "assets/svgicons/hearticon.svg",
-                              color: Colors.white,
+                          GestureDetector(
+                            onTap: () {
+                              addFavorite();
+                            },
+                            child: Container(
+                              margin: EdgeInsets.only(right: size.width * 0.04),
+                              child: SvgPicture.asset(
+                                "assets/svgicons/hearticon.svg",
+                                color:
+                                    _favoriteBool ? Colors.red : Colors.white,
+                              ),
                             ),
                           )
                         ],

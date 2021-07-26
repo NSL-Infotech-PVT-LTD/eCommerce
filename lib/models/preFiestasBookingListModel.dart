@@ -31,7 +31,7 @@ class PreFiestasBookingListModel {
   Map<String, dynamic> toJson() => {
         "status": status,
         "code": code,
-        "data": data!.toJson(),
+        "data": data?.toJson(),
       };
 }
 
@@ -115,7 +115,7 @@ class Datum {
   int? orderBy;
   int? totalPrice;
   String? address;
-  String? orderStatus;
+  OrderStatus? orderStatus;
   dynamic paymentParams;
   dynamic paymentMode;
   List<OrderItem>? orderItem;
@@ -127,7 +127,7 @@ class Datum {
         orderBy: json["order_by"],
         totalPrice: json["total_price"],
         address: json["address"],
-        orderStatus: json["order_status"],
+        orderStatus: orderStatusValues.map[json["order_status"]],
         paymentParams: json["payment_params"],
         paymentMode: json["payment_mode"],
         orderItem: List<OrderItem>.from(
@@ -142,7 +142,7 @@ class Datum {
         "order_by": orderBy,
         "total_price": totalPrice,
         "address": address,
-        "order_status": orderStatus,
+        "order_status": orderStatusValues.reverse[orderStatus],
         "payment_params": paymentParams,
         "payment_mode": paymentMode,
         "order_item": List<dynamic>.from(orderItem!.map((x) => x.toJson())),
@@ -169,7 +169,9 @@ class OrderItem {
         preFiestaId: json["pre_fiesta_id"],
         quantity: json["quantity"],
         price: json["price"],
-        preFiesta: PreFiesta.fromJson(json["pre_fiesta"]),
+        preFiesta: json["pre_fiesta"] == null
+            ? null
+            : PreFiesta.fromJson(json["pre_fiesta"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -177,7 +179,7 @@ class OrderItem {
         "pre_fiesta_id": preFiestaId,
         "quantity": quantity,
         "price": price,
-        "pre_fiesta": preFiesta?.toJson(),
+        "pre_fiesta": preFiesta == null ? null : preFiesta?.toJson(),
       };
 }
 
@@ -188,6 +190,9 @@ class PreFiesta {
     this.image,
     this.price,
     this.description,
+    this.isInMyCart,
+    this.isInMyCartQuantity,
+    this.isFavourite,
   });
 
   int? id;
@@ -195,6 +200,9 @@ class PreFiesta {
   String? image;
   String? price;
   String? description;
+  bool? isInMyCart;
+  int? isInMyCartQuantity;
+  bool? isFavourite;
 
   factory PreFiesta.fromJson(Map<String, dynamic> json) => PreFiesta(
         id: json["id"],
@@ -202,6 +210,9 @@ class PreFiesta {
         image: json["image"],
         price: json["price"],
         description: json["description"],
+        isInMyCart: json["is_in_my_cart"],
+        isInMyCartQuantity: json["is_in_my_cart_quantity"],
+        isFavourite: json["is_favourite"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -210,5 +221,26 @@ class PreFiesta {
         "image": image,
         "price": price,
         "description": description,
+        "is_in_my_cart": isInMyCart,
+        "is_in_my_cart_quantity": isInMyCartQuantity,
+        "is_favourite": isFavourite,
       };
+}
+
+enum OrderStatus { PENDING }
+
+final orderStatusValues = EnumValues({"pending": OrderStatus.PENDING});
+
+class EnumValues<T> {
+  Map<String, T> map;
+  Map<T, String>? reverseMap;
+
+  EnumValues(this.map);
+
+  Map<T, String> get reverse {
+    if (reverseMap == null) {
+      reverseMap = map.map((k, v) => new MapEntry(v, k));
+    }
+    return reverseMap!;
+  }
 }

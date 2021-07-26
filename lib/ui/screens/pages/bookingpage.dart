@@ -4,7 +4,7 @@ import 'package:funfy/apis/bookingApi.dart';
 import 'package:funfy/apis/homeApis.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/models/fiestasBookingListModel.dart';
-import 'package:funfy/models/preFiestasListModel.dart';
+import 'package:funfy/models/preFiestasBookingListModel.dart';
 import 'package:funfy/ui/screens/Your%20order%20Summery.dart';
 import 'package:funfy/ui/screens/fiestasMoreOrderDetails.dart';
 import 'package:funfy/ui/widgets/postsitems.dart';
@@ -69,9 +69,15 @@ class _BookingPageState extends State<BookingPage> {
   }
 
   priFiestasBookings() async {
+    print("run 2 ---------------- ");
     await preFiestaBookingListApi().then((res) {
+      setState(() {
+        _preFiestasLoading = false;
+      });
+
+      print("res data ----------- $res");
       if (res?.code == 200 && res?.status == true) {
-        // print("after return  ${res?.toJson().toString()}");
+        print("after return  ${res?.toJson().toString()}");
 
         setState(() {
           preFiestasBookingList = res;
@@ -223,16 +229,26 @@ class _BookingPageState extends State<BookingPage> {
                       // loading
                       _loading
                           ? Center(child: CircularProgressIndicator())
-                          : SizedBox(),
-                      ListView.builder(
-                          itemCount:
-                              fiestasBookingListModel?.data?.data?.length ?? 0,
-                          itemBuilder: (context, index) {
-                            return fiestasOrdersItem(
-                                context: context,
-                                index: index,
-                                model: fiestasBookingListModel);
-                          }),
+                          : _loading == false &&
+                                  fiestasBookingListModel?.data?.data?.length ==
+                                      0
+                              ? Center(
+                                  child: Text(
+                                  "${Strings.listEmpty}",
+                                  style: TextStyle(
+                                      color: AppColors.white,
+                                      fontSize: size.width * 0.05),
+                                ))
+                              : ListView.builder(
+                                  itemCount: fiestasBookingListModel
+                                          ?.data?.data?.length ??
+                                      0,
+                                  itemBuilder: (context, index) {
+                                    return fiestasOrdersItem(
+                                        context: context,
+                                        index: index,
+                                        model: fiestasBookingListModel);
+                                  }),
                     ],
                   ))
                 : Expanded(
@@ -241,16 +257,25 @@ class _BookingPageState extends State<BookingPage> {
                       // loading
                       _preFiestasLoading
                           ? Center(child: CircularProgressIndicator())
-                          : SizedBox(),
-                      ListView.builder(
-                          itemCount:
-                              preFiestasBookingList?.data?.data?.length ?? 0,
-                          itemBuilder: (context, index) {
-                            return preFiestasOrderItem(
-                                context: context,
-                                index: index,
-                                model: preFiestasBookingList);
-                          }),
+                          : _preFiestasLoading == false &&
+                                  preFiestasBookingList?.data?.data?.length == 0
+                              ? Center(
+                                  child: Text(
+                                  "${Strings.listEmpty}",
+                                  style: TextStyle(
+                                      color: AppColors.white,
+                                      fontSize: size.width * 0.05),
+                                ))
+                              : ListView.builder(
+                                  itemCount: preFiestasBookingList
+                                          ?.data?.data?.length ??
+                                      0,
+                                  itemBuilder: (context, index) {
+                                    return preFiestasOrderItem(
+                                        context: context,
+                                        index: index,
+                                        model: preFiestasBookingList);
+                                  }),
                     ],
                   ))
           ],
@@ -372,15 +397,13 @@ Widget fiestasOrdersItem({context, index, FiestasBookingList? model}) {
   );
 }
 
+//
 Widget preFiestasOrderItem(
     {context, int? index, PreFiestasBookingListModel? model}) {
   var size = MediaQuery.of(context).size;
 
-  var data = model?.data?.data
-      ?.elementAt(int.parse(index.toString()))
-      .orderItem
-      ?.elementAt(int.parse(index.toString()))
-      .preFiesta;
+  var data =
+      model?.data?.data?.elementAt(index!).orderItem?.elementAt(0).preFiesta;
 
   return Container(
     margin: EdgeInsets.only(top: size.height * 0.02),
@@ -406,6 +429,7 @@ Widget preFiestasOrderItem(
                     children: [
                       Text(
                         "${data?.name}",
+                        // "${data?.name}",
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(

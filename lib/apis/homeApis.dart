@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:funfy/apis/userdataM.dart';
+import 'package:funfy/models/favourite/fiestasFavouriteModel.dart';
+import 'package:funfy/models/favourite/preFiestasFavModel.dart';
 import 'package:funfy/models/fiestasmodel.dart';
 import 'package:funfy/models/preFiestasModel.dart';
 import 'package:funfy/models/prifiestasAlMxEx.dart';
@@ -63,3 +65,90 @@ Future<PrefiestasAlMxExModel?> prefiestasAlMxExApi(
     print("ERRRO IN THE API in prefiestas child");
   }
 }
+
+// favourite api
+
+Future fiestasAddfavouriteApi({
+  String? id,
+}) async {
+  var headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+  };
+  Map body = {"fiesta_id": id};
+
+  var res = await http.post(Uri.parse(Urls.fiestasAddfavoriteUrl),
+      body: body, headers: headers);
+
+  print(res.body);
+
+  var response = json.decode(res.body);
+
+  return response;
+}
+
+//
+
+Future prefiestasAddfavouriteApi({
+  String? id,
+}) async {
+  var headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+  };
+  Map body = {"pre_fiesta_id": id};
+
+  var res = await http.post(Uri.parse(Urls.preFiestasAddfavoriteUrl),
+      body: body, headers: headers);
+
+  print(res.body);
+
+  var response = json.decode(res.body);
+
+  return response;
+}
+
+// favourite list fiestas
+
+Future<FiestasFavouriteModel?> fiestasFavouriteListApi() async {
+  var headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+  };
+
+  var res =
+      await http.post(Uri.parse(Urls.fiestasfavoriteListUrl), headers: headers);
+
+  print(res.body);
+
+  FiestasFavouriteModel response = fiestasFavouriteModelFromJson(res.body);
+
+  if (res.statusCode == 200) {
+    return response;
+  } else {
+    print(res.body);
+  }
+}
+
+// favourite list prefiestas
+
+Future<PrefiestasFavouriteModel?> prefiestasFavouriteListApi() async {
+  var headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+  };
+
+  var res = await http.post(Uri.parse(Urls.preFiestasfavoriteListUrl),
+      headers: headers);
+
+  print(res.body);
+
+  PrefiestasFavouriteModel response =
+      prefiestasFavouriteModelFromJson(res.body);
+
+  if (res.statusCode == 200) {
+    return response;
+  } else {
+    print(res.body);
+  }
+}
+
+
+// getcart 
+

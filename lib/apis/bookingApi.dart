@@ -5,7 +5,7 @@ import 'package:funfy/models/createcartPreFiestasModel.dart';
 import 'package:funfy/models/fiestasBooking.dart';
 import 'package:funfy/models/fiestasBookingListModel.dart';
 import 'package:funfy/models/makePrefiestasmodel.dart';
-import 'package:funfy/models/preFiestasListModel.dart';
+import 'package:funfy/models/preFiestasBookingListModel.dart';
 import 'package:funfy/utils/urls.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -103,9 +103,11 @@ Future<PreFiestasBookingListModel?> preFiestaBookingListApi() async {
       headers: headers);
 
   if (res.statusCode == 200) {
-    print("workking------------ ");
+    print("workking------------ ${res.body} ");
+
     return preFiestasBookingListModelFromJson(res.body);
   } else {
+    print(res.body);
     // print(res.body);
   }
 }
