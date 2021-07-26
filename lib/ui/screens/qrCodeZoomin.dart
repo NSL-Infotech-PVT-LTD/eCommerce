@@ -5,6 +5,7 @@ import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
+import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -29,7 +30,8 @@ class _QrCodeZoomInState extends State<QrCodeZoomIn> {
         centerTitle: true,
         elevation: 0,
         title: Text(
-          Strings.youreTicket,
+          "${getTranslated(context, "youreTicket")}",
+          // Strings.youreTicket,
           style: TextStyle(
               fontFamily: Fonts.dmSansMedium, fontSize: size.width * 0.05),
         ),
@@ -108,7 +110,8 @@ class _QrCodeZoomInState extends State<QrCodeZoomIn> {
                   radius: size.width * 0.02,
                   child: Center(
                       child: Text(
-                    Strings.seeClubProfile,
+                        "${getTranslated(context, "seeClubProfile")}",
+                    // Strings.seeClubProfile,
                     style: TextStyle(
                         color: AppColors.white,
                         fontFamily: Fonts.dmSansBold,

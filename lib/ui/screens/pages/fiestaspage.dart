@@ -4,6 +4,7 @@ import 'package:funfy/apis/homeApis.dart';
 import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/components/locationget.dart';
 import 'package:funfy/components/navigation.dart';
+import 'package:funfy/main.dart';
 import 'package:funfy/models/fiestasmodel.dart';
 import 'package:funfy/models/preFiestasModel.dart';
 import 'package:funfy/ui/screens/auth/signin.dart';
@@ -17,6 +18,7 @@ import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
+import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 import 'package:intl/intl.dart';
 
@@ -34,6 +36,12 @@ class FiestasPage extends StatefulWidget {
 }
 
 class _FiestasPageState extends State<FiestasPage> {
+  void changeLanguage() async{
+    String? value =  Constants.prefs?.getString("radioValue");
+    print("check value1" + value!);
+    Locale locale = await setLocale(value);
+    MyApp.setLocale(context, locale);
+  }
   bool fiestasButton = true;
 
   FiestasModel? fiestasdata;
@@ -188,7 +196,6 @@ class _FiestasPageState extends State<FiestasPage> {
     super.initState();
     fiestasgetPosts();
     determinePosition();
-
     print(UserData.userToken);
   }
 
@@ -224,7 +231,8 @@ class _FiestasPageState extends State<FiestasPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          Strings.hello,
+                          "${getTranslated(context, "hello")}",
+                        //  Strings.hello,
                           style: TextStyle(
                               fontSize: size.width * 0.038,
                               fontFamily: Fonts.dmSansRegular,
@@ -269,7 +277,7 @@ class _FiestasPageState extends State<FiestasPage> {
                               child: Text(
                                 Constants.prefs?.getString("addres") != null
                                     ? "${Constants.prefs?.getString("addres")}"
-                                    : Strings.location,
+                                    :"${getTranslated(context, "location")}",// Strings.location,
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
                                 style: TextStyle(
@@ -350,7 +358,8 @@ class _FiestasPageState extends State<FiestasPage> {
                                   child: Align(
                                     alignment: Alignment.center,
                                     child: Text(
-                                      Strings.fiestas,
+                                      "${getTranslated(context, "fiestas")}",
+                                  //    Strings.fiestas,
                                       style: TextStyle(
                                           fontSize: size.width * 0.035,
                                           fontFamily: Fonts.dmSansMedium,
@@ -370,6 +379,7 @@ class _FiestasPageState extends State<FiestasPage> {
                               onTap: () {
                                 setState(() {
                                   fiestasButton = false;
+                                  changeLanguage();
                                 });
                               },
                               child: roundedBox(
@@ -379,8 +389,8 @@ class _FiestasPageState extends State<FiestasPage> {
                                       : AppColors.siginbackgrond,
                                   child: Align(
                                     alignment: Alignment.center,
-                                    child: Text(
-                                      Strings.preFiestas,
+                                    child: Text("${getTranslated(context, "preFiestas")}",
+                                   //   Strings.preFiestas,
                                       style: TextStyle(
                                           fontSize: size.width * 0.035,
                                           fontFamily: Fonts.dmSansMedium,
@@ -421,7 +431,7 @@ class _FiestasPageState extends State<FiestasPage> {
                                         itemBuilder: (context, index) {
                                           return tagbutton(
                                               context: context,
-                                              text: Strings.club,
+                                              text: "${getTranslated(context, "club")}",//Strings.club,
                                               borderColor: AppColors.white,
                                               borderwidth: size.width * 0.001);
                                         })),
@@ -464,7 +474,8 @@ class _FiestasPageState extends State<FiestasPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    Strings.pickfiestasday,
+                                    "${getTranslated(context, "pickfiestasday")}",
+                                   // Strings.pickfiestasday,
                                     style: TextStyle(
                                         fontSize: size.width * 0.04,
                                         fontFamily: Fonts.dmSansMedium,
@@ -584,14 +595,15 @@ class _FiestasPageState extends State<FiestasPage> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    Strings.nearbyfiestas,
+                                    "${getTranslated(context, "nearbyfiestas")}",
                                     style: TextStyle(
                                         fontSize: size.width * 0.045,
                                         fontFamily: Fonts.dmSansBold,
                                         color: AppColors.white),
                                   ),
                                   Text(
-                                    Strings.seeall,
+                                    "${getTranslated(context, "seeall")}",
+                                 //   Strings.seeall,
                                     style: TextStyle(
                                         fontSize: size.width * 0.04,
                                         fontFamily: Fonts.dmSansBold,
@@ -613,7 +625,8 @@ class _FiestasPageState extends State<FiestasPage> {
                                               _postLoading == false
                                           ? Center(
                                               child: Text(
-                                                Strings.PostsEmpty,
+                                                "${getTranslated(context, "PostsEmpty")}",
+                                           //     Strings.PostsEmpty,
                                                 style: TextStyle(
                                                     color: AppColors.white,
                                                     fontSize:
@@ -679,7 +692,8 @@ Widget preFiestas(context, PrefiestasModel? prefiestasdata, _postLoading) {
               height: size.height * 0.03,
             ),
             Text(
-              Strings.preFiestasOffers,
+              "${getTranslated(context, "preFiestasOffers")}",
+            //  Strings.preFiestasOffers,
               style: TextStyle(
                   fontSize: size.width * 0.043,
                   fontFamily: Fonts.dmSansBold,
@@ -703,7 +717,8 @@ Widget preFiestas(context, PrefiestasModel? prefiestasdata, _postLoading) {
                             _postLoading == false
                         ? Center(
                             child: Text(
-                              Strings.PostsEmpty,
+                              "${getTranslated(context, "PostsEmpty")}",
+                          //    Strings.PostsEmpty,
                               style: TextStyle(
                                   color: AppColors.white,
                                   fontSize: size.width * 0.04),
@@ -718,4 +733,6 @@ Widget preFiestas(context, PrefiestasModel? prefiestasdata, _postLoading) {
       )
     ],
   );
+
+
 }

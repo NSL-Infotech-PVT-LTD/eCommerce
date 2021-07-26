@@ -27,6 +27,7 @@ import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
+import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 import 'package:video_player/video_player.dart';
 
@@ -375,7 +376,8 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      Strings.addtocart,
+                      "${getTranslated(context, "addtocart")}",
+                      // Strings.addtocart,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           color: AppColors.brownlite,
@@ -395,7 +397,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                       Container(
                         // width: SizeConfig.screenWidth * 0.40,
                         child: Text(
-                          "${Strings.ticket} * ${UserData.totalTicketNum}",
+                          "${getTranslated(context, "ticket")} * ${UserData.totalTicketNum}",
                           style: TextStyle(
                             color: AppColors.white,
                             fontSize: size.width * 0.05,
@@ -416,7 +418,8 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                 Spacer(),
                 ElevatedButton(
                   child: Text(
-                    'Buy Now',
+                    "${getTranslated(context, "buyNow")}",
+                    // 'Buy Now',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   onPressed: () {
@@ -804,13 +807,22 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                               // unselectedLabelColor: Colors.grey,
                               tabs: [
                                 Tab(
-                                  icon: Text(Strings.alcohol),
+                                  icon: Text(
+                                      "${getTranslated(context, "alcohol")}",
+                                      //Strings.alcohol
+                                  ),
                                 ),
                                 Tab(
-                                  icon: Text(Strings.mixes),
+                                  icon: Text(
+                                      "${getTranslated(context, "mixes")}",
+                                      //Strings.mixes
+                                  ),
                                 ),
                                 Tab(
-                                  icon: Text(Strings.extras),
+                                  icon: Text(
+                                      "${getTranslated(context, "extras")}",
+                                      // Strings.extras
+                                  ),
                                 ),
                               ],
                             ),
@@ -825,7 +837,8 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                         : _loading == false && alcohol?.data?.data == []
                             ? Center(
                                 child: Text(
-                                  Strings.nodataFound,
+                                  "${getTranslated(context, "nodataFound")}",
+                                  //Strings.nodataFound,
                                   style: TextStyle(
                                       color: AppColors.descriptionfirst,
                                       fontFamily: Fonts.dmSansBold,
@@ -841,8 +854,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                                     ),
                                     SizedBox(
                                       width: SizeConfig.screenWidth * 0.95,
-                                      child: richText("Select at most ", "One",
-                                          " from Alcohols"),
+                                      child: richText("Select at most ", "One", " from Alcohols"),
                                     ),
                                     Expanded(
                                       child: ListView.builder(
@@ -867,7 +879,8 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                         : _loading == false && mix?.data?.data == []
                             ? Center(
                                 child: Text(
-                                  Strings.nodataFound,
+                                  "${getTranslated(context, "nodataFound")}",
+                                 // Strings.nodataFound,
                                   style: TextStyle(
                                       color: AppColors.descriptionfirst,
                                       fontFamily: Fonts.dmSansBold,
@@ -909,7 +922,8 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                         : _loading == false && extras?.data?.data == []
                             ? Center(
                                 child: Text(
-                                  Strings.nodataFound,
+                                  "${getTranslated(context, "nodataFound")}",
+                                  // Strings.nodataFound,
                                   style: TextStyle(
                                       color: AppColors.descriptionfirst,
                                       fontFamily: Fonts.dmSansBold,

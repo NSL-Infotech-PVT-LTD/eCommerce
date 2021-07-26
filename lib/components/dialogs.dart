@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:funfy/utils/fontsname.dart';
+import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 
 class Dialogs {
@@ -24,7 +25,9 @@ class Dialogs {
               onPressed: () {
                 okfunc();
               },
-              child: Text(Strings.ok,
+              child: Text(
+                  "${getTranslated(context, "ok")}",
+               //   Strings.ok,
                   style: TextStyle(
                       fontFamily: Fonts.dmSansMedium,
                       fontSize: size.width * 0.05)),
@@ -44,13 +47,19 @@ class Dialogs {
           content: new Text(content.toString()),
           actions: <Widget>[
             TextButton(
-              child: new Text(Strings.no),
+              child: new Text(
+                  "${getTranslated(context, "no")}"
+                  //Strings.no
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: new Text(Strings.yes),
+              child: new Text(
+                  "${getTranslated(context, "yes")}"
+                //  Strings.yes
+              ),
               onPressed: () {
                 func();
               },

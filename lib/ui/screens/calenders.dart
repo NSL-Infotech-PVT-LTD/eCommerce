@@ -3,6 +3,7 @@ import 'package:funfy/ui/widgets/dateButton.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
+import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 import 'package:intl/intl.dart';
 
@@ -137,7 +138,8 @@ class _HcalenderState extends State<Hcalender> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  Strings.pickfiestasday,
+                  "${getTranslated(context, "pickfiestasday")}",
+                  // Strings.pickfiestasday,
                   style: TextStyle(
                       fontSize: size.width * 0.04,
                       fontFamily: Fonts.dmSansMedium,

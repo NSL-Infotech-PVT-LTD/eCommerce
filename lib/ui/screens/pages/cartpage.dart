@@ -6,6 +6,7 @@ import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:funfy/components/sizeclass/SizeConfig.dart';
+import 'package:funfy/utils/langauge_constant.dart';
 import 'package:hexcolor/hexcolor.dart';
 import '../../../utils/strings.dart';
 
@@ -45,18 +46,25 @@ class _CartpageState extends State<Cartpage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              Strings.mycart,
+                              "${getTranslated(context, "mycart")}",
+                              //Strings.mycart,
                               style: TextStyle(
                                   fontFamily: Fonts.dmSansBold,
                                   color: AppColors.white,
                                   fontSize: size.width * 0.065),
                             ),
-                            Text(
-                              Strings.checkyourdeliverableordersstatus,
-                              style: TextStyle(
-                                  fontFamily: Fonts.dmSansRegular,
-                                  color: AppColors.white,
-                                  fontSize: size.width * 0.036),
+                            ConstrainedBox(
+                              constraints: BoxConstraints(
+                                maxWidth: size.width * 0.70,
+                              ),
+                              child: Text(
+                                "${getTranslated(context, "checkyourdeliverableordersstatus")}",
+                                //Strings.checkyourdeliverableordersstatus,
+                                style: TextStyle(
+                                    fontFamily: Fonts.dmSansRegular,
+                                    color: AppColors.white,
+                                    fontSize: size.width * 0.036),
+                              ),
                             )
                           ],
                         ),
@@ -98,7 +106,7 @@ class _CartpageState extends State<Cartpage> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            "Pack 'La havanna'",
+                                            "Pack 'La havanna",
                                             style: TextStyle(
                                                 color: AppColors.white,
                                                 fontFamily: Fonts.dmSansBold,
@@ -108,7 +116,8 @@ class _CartpageState extends State<Cartpage> {
                                             height: size.height * 0.008,
                                           ),
                                           Text(
-                                            Strings.lorem,
+                                            "${getTranslated(context, "lorem")}",
+                                            //Strings.lorem,
                                             maxLines: 2,
                                             overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
@@ -131,22 +140,22 @@ class _CartpageState extends State<Cartpage> {
                                 SizedBox(
                                   height: size.height * 0.035,
                                 ),
-                                listItem(size: size),
+                                listItem(size: size,context: context),
                                 SizedBox(
                                   height: size.height * 0.03,
                                 ),
-                                listItem(size: size, boolCount: true),
+                                listItem(size: size, boolCount: true,context: context),
                                 SizedBox(
                                   height: size.height * 0.03,
                                 ),
-                                listItem(size: size, boolCount: true),
+                                listItem(size: size, boolCount: true,context: context),
                               ],
                             ),
                           )),
                       SizedBox(height: size.height * 0.02),
                       Text(
-                          Strings
-                              .thisisFinalstepafteryouTouchingpaynowbuttonthepaymentwillbetransation,
+                          "${getTranslated(context, "thisisFinalstepafteryouTouchingpaynowbuttonthepaymentwillbetransation")}",
+                          // Strings.thisisFinalstepafteryouTouchingpaynowbuttonthepaymentwillbetransation,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               color: AppColors.itemDescription,
@@ -162,7 +171,8 @@ class _CartpageState extends State<Cartpage> {
                         backgroundColor: AppColors.siginbackgrond,
                         child: Center(
                           child: Text(
-                            Strings.proceedtopay,
+                            "${getTranslated(context, "proceedtopay")}",
+                         //   Strings.proceedtopay,
                             style: TextStyle(
                                 color: AppColors.white,
                                 fontFamily: Fonts.dmSansBold,
@@ -190,14 +200,17 @@ Widget listItem(
     String? topTile,
     String? title,
     String? descriptionTitle,
-    bool? boolCount}) {
+    bool? boolCount,
+    required BuildContext context,
+    }) {
   return Container(
     width: size.width,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "(${Strings.alcohol})",
+          //"(${Strings.alcohol})",
+          "${getTranslated(context, "alcohol")}",
           style: TextStyle(
               color: AppColors.itemDescription,
               fontFamily: Fonts.dmSansRegular,
@@ -213,6 +226,7 @@ Widget listItem(
               children: [
                 Text(
                   "Ron Bucanero Anejo",
+
                   style: TextStyle(
                       color: AppColors.white,
                       fontFamily: Fonts.dmSansBold,
@@ -222,7 +236,8 @@ Widget listItem(
                   width: size.width * 0.03,
                 ),
                 Text(
-                  Strings.change,
+                  "${getTranslated(context, "change")}",
+                  //Strings.change,
                   style: TextStyle(
                       color: AppColors.siginbackgrond,
                       decoration: TextDecoration.underline,
@@ -255,7 +270,8 @@ Widget listItem(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              Strings.euro + " " + "28.99",
+              "${getTranslated(context,'euro')}" '28.99',
+              //Strings.euro + " " + "28.99",
               style: TextStyle(
                   color: AppColors.white,
                   fontFamily: Fonts.dmSansBold,
@@ -362,7 +378,8 @@ Widget ordernow(context) {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        Strings.mycart,
+                        "${getTranslated(context, "mycart")}",
+                      //  Strings.mycart,
                         style: TextStyle(
                             fontFamily: Fonts.dmSansBold,
                             color: AppColors.white,
@@ -396,7 +413,8 @@ Widget ordernow(context) {
                     height: size.height * 0.025,
                   ),
                   Text(
-                    Strings.nothingshowincartrightnow,
+                    "${getTranslated(context, "nothingshowincartrightnow")}",
+                  //  Strings.nothingshowincartrightnow,
                     style: TextStyle(
                         fontFamily: Fonts.dmSansBold,
                         color: AppColors.white,
@@ -414,7 +432,8 @@ Widget ordernow(context) {
             Container(
               width: size.width * 0.6,
               child: Text(
-                Strings.buyFiestasandPreFiestasbestdealsinyourcart,
+                "${getTranslated(context, "buyFiestasandPreFiestasbestdealsinyourcart")}",
+            //    Strings.buyFiestasandPreFiestasbestdealsinyourcart,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontFamily: Fonts.dmSansBold,
@@ -436,7 +455,8 @@ Widget ordernow(context) {
                 borderSize: size.width * 0.002,
                 child: Align(
                   child: Text(
-                    Strings.orderNow,
+                    "${getTranslated(context, "orderNow")}",
+                  //  Strings.orderNow,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontFamily: Fonts.dmSansBold,

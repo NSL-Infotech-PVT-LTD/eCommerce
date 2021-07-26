@@ -7,6 +7,7 @@ import 'package:funfy/components/sizeclass/SizeConfig.dart';
 import 'package:funfy/ui/screens/bookingSuccess.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
+import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 import 'package:hexcolor/hexcolor.dart';
 
@@ -75,7 +76,8 @@ class _CreditCardState extends State<CreditCard> {
                               width: SizeConfig.screenWidth * 0.03,
                             ),
                             Text(
-                              Strings.yourCart,
+                              "${getTranslated(context, "yourCart")}",
+                         //     Strings.yourCart,
                               style: TextStyle(
                                   fontSize: size.width * 0.045,
                                   fontFamily: Fonts.dmSansMedium,
@@ -111,12 +113,17 @@ class _CreditCardState extends State<CreditCard> {
                                   mainAxisSize: MainAxisSize.min,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text("Ticket",
+
+                                    Text(
+                                        //"Ticket",
+                                        "${getTranslated(context, "Ticket")}",
                                         style: TextStyle(
                                             fontSize: size.width * 0.045,
                                             fontFamily: Fonts.dmSansMedium,
                                             color: AppColors.white)),
-                                    Text("Qty:2",
+                                    Text(
+                                        //"Qty:2",
+                                        "${getTranslated(context, "Qty")}",
                                         style: TextStyle(
                                             fontSize: size.width * 0.045,
                                             fontFamily: Fonts.dmSansMedium,
@@ -146,7 +153,9 @@ class _CreditCardState extends State<CreditCard> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Payment",
+                      Text(
+                          //"Payment",
+                          "${getTranslated(context, "Payment")}",
                           style: TextStyle(
                               fontSize: size.width * 0.045,
                               fontFamily: Fonts.dmSansMedium,
@@ -183,7 +192,9 @@ class _CreditCardState extends State<CreditCard> {
                                               width:
                                                   SizeConfig.screenWidth * 0.04,
                                             ),
-                                            Text("Add Credit / Debit Card",
+                                            Text(
+                                                "${getTranslated(context, "AddCreditDebitCard")}",
+                                           //     "Add Credit / Debit Card",
                                                 style: TextStyle(
                                                     fontSize:
                                                         size.width * 0.045,
@@ -244,7 +255,9 @@ class _CreditCardState extends State<CreditCard> {
                                           height:
                                               SizeConfig.screenHeight * 0.02,
                                         ),
-                                        Text("Expire Date",
+                                        Text(
+                                            "${getTranslated(context, "ExpireDate")}",
+                                          //  "Expire Date",
                                             style: TextStyle(
                                                 fontSize: size.width * 0.045,
                                                 fontFamily: Fonts.dmSansMedium,
@@ -356,13 +369,13 @@ class _CreditCardState extends State<CreditCard> {
                                     width: SizeConfig.screenWidth * 0.90,
                                     child: ElevatedButton(
                                       child: Text(
-                                        'Swipe to pay',
+                                        "${getTranslated(context, "Swipetopay")}",
+                                       // 'Swipe to pay',
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold),
                                       ),
                                       onPressed: () {
-                                        navigatorPushFun(
-                                            context, BookingSuccess());
+                                        navigatorPushFun( context, BookingSuccess());
                                       },
                                       style: ElevatedButton.styleFrom(
                                         padding: EdgeInsets.symmetric(

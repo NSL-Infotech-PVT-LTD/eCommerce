@@ -6,6 +6,7 @@ import 'package:funfy/apis/introApi.dart';
 import 'package:funfy/ui/screens/auth/signin.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
+import 'package:funfy/utils/langauge_constant.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
 class Intro extends StatefulWidget {
@@ -111,9 +112,12 @@ class _IntroState extends State<Intro> {
       showNextButton: true,
       showDoneButton: true,
       //rtl: true, // Display as right-to-left
-      skip: const Text('Skip'),
+      skip: Text("${getTranslated(context, "Skip")}"),
       next: const Icon(Icons.arrow_forward),
-      done: const Text('Done', style: TextStyle(fontWeight: FontWeight.w600)),
+      done: Text(
+          "${getTranslated(context, "Done")}",
+          //'Done',
+          style: TextStyle(fontWeight: FontWeight.w600)),
       curve: Curves.fastLinearToSlowEaseIn,
       controlsMargin: const EdgeInsets.all(16),
       controlsPadding: kIsWeb
@@ -144,7 +148,10 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Home')),
+      appBar: AppBar(title: Text(
+          "${getTranslated(context, "Home")}",
+          //'Home'
+      )),
       body: const Center(child: Text("This is the screen after Introduction")),
     );
   }

@@ -12,6 +12,7 @@ import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
+import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -204,7 +205,8 @@ class _SignUpState extends State<SignUp> {
                 ),
                 Container(
                   child: Text(
-                    titletext.toString(),
+                    "${getTranslated(context, "titletext")}",
+                    // titletext.toString(),
                     style: TextStyle(
                       fontFamily: Fonts.dmSansBold,
                       fontSize: size.width * 0.05,
@@ -247,7 +249,8 @@ class _SignUpState extends State<SignUp> {
                     // color: AppColors.siginbackgrond,
                   ),
                   title: Text(
-                    Strings.male,
+                    "${getTranslated(context, "male")}",
+                    // Strings.male,
                     style: TextStyle(
                         fontFamily: Fonts.dmSansBold,
                         fontSize: size.width * 0.042),
@@ -257,14 +260,17 @@ class _SignUpState extends State<SignUp> {
                 ListTile(
                   onTap: () {
                     setState(() {
-                      gender = Strings.female;
+                      gender = "${getTranslated(context, "female")}";//Strings.female;
                       _genderController.text = gender;
                     });
                     Navigator.of(context).pop();
                   },
                   // leading: Icon(Icons.female),
                   leading: Icon(Icons.error),
-                  title: Text(Strings.female,
+                  title: Text(
+                      "${getTranslated(context, "female")}",
+                      // Strings.female,
+
                       style: TextStyle(
                           fontFamily: Fonts.dmSansBold,
                           fontSize: size.width * 0.042)),
@@ -280,7 +286,10 @@ class _SignUpState extends State<SignUp> {
                   },
                   // leading: Icon(Icons.female),
                   leading: Icon(Icons.error),
-                  title: Text(Strings.other,
+                  title: Text(
+                      "${getTranslated(context, "other")}",
+                      // Strings.other,
+
                       style: TextStyle(
                           fontFamily: Fonts.dmSansBold,
                           fontSize: size.width * 0.042)),
@@ -364,7 +373,8 @@ class _SignUpState extends State<SignUp> {
                     height: size.height * 0.02,
                   ),
                   Text(
-                    Strings.alreadyhaveaccount,
+                    "${getTranslated(context, "alreadyhaveaccount")}",
+                    // Strings.alreadyhaveaccount,
                     style: TextStyle(
                       fontSize: size.width * 0.035,
                       fontFamily: Fonts.dmSansRegular,
@@ -380,7 +390,8 @@ class _SignUpState extends State<SignUp> {
                       Navigator.of(context).pop();
                     },
                     child: Text(
-                      Strings.backtoSignin,
+                      "${getTranslated(context, "backtoSignin")}",
+                      // Strings.backtoSignin,
                       style: TextStyle(
                           decoration: TextDecoration.underline,
                           fontFamily: Fonts.dmSansBold,
@@ -401,7 +412,8 @@ class _SignUpState extends State<SignUp> {
                     // title
 
                     Text(
-                      Strings.signup,
+                      "${getTranslated(context, "signup")}",
+                      // Strings.signup,
                       style: TextStyle(
                           fontSize: size.width * 0.088,
                           fontFamily: Fonts.abrilFatface,
@@ -417,7 +429,8 @@ class _SignUpState extends State<SignUp> {
                     Row(
                       children: [
                         Text(
-                          Strings.quicklyOnboardto,
+                          "${getTranslated(context, "quicklyOnboardto")}",
+                          // Strings.quicklyOnboardto,
                           style: TextStyle(
                               fontSize: size.width * 0.045,
                               color: AppColors.descriptionfirst),
@@ -426,7 +439,8 @@ class _SignUpState extends State<SignUp> {
                           width: size.width * 0.015,
                         ),
                         Text(
-                          Strings.funfypartyApp,
+                          "${getTranslated(context, "funfypartyApp")}",
+                          // Strings.funfypartyApp,
                           style: TextStyle(
                               fontSize: size.width * 0.045,
                               color: Colors.white),
@@ -478,7 +492,8 @@ class _SignUpState extends State<SignUp> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                Strings.password,
+                                "${getTranslated(context, "password")}",
+                                // Strings.password,
                                 style: TextStyle(
                                     fontFamily: Fonts.dmSansMedium,
                                     fontSize: size.width * 0.04,
@@ -591,6 +606,7 @@ class _SignUpState extends State<SignUp> {
                                     EdgeInsets.only(top: size.height * 0.01),
                                 alignment: Alignment.centerLeft,
                                 child: Text(
+
                                   _signupError.toString(),
                                   style: TextStyle(
                                       color: Colors.red,
@@ -607,7 +623,8 @@ class _SignUpState extends State<SignUp> {
                         Container(
                           // alignment: Alignment.center,
                           child: Text.rich(TextSpan(
-                              text: Strings.byContinuingYouAgreetoOur,
+
+                              text: "${getTranslated(context, "byContinuingYouAgreetoOur")}",// Strings.byContinuingYouAgreetoOur,
                               style: TextStyle(
                                   fontFamily: Fonts.dmSansMedium,
                                   color: AppColors.donthaveaccount,
@@ -615,7 +632,7 @@ class _SignUpState extends State<SignUp> {
                               children: <InlineSpan>[
                                 TextSpan(
                                   recognizer: _termsandConditions,
-                                  text: " ${Strings.termsOfService}",
+                                  text:"${getTranslated(context, "termsOfService")}",//"${Strings.termsOfService}",
                                   style: TextStyle(
                                       fontFamily: Fonts.dmSansBold,
                                       decoration: TextDecoration.underline,
@@ -623,14 +640,15 @@ class _SignUpState extends State<SignUp> {
                                       fontSize: size.width * 0.033),
                                 ),
                                 TextSpan(
-                                    text: " ${Strings.and}",
+                                    text: "${getTranslated(context, "and")}",//"${Strings.and}",
                                     style: TextStyle(
                                         fontFamily: Fonts.dmSansMedium,
                                         color: AppColors.donthaveaccount,
                                         fontSize: size.width * 0.04)),
                                 TextSpan(
                                   recognizer: _policy,
-                                  text: " ${Strings.privacypolicy}",
+                                  text:"${getTranslated(context, "privacypolicy")}",
+                                  // " ${Strings.privacypolicy}",
                                   style: TextStyle(
                                       fontFamily: Fonts.dmSansBold,
                                       decoration: TextDecoration.underline,
@@ -658,7 +676,8 @@ class _SignUpState extends State<SignUp> {
                               child: Align(
                                 alignment: Alignment.center,
                                 child: Text(
-                                  Strings.signup,
+                                  "${getTranslated(context, "signup")}",
+                                  // Strings.signup,
                                   style: TextStyle(
                                       fontFamily: Fonts.dmSansMedium,
                                       fontSize: size.width * 0.05,

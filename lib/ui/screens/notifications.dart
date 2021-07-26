@@ -3,6 +3,7 @@ import 'package:funfy/components/sizeclass/SizeConfig.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
+import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 
 class Notifications extends StatefulWidget {
@@ -25,7 +26,8 @@ class _NotificationsState extends State<Notifications> {
         centerTitle: true,
         backgroundColor: AppColors.blackBackground,
         title: Text(
-          Strings.notifications,
+          "${getTranslated(context, "notifications")}",
+          // Strings.notifications,
           style: TextStyle(
               color: AppColors.white,
               fontFamily: Fonts.dmSansMedium,
@@ -42,7 +44,8 @@ class _NotificationsState extends State<Notifications> {
                 top: size.height * 0.02,
                 bottom: size.height * 0.01),
             child: Text(
-              Strings.today,
+              "${getTranslated(context, "today")}",
+              // Strings.today,
               style: TextStyle(
                   color: AppColors.white,
                   fontFamily: Fonts.dmSansMedium,
@@ -69,7 +72,8 @@ class _NotificationsState extends State<Notifications> {
                 top: size.height * 0.02,
                 bottom: size.height * 0.01),
             child: Text(
-              Strings.earlier,
+              "${getTranslated(context, "earlier")}",
+              // Strings.earlier,
               style: TextStyle(
                   color: AppColors.white,
                   fontFamily: Fonts.dmSansMedium,

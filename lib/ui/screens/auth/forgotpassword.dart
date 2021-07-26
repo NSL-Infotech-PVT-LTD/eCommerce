@@ -8,6 +8,7 @@ import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
+import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 
 class ForgotPassword extends StatefulWidget {
@@ -110,7 +111,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    Strings.forgotpassword,
+                    "${getTranslated(context, "forgotpassword")}",
+                    // Strings.forgotpassword,
                     style: TextStyle(
                         fontSize: size.width * 0.085,
                         fontFamily: Fonts.abrilFatface,
@@ -122,7 +124,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   Row(
                     children: [
                       Text(
-                        Strings.welcometo,
+                        "${getTranslated(context, "welcometo")}",
+                        // Strings.welcometo,
                         style: TextStyle(
                             // fontFamily: Fonts.dmSansMedium,
                             fontSize: size.width * 0.048,
@@ -132,7 +135,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         width: size.width * 0.02,
                       ),
                       Text(
-                        Strings.funfypartyapp,
+                        "${getTranslated(context, "funfypartyapp")}",
+                        // Strings.funfypartyapp,
                         style: TextStyle(
                             // fontFamily: Fonts.dmSansMedium,
                             fontSize: size.width * 0.048,
@@ -156,7 +160,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    Strings.email,
+                    "${getTranslated(context, "email")}",
+                    // Strings.email,
                     style: TextStyle(
                         fontFamily: Fonts.dmSansMedium,
                         fontSize: size.width * 0.04,
@@ -226,7 +231,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   child: Align(
                     alignment: Alignment.center,
                     child: Text(
-                      Strings.submit,
+                      "${getTranslated(context, "submit")}",
+                      // Strings.submit,
                       style: TextStyle(
                           fontFamily: Fonts.dmSansMedium,
                           fontSize: size.width * 0.05,
@@ -245,7 +251,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    Strings.rememberyourpassword,
+                    "${getTranslated(context, "rememberyourpassword")}",
+                    // Strings.rememberyourpassword,
                     style: TextStyle(
                         fontFamily: Fonts.dmSansMedium,
                         color: AppColors.donthaveaccount,
@@ -260,7 +267,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           MaterialPageRoute(builder: (context) => Signin()));
                     },
                     child: Text(
-                      Strings.backToSignIn,
+                      "${getTranslated(context, "backToSignIn")}",
+                      // Strings.backToSignIn,
                       style: TextStyle(
                           fontFamily: Fonts.dmSansBold,
                           decoration: TextDecoration.underline,

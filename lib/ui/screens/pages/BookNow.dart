@@ -291,7 +291,8 @@ class _BookNowState extends State<BookNow> {
                       ),
                     ),
                     Expanded(
-                      child: TabBarView(children: [
+                      child: TabBarView(children:
+                      [
                         //   Text(""),
                         Column(
                           children: [
@@ -331,7 +332,6 @@ class _BookNowState extends State<BookNow> {
                                 child: Column(
                                   children: [
                                     // about items
-
                                     Container(
                                       width: size.width * 0.75,
                                       child: Row(

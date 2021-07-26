@@ -6,6 +6,7 @@ import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
+import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 import 'package:funfy/utils/Constants.dart';
 
@@ -97,32 +98,43 @@ class _ProfilepageState extends State<Profilepage> {
 
                 centerlistItem(
                     context: context,
-                    title: Strings.orders,
+                    title:  "${getTranslated(context, "orders")}",
+                    //Strings.orders,
                     leftIconImage: Images.orderIIconpng),
 
                 centerlistItem(
                     context: context,
-                    title: Strings.deliveryAddress,
+                    title:
+                    "${getTranslated(context, "deliveryAddress")}",
+                  //  Strings.deliveryAddress,
                     leftIconImage: Images.locationspng),
 
                 centerlistItem(
                     context: context,
-                    title: Strings.paymentMethods,
+                    title:
+                    "${getTranslated(context, "paymentMethods")}",
+                //    Strings.paymentMethods,
                     leftIconImage: Images.paymentIconpng),
 
                 centerlistItem(
                     context: context,
-                    title: Strings.notification,
+                    title:
+                    "${getTranslated(context, "notification")}",
+                   // Strings.notification,
                     leftIconImage: Images.notificationspng),
 
                 centerlistItem(
                     context: context,
-                    title: Strings.help,
+                    title:
+                    "${getTranslated(context, "help")}",
+                  //  Strings.help,
                     leftIconImage: Images.helppng),
 
                 centerlistItem(
                     context: context,
-                    title: Strings.about,
+                    title:
+                    "${getTranslated(context, "about")}",
+                    //Strings.about,
                     leftIconImage: Images.aboutpng),
 
                 SizedBox(
@@ -153,7 +165,8 @@ class _ProfilepageState extends State<Profilepage> {
                                 width: size.width * 0.12,
                               ),
                               Text(
-                                Strings.logout,
+                                "${getTranslated(context, "logout")}",
+                             //   Strings.logout,
                                 style: TextStyle(
                                     color: AppColors.white,
                                     fontFamily: Fonts.dmSansBold,

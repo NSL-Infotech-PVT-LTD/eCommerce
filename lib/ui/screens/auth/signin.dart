@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:funfy/apis/signinApi.dart';
 import 'package:funfy/components/inputvalid.dart';
+import 'package:funfy/components/navigation.dart';
 import 'package:funfy/ui/screens/auth/forgotpassword.dart';
 import 'package:funfy/ui/screens/auth/signup.dart';
 import 'package:funfy/ui/screens/home.dart';
+import 'package:funfy/ui/screens/pages/languageScreen.dart';
 import 'package:funfy/ui/widgets/inputtype.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
+import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -47,13 +51,13 @@ class _SigninState extends State<Signin> {
       _passwordError = "";
       _credentialsError = false;
       if (_emailController.text == "") {
-        _emailError = Strings.pleaseEnterYourEmail;
+        _emailError = "${getTranslated(context, "pleaseEnterYourEmail")}"; // Strings.pleaseEnterYourEmail;
       } else if (emailvalid(_emailController.text) == false) {
-        _emailError = Strings.pleaseEnterValidEmail;
+        _emailError = "${getTranslated(context, "pleaseEnterValidEmail")}"; //Strings.pleaseEnterValidEmail;
       } else if (_passwordController.text == "") {
-        _passwordError = Strings.pleaseEnterYourpassword;
+        _passwordError ="${getTranslated(context, "pleaseEnterYourpassword")}"; // Strings.pleaseEnterYourpassword;
       } else if (_passwordController.text.length < 6) {
-        _passwordError = Strings.pleaseEnterValidpassword;
+        _passwordError = "${getTranslated(context, "pleaseEnterValidpassword")}" ;//Strings.pleaseEnterValidpassword;
       } else {
         _SigninUser();
       }
@@ -248,7 +252,8 @@ class _SigninState extends State<Signin> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              Strings.pleaseEnterYourEmailToSignin,
+                              "${getTranslated(context, "pleaseEnterYourEmailToSignin")}",
+                             // Strings.pleaseEnterYourEmailToSignin,
                               style: TextStyle(
                                   fontSize: size.width * 0.045,
                                   fontFamily: Fonts.dmSansMedium),
@@ -260,8 +265,8 @@ class _SigninState extends State<Signin> {
                                 context: context,
                                 controller: facebookEmailController,
                                 obscureTextBool: false,
-                                titletxt: Strings.email,
-                                hinttxt: Strings.emailHint,
+                                titletxt:"${getTranslated(context, "email")}",// Strings.email,
+                                hinttxt:"${getTranslated(context, "emailHint")}",// Strings.emailHint,
                                 inputError: facebookEmailError,
                                 ontapFun: null,
                                 height: size.height * 0.06,
@@ -276,13 +281,13 @@ class _SigninState extends State<Signin> {
                                 setState(() {
                                   if (facebookEmailController.text == "") {
                                     facebookEmailError =
-                                        Strings.pleaseEnterYourEmail;
+                                    "${getTranslated(context, "pleaseEnterYourEmail")}";//  Strings.pleaseEnterYourEmail;
                                   } else if (emailvalid(
                                           facebookEmailController.text) ==
                                       false) {
                                     print("email is not valid");
                                     facebookEmailError =
-                                        Strings.pleaseEnterValidEmail;
+                                    "${getTranslated(context, "pleaseEnterValidEmail")}";//    Strings.pleaseEnterValidEmail;
                                   } else {
                                     print(
                                         "email is ok ${facebookEmailController.text}");
@@ -310,7 +315,8 @@ class _SigninState extends State<Signin> {
                                   child: Align(
                                     alignment: Alignment.center,
                                     child: Text(
-                                      Strings.signin,
+                                      "${getTranslated(context, "signin")}",
+                                     // Strings.signin,
                                       style: TextStyle(
                                           fontFamily: Fonts.dmSansBold,
                                           fontSize: size.width * 0.045,
@@ -443,11 +449,25 @@ class _SigninState extends State<Signin> {
 
                     // app logo
 
-                    SafeArea(
-                      child: Container(
-                        height: size.height * 0.16,
-                        child: Image.asset(Images.appLogo),
-                      ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          height: size.height * 0.16,
+                          child: Image.asset(Images.appLogo),
+                        ),
+                        Spacer(),
+                        InkWell(
+                          onTap: (){
+                            navigatorPushFun(context, TranslationPage());
+                          },
+                          child: Container(
+                            padding: EdgeInsets.fromLTRB(size.height * 0.04,0.0,size.height * 0.04,size.height * 0.04,),
+                            height: size.height * 0.10,
+                            child: SvgPicture.asset("assets/pngicons/Translationicon.svg"),
+                          ),
+                        ),
+                      ],
                     ),
 
                     SizedBox(
@@ -463,7 +483,8 @@ class _SigninState extends State<Signin> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            Strings.signin,
+                            "${getTranslated(context, "signin")}",
+                          //  Strings.signin,
                             style: TextStyle(
                                 fontSize: size.width * 0.088,
                                 fontFamily: Fonts.abrilFatface,
@@ -475,7 +496,8 @@ class _SigninState extends State<Signin> {
                           Row(
                             children: [
                               Text(
-                                Strings.welcometo,
+                                "${getTranslated(context, "welcometo")}",
+                               // Strings.welcometo,
                                 style: TextStyle(
                                     // fontFamily: Fonts.dmSansMedium,
                                     fontSize: size.width * 0.048,
@@ -485,7 +507,8 @@ class _SigninState extends State<Signin> {
                                 width: size.width * 0.02,
                               ),
                               Text(
-                                Strings.funfypartyapp,
+                                "${getTranslated(context, "funfypartyapp")}",
+                                // Strings.funfypartyapp,
                                 style: TextStyle(
                                     // fontFamily: Fonts.dmSansMedium,
                                     fontSize: size.width * 0.048,
@@ -505,7 +528,7 @@ class _SigninState extends State<Signin> {
 
                     socialSigninButton(
                         context: context,
-                        title: Strings.signinwithfacebook,
+                        title: "${getTranslated(context, "signinwithfacebook")}", //Strings.signinwithfacebook,
                         iconImage: Images.fbIcon,
                         func: _facebookSignin),
 
@@ -516,7 +539,7 @@ class _SigninState extends State<Signin> {
                     // Google signup
                     socialSigninButton(
                         context: context,
-                        title: Strings.signinwithgoogle,
+                        title:"${getTranslated(context, "signinwithgoogle")}", // Strings.signinwithgoogle,
                         iconImage: Images.googleIconActPng,
                         func: _googleSignin),
 
@@ -529,7 +552,7 @@ class _SigninState extends State<Signin> {
                     Platform.isIOS
                         ? socialSigninButton(
                             context: context,
-                            title: Strings.signinwithApple,
+                            title:"${getTranslated(context, "signinwithApple")}",// Strings.signinwithApple,
                             iconImage: Images.appleIcon,
                             func: () {})
                         : SizedBox(),
@@ -578,7 +601,8 @@ class _SigninState extends State<Signin> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            Strings.email,
+                            "${getTranslated(context, "email")}",
+                            // Strings.email,
                             style: TextStyle(
                                 fontFamily: Fonts.dmSansMedium,
                                 fontSize: size.width * 0.04,
@@ -607,7 +631,7 @@ class _SigninState extends State<Signin> {
                                       keyboardType: TextInputType.emailAddress,
                                       cursorColor: AppColors.white,
                                       decoration: InputDecoration(
-                                        hintText: Strings.emailHint,
+                                        hintText: "${getTranslated(context, "emailHint")}", //Strings.emailHint,
                                         border: InputBorder.none,
                                         // contentPadding: EdgeInsets.only(
                                         //     left: size.width * 0.04,
@@ -654,7 +678,8 @@ class _SigninState extends State<Signin> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            Strings.password,
+                            "${getTranslated(context, "password")}",
+                            // Strings.password,
                             style: TextStyle(
                                 fontFamily: Fonts.dmSansMedium,
                                 fontSize: size.width * 0.04,
@@ -686,7 +711,7 @@ class _SigninState extends State<Signin> {
                                           ),
                                           cursorColor: AppColors.white,
                                           decoration: InputDecoration(
-                                            hintText: Strings.passwordhint,
+                                            hintText: "${getTranslated(context, "passwordhint")}",//Strings.passwordhint,
                                             border: InputBorder.none,
                                             // contentPadding: EdgeInsets.only(
                                             //     left: size.width * 0.04,
@@ -745,7 +770,8 @@ class _SigninState extends State<Signin> {
                                           top: size.height * 0.01),
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                        Strings.CredentialsDoesnmatched,
+                                        "${getTranslated(context, "CredentialsDoesnmatched")}",
+                                        // Strings.CredentialsDoesnmatched,
                                         style: TextStyle(
                                             color: Colors.red,
                                             fontFamily: Fonts.dmSansMedium,
@@ -773,7 +799,8 @@ class _SigninState extends State<Signin> {
                               builder: (context) => ForgotPassword()));
                         },
                         child: Text(
-                          Strings.forgotPassword,
+                          "${getTranslated(context, "forgotPassword")}",
+                          // Strings.forgotPassword,
                           style: TextStyle(
                               fontFamily: Fonts.dmSansMedium,
                               fontSize: size.width * 0.035,
@@ -798,7 +825,8 @@ class _SigninState extends State<Signin> {
                           child: Align(
                             alignment: Alignment.center,
                             child: Text(
-                              Strings.signin,
+                              "${getTranslated(context, "signin")}",
+                              // Strings.signin,
                               style: TextStyle(
                                   fontFamily: Fonts.dmSansMedium,
                                   fontSize: size.width * 0.05,
@@ -817,7 +845,8 @@ class _SigninState extends State<Signin> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            Strings.donthaveAccount,
+                            "${getTranslated(context, "donthaveAccount")}",
+                            // Strings.donthaveAccount,
                             style: TextStyle(
                                 fontFamily: Fonts.dmSansRegular,
                                 color: AppColors.donthaveaccount,
@@ -833,7 +862,8 @@ class _SigninState extends State<Signin> {
                                   builder: (context) => SignUp()));
                             },
                             child: Text(
-                              Strings.signupUp,
+                              "${getTranslated(context, "signupUp")}",
+                              // Strings.signupUp,
                               style: TextStyle(
                                   fontFamily: Fonts.dmSansBold,
                                   decoration: TextDecoration.underline,
@@ -875,6 +905,7 @@ socialSigninButton({context, String? title, String? iconImage, func}) {
             child: Align(
               alignment: Alignment.center,
               child: Text(
+                // "${getTranslated(context, "title")}",
                 title.toString(),
                 style: TextStyle(
                   color: AppColors.fbappletitle,
@@ -884,8 +915,9 @@ socialSigninButton({context, String? title, String? iconImage, func}) {
                 ),
               ),
             )),
+
         Positioned(
-          left: size.width * 0.101,
+          left: size.width * 0.05,
           child: Container(
               width: size.width * 0.05,
               child: Image.asset(
