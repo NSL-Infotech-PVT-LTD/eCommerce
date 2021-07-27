@@ -23,9 +23,9 @@ String bannerImage =
     "https://png.pngtree.com/thumb_back/fw800/back_our/20190621/ourmid/pngtree-tmall-beer-festival-e-commerce-carnival-banner-image_193689.jpg";
 
 class BookNowBeta extends StatefulWidget {
-  // final Datum? fiestasModel;
+  final Datum? fiestasModel;
 
-  final fiestasModel;
+  // final fiestasModel;
 
   const BookNowBeta({Key? key, this.fiestasModel}) : super(key: key);
 
@@ -44,10 +44,11 @@ class _BookNowBetaState extends State<BookNowBeta> {
   // - + funtion
 
   addTicket({int? index, String? name, var count, var price, String? image}) {
-    print("add button press  $count");
-    print(count.runtimeType);
+    print("add button press  $count  $index");
+    print("price is here $price");
+    // print(UserData.ticketcartMap[index]["ticketPrice"].runtimeType);
 
-    print(UserData.ticketcartMap);
+    // print(UserData.ticketcartMap.toString());
 
     setState(() {
       if (UserData.ticketcartMap.containsKey(index)) {
@@ -57,8 +58,8 @@ class _BookNowBetaState extends State<BookNowBeta> {
             UserData.ticketcartMap[index]["ticketCount"] + 1;
 
         UserData.ticketcartMap[index]["ticketPrice"] =
-            UserData.ticketcartMap[index]["ticketCount"] *
-                UserData.tiketList[index!]["price"];
+            int.parse(UserData.ticketcartMap[index]["ticketCount"].toString()) *
+                int.parse(UserData.tiketList[index!]["price"].toString());
 
         totalTicket();
       } else {
@@ -167,6 +168,8 @@ class _BookNowBetaState extends State<BookNowBeta> {
   void initState() {
     // setFavorite bool
 
+    // print("here is data ${widget.fiestasModel.toJson().toString()}");
+
     setFavoriteBool();
 
     cardList = List<SlidingBannerProviderDetails>.generate(
@@ -182,11 +185,15 @@ class _BookNowBetaState extends State<BookNowBeta> {
   setPriceToList() {
     setState(() {
       UserData.tiketList[0]["price"] =
-          k_m_b_generator(int.parse('${widget.fiestasModel?.ticketPrice}'));
-      UserData.tiketList[1]["price"] = k_m_b_generator(
-          int.parse('${widget.fiestasModel?.ticketPriceStandard}'));
+          int.parse('${widget.fiestasModel?.ticketPrice}');
+      // k_m_b_generator(int.parse('${widget.fiestasModel?.ticketPrice}'));
+      UserData.tiketList[1]["price"] =
+          int.parse('${widget.fiestasModel?.ticketPriceStandard}');
+      // k_m_b_generator(
+      //     int.parse('${widget.fiestasModel?.ticketPriceStandard}'));
       UserData.tiketList[2]["price"] =
-          k_m_b_generator(int.parse('${widget.fiestasModel?.ticketPriceVip}'));
+          int.parse('${widget.fiestasModel?.ticketPriceVip}');
+      // k_m_b_generator(int.parse('${widget.fiestasModel?.ticketPriceVip}'));
     });
   }
 
@@ -209,14 +216,14 @@ class _BookNowBetaState extends State<BookNowBeta> {
 
     return SafeArea(
       child: Scaffold(
-          floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                setState(() {
-                  UserData.totalTicketNum = 0;
-                  UserData.ticketcartMap.clear();
-                });
-              },
-              child: Icon(Icons.add)),
+          // floatingActionButton: FloatingActionButton(
+          //     onPressed: () {
+          //       setState(() {
+          //         UserData.totalTicketNum = 0;
+          //         UserData.ticketcartMap.clear();
+          //       });
+          //     },
+          //     child: Icon(Icons.add)),
           backgroundColor: AppColors.homeBackground,
           body: Stack(
             children: [
@@ -598,9 +605,8 @@ class _BookNowBetaState extends State<BookNowBeta> {
                                                   .push(MaterialPageRoute(
                                                       builder: (context) =>
                                                           BuyNow(
-                                                              fiestasId: widget
-                                                                  .fiestasModel
-                                                                  ?.id)))
+                                                              fiestasM: widget
+                                                                  .fiestasModel)))
                                                   .then((value) {
                                                 setState(() {
                                                   totalTicket();
@@ -652,10 +658,14 @@ class _BookNowBetaState extends State<BookNowBeta> {
                                           text1: "$day",
                                           text2: "$month"),
                                       aboutItem(
-                                          context: context,
-                                          imageName: Images.aboutProfileSvg,
-                                          text1: "101",
-                                          text2: "Attendies"),
+                                        context: context,
+                                        imageName: Images.aboutProfileSvg,
+                                        // ${widget.fiestasModel.total_members}
+                                        text1:
+                                            "${widget.fiestasModel?.totalMembers}",
+                                        text2:
+                                            "${getTranslated(context, "attendies")}",
+                                      ),
                                       aboutItem(
                                           context: context,
                                           imageName: Images.aboutWatchSvg,

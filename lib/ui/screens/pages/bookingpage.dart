@@ -295,12 +295,20 @@ Widget fiestasOrdersItem({context, index, FiestasBookingList? model}) {
 
   return Container(
     // color: AppColors.brownLite,
-    color: HexColor("#38332f"),
+
     margin: EdgeInsets.symmetric(
         vertical: size.height * 0.01, horizontal: size.width * 0.03),
     padding: EdgeInsets.symmetric(
         vertical: size.height * 0.02, horizontal: size.width * 0.04),
     alignment: Alignment.topLeft,
+
+    decoration: BoxDecoration(
+        //  color: HexColor("#38332f"),
+        // color: Colors.blue,
+        image: DecorationImage(
+            image: AssetImage("assets/pngicons/fiestasBackground.png"),
+            fit: BoxFit.cover)),
+
     child: Column(
       // mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,

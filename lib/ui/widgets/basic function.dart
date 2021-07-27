@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/components/addProductFuctions.dart';
+import 'package:funfy/components/shortPrices.dart';
 import 'package:funfy/components/sizeclass/SizeConfig.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/strings.dart';
@@ -113,7 +114,9 @@ Widget ticket({context, index, mapdata, addFunc, removeFunc}) {
                       Column(
                         children: [
                           Text(
-                            Strings.euro + " " + "${mapdata["price"]}",
+                            Strings.euro +
+                                " " +
+                                "${k_m_b_generator(mapdata["price"])}",
                             style: TextStyle(
                                 color: AppColors.white,
                                 fontSize: 20,
@@ -176,7 +179,8 @@ Widget ticket({context, index, mapdata, addFunc, removeFunc}) {
                                       index: index,
                                       name: mapdata["name"],
                                       count: 1,
-                                      price: 100,
+                                      price: int.parse(
+                                          mapdata["price"].toString()),
                                       image: mapdata["image"]);
                                 },
                                 child: Container(

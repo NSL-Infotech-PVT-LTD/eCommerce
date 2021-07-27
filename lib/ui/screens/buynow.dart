@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:funfy/apis/bookingApi.dart';
 import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/components/navigation.dart';
+import 'package:funfy/models/fiestasmodel.dart';
 import 'package:funfy/ui/screens/CreditCardDetails.dart';
 import 'package:funfy/components/sizeclass/SizeConfig.dart';
 import 'package:funfy/ui/screens/bookingSuccess.dart';
@@ -19,9 +20,10 @@ import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 
 class BuyNow extends StatefulWidget {
-  final fiestasId;
+  final Datum? fiestasM;
 
-  const BuyNow({Key? key, this.fiestasId}) : super(key: key);
+  const BuyNow({Key? key, this.fiestasM}) : super(key: key);
+
   @override
   _BuyNowState createState() => _BuyNowState();
 }
@@ -111,7 +113,7 @@ class _BuyNowState extends State<BuyNow> {
         });
 
         await fiestasBooking(
-                id: widget.fiestasId.toString(),
+                id: widget.fiestasM?.id.toString(),
                 ticketcount: ticket,
                 standardticketcount: standard,
                 vipticketcount: vip)
@@ -201,8 +203,8 @@ class _BuyNowState extends State<BuyNow> {
                                       width: SizeConfig.screenWidth * 0.15,
                                       child: Center(
                                           child: Text(
-                                            "${getTranslated(context, "OPEN")}",
-                                     //   "OPEN",
+                                        "${getTranslated(context, "OPEN")}",
+                                        //   "OPEN",
                                         style: TextStyle(
                                           color: AppColors.white,
                                           fontFamily: "BabasNeue",
@@ -223,8 +225,9 @@ class _BuyNowState extends State<BuyNow> {
                                       height: SizeConfig.screenHeight * 0.03,
                                       width: SizeConfig.screenWidth * 0.15,
                                       child: Center(
-                                          child: Text("${getTranslated(context, "Club")}",
-                                    //    "Club",
+                                          child: Text(
+                                        "${getTranslated(context, "club")}",
+                                        //    "Club",
                                         style: TextStyle(
                                           color: AppColors.white,
                                           fontFamily: "DM Sans Medium",
@@ -243,7 +246,7 @@ class _BuyNowState extends State<BuyNow> {
 
                                   //   height: SizeConfig.screenHeight,
                                   child: Text(
-                                    "Teatro Barceló",
+                                    "${widget.fiestasM?.name}",
                                     style: TextStyle(
                                         fontSize: size.width * 0.08,
                                         fontFamily: "DM Sans Bold",
@@ -302,7 +305,8 @@ class _BuyNowState extends State<BuyNow> {
                             SizedBox(
                               width: SizeConfig.screenWidth * 0.003,
                             ),
-                            Text("${getTranslated(context, "yourCart")}",
+                            Text(
+                              "${getTranslated(context, "yourCart")}",
                               //Strings.yourCart,
                               style: TextStyle(
                                   color: AppColors.white,
@@ -347,7 +351,7 @@ class _BuyNowState extends State<BuyNow> {
                           child: ElevatedButton(
                             child: Text(
                               "${getTranslated(context, "proceedtopay")}",
-                        //      Strings.proceedtopay,
+                              //      Strings.proceedtopay,
                               style: TextStyle(
                                   color: AppColors.white,
                                   fontSize: size.width * 0.05,
@@ -375,7 +379,7 @@ class _BuyNowState extends State<BuyNow> {
                             ),
                             child: Text(
                               "${getTranslated(context, "thisisthefinalstepafteryoutouchingPayNowbuttonthepaymentwillbetransaction")}",
-                         //     Strings.thisisthefinalstepafteryoutouchingPayNowbuttonthepaymentwillbetransaction,
+                              //     Strings.thisisthefinalstepafteryoutouchingPayNowbuttonthepaymentwillbetransaction,
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   color: AppColors.descriptionfirst,
@@ -428,7 +432,7 @@ Widget cartItem(
         //  mainAxisSize: MainAxisSize.min,
         children: [
           SvgPicture.asset(
-            "assets/images/ticket.svg",
+            "$image",
             width: size.width * 0.1,
           ),
           SizedBox(

@@ -392,8 +392,8 @@ fiestasItemFav({context, int? index, FiestasFavouriteModel? model}) {
                   ),
                   InkWell(
                     onTap: () {
-                      navigatorPushFun(context,
-                          BookNowBeta(fiestasModel: data?.fiestaDetail!));
+                      // navigatorPushFun(context,
+                      //     BookNowBeta(fiestasModel: data?.fiestaDetail!));
                     },
                     child: roundedBoxR(
                         width: size.width * 0.23,

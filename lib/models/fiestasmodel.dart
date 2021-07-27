@@ -116,7 +116,7 @@ class Datum {
   int? id;
   String? name;
   int? clubId;
-  dynamic description;
+  String? description;
   String? timestamp;
   String? image;
   String? ticketPrice;

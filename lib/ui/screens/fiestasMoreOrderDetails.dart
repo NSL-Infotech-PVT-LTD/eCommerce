@@ -28,8 +28,6 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-
-    print("fdljlf ${widget.fiestaData?.toJson()}");
     DateTime? dateTime = DateTime.parse("${widget.fiestaData?.createdAt}");
 
     String date = DateFormat('dd MMM yyyy').format(dateTime);

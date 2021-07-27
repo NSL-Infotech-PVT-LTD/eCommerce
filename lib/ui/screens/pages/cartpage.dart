@@ -69,7 +69,7 @@ class _CartpageState extends State<Cartpage> {
                           ],
                         ),
                         SvgPicture.asset(
-                          Images.cartIconUnActSvg,
+                          "assets/svgicons/cartsvg.svg",
                           width: size.width * 0.07,
                         ),
                       ],

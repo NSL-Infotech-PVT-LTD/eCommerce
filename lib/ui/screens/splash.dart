@@ -21,12 +21,13 @@ class Splash extends StatefulWidget {
 }
 
 class _SplashState extends State<Splash> {
-  void changeLanguage() async{
-    dynamic value =  Constants.prefs?.getString(Strings.radioValue) ?? "en";
-    print("check value $value" );
+  void changeLanguage() async {
+    dynamic value = Constants.prefs?.getString(Strings.radioValue) ?? "en";
+    print("check value $value");
     Locale locale = await setLocale(value);
     MyApp.setLocale(context, locale);
   }
+
   @override
   void initState() {
     super.initState();
@@ -46,7 +47,7 @@ class _SplashState extends State<Splash> {
       // term();
       // policy();
 
-      if (introdata.length != 0 && introdata != []) {
+      if (introdata.length != 0) {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (context) => Constants.prefs?.getString("token") != null &&
                     Constants.prefs?.getString("token") != ""

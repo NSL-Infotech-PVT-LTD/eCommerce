@@ -101,6 +101,7 @@ flutter:
     - assets/svgicons/bookingunActive.svg
     - assets/images/pricebanner.svg
     - assets/svgicons/cartsvg.svg
+    - assets/svgicons/myCart.svg
     - assets/images/ticket.svg
     - assets/images/Rectangle.svg
     - assets/images/Rectangle84.svg
@@ -117,6 +118,7 @@ flutter:
     - assets/AuthenticationIcon/BG_2.png
     - assets/pngicons/googleIcon.png
     - assets/pngicons/aboutCalender.png
+    - assets/pngicons/fiestasBackground.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
