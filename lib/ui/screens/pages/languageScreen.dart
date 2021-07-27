@@ -1,22 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:funfy/apis/signinApi.dart';
-import 'package:funfy/components/inputvalid.dart';
-import 'package:funfy/ui/screens/auth/forgotpassword.dart';
-import 'package:funfy/ui/screens/auth/signup.dart';
-import 'package:funfy/ui/screens/home.dart';
-import 'package:funfy/ui/widgets/inputtype.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/Constants.dart';
-import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:io' show Platform;
 
 import '../../../main.dart';

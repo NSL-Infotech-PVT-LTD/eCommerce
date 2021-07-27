@@ -469,13 +469,10 @@ class _SigninState extends State<Signin> {
                         ),
                       ],
                     ),
-
                     SizedBox(
                       height: size.height * 0.03,
                     ),
-
                     // title
-
                     Container(
                       margin:
                           EdgeInsets.symmetric(horizontal: size.width * 0.07),

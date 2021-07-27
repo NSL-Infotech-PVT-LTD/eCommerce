@@ -437,7 +437,7 @@ class _BookNowBetaState extends State<BookNowBeta> {
                                       horizontal: size.width * 0.03,
                                       vertical: size.height * 0.01),
                                   child: Row(
-                                    children: [
+                                    children:[
                                       Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
