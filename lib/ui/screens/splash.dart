@@ -10,6 +10,10 @@ import 'package:funfy/ui/screens/intro.dart';
 import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/imagesIcons.dart';
+import 'package:funfy/utils/langauge_constant.dart';
+import 'package:funfy/utils/strings.dart';
+
+import '../../main.dart';
 
 class Splash extends StatefulWidget {
   @override
@@ -17,9 +21,17 @@ class Splash extends StatefulWidget {
 }
 
 class _SplashState extends State<Splash> {
+  void changeLanguage() async{
+    dynamic value =  Constants.prefs?.getString(Strings.radioValue) ?? "en";
+    print("check value $value" );
+    Locale locale = await setLocale(value);
+    MyApp.setLocale(context, locale);
+  }
   @override
   void initState() {
     super.initState();
+    changeLanguage();
+
     next();
   }
 

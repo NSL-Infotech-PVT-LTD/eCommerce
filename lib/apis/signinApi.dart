@@ -7,6 +7,7 @@ import 'package:funfy/models/googleSigninModel.dart';
 import 'package:funfy/models/userModel.dart';
 import 'package:funfy/ui/screens/auth/signin.dart';
 import 'package:funfy/utils/Constants.dart';
+import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 import 'package:funfy/utils/urls.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -136,8 +137,8 @@ saveDataInshareP(
 logout(context) {
   Dialogs.simpleAlertDialog(
       context: context,
-      title: Strings.alert,
-      content: Strings.areYousureWantToLogout,
+      title: "${getTranslated(context, "alert")}", // Strings.alert,
+      content: "${getTranslated(context, "areYousureWantToLogout")}",//Strings.areYousureWantToLogout,
       func: () {
         // token
         Constants.prefs?.setString("token", "");

@@ -8,6 +8,7 @@ import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
+import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
@@ -28,10 +29,10 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
 
-    DateTime? dateTime =
-        DateTime.parse("${widget.fiestaData?.fiestaDetail?.timestamp}");
+    print("fdljlf ${widget.fiestaData?.toJson()}");
+    DateTime? dateTime = DateTime.parse("${widget.fiestaData?.createdAt}");
 
-    String date = DateFormat('ddd MMM yyyy').format(dateTime);
+    String date = DateFormat('dd MMM yyyy').format(dateTime);
 
     String time = DateFormat('hh:mm a').format(dateTime);
 
@@ -44,7 +45,8 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
         centerTitle: true,
         elevation: 0,
         title: Text(
-          Strings.youreTicket,
+          "${getTranslated(context, "youreTicket")}",
+          //   Strings.youreTicket,
           style: TextStyle(
               fontFamily: Fonts.dmSansMedium, fontSize: size.width * 0.05),
         ),
@@ -84,7 +86,8 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                       alignment: Alignment.center,
                       height: 50,
                       child: Text(
-                        Strings.hyphens,
+                        "${getTranslated(context, "hyphens")}",
+                        //Strings.hyphens,
                         maxLines: 1,
                         overflow: TextOverflow.clip,
                         style: TextStyle(
@@ -300,7 +303,8 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                     radius: size.width * 0.02,
                     child: Center(
                         child: Text(
-                      Strings.seeClubProfile,
+                      "${getTranslated(context, "seeClubProfile")}",
+                      // Strings.seeClubProfile,
                       style: TextStyle(
                           color: AppColors.white,
                           fontFamily: Fonts.dmSansBold,

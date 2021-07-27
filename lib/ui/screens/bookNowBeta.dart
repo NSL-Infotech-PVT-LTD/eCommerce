@@ -5,12 +5,8 @@ import 'package:funfy/components/shortPrices.dart';
 import 'package:funfy/models/fiestasmodel.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:funfy/components/navigation.dart';
 import 'package:funfy/components/sizeclass/SizeConfig.dart';
-import 'package:funfy/models/fiestasmodel.dart';
 import 'package:funfy/ui/widgets/basic%20function.dart';
 import 'package:funfy/ui/widgets/rating.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
@@ -18,17 +14,18 @@ import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
+import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 import 'package:intl/intl.dart';
-import 'Your order Summery.dart';
-import 'bookNowBeta.dart';
 import 'buynow.dart';
 
 String bannerImage =
     "https://png.pngtree.com/thumb_back/fw800/back_our/20190621/ourmid/pngtree-tmall-beer-festival-e-commerce-carnival-banner-image_193689.jpg";
 
 class BookNowBeta extends StatefulWidget {
-  final Datum? fiestasModel;
+  // final Datum? fiestasModel;
+
+  final fiestasModel;
 
   const BookNowBeta({Key? key, this.fiestasModel}) : super(key: key);
 
@@ -46,12 +43,16 @@ class _BookNowBetaState extends State<BookNowBeta> {
 
   // - + funtion
 
-  addTicket({int? index, String? name, int? count, var price, String? image}) {
-    print("add button press");
+  addTicket({int? index, String? name, var count, var price, String? image}) {
+    print("add button press  $count");
+    print(count.runtimeType);
+
+    print(UserData.ticketcartMap);
 
     setState(() {
       if (UserData.ticketcartMap.containsKey(index)) {
         print("old add");
+        print(UserData.ticketcartMap);
         UserData.ticketcartMap[index]["ticketCount"] =
             UserData.ticketcartMap[index]["ticketCount"] + 1;
 
@@ -64,7 +65,7 @@ class _BookNowBetaState extends State<BookNowBeta> {
         print("new add $index");
         UserData.ticketcartMap[index] = {
           "ticketname": name,
-          "ticketCount": count,
+          "ticketCount": 1,
           "ticketPrice": price,
           "ticketimage": image
         };
@@ -208,6 +209,14 @@ class _BookNowBetaState extends State<BookNowBeta> {
 
     return SafeArea(
       child: Scaffold(
+          floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                setState(() {
+                  UserData.totalTicketNum = 0;
+                  UserData.ticketcartMap.clear();
+                });
+              },
+              child: Icon(Icons.add)),
           backgroundColor: AppColors.homeBackground,
           body: Stack(
             children: [
@@ -295,7 +304,8 @@ class _BookNowBetaState extends State<BookNowBeta> {
                                                 SizeConfig.screenWidth * 0.15,
                                             child: Center(
                                                 child: Text(
-                                              Strings.open,
+                                              "${getTranslated(context, "open")}",
+                                              // Strings.open,
                                               style: TextStyle(
                                                 color: AppColors.white,
                                                 fontFamily: "BabasNeue",
@@ -320,7 +330,8 @@ class _BookNowBetaState extends State<BookNowBeta> {
                                                 SizeConfig.screenWidth * 0.15,
                                             child: Center(
                                                 child: Text(
-                                              Strings.club,
+                                              "${getTranslated(context, "club")}",
+                                              // Strings.club,
                                               style: TextStyle(
                                                 color: AppColors.white,
                                                 fontFamily: "DM Sans Medium",
@@ -456,10 +467,16 @@ class _BookNowBetaState extends State<BookNowBeta> {
                               // unselectedLabelColor: Colors.grey,
                               tabs: [
                                 Tab(
-                                  icon: Text(Strings.booking),
+                                  icon: Text(
+                                    // Strings.booking
+                                    "${getTranslated(context, "booking")}",
+                                  ),
                                 ),
                                 Tab(
-                                  icon: Text(Strings.about),
+                                  icon: Text(
+                                    // Strings.about
+                                    "${getTranslated(context, "about")}",
+                                  ),
                                 ),
                               ],
                             ),
@@ -516,7 +533,8 @@ class _BookNowBetaState extends State<BookNowBeta> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                Strings.addtocart,
+                                                "${getTranslated(context, "addtocart")}",
+                                                // Strings.addtocart,
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
                                                     color: AppColors.brownlite,
@@ -542,7 +560,8 @@ class _BookNowBetaState extends State<BookNowBeta> {
                                                     Container(
                                                       // width: SizeConfig.screenWidth * 0.40,
                                                       child: Text(
-                                                        "${Strings.ticket} * ${UserData.totalTicketNum}",
+                                                        "${getTranslated(context, "ticket")} * ${UserData.totalTicketNum}",
+                                                        // "${Strings.ticket} * ${UserData.totalTicketNum}",
                                                         style: TextStyle(
                                                           color:
                                                               AppColors.white,
@@ -569,7 +588,8 @@ class _BookNowBetaState extends State<BookNowBeta> {
                                           Spacer(),
                                           ElevatedButton(
                                             child: Text(
-                                              Strings.buyNow,
+                                              "${getTranslated(context, "buyNow")}",
+                                              // Strings.buyNow,
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -663,7 +683,8 @@ class _BookNowBetaState extends State<BookNowBeta> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            Strings.description,
+                                            "${getTranslated(context, "description")}",
+                                            // Strings.description,
                                             style: TextStyle(
                                                 color: AppColors.white,
                                                 fontFamily: "Product",
@@ -674,7 +695,8 @@ class _BookNowBetaState extends State<BookNowBeta> {
                                               height: SizeConfig.screenHeight *
                                                   0.02),
                                           Text(
-                                              "${widget.fiestasModel?.description ?? Strings.lorem}",
+                                              // "${getTranslated(context, "lorem")}",
+                                              "${widget.fiestasModel?.description ?? getTranslated(context, "nodataFound")}",
                                               style: TextStyle(
                                                   fontFamily: "Product",
                                                   fontSize: 14,

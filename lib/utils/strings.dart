@@ -18,6 +18,8 @@ class Strings {
   static String quicklyOnboardto = "Quickly onboard to";
   static String funfypartyApp = "Funfy Party App";
   static String fullname = "Full Name";
+  static String ChooseLanguage = "Choose Language";
+  static String radioValue = "en";
   static String fullnamehint = "Enter your full name";
   static String dateofbirth = "Date of birth";
   static String dateofbirthhint = "Enter your Date of birth";
@@ -42,6 +44,10 @@ class Strings {
   static String pleaseEnterValidpassword = "Please enter valid password";
   static String wehavesentlinkonyouemail = "We have sent link on your email";
   static String pleaseEnterYourfullname = "Please enter your full name";
+  static String OPEN = "OPEN";
+  static String Qty = "Qty";
+  static String Home = "Home";
+  static String ExpireDate = "Expire Date";
   static String yourNameMustBeAbove3Characters =
       "Your name must be above 3 characters";
   static String yourPasswordMustBeAbove8Characters =
@@ -49,8 +55,12 @@ class Strings {
   static String pleaseEnterYourGender = "Choose your gender";
   static String pleaseEnterValidgender = "Please enter valid gender";
   static String male = "Male";
+  static String Swipetopay = "Swipe to pay";
   static String female = "Female";
+  static String Payment = "Payment";
   static String other = "Other";
+  static String Done = "Done";
+  static String Skip = "Skip";
   static String dobtypehint = "YYYY-MM-DD";
   static String Success = "Success";
   static String hello = "Hello,";
@@ -59,7 +69,7 @@ class Strings {
   static String club = "Club";
   static String specialEvent = "Special Events";
   static String pickfiestasday = "Pick Fiesta's day";
-  static String nearbyfiestas = "Nearby Fiestas";
+  static String nearbyfiestas = "Nearby Fiestassssssssss";
   static String seeall = "SEE ALL";
   static String startingfrom = "STARTING FROM";
   static String booknow = "Book Now";
@@ -115,12 +125,12 @@ class Strings {
 
   static String qty = "Qty";
   static String proceedtopay = "Proceed to pay";
+  static String Proceed = "Proceed";
   static String
       thisisthefinalstepafteryoutouchingPayNowbuttonthepaymentwillbetransaction =
       "This is the final step, after you touching Pay Now button, the payment will be transaction";
   static String mybookings = "My Bookings";
-  static String checkyourticketsyouboughtforFiestas =
-      "Check your tickets you bought for Fiestas";
+  static String checkyourticketsyouboughtforFiestas = "Check your tickets you bought for Fiestas";
   static String fiestasOrders = "Fiestas Orders";
   static String preFiestasOrders = "Pre-Fiestas Orders";
   static String moreDetails = "More details";
@@ -170,9 +180,17 @@ class Strings {
   static String alcohols = "alcohol";
   static String extrass = "extras";
   static String mixs = "mix";
+  static String PAID = "PAID";
+  static String OtherTaxes = "Other Taxes";
+  static String GrandTotal = "Grand Total";
+  static String DeliveryStatus = "Delivery Status";
+
   static String nodataFound = "No Data Found!";
   static String addtocart = "Added to cart";
   static String buyNow = "Buy Now";
+  static String YourOrderSummery = "Your Order Summery";
+  static String Paymentstatus = "Payment status";
+  static String PackLaHavana = "Pack La Havana";
   static String doYouWantTOExit = "Do you want to exit?";
   static String exit = "Exit";
   static String favourite = "Favourite";

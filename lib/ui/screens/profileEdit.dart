@@ -14,6 +14,7 @@ import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
+import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
@@ -57,9 +58,9 @@ class _EditProfileState extends State<EditProfile> {
       _genderError = "";
 // fullname
       if (_fullnameController.text == "") {
-        _fullnameError = Strings.pleaseEnterYourfullname;
+        _fullnameError =   "${getTranslated(context, "pleaseEnterYourfullname")}";//Strings.pleaseEnterYourfullname;
       } else if (_fullnameController.text.length < 3) {
-        _fullnameError = Strings.yourNameMustBeAbove3Characters;
+        _fullnameError ="${getTranslated(context, "yourNameMustBeAbove3Characters")}";// Strings.yourNameMustBeAbove3Characters;
       } else if (validateName(_fullnameController.text) != "") {
         _fullnameError = validateName(_fullnameController.text);
       }
@@ -67,14 +68,14 @@ class _EditProfileState extends State<EditProfile> {
       if (Constants.prefs?.getString("social").toString() == "false") {
 // dob
         if (_dobController.text == "") {
-          _dobError = Strings.dateofbirthhint;
+          _dobError = "${getTranslated(context, "dateofbirthhint")}";//Strings.dateofbirthhint;
         } else if (calculateAge(dobDateTime) != "") {
-          _dobError = Strings.agemustbe18;
+          _dobError = "${getTranslated(context, "agemustbe18")}"; //Strings.agemustbe18;
         }
 
 // gender
         if (_genderController.text == "") {
-          _genderError = Strings.pleaseEnterYourGender;
+          _genderError = "${getTranslated(context, "pleaseEnterYourGender")}"; //Strings.pleaseEnterYourGender;
         }
         if (_fullnameError == "" && _dobError == "" && _genderError == "") {
           _updateProfile();
@@ -203,7 +204,8 @@ class _EditProfileState extends State<EditProfile> {
                 ),
                 Container(
                   child: Text(
-                    titletext.toString(),
+                    "${getTranslated(context, "titletext")}",
+                    //titletext.toString(),
                     style: TextStyle(
                       fontFamily: Fonts.dmSansBold,
                       fontSize: size.width * 0.05,
@@ -235,7 +237,7 @@ class _EditProfileState extends State<EditProfile> {
                 ListTile(
                   onTap: () {
                     setState(() {
-                      gender = Strings.male;
+                      gender ="${getTranslated(context, "male")}";// Strings.male;
                       _genderController.text = gender;
                     });
                     Navigator.of(context).pop();
@@ -246,7 +248,8 @@ class _EditProfileState extends State<EditProfile> {
                     // color: AppColors.siginbackgrond,
                   ),
                   title: Text(
-                    Strings.male,
+                    "${getTranslated(context, "male")}",
+                    // Strings.male,
                     style: TextStyle(
                         fontFamily: Fonts.dmSansBold,
                         fontSize: size.width * 0.042),
@@ -256,14 +259,17 @@ class _EditProfileState extends State<EditProfile> {
                 ListTile(
                   onTap: () {
                     setState(() {
-                      gender = Strings.female;
+                      gender = "${getTranslated(context, "female")}"; //Strings.female;
                       _genderController.text = gender;
                     });
                     Navigator.of(context).pop();
                   },
                   // leading: Icon(Icons.female),
                   leading: Icon(Icons.female),
-                  title: Text(Strings.female,
+                  title:
+                  Text(
+                      //Strings.female,
+                      "${getTranslated(context, "female")}",
                       style: TextStyle(
                           fontFamily: Fonts.dmSansBold,
                           fontSize: size.width * 0.042)),
@@ -272,14 +278,17 @@ class _EditProfileState extends State<EditProfile> {
                 ListTile(
                   onTap: () {
                     setState(() {
-                      gender = Strings.other;
+                      gender = "${getTranslated(context, "other")}";
+                      // Strings.other;
                       _genderController.text = gender;
                     });
                     Navigator.of(context).pop();
                   },
                   leading: Icon(Icons.female),
                   // leading: Icon(Icons.error),
-                  title: Text(Strings.other,
+                  title: Text(
+                      "${getTranslated(context, "other")}",
+                      // Strings.other,
                       style: TextStyle(
                           fontFamily: Fonts.dmSansBold,
                           fontSize: size.width * 0.042)),
@@ -310,7 +319,9 @@ class _EditProfileState extends State<EditProfile> {
                   },
                   // leading: Icon(Icons.female),
                   leading: Icon(Icons.camera),
-                  title: Text(Strings.camera,
+                  title: Text(
+                      // Strings.camera
+                      "${getTranslated(context, "camera")}",
                       style: TextStyle(
                           fontFamily: Fonts.dmSansBold,
                           fontSize: size.width * 0.042)),
@@ -326,7 +337,8 @@ class _EditProfileState extends State<EditProfile> {
                     // color: AppColors.siginbackgrond,
                   ),
                   title: Text(
-                    Strings.gallery,
+                    "${getTranslated(context, "gallery")}",
+                    // Strings.gallery,
                     style: TextStyle(
                         fontFamily: Fonts.dmSansBold,
                         fontSize: size.width * 0.042),
@@ -369,7 +381,7 @@ class _EditProfileState extends State<EditProfile> {
     if (Constants.prefs?.getString('gender') != "null") {
       _genderController.text = "${Constants.prefs?.getString('gender')}";
     } else {
-      _genderController.text = Strings.genderHint;
+      _genderController.text = "${getTranslated(context, "genderHint")}"; //Strings.genderHint;
     }
 
     // print('this is date $dobDateTime');
@@ -437,7 +449,8 @@ class _EditProfileState extends State<EditProfile> {
 
                     Center(
                       child: Text(
-                        Strings.myprofile,
+                        "${getTranslated(context, "myprofile")}",
+                        // Strings.myprofile,
                         style: TextStyle(
                             fontSize: size.width * 0.088,
                             fontFamily: Fonts.abrilFatface,
@@ -504,8 +517,8 @@ class _EditProfileState extends State<EditProfile> {
                             context: context,
                             controller: _fullnameController,
                             obscureTextBool: false,
-                            titletxt: Strings.fullname,
-                            hinttxt: Strings.fullnamehint,
+                            titletxt:"${getTranslated(context, "fullname")}",// Strings.fullname,
+                            hinttxt:"${getTranslated(context, "fullnamehint")}", //Strings.fullnamehint,
                             inputError: _fullnameError,
                             readonly: false,
                             ontapFun: null),
@@ -514,8 +527,8 @@ class _EditProfileState extends State<EditProfile> {
                             context: context,
                             controller: _emailController,
                             obscureTextBool: false,
-                            titletxt: Strings.email,
-                            hinttxt: Strings.emailHint,
+                            titletxt:"${getTranslated(context, "email")}", // Strings.email,
+                            hinttxt:"${getTranslated(context, "emailHint")}",  // Strings.emailHint,
                             inputError: "",
                             ontapFun: null,
                             readonly: true),
@@ -574,8 +587,8 @@ class _EditProfileState extends State<EditProfile> {
                                 context: context,
                                 controller: _dobController,
                                 obscureTextBool: false,
-                                titletxt: Strings.dateofbirth,
-                                hinttxt: Strings.dobtypehint,
+                                titletxt:"${getTranslated(context, "dateofbirth")}", // Strings.dateofbirth,
+                                hinttxt:"${getTranslated(context, "dobtypehint")}",// Strings.dobtypehint,
                                 inputError: _dobError,
                                 ontapFun: selectDate,
                                 readonly: true)
@@ -585,8 +598,8 @@ class _EditProfileState extends State<EditProfile> {
                                 context: context,
                                 controller: _genderController,
                                 obscureTextBool: false,
-                                titletxt: Strings.gender,
-                                hinttxt: Strings.genderHint,
+                                titletxt:"${getTranslated(context, "gender")}",// Strings.gender,
+                                hinttxt: "${getTranslated(context, "genderHint")}", //Strings.genderHint,
                                 inputError: _genderError,
                                 ontapFun: _showBottomSheetgender,
                                 readonly: true)
@@ -598,7 +611,8 @@ class _EditProfileState extends State<EditProfile> {
                                     EdgeInsets.only(top: size.height * 0.01),
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                  _signupError.toString(),
+                                  "${getTranslated(context, "_signupError")}",
+                                  // _signupError.toString(),
                                   style: TextStyle(
                                       color: Colors.red,
                                       fontFamily: Fonts.dmSansMedium,
@@ -627,7 +641,8 @@ class _EditProfileState extends State<EditProfile> {
                               child: Align(
                                 alignment: Alignment.center,
                                 child: Text(
-                                  Strings.update,
+                                  "${getTranslated(context, "update")}",
+                                  // Strings.update,
                                   style: TextStyle(
                                       fontFamily: Fonts.dmSansMedium,
                                       fontSize: size.width * 0.05,

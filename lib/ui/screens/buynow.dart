@@ -15,6 +15,7 @@ import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
+import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 
 class BuyNow extends StatefulWidget {
@@ -200,7 +201,8 @@ class _BuyNowState extends State<BuyNow> {
                                       width: SizeConfig.screenWidth * 0.15,
                                       child: Center(
                                           child: Text(
-                                        "OPEN",
+                                            "${getTranslated(context, "OPEN")}",
+                                     //   "OPEN",
                                         style: TextStyle(
                                           color: AppColors.white,
                                           fontFamily: "BabasNeue",
@@ -221,8 +223,8 @@ class _BuyNowState extends State<BuyNow> {
                                       height: SizeConfig.screenHeight * 0.03,
                                       width: SizeConfig.screenWidth * 0.15,
                                       child: Center(
-                                          child: Text(
-                                        "Club",
+                                          child: Text("${getTranslated(context, "Club")}",
+                                    //    "Club",
                                         style: TextStyle(
                                           color: AppColors.white,
                                           fontFamily: "DM Sans Medium",
@@ -300,8 +302,8 @@ class _BuyNowState extends State<BuyNow> {
                             SizedBox(
                               width: SizeConfig.screenWidth * 0.003,
                             ),
-                            Text(
-                              Strings.yourCart,
+                            Text("${getTranslated(context, "yourCart")}",
+                              //Strings.yourCart,
                               style: TextStyle(
                                   color: AppColors.white,
                                   fontFamily: Fonts.dmSansMedium,
@@ -344,7 +346,8 @@ class _BuyNowState extends State<BuyNow> {
                           width: SizeConfig.screenWidth * 0.90,
                           child: ElevatedButton(
                             child: Text(
-                              Strings.proceedtopay,
+                              "${getTranslated(context, "proceedtopay")}",
+                        //      Strings.proceedtopay,
                               style: TextStyle(
                                   color: AppColors.white,
                                   fontSize: size.width * 0.05,
@@ -371,8 +374,8 @@ class _BuyNowState extends State<BuyNow> {
                               maxWidth: SizeConfig.screenWidth * 0.80,
                             ),
                             child: Text(
-                              Strings
-                                  .thisisthefinalstepafteryoutouchingPayNowbuttonthepaymentwillbetransaction,
+                              "${getTranslated(context, "thisisthefinalstepafteryoutouchingPayNowbuttonthepaymentwillbetransaction")}",
+                         //     Strings.thisisthefinalstepafteryoutouchingPayNowbuttonthepaymentwillbetransaction,
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   color: AppColors.descriptionfirst,

@@ -35,7 +35,7 @@ Future<Map> signApiCall(
   if (response["status"] == true && response["code"] == 201) {
     // Iterable userdata = response["data"];
 
-    Constants.prefs?.setString("token", response["data"]['token']);
+    // Constants.prefs?.setString("token", response["data"]['token']);
 
     // print(response["data"]);
 
@@ -57,26 +57,20 @@ Future<UpdateProfileDataModel?> updateProfile(
     {String? name, String? gender, File? imageFile, String? dob}) async {
   print("update profile");
   Map<String, String>? body;
-  
-  if(Constants.prefs?.getString("social") == "false"){
-   body = {
+
+  if (Constants.prefs?.getString("social") == "false") {
+    body = {
       "name": name!,
       "dob": dob.toString(),
       "gender": gender!,
-     "is_social": "0"
+      "is_social": "0"
     };
-
-
-  }else{
-    body = {
-      "name": name!,
-      "is_social": "1"
-
-    };
+  } else {
+    body = {"name": name!, "is_social": "1"};
   }
 
-
-  return await updateUserApi(auth: UserData.userToken, file: imageFile, params: body);
+  return await updateUserApi(
+      auth: UserData.userToken, file: imageFile, params: body);
 }
 
 Future<UpdateProfileDataModel?> updateUserApi(

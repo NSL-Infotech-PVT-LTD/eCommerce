@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="84.932" height="84.932" viewBox="0 0 84.932 84.932">
+  <g id="Translation-80_icon-icons.com_57255" transform="translate(-2 -2)">
+    <g id="Group_1693" data-name="Group 1693" transform="translate(2 2)">
+      <g id="Group_1691" data-name="Group 1691" transform="translate(0.559 0.559)">
+        <rect id="Rectangle_156" data-name="Rectangle 156" width="56.994" height="56.994" fill="#434343"/>
+      </g>
+      <g id="Group_1692" data-name="Group 1692">
+        <path id="Path_417" data-name="Path 417" d="M58.994,3.118V58.994H3.118V3.118H58.994M60.111,2H2V60.111H60.111V2Z" transform="translate(-2 -2)" fill="#f9efe5"/>
+      </g>
+    </g>
+    <g id="Group_1695" data-name="Group 1695" transform="translate(28.821 28.821)">
+      <path id="Path_418" data-name="Path 418" d="M26.5,83.494V55.228L55.228,26.5H83.494V83.494Z" transform="translate(-25.941 -25.941)" fill="#ff5349"/>
+      <g id="Group_1694" data-name="Group 1694">
+        <path id="Path_419" data-name="Path 419" d="M82.994,27.118V82.994H27.118V55.518l28.4-28.4H82.994M84.111,26H55.056L26,55.056V84.111H84.111V26Z" transform="translate(-26 -26)" fill="#bb221a"/>
+      </g>
+    </g>
+    <g id="Group_1696" data-name="Group 1696" transform="translate(50.452 62.346)">
+      <rect id="Rectangle_157" data-name="Rectangle 157" width="16.763" height="6.705" fill="#fff"/>
+    </g>
+    <g id="Group_1697" data-name="Group 1697" transform="translate(43.188 44.466)">
+      <path id="Path_420" data-name="Path 420" d="M58.87,40H50.4L38.857,71.291h7.432L54.359,45.97h.285l8.072,25.321h7.432Z" transform="translate(-38.857 -40)" fill="#fff"/>
+    </g>
+    <g id="Group_1698" data-name="Group 1698" transform="translate(14.292 12.058)">
+      <path id="Line_21" data-name="Line 21" d="M31.291,2.47H0V-2H31.291Z" transform="translate(0 8.705)" fill="#ffefbb"/>
+      <path id="Line_22" data-name="Line 22" d="M2.47,8.94H-2V0H2.47Z" transform="translate(15.41)" fill="#ffefbb"/>
+      <path id="Path_421" data-name="Path 421" d="M13,43.64V39.17c8.16,0,14.775-3.447,19.662-10.245a33.185,33.185,0,0,0,4.984-10.387L42,19.571a37.489,37.489,0,0,1-5.7,11.963,29.662,29.662,0,0,1-8.884,8.3A27.767,27.767,0,0,1,13,43.64Z" transform="translate(-13 -10.114)" fill="#ffefbb"/>
+      <path id="Path_422" data-name="Path 422" d="M37.309,38.544A23.565,23.565,0,0,1,28.06,36.62,29.279,29.279,0,0,1,21.2,32.464,31.888,31.888,0,0,1,15.354,26.4l1.84-1.269,1.837-1.273a27.989,27.989,0,0,0,5.072,5.2,21.026,21.026,0,0,0,13.207,5.013Z" transform="translate(-12.723 -9.488)" fill="#ffefbb"/>
+    </g>
+  </g>
+</svg>

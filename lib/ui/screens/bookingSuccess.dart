@@ -5,6 +5,7 @@ import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
+import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 
 class BookingSuccess extends StatefulWidget {
@@ -30,7 +31,8 @@ class _BookingSuccessState extends State<BookingSuccess> {
                 height: size.height * 0.17,
               ),
               Text(
-                Strings.bookingSuccessfull,
+                "${getTranslated(context, "bookingSuccessfull")}",
+              //  Strings.bookingSuccessfull,
                 style: TextStyle(
                     color: AppColors.white,
                     fontFamily: Fonts.dmSansBold,
@@ -62,7 +64,8 @@ class _BookingSuccessState extends State<BookingSuccess> {
                     radius: size.width * 0.007,
                     child: Align(
                       child: Text(
-                        Strings.seeReceipt,
+                        "${getTranslated(context, "seeReceipt")}",
+                     //   Strings.seeReceipt,
                         style: TextStyle(
                             color: AppColors.white,
                             fontFamily: Fonts.dmSansBold,
@@ -81,7 +84,10 @@ class _BookingSuccessState extends State<BookingSuccess> {
                           builder: (BuildContext context) => Home()),
                       (route) => false);
                 },
-                child: Text(Strings.backtoHome,
+                child: Text
+                  (
+                    "${getTranslated(context, "backtoHome")}",
+                   // Strings.backtoHome,
                     style: TextStyle(
                         color: AppColors.white,
                         fontFamily: Fonts.dmSansRegular,

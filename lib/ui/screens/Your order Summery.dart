@@ -9,6 +9,7 @@ import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
+import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 
 class YourOrderSum extends StatefulWidget {
@@ -39,7 +40,8 @@ class _YourOrderSumState extends State<YourOrderSum> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      Strings.doYouLikeOurService,
+                      "${getTranslated(context, "doYouLikeOurService")}",
+                      // Strings.doYouLikeOurService,
                       style: TextStyle(
                           color: AppColors.white,
                           fontFamily: Fonts.dmSansMedium,
@@ -83,7 +85,8 @@ class _YourOrderSumState extends State<YourOrderSum> {
               backgroundColor: AppColors.siginbackgrond,
               child: Center(
                 child: Text(
-                  Strings.submitReview,
+                  "${getTranslated(context, "submitReview")}",
+                  // Strings.submitReview,
                   style: TextStyle(
                       fontFamily: Fonts.dmSansBold,
                       fontSize: size.width * 0.04,
@@ -103,7 +106,8 @@ class _YourOrderSumState extends State<YourOrderSum> {
           backgroundColor: AppColors.homeBackgroundLite,
           centerTitle: true,
           title: Text(
-            "Your Order Summery",
+            "${getTranslated(context, "YourOrderSummery")}",
+            // "Your Order Summery",
             style: TextStyle(
                 color: AppColors.white,
                 fontSize: size.width * 0.05,
@@ -142,7 +146,7 @@ class _YourOrderSumState extends State<YourOrderSum> {
                         width: SizeConfig.screenWidth * 0.03,
                       ),
                       Text(
-                        "Payment status",
+                        "${getTranslated(context, "Paymentstatus")}",
                         style: TextStyle(
                             color: AppColors.white,
                             fontSize: size.width * 0.05,
@@ -150,7 +154,7 @@ class _YourOrderSumState extends State<YourOrderSum> {
                       ),
                       Spacer(),
                       Text(
-                        "PAID",
+                        "${getTranslated(context, "PAID")}",
                         style: TextStyle(
                             color: AppColors.white,
                             fontSize: size.width * 0.05,
@@ -179,7 +183,8 @@ class _YourOrderSumState extends State<YourOrderSum> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Pack La Havana",
+                            "${getTranslated(context, "PackLaHavana")}",
+                            //"Pack La Havana",
                             style: TextStyle(
                                 color: AppColors.white,
                                 fontSize: size.width * 0.05,
@@ -195,7 +200,8 @@ class _YourOrderSumState extends State<YourOrderSum> {
                                   constraints: BoxConstraints(
                                       maxWidth: SizeConfig.screenWidth * 0.68),
                                   child: Text(
-                                    Strings.lorem,
+                                    "${getTranslated(context, "lorem")}",
+                                    // Strings.lorem,
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
@@ -261,7 +267,8 @@ class _YourOrderSumState extends State<YourOrderSum> {
                             child: Row(
                               children: [
                                 Text(
-                                  "Other Taxes",
+                                  "${getTranslated(context, "OtherTaxes")}",
+                               //   "Other Taxes",
                                   style: TextStyle(
                                       color: AppColors.white,
                                       fontSize: size.width * 0.05,
@@ -286,7 +293,8 @@ class _YourOrderSumState extends State<YourOrderSum> {
                             child: Row(
                               children: [
                                 Text(
-                                  "Grand Total",
+                                  "${getTranslated(context, "GrandTotal")}",
+                               //   "Grand Total",
                                   style: TextStyle(
                                       color: AppColors.white,
                                       fontSize: size.width * 0.06,
@@ -331,7 +339,8 @@ class _YourOrderSumState extends State<YourOrderSum> {
                             width: SizeConfig.screenWidth * 0.03,
                           ),
                           Text(
-                            "Delivery Status",
+                            "${getTranslated(context, "DeliveryStatus")}",
+                            //"Delivery Status",
                             style: TextStyle(
                                 color: AppColors.white,
                                 fontSize: size.width * 0.05,

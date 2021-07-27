@@ -14,6 +14,7 @@ import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
+import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:page_transition/page_transition.dart';
@@ -117,7 +118,8 @@ class _BookingPageState extends State<BookingPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        Strings.mybookings,
+                        "${getTranslated(context, "mybookings")}",
+                        // Strings.mybookings,
                         style: TextStyle(
                             fontFamily: Fonts.dmSansBold,
                             color: AppColors.white,
@@ -127,7 +129,8 @@ class _BookingPageState extends State<BookingPage> {
                         height: size.height * 0.01,
                       ),
                       Text(
-                        Strings.checkyourticketsyouboughtforFiestas,
+                        "${getTranslated(context, "checkyourticketsyouboughtforFiestas")}",
+                        // Strings.checkyourticketsyouboughtforFiestas,
                         style: TextStyle(
                             fontFamily: Fonts.dmSansRegular,
                             color: AppColors.white,
@@ -176,7 +179,8 @@ class _BookingPageState extends State<BookingPage> {
                                 child: Align(
                                   alignment: Alignment.center,
                                   child: Text(
-                                    Strings.fiestas,
+                                    "${getTranslated(context, "fiestas")}",
+                                    //Strings.fiestas,
                                     style: TextStyle(
                                         fontSize: size.width * 0.035,
                                         fontFamily: Fonts.dmSansMedium,
@@ -206,7 +210,8 @@ class _BookingPageState extends State<BookingPage> {
                                 child: Align(
                                   alignment: Alignment.center,
                                   child: Text(
-                                    Strings.preFiestas,
+                                    "${getTranslated(context, "preFiestas")}",
+                                    //  Strings.preFiestas,
                                     style: TextStyle(
                                         fontSize: size.width * 0.035,
                                         fontFamily: Fonts.dmSansMedium,
@@ -308,7 +313,8 @@ Widget fiestasOrdersItem({context, index, FiestasBookingList? model}) {
             child: Align(
               alignment: Alignment.center,
               child: Text(
-                Strings.open,
+                "${getTranslated(context, "open")}",
+                // Strings.open,
                 style: TextStyle(
                     fontFamily: Fonts.dmSansBold,
                     color: AppColors.white,
@@ -349,14 +355,16 @@ Widget fiestasOrdersItem({context, index, FiestasBookingList? model}) {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  Strings.ticket,
+                  "${getTranslated(context, "ticket")}",
+                  // Strings.ticket,
                   style: TextStyle(
                       fontFamily: Fonts.dmSansBold,
                       color: AppColors.white,
                       fontSize: size.width * 0.05),
                 ),
                 Text(
-                  Strings.qty + ":2",
+                  "${getTranslated(context, "qty")} :2",
+                  //   Strings.qty + ":2",
                   style: TextStyle(
                       fontFamily: Fonts.dmSansBold,
                       color: AppColors.white,
@@ -384,7 +392,8 @@ Widget fiestasOrdersItem({context, index, FiestasBookingList? model}) {
                   context, FiestasMoreOrderDetail(fiestaData: data));
             },
             child: Text(
-              Strings.moreDetails,
+              "${getTranslated(context, "moreDetails")}",
+              //Strings.moreDetails,
               style: TextStyle(
                   fontFamily: Fonts.dmSansBold,
                   color: AppColors.siginbackgrond,
@@ -467,7 +476,8 @@ Widget preFiestasOrderItem(
                             child: Align(
                               alignment: Alignment.center,
                               child: Text(
-                                Strings.orderDetails,
+                                "${getTranslated(context, "orderDetails")}",
+                                // Strings.orderDetails,
                                 style: TextStyle(
                                     color: AppColors.white,
                                     fontSize: size.width * 0.034,
@@ -486,7 +496,7 @@ Widget preFiestasOrderItem(
                 width: size.width * 0.25,
                 // decoration: BoxDecoration(),
                 child: Image.network(
-                  Images.beerNetwork,
+                  "${data?.image ?? Images.beerNetwork}",
 
                   // fit: BoxFit.fill,
                 ),

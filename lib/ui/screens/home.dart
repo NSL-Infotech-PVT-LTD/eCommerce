@@ -15,6 +15,7 @@ import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
+import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -63,17 +64,29 @@ class _HomeState extends State<Home> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: new Text(Strings.exit),
-          content: new Text(Strings.doYouWantTOExit),
+          title: new Text(
+              "${getTranslated(context, "exit")}",
+              //Strings.exit
+          ),
+          content: new Text(
+              "${getTranslated(context, "doYouWantTOExit")}",
+              //Strings.doYouWantTOExit
+          ),
           actions: <Widget>[
             TextButton(
-              child: new Text(Strings.no),
+              child: new Text(
+                  "${getTranslated(context, "no")}",
+                  //Strings.no
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: new Text(Strings.yes),
+              child: new Text(
+                  "${getTranslated(context, "yes")}",
+                  //Strings.yes
+              ),
               onPressed: () {
                 SystemNavigator.pop();
               },
@@ -113,14 +126,16 @@ class _HomeState extends State<Home> {
                   size: size, svgimage: Images.fiestasIconActSvg),
               icon: buttomIconImage(
                   size: size, svgimage: Images.fiestasIconUnActSvg),
-              label: Strings.bottomNavFiestas,
+              label:   "${getTranslated(context, "bottomNavFiestas")}",
+            //  Strings.bottomNavFiestas,
             ),
             BottomNavigationBarItem(
               activeIcon:
                   buttomIconImage(size: size, svgimage: Images.cartIconActSvg),
               icon: buttomIconImage(
                   size: size, svgimage: Images.cartIconUnActSvg),
-              label: Strings.bottomNavCart,
+              label:  "${getTranslated(context, "bottomNavCart")}",
+              //Strings.bottomNavCart,
             ),
             BottomNavigationBarItem(
               activeIcon: buttomIconImage(
@@ -129,14 +144,18 @@ class _HomeState extends State<Home> {
                   size: size,
                   // image: Images.bookingIconUnActPng
                   svgimage: Images.bookingIconUnActSvg),
-              label: Strings.bottomNavBookings,
+              label:
+              "${getTranslated(context, "bottomNavBookings")}",
+              //Strings.bottomNavBookings,
             ),
             BottomNavigationBarItem(
               activeIcon: buttomIconImage(
                   size: size, svgimage: Images.profileIconActSvg),
               icon:
                   buttomIconImage(size: size, svgimage: Images.profileUnActSvg),
-              label: Strings.bottomNavMyprofile,
+              label:
+              "${getTranslated(context, "bottomNavMyprofile")}",
+            //  Strings.bottomNavMyprofile,
             ),
           ],
         ),
