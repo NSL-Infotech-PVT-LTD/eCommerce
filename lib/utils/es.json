@@ -13,6 +13,7 @@
   "forgotPassword": "¿Olvidó la contraseña?",
   "donthaveAccount": "¿No tienes cuenta?",
   "signupUp": "Únete",
+  "language": "idioma",
   "alreadyhaveaccount": "¿Ya tienes cuenta?",
   "backtoSignin": "VOLVER PARA INICIAR SESIÓN",
   "signup": "Únete",
@@ -141,7 +142,7 @@
   "mix": "mezclar",
   "extras": "Extras",
   "thisisFinalstepafteryouTouchingpaynowbuttonthepaymentwillbetransation": "Este es el paso final, después de tocar el botón Pagar ahora, el pago será la transacción",
-  "Includesbottles": "Incluye botellas con mezcla, cervezas americanas clásicas, juegos y mucho más ",
+  "Includesbottles": "Incluye botellas con mezcla, cervezas americanas clásicas, juegos y mucho más",
   "notifications": "notificaciones",
   "today": "Hoy",
   "earlier": "anterior",
@@ -162,11 +163,14 @@
   "DeliveryStatus": "Estado de entrega",
   "PackLaHavana": "Pack La Habana",
   "YourOrderSummery": "Su pedido summery",
-  "doYouWantTOExit": "¿Quieres salir?",
-  "exit": "salida",
   "garyadams": "Gary F. Adams",
   "madridspain": "Madrid, Spain",
-  "lorem": "Lorem Ipsum is simply dummy text of the printing and typesetting standard. Lorem Ipsum has been the industry's standardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially"
-
+  "lorem": "Lorem Ipsum is simply dummy text of the printing and typesetting standard. Lorem Ipsum has been the industry's standardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially",
+  "doYouWantTOExit": "¿Quieres salir?",
+  "home": "Casa",
+  "success": "éxito",
+  "attendies": "Asiste",
+  "yourAccountisSuccessfullyregistered": "su cuenta está registrada con éxito",
+  "exit": "salida"
 }
 

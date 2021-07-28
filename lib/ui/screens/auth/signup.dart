@@ -438,12 +438,14 @@ class _SignUpState extends State<SignUp> {
                         SizedBox(
                           width: size.width * 0.015,
                         ),
-                        Text(
-                          "${getTranslated(context, "funfypartyApp")}",
-                          // Strings.funfypartyApp,
-                          style: TextStyle(
-                              fontSize: size.width * 0.045,
-                              color: Colors.white),
+                        Flexible(
+                          child: Text(
+                            "${getTranslated(context, "funfypartyApp")}",
+                            // Strings.funfypartyApp,
+                            style: TextStyle(
+                                fontSize: size.width * 0.045,
+                                color: Colors.white),
+                          ),
                         ),
                       ],
                     ),
@@ -462,8 +464,8 @@ class _SignUpState extends State<SignUp> {
                             context: context,
                             controller: _fullnameController,
                             obscureTextBool: false,
-                            titletxt: Strings.fullname,
-                            hinttxt: Strings.fullnamehint,
+                            titletxt: "${getTranslated(context, "fullname")}", //Strings.fullname,
+                            hinttxt:"${getTranslated(context, "fullnamehint")}",// Strings.fullnamehint,
                             inputError: _fullnameError,
                             readonly: false,
                             ontapFun: null),
@@ -471,8 +473,8 @@ class _SignUpState extends State<SignUp> {
                             context: context,
                             controller: _emailController,
                             obscureTextBool: false,
-                            titletxt: Strings.email,
-                            hinttxt: Strings.emailHint,
+                            titletxt:"${getTranslated(context, "email")}",// Strings.email,
+                            hinttxt:"${getTranslated(context, "emailHint")}",// Strings.emailHint,
                             inputError: _emailError,
                             ontapFun: null,
                             readonly: false),
@@ -524,7 +526,7 @@ class _SignUpState extends State<SignUp> {
                                               ),
                                               cursorColor: AppColors.white,
                                               decoration: InputDecoration(
-                                                hintText: Strings.passwordhint,
+                                                hintText: "${getTranslated(context, "passwordhint")}", //Strings.passwordhint,
                                                 border: InputBorder.none,
                                                 // contentPadding: EdgeInsets.only(
                                                 //     left: size.width * 0.04,
@@ -585,8 +587,8 @@ class _SignUpState extends State<SignUp> {
                             context: context,
                             controller: _dobController,
                             obscureTextBool: false,
-                            titletxt: Strings.dateofbirth,
-                            hinttxt: Strings.dobtypehint,
+                            titletxt:"${getTranslated(context, "dateofbirth")}",// Strings.dateofbirth,
+                            hinttxt:"${getTranslated(context, "dobtypehint")}",// Strings.dobtypehint,
                             inputError: _dobError,
                             ontapFun: selectDate,
                             readonly: true),
@@ -594,8 +596,8 @@ class _SignUpState extends State<SignUp> {
                             context: context,
                             controller: _genderController,
                             obscureTextBool: false,
-                            titletxt: Strings.gender,
-                            hinttxt: Strings.genderHint,
+                            titletxt:"${getTranslated(context, "gender")}",// Strings.gender,
+                            hinttxt:"${getTranslated(context, "genderHint")}",// Strings.genderHint,
                             inputError: _genderError,
                             ontapFun: _showBottomSheetgender,
                             readonly: true),

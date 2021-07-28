@@ -17,7 +17,7 @@ Future<Locale> setLocale(String languageCode) async {
 
 Future<Locale> getLocale() async {
   SharedPreferences _prefs = await SharedPreferences.getInstance();
-  String languageCode = _prefs.getString(LAGUAGE_CODE) ?? "es";
+  String languageCode = _prefs.getString(LAGUAGE_CODE) ?? "en";
   return _locale(languageCode);
 }
 
@@ -28,7 +28,7 @@ Locale _locale(String languageCode) {
     case Spain:
       return Locale(Spain, "ES");
     default:
-      return Locale(Spain, 'ES');
+      return Locale(ENGLISH, 'US');
   }
 }
 

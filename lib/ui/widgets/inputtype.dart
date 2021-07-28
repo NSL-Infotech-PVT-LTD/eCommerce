@@ -11,7 +11,8 @@ Widget inputs(
     String? hinttxt,
     String? inputError,
     readonly,
-    ontapFun}) {
+    ontapFun
+    }) {
   var size = MediaQuery.of(context).size;
 
   return Container(

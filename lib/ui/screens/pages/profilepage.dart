@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:funfy/apis/signinApi.dart';
+import 'package:funfy/components/navigation.dart';
 import 'package:funfy/ui/screens/profileEdit.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/Constants.dart';
@@ -9,6 +10,8 @@ import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 import 'package:funfy/utils/Constants.dart';
+
+import 'languageScreen.dart';
 
 class Profilepage extends StatefulWidget {
   Profilepage({Key? key}) : super(key: key);
@@ -108,6 +111,18 @@ class _ProfilepageState extends State<Profilepage> {
                     "${getTranslated(context, "deliveryAddress")}",
                   //  Strings.deliveryAddress,
                     leftIconImage: Images.locationspng),
+
+                InkWell(
+                  onTap: (){
+                    navigatorPushFun(context, TranslationPage(fromSplash: false));
+                  },
+                  child: centerlistItem(
+                      context: context,
+                      title:
+                      "${getTranslated(context, "language")}",
+                    //  Strings.deliveryAddress,
+                      leftIconImage: Images.locationspng),
+                ),
 
                 centerlistItem(
                     context: context,

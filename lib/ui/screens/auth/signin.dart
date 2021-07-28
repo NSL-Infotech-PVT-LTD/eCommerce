@@ -459,7 +459,7 @@ class _SigninState extends State<Signin> {
                         Spacer(),
                         InkWell(
                           onTap: (){
-                            navigatorPushFun(context, TranslationPage());
+                            navigatorPushFun(context, TranslationPage(fromSplash: false));
                           },
                           child: Container(
                             padding: EdgeInsets.fromLTRB(size.height * 0.04,0.0,size.height * 0.04,size.height * 0.04,),

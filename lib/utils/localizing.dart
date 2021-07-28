@@ -17,7 +17,7 @@ class MyLocalization{
 
   Future load() async{
 
-    print("dbjsgfjsgf${locale.languageCode}");
+    print("dbjsgfjsgf ${locale.languageCode}");
     String jsonStringValue = await rootBundle.loadString("lib/utils/${locale.languageCode}.json");
 
     Map<String,dynamic> mappedJson = json.decode(jsonStringValue);

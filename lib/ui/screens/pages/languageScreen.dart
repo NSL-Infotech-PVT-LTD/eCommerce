@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:funfy/apis/introApi.dart';
+import 'package:funfy/components/navigation.dart';
+import 'package:funfy/ui/screens/auth/signin.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/Constants.dart';
+import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
-import 'dart:io' show Platform;
+// import 'dart:io' show Platform;
 
 import '../../../main.dart';
+import '../home.dart';
+import '../intro.dart';
 
 class TranslationPage extends StatefulWidget {
-  const TranslationPage({Key? key}) : super(key: key);
+  final bool fromSplash;
+  const TranslationPage({Key? key, required this.fromSplash}) : super(key: key);
 
   @override
   _SigninState createState() => _SigninState();
@@ -21,8 +28,29 @@ enum SingingCharacter { English, Spanish }
 
 class _SigninState extends State<TranslationPage> {
 
+  next() async {
+    var net = await Internetcheck.check();
+    if (net != true) {
+      Internetcheck.showdialog(context: context);
+    } else {
+      var introdata = await getIntrodata();
+      if ( introdata.length != 0 && introdata != [] ) {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (context) => Constants.prefs?.getString("token") != null &&
+                Constants.prefs?.getString("token") != ""
+                ? Home()
+                : Intro()));
+      } else {
+        print("no intro data");
 
-
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (context) => Constants.prefs?.getString("token") != null &&
+                Constants.prefs?.getString("token") != ""
+                ? Home()
+                : Signin()));
+      }
+    }
+  }
 
   final _scaffoldKey = new GlobalKey<ScaffoldState>();
   TextEditingController _emailController = TextEditingController();
@@ -50,8 +78,8 @@ var newValue ;
   @override
   void initState() {
     var radioini = Constants.prefs!.getString(Strings.radioValue);
-    print(radioini);
-    _character  = radioini == "es" ? SingingCharacter.Spanish:SingingCharacter.English;
+    print("first language" + radioini.toString());
+    _character  = radioini == null?SingingCharacter.English:radioini == "en"?SingingCharacter.English:SingingCharacter.Spanish;
     super.initState();
   }
   @override
@@ -199,7 +227,12 @@ var newValue ;
                       child: GestureDetector(
                         onTap: () {
                           Constants.prefs?.setString(Strings.radioValue, newValue ?? "es");
-                          Navigator.pop(context);
+                         if(widget.fromSplash) {
+                           next();
+                           //  navigatorPushFun(context, TranslationPage(fromSplash: true));
+                         }else{
+                           Navigator.pop(context);
+                         }
                         },
                         child: roundedBox(
                             width: size.width * 0.78,

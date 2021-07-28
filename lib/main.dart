@@ -75,7 +75,7 @@ class _MyAppState extends State<MyApp> {
 
 @override
   void initState() {
- // getMe();
+ getMe();
   initializePlatformSpecifics();
   getMeLocal();
   var initialzationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -83,8 +83,8 @@ class _MyAppState extends State<MyApp> {
 
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
     // print('A new onMessageOpenedApp event was published!');
-    // RemoteNotification notification = message.notification;
-    // AndroidNotification android = message.notification?.android;
+    RemoteNotification? notification = message.notification;
+    AndroidNotification? android = message.notification?.android;
     // if (notification != null && android != null) {
     //   if (message.data["data_type"] != null && message.data["data_type"] == "Message") {
     //     print("issue 1");
@@ -124,16 +124,16 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
 
- //  getMe()async{
- //  //  RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
- //   // if (initialMessage!.data["data_type"] != null && initialMessage!.data["data_type"] == "Message") {
- // //     print("issue 3");
- //      // reciverName =  "${initialMessage.data["sender_name"]}";
- //      // image = "${initialMessage.data["profile_img"]}";
- //      // reciverId = "${initialMessage.data["target_id"]}";
- //      // navigatorKey.currentState.pushNamed('/notification');
- //    //}
- //  }
+  getMe()async{
+   RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+   // if (initialMessage!.data["data_type"] != null && initialMessage!.data["data_type"] == "Message") {
+ //     print("issue 3");
+      // reciverName =  "${initialMessage.data["sender_name"]}";
+      // image = "${initialMessage.data["profile_img"]}";
+      // reciverId = "${initialMessage.data["target_id"]}";
+      // navigatorKey.currentState.pushNamed('/notification');
+    //}
+  }
   initializePlatformSpecifics() {
     var initializationSettingsAndroid =
     AndroidInitializationSettings('@mipmap/ic_launcher');

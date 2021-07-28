@@ -141,6 +141,7 @@ class Strings {
       "You will enjoy an entrance to the club with two drinks.";
 
   static String standard = "Standard";
+  static String langugae = "Language";
   static String standardDescription =
       "Enjoy traditional alcohol brands at a cheaper price.";
 
