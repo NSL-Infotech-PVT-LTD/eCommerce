@@ -5,9 +5,9 @@ import 'package:funfy/components/navigation.dart';
 import 'package:funfy/components/shortPrices.dart';
 import 'package:funfy/models/favourite/fiestasFavouriteModel.dart';
 import 'package:funfy/models/favourite/preFiestasFavModel.dart';
+import 'package:funfy/models/fiestasmodel.dart';
 import 'package:funfy/ui/screens/bookNowBeta.dart';
 import 'package:funfy/ui/screens/preFistaOrderMix.dart';
-import 'package:funfy/ui/widgets/postsitems.dart';
 import 'package:funfy/ui/widgets/rating.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/InternetCheck.dart';
@@ -29,7 +29,7 @@ class _FavouriteState extends State<Favourite> {
   bool _loading = false;
   bool prifestasLoading = false;
 
-  FiestasFavouriteModel? fiestasFavModel = FiestasFavouriteModel();
+  FiestasModel? fiestasFavModel = FiestasModel();
   PrefiestasFavouriteModel? preFiestasFavModel = PrefiestasFavouriteModel();
 
   @override
@@ -249,17 +249,16 @@ class _FavouriteState extends State<Favourite> {
 
 // favorItem fiestas
 
-fiestasItemFav({context, int? index, FiestasFavouriteModel? model}) {
+fiestasItemFav({context, int? index, FiestasModel? model}) {
   var size = MediaQuery.of(context).size;
 
   var data = model?.data?.data?.elementAt(index!);
 
-  DateTime? date = DateTime.parse("${data?.fiestaDetail?.timestamp}");
+  DateTime? date = DateTime.parse("${data?.timestamp}");
 
   String month = DateFormat('MMM').format(date);
 
-  String price =
-      k_m_b_generator(int.parse("${data?.fiestaDetail?.ticketPrice}"));
+  String price = k_m_b_generator(int.parse("${data?.ticketPrice}"));
 
   return Container(
     margin: EdgeInsets.only(top: size.width * 0.04),
@@ -267,8 +266,7 @@ fiestasItemFav({context, int? index, FiestasFavouriteModel? model}) {
     height: size.height * 0.28,
     decoration: BoxDecoration(
         image: DecorationImage(
-            image: NetworkImage("${data?.fiestaDetail?.image}"),
-            fit: BoxFit.cover)),
+            image: NetworkImage("${data?.image}"), fit: BoxFit.cover)),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -323,7 +321,7 @@ fiestasItemFav({context, int? index, FiestasFavouriteModel? model}) {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "${data?.fiestaDetail?.name}",
+                    "${data?.name}",
                     style: TextStyle(
                         fontSize: size.width * 0.045,
                         fontFamily: Fonts.dmSansBold,
@@ -333,7 +331,7 @@ fiestasItemFav({context, int? index, FiestasFavouriteModel? model}) {
                     height: size.height * 0.004,
                   ),
                   Text(
-                    "${data?.fiestaDetail?.distanceMiles}",
+                    "${data?.distanceMiles}",
                     style: TextStyle(
                         fontSize: size.width * 0.03,
                         fontFamily: Fonts.dmSansMedium,
@@ -392,8 +390,8 @@ fiestasItemFav({context, int? index, FiestasFavouriteModel? model}) {
                   ),
                   InkWell(
                     onTap: () {
-                      // navigatorPushFun(context,
-                      //     BookNowBeta(fiestasModel: data?.fiestaDetail!));
+                      navigatorPushFun(
+                          context, BookNowBeta(fiestasModel: data));
                     },
                     child: roundedBoxR(
                         width: size.width * 0.23,
@@ -516,8 +514,7 @@ Widget preFiestasItem(
 
                       // description
                       Text(
-                        '',
-                        // "${data?.preFiestaDetail?}",
+                        "${data?.preFiestaDetail?.description}",
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -534,8 +531,15 @@ Widget preFiestasItem(
                       GestureDetector(
                         onTap: () {
                           // print(prefiestasdata?.id);
-                          // navigatorPushFun(context,
-                          //     PreFistaOrder(prefiestasModel: prefiestasdata));
+                          navigatorPushFun(
+                              context,
+                              PreFistaOrder(prefiestasdataMap: {
+                                'id': data?.preFiestaDetail?.id,
+                                "name": data?.preFiestaDetail?.name,
+                                "favourite": data?.preFiestaDetail?.isFavourite,
+                                "description":
+                                    data?.preFiestaDetail?.description
+                              }));
                         },
                         child: roundedBoxR(
                             radius: size.width * 0.005,

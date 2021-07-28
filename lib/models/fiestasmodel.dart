@@ -97,6 +97,7 @@ class Datum {
   Datum({
     this.id,
     this.name,
+    this.type,
     this.clubId,
     this.description,
     this.timestamp,
@@ -110,11 +111,12 @@ class Datum {
     this.distanceKm,
     this.distanceMiles,
     this.isFavourite,
-    this.clubDetail,
+    // this.clubDetail,
   });
 
   int? id;
   String? name;
+  String? type;
   int? clubId;
   String? description;
   String? timestamp;
@@ -128,11 +130,12 @@ class Datum {
   String? distanceKm;
   String? distanceMiles;
   bool? isFavourite;
-  ClubDetail? clubDetail;
+  // ClubDetail? clubDetail;
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
         id: json["id"],
         name: json["name"],
+        type: json["type"],
         clubId: json["club_id"],
         description: json["description"],
         timestamp: json["timestamp"],
@@ -146,12 +149,13 @@ class Datum {
         distanceKm: json["distance_km"],
         distanceMiles: json["distance_miles"],
         isFavourite: json["is_favourite"],
-        clubDetail: ClubDetail.fromJson(json["club_detail"]),
+        // clubDetail: ClubDetail.fromJson(json["club_detail"]),
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
+        "type": type,
         "club_id": clubId,
         "description": description,
         "timestamp": timestamp,
@@ -165,7 +169,7 @@ class Datum {
         "distance_km": distanceKm,
         "distance_miles": distanceMiles,
         "is_favourite": isFavourite,
-        "club_detail": clubDetail?.toJson(),
+        // "club_detail": clubDetail?.toJson(),
       };
 }
 

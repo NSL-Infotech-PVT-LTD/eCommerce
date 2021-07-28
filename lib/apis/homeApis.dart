@@ -74,7 +74,7 @@ Future fiestasAddfavouriteApi({
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
   };
-  Map body = {"fiesta_id": id};
+  Map body = {"club_id": id};
 
   var res = await http.post(Uri.parse(Urls.fiestasAddfavoriteUrl),
       body: body, headers: headers);
@@ -108,7 +108,7 @@ Future prefiestasAddfavouriteApi({
 
 // favourite list fiestas
 
-Future<FiestasFavouriteModel?> fiestasFavouriteListApi() async {
+Future<FiestasModel?> fiestasFavouriteListApi() async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
   };
@@ -118,7 +118,7 @@ Future<FiestasFavouriteModel?> fiestasFavouriteListApi() async {
 
   print(res.body);
 
-  FiestasFavouriteModel response = fiestasFavouriteModelFromJson(res.body);
+  FiestasModel response = fiestasModelFromJson(res.body);
 
   if (res.statusCode == 200) {
     return response;

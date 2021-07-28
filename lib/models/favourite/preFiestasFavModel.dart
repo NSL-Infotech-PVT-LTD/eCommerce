@@ -127,7 +127,13 @@ class PreFiestaDetail {
   PreFiestaDetail({
     this.id,
     this.name,
+    this.description,
+    this.parentId,
+    this.categories,
     this.image,
+    this.price,
+    this.quantity,
+    this.status,
     this.isInMyCart,
     this.isInMyCartQuantity,
     this.isFavourite,
@@ -135,7 +141,13 @@ class PreFiestaDetail {
 
   int? id;
   String? name;
+  String? description;
+  int? parentId;
+  dynamic categories;
   String? image;
+  String? price;
+  int? quantity;
+  String? status;
   bool? isInMyCart;
   int? isInMyCartQuantity;
   bool? isFavourite;
@@ -144,7 +156,13 @@ class PreFiestaDetail {
       PreFiestaDetail(
         id: json["id"],
         name: json["name"],
+        description: json["description"],
+        parentId: json["parent_id"],
+        categories: json["categories"],
         image: json["image"],
+        price: json["price"],
+        quantity: json["quantity"],
+        status: json["status"],
         isInMyCart: json["is_in_my_cart"],
         isInMyCartQuantity: json["is_in_my_cart_quantity"],
         isFavourite: json["is_favourite"],
@@ -153,7 +171,13 @@ class PreFiestaDetail {
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
+        "description": description,
+        "parent_id": parentId,
+        "categories": categories,
         "image": image,
+        "price": price,
+        "quantity": quantity,
+        "status": status,
         "is_in_my_cart": isInMyCart,
         "is_in_my_cart_quantity": isInMyCartQuantity,
         "is_favourite": isFavourite,

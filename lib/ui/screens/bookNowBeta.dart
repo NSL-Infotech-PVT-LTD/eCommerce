@@ -130,7 +130,8 @@ class _BookNowBetaState extends State<BookNowBeta> {
         _loadingMainCenter = true;
       });
       try {
-        await fiestasAddfavouriteApi(id: widget.fiestasModel?.id.toString())
+        print("----------- ${widget.fiestasModel?.clubId.toString()}");
+        await fiestasAddfavouriteApi(id: widget.fiestasModel?.clubId.toString())
             .then((res) {
           setState(() {
             _loadingMainCenter = false;
@@ -301,7 +302,20 @@ class _BookNowBetaState extends State<BookNowBeta> {
                                         children: [
                                           Container(
                                             decoration: BoxDecoration(
-                                              color: AppColors.green,
+                                              //
+                                              color: widget
+                                                          .fiestasModel?.type ==
+                                                      "open"
+                                                  ? AppColors.green
+                                                  : AppColors.blackBackground,
+
+                                              border: Border.all(
+                                                  color: widget.fiestasModel
+                                                              ?.type ==
+                                                          "open"
+                                                      ? AppColors
+                                                          .blackBackground
+                                                      : AppColors.white),
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(6)),
                                             ),
@@ -325,9 +339,23 @@ class _BookNowBetaState extends State<BookNowBeta> {
                                                   0.03),
                                           Container(
                                             decoration: BoxDecoration(
-                                              color: AppColors.homeBackground,
+                                              //
+                                              color: widget
+                                                          .fiestasModel?.type ==
+                                                      "club"
+                                                  ? AppColors.green
+                                                  : AppColors.blackBackground,
+
                                               border: Border.all(
-                                                  color: AppColors.white),
+                                                  color: widget.fiestasModel
+                                                              ?.type ==
+                                                          "club"
+                                                      ? AppColors
+                                                          .blackBackground
+                                                      : AppColors.white),
+                                              // color: AppColors.homeBackground,
+                                              // border: Border.all(
+                                              //     color: AppColors.white),
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(6)),
                                             ),
@@ -342,7 +370,7 @@ class _BookNowBetaState extends State<BookNowBeta> {
                                               style: TextStyle(
                                                 color: AppColors.white,
                                                 fontFamily: "DM Sans Medium",
-                                                fontSize: size.width * 0.03,
+                                                fontSize: size.width * 0.035,
                                               ),
                                             )),
                                           ),

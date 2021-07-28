@@ -188,7 +188,7 @@ Widget fiestasItem({context, Datum? postModeldata}) {
   );
 }
 
-Widget preFiestasItem(context, ProductInfo? prefiestasdata) {
+Widget preFiestasItem({context, ProductInfo? prefiestasdata}) {
   var size = MediaQuery.of(context).size;
 
   return Container(
@@ -295,8 +295,14 @@ Widget preFiestasItem(context, ProductInfo? prefiestasdata) {
                       GestureDetector(
                         onTap: () {
                           print(prefiestasdata?.id);
-                          navigatorPushFun(context,
-                              PreFistaOrder(prefiestasModel: prefiestasdata));
+                          navigatorPushFun(
+                              context,
+                              PreFistaOrder(prefiestasdataMap: {
+                                'id': prefiestasdata?.id,
+                                "name": prefiestasdata?.name,
+                                "favourite": prefiestasdata?.isFavourite,
+                                "description": prefiestasdata?.description
+                              }));
                         },
                         child: roundedBoxR(
                             radius: size.width * 0.005,

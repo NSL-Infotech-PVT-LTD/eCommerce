@@ -98,38 +98,11 @@ class Data {
 class Datum {
   Datum({
     this.id,
-    this.fiestaId,
-    this.userId,
-    this.fiestaDetail,
-  });
-
-  int? id;
-  int? fiestaId;
-  int? userId;
-  FiestaDetail? fiestaDetail;
-
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
-        id: json["id"],
-        fiestaId: json["fiesta_id"],
-        userId: json["user_id"],
-        fiestaDetail: FiestaDetail.fromJson(json["fiesta_detail"]),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "fiesta_id": fiestaId,
-        "user_id": userId,
-        "fiesta_detail": fiestaDetail?.toJson(),
-      };
-}
-
-class FiestaDetail {
-  FiestaDetail({
-    this.id,
-    this.name,
-    this.image,
+    this.type,
     this.clubId,
+    this.name,
     this.timestamp,
+    this.image,
     this.description,
     this.ticketPrice,
     this.ticketPriceStandard,
@@ -137,33 +110,45 @@ class FiestaDetail {
     this.totalMembers,
     this.dressCode,
     this.partyMusic,
+    this.params,
+    this.status,
+    this.createdAt,
+    this.updatedAt,
+    this.deletedAt,
     this.distanceKm,
     this.distanceMiles,
     this.isFavourite,
   });
 
   int? id;
-  String? name;
-  String? image;
+  String? type;
   int? clubId;
-  DateTime? timestamp;
-  dynamic description;
+  String? name;
+  String? timestamp;
+  String? image;
+  String? description;
   String? ticketPrice;
   String? ticketPriceStandard;
   String? ticketPriceVip;
   String? totalMembers;
   String? dressCode;
   String? partyMusic;
+  dynamic params;
+  String? status;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  dynamic deletedAt;
   String? distanceKm;
   String? distanceMiles;
   bool? isFavourite;
 
-  factory FiestaDetail.fromJson(Map<String, dynamic> json) => FiestaDetail(
+  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
         id: json["id"],
-        name: json["name"],
-        image: json["image"],
+        type: json["type"],
         clubId: json["club_id"],
-        timestamp: DateTime.parse(json["timestamp"]),
+        name: json["name"],
+        timestamp: json["timestamp"],
+        image: json["image"],
         description: json["description"],
         ticketPrice: json["ticket_price"],
         ticketPriceStandard: json["ticket_price_standard"],
@@ -171,6 +156,11 @@ class FiestaDetail {
         totalMembers: json["total_members"],
         dressCode: json["dress_code"],
         partyMusic: json["party_music"],
+        params: json["params"],
+        status: json["status"],
+        createdAt: DateTime.parse(json["created_at"]),
+        updatedAt: DateTime.parse(json["updated_at"]),
+        deletedAt: json["deleted_at"],
         distanceKm: json["distance_km"],
         distanceMiles: json["distance_miles"],
         isFavourite: json["is_favourite"],
@@ -178,10 +168,11 @@ class FiestaDetail {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "name": name,
-        "image": image,
+        "type": type,
         "club_id": clubId,
-        "timestamp": timestamp?.toIso8601String(),
+        "name": name,
+        "timestamp": timestamp,
+        "image": image,
         "description": description,
         "ticket_price": ticketPrice,
         "ticket_price_standard": ticketPriceStandard,
@@ -189,6 +180,11 @@ class FiestaDetail {
         "total_members": totalMembers,
         "dress_code": dressCode,
         "party_music": partyMusic,
+        "params": params,
+        "status": status,
+        "created_at": createdAt?.toIso8601String(),
+        "updated_at": updatedAt?.toIso8601String(),
+        "deleted_at": deletedAt,
         "distance_km": distanceKm,
         "distance_miles": distanceMiles,
         "is_favourite": isFavourite,
