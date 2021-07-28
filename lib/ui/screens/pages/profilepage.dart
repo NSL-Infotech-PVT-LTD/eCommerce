@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:funfy/apis/signinApi.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/ui/screens/favourite.dart';
+import 'package:funfy/ui/screens/languageScreen.dart';
 import 'package:funfy/ui/screens/profileEdit.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/Constants.dart';
@@ -9,8 +10,6 @@ import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/langauge_constant.dart';
-import 'package:funfy/utils/strings.dart';
-import 'package:funfy/utils/Constants.dart';
 
 class Profilepage extends StatefulWidget {
   Profilepage({Key? key}) : super(key: key);
@@ -96,54 +95,64 @@ class _ProfilepageState extends State<Profilepage> {
 
                 centerlistItem(
                     context: context,
-                    title:  "${getTranslated(context, "orders")}",
+                    title: "${getTranslated(context, "orders")}",
                     //Strings.orders,
-                    leftIconImage: Images.orderIIconpng),
+                    leftIconImage: Images.orderIIconpng,
+                    onTapfunc: () {}),
 
                 centerlistItem(
                     context: context,
-                    title:
-                    "${getTranslated(context, "deliveryAddress")}",
-                  //  Strings.deliveryAddress,
-                    leftIconImage: Images.locationspng),
+                    title: "${getTranslated(context, "deliveryAddress")}",
+                    //  Strings.deliveryAddress,
+                    leftIconImage: Images.locationspng,
+                    onTapfunc: () {}),
 
                 centerlistItem(
                     context: context,
-                    title:
-                    "${getTranslated(context, "paymentMethods")}",
-                //    Strings.paymentMethods,
-                    leftIconImage: Images.paymentIconpng),
-
-                GestureDetector(
-                  onTap: () {
-                    navigatorPushFun(context, Favourite());
-                  },
-                  child: centerlistItem(
-                      context: context,
-                      title: Strings.favourite,
-                      leftIconImage: Images.heart),
-                ),
+                    title: "${getTranslated(context, "favourite")}",
+                    //  Strings.deliveryAddress,
+                    leftIconImage: "assets/pngicons/hearticonbig.png",
+                    onTapfunc: () {
+                      navigatorPushFun(context, Favourite());
+                    }),
 
                 centerlistItem(
                     context: context,
-                    title:
-                    "${getTranslated(context, "notification")}",
-                   // Strings.notification,
-                    leftIconImage: Images.notificationspng),
+                    title: "${getTranslated(context, "language")}",
+                    //  Strings.deliveryAddress,
+                    leftIconImage: Images.locationspng,
+                    onTapfunc: () {
+                      navigatorPushFun(
+                          context, TranslationPage(fromSplash: false));
+                    }),
 
                 centerlistItem(
                     context: context,
-                    title:
-                    "${getTranslated(context, "help")}",
-                  //  Strings.help,
-                    leftIconImage: Images.helppng),
+                    title: "${getTranslated(context, "paymentMethods")}",
+                    //    Strings.paymentMethods,
+                    leftIconImage: Images.paymentIconpng,
+                    onTapfunc: () {}),
 
                 centerlistItem(
                     context: context,
-                    title:
-                    "${getTranslated(context, "about")}",
+                    title: "${getTranslated(context, "notification")}",
+                    // Strings.notification,
+                    leftIconImage: Images.notificationspng,
+                    onTapfunc: () {}),
+
+                centerlistItem(
+                    context: context,
+                    title: "${getTranslated(context, "help")}",
+                    //  Strings.help,
+                    leftIconImage: Images.helppng,
+                    onTapfunc: () {}),
+
+                centerlistItem(
+                    context: context,
+                    title: "${getTranslated(context, "about")}",
                     //Strings.about,
-                    leftIconImage: Images.aboutpng),
+                    leftIconImage: Images.aboutpng,
+                    onTapfunc: () {}),
 
                 SizedBox(
                   height: size.height * 0.04,
@@ -174,7 +183,7 @@ class _ProfilepageState extends State<Profilepage> {
                               ),
                               Text(
                                 "${getTranslated(context, "logout")}",
-                             //   Strings.logout,
+                                //   Strings.logout,
                                 style: TextStyle(
                                     color: AppColors.white,
                                     fontFamily: Fonts.dmSansBold,
@@ -193,54 +202,63 @@ class _ProfilepageState extends State<Profilepage> {
 }
 
 Widget centerlistItem(
-    {context, String? leftIconImage, String? title, String? rightIconImage}) {
+    {context,
+    String? leftIconImage,
+    String? title,
+    String? rightIconImage,
+    onTapfunc}) {
   var size = MediaQuery.of(context).size;
 
-  return Container(
-    margin: EdgeInsets.only(top: size.height * 0.02),
-    child: Column(
-      children: [
-        Container(
-          margin: EdgeInsets.symmetric(horizontal: size.width * 0.02),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(children: [
+  return GestureDetector(
+    onTap: () {
+      onTapfunc();
+    },
+    child: Container(
+      margin: EdgeInsets.only(top: size.height * 0.02),
+      child: Column(
+        children: [
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: size.width * 0.02),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(children: [
+                  Container(
+                      alignment: Alignment.center,
+                      width: size.width * 0.045,
+                      child: Image.asset("$leftIconImage")),
+                  SizedBox(
+                    width: size.width * 0.03,
+                  ),
+                  Text(
+                    title.toString(),
+                    style: TextStyle(
+                        fontFamily: Fonts.dmSansRegular,
+                        color: AppColors.white,
+                        fontSize: size.width * 0.04),
+                  ),
+                ]),
                 Container(
-                    alignment: Alignment.center,
-                    width: size.width * 0.045,
-                    child: Image.asset("$leftIconImage")),
-                SizedBox(
-                  width: size.width * 0.03,
+                  alignment: Alignment.center,
+                  width: size.width * 0.06,
+                  child: Icon(
+                    Icons.chevron_right,
+                    color: AppColors.white,
+                    size: size.width * 0.07,
+                  ),
                 ),
-                Text(
-                  title.toString(),
-                  style: TextStyle(
-                      fontFamily: Fonts.dmSansRegular,
-                      color: AppColors.white,
-                      fontSize: size.width * 0.04),
-                ),
-              ]),
-              Container(
-                alignment: Alignment.center,
-                width: size.width * 0.06,
-                child: Icon(
-                  Icons.chevron_right,
-                  color: AppColors.white,
-                  size: size.width * 0.07,
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        SizedBox(
-          height: size.height * 0.01,
-        ),
-        Divider(
-          color: Colors.white,
-          thickness: size.height * 0.0003,
-        )
-      ],
+          SizedBox(
+            height: size.height * 0.01,
+          ),
+          Divider(
+            color: Colors.white,
+            thickness: size.height * 0.0003,
+          )
+        ],
+      ),
     ),
   );
 }

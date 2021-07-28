@@ -52,6 +52,9 @@ dependencies:
   dotted_border: ^2.0.0
   video_player: ^2.1.10
   page_transition: ^2.0.2
+  firebase_messaging: ^10.0.0
+  firebase_core: ^1.2.1
+  flutter_local_notifications: ^5.0.0+4
 
 
 dev_dependencies:

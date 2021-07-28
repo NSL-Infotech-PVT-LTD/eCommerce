@@ -28,9 +28,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     setState(() {
       _emailError = "";
       if (_emailController.text == "") {
-        _emailError = Strings.pleaseEnterYourEmail;
+        _emailError = "${getTranslated(context, "pleaseEnterYourEmail")}";
       } else if (emailvalid(_emailController.text) == false) {
-        _emailError = Strings.pleaseEnterValidEmail;
+        _emailError = "${getTranslated(context, "pleaseEnterValidEmail")}";
       } else {
         _forgotPassword();
       }
@@ -54,15 +54,19 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       if (response == true) {
         Dialogs.simpledialogshow(
             context: context,
-            title: Strings.Success,
-            description: Strings.wehavesentlinkonyouemail,
+            title: "${getTranslated(context, "Success")}",
+            // Strings.Success,
+            description:
+                "${getTranslated(context, "wehavesentlinkonyouemail")}",
+            // Strings.wehavesentlinkonyouemail,
             okfunc: () {
               Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => Signin()));
             });
       } else {
         setState(() {
-          _emailError = Strings.pleaseEnterValidEmail;
+          _emailError =
+              "${getTranslated(context, "pleaseEnterValidEmail")}"; //Strings.pleaseEnterValidEmail;
         });
       }
     } else {
@@ -187,7 +191,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         keyboardType: TextInputType.emailAddress,
                         cursorColor: AppColors.white,
                         decoration: InputDecoration(
-                          hintText: Strings.emailHint,
+                          hintText:
+                              "${getTranslated(context, "emailHint")}", //Strings.emailHint,
                           border: InputBorder.none,
                           // contentPadding: EdgeInsets.only(
                           //     left: size.width * 0.04,
@@ -245,38 +250,36 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               height: size.height * 0.05,
             ),
 
-            Container(
-              alignment: Alignment.center,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "${getTranslated(context, "rememberyourpassword")}",
-                    // Strings.rememberyourpassword,
+            ///
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) => Signin()));
+              },
+              child: Container(
+                // color: Colors.blue,
+                alignment: Alignment.center,
+                width: size.width * 0.8,
+                // width: size.width,
+                child: Text.rich(TextSpan(
+                    text:
+                        "${getTranslated(context, "rememberyourpassword")}", // Strings.byContinuingYouAgreetoOur,
                     style: TextStyle(
                         fontFamily: Fonts.dmSansMedium,
                         color: AppColors.donthaveaccount,
                         fontSize: size.width * 0.04),
-                  ),
-                  SizedBox(
-                    width: size.width * 0.01,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => Signin()));
-                    },
-                    child: Text(
-                      "${getTranslated(context, "backToSignIn")}",
-                      // Strings.backToSignIn,
-                      style: TextStyle(
-                          fontFamily: Fonts.dmSansBold,
-                          decoration: TextDecoration.underline,
-                          color: AppColors.white,
-                          fontSize: size.width * 0.035),
-                    ),
-                  )
-                ],
+                    children: <InlineSpan>[
+                      TextSpan(
+                        // recognizer: _termsandConditions,
+                        text:
+                            "${getTranslated(context, "backToSignIn")}", //"${Strings.termsOfService}",
+                        style: TextStyle(
+                            fontFamily: Fonts.dmSansBold,
+                            decoration: TextDecoration.underline,
+                            color: AppColors.white,
+                            fontSize: size.width * 0.033),
+                      ),
+                    ])),
               ),
             ),
           ],

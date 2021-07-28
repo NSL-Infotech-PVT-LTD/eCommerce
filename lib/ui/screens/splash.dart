@@ -3,10 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:funfy/apis/configuration.dart';
 import 'package:funfy/apis/introApi.dart';
+import 'package:funfy/components/navigation.dart';
 import 'package:funfy/components/sizeclass/SizeConfig.dart';
 import 'package:funfy/ui/screens/auth/signin.dart';
 import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/screens/intro.dart';
+import 'package:funfy/ui/screens/languageScreen.dart';
 import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/imagesIcons.dart';
@@ -21,17 +23,19 @@ class Splash extends StatefulWidget {
 }
 
 class _SplashState extends State<Splash> {
-  void changeLanguage() async {
-    dynamic value = Constants.prefs?.getString(Strings.radioValue) ?? "en";
-    print("check value $value");
-    Locale locale = await setLocale(value);
-    MyApp.setLocale(context, locale);
-  }
+  dynamic value;
 
+  // void changeLanguage() async{
+  //
+  //   print("check value $value" );
+  //   Locale locale = await setLocale(value);
+  //   MyApp.setLocale(context, locale);
+  // }
   @override
   void initState() {
     super.initState();
-    changeLanguage();
+    value = Constants.prefs?.getString(Strings.radioValue);
+    // changeLanguage();
 
     next();
   }
@@ -46,21 +50,27 @@ class _SplashState extends State<Splash> {
 
       // term();
       // policy();
-
-      if (introdata.length != 0) {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => Constants.prefs?.getString("token") != null &&
-                    Constants.prefs?.getString("token") != ""
-                ? Home()
-                : Intro()));
+      if (value == null) {
+        navigatorPushFun(context, TranslationPage(fromSplash: true));
       } else {
-        print("no intro data");
+        if (introdata.length != 0) {
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) =>
+                  Constants.prefs?.getString("token") != null &&
+                          Constants.prefs?.getString("token") != ""
+                      ? Home()
+                      // : Intro()
+                      : Signin()));
+        } else {
+          print("no intro data");
 
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => Constants.prefs?.getString("token") != null &&
-                    Constants.prefs?.getString("token") != ""
-                ? Home()
-                : Signin()));
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) =>
+                  Constants.prefs?.getString("token") != null &&
+                          Constants.prefs?.getString("token") != ""
+                      ? Home()
+                      : Signin()));
+        }
       }
     }
   }

@@ -136,7 +136,6 @@ class _SignUpState extends State<SignUp> {
                   Navigator.of(context).pushReplacement(
                       MaterialPageRoute(builder: (context) => Signin()));
                 });
-
             // Navigator.of(context).pushReplacement(
             //     MaterialPageRoute(builder: (context) => Home()));
           } else {
@@ -254,7 +253,7 @@ class _SignUpState extends State<SignUp> {
                     Navigator.of(context).pop();
                   },
                   leading: Icon(
-                    Icons.male,
+                    Icons.error,
                     //  Icons.male,
                     // color: AppColors.siginbackgrond,
                   ),
@@ -270,14 +269,15 @@ class _SignUpState extends State<SignUp> {
                 ListTile(
                   onTap: () {
                     setState(() {
-                      gender = "female"; //Strings.female;
+                      gender = "female";
+                      //Strings.female;
                       _genderController.text =
                           "${getTranslated(context, "female")}";
                     });
                     Navigator.of(context).pop();
                   },
                   // leading: Icon(Icons.female),
-                  leading: Icon(Icons.female),
+                  leading: Icon(Icons.error),
                   title: Text("${getTranslated(context, "female")}",
                       // Strings.female,
 
@@ -296,7 +296,7 @@ class _SignUpState extends State<SignUp> {
                     Navigator.of(context).pop();
                   },
                   // leading: Icon(Icons.female),
-                  leading: Icon(Icons.female),
+                  leading: Icon(Icons.error),
                   title: Text("${getTranslated(context, "other")}",
                       // Strings.other,
 
@@ -346,12 +346,6 @@ class _SignUpState extends State<SignUp> {
 
     return SafeArea(
         child: Scaffold(
-            // floatingActionButton: FloatingActionButton(
-            //   onPressed: () {
-
-            //   },
-            //   child: Icon(Icons.add),
-            // ),
             body: Stack(children: [
       Container(
           decoration: BoxDecoration(
@@ -454,12 +448,14 @@ class _SignUpState extends State<SignUp> {
                         SizedBox(
                           width: size.width * 0.015,
                         ),
-                        Text(
-                          "${getTranslated(context, "funfypartyApp")}",
-                          // Strings.funfypartyApp,
-                          style: TextStyle(
-                              fontSize: size.width * 0.045,
-                              color: Colors.white),
+                        Flexible(
+                          child: Text(
+                            "${getTranslated(context, "funfypartyApp")}",
+                            // Strings.funfypartyApp,
+                            style: TextStyle(
+                                fontSize: size.width * 0.045,
+                                color: Colors.white),
+                          ),
                         ),
                       ],
                     ),
@@ -478,8 +474,10 @@ class _SignUpState extends State<SignUp> {
                             context: context,
                             controller: _fullnameController,
                             obscureTextBool: false,
-                            titletxt: Strings.fullname,
-                            hinttxt: Strings.fullnamehint,
+                            titletxt:
+                                "${getTranslated(context, "fullname")}", //Strings.fullname,
+                            hinttxt:
+                                "${getTranslated(context, "fullnamehint")}", // Strings.fullnamehint,
                             inputError: _fullnameError,
                             readonly: false,
                             ontapFun: null),
@@ -487,8 +485,10 @@ class _SignUpState extends State<SignUp> {
                             context: context,
                             controller: _emailController,
                             obscureTextBool: false,
-                            titletxt: Strings.email,
-                            hinttxt: Strings.emailHint,
+                            titletxt:
+                                "${getTranslated(context, "email")}", // Strings.email,
+                            hinttxt:
+                                "${getTranslated(context, "emailHint")}", // Strings.emailHint,
                             inputError: _emailError,
                             ontapFun: null,
                             readonly: false),
@@ -540,7 +540,8 @@ class _SignUpState extends State<SignUp> {
                                               ),
                                               cursorColor: AppColors.white,
                                               decoration: InputDecoration(
-                                                hintText: Strings.passwordhint,
+                                                hintText:
+                                                    "${getTranslated(context, "passwordhint")}", //Strings.passwordhint,
                                                 border: InputBorder.none,
                                                 // contentPadding: EdgeInsets.only(
                                                 //     left: size.width * 0.04,
@@ -601,8 +602,10 @@ class _SignUpState extends State<SignUp> {
                             context: context,
                             controller: _dobController,
                             obscureTextBool: false,
-                            titletxt: Strings.dateofbirth,
-                            hinttxt: Strings.dobtypehint,
+                            titletxt:
+                                "${getTranslated(context, "dateofbirth")}", // Strings.dateofbirth,
+                            hinttxt:
+                                "${getTranslated(context, "dobtypehint")}", // Strings.dobtypehint,
                             inputError: _dobError,
                             ontapFun: selectDate,
                             readonly: true),
@@ -610,8 +613,10 @@ class _SignUpState extends State<SignUp> {
                             context: context,
                             controller: _genderController,
                             obscureTextBool: false,
-                            titletxt: Strings.gender,
-                            hinttxt: Strings.genderHint,
+                            titletxt:
+                                "${getTranslated(context, "gender")}", // Strings.gender,
+                            hinttxt:
+                                "${getTranslated(context, "genderHint")}", // Strings.genderHint,
                             inputError: _genderError,
                             ontapFun: _showBottomSheetgender,
                             readonly: true),
@@ -631,7 +636,7 @@ class _SignUpState extends State<SignUp> {
                             : SizedBox(),
 
                         SizedBox(
-                          height: size.height * 0.04,
+                          height: size.height * 0.03,
                         ),
 
                         // bottom content
@@ -677,7 +682,7 @@ class _SignUpState extends State<SignUp> {
                         ),
 
                         SizedBox(
-                          height: size.height * 0.02,
+                          height: size.height * 0.01,
                         ),
 
                         // signup button

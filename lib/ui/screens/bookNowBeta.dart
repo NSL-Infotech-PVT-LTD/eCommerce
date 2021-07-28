@@ -162,6 +162,8 @@ class _BookNowBetaState extends State<BookNowBeta> {
   setFavoriteBool() {
     setState(() {
       _fiestasfavoriteBool = widget.fiestasModel!.isFavourite!;
+
+      print("here is bool ------------- ${widget.fiestasModel!.isFavourite!}");
     });
   }
 

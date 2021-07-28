@@ -345,6 +345,8 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
             categoriesName: Strings.extrass)
         .then((res) {
       if (res?.status == true) {
+        print("here is --------------- ");
+        print(res?.toJson().toString());
         setState(() {
           extras = res;
           _loading = false;
@@ -354,6 +356,9 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
           extras = PrefiestasAlMxExModel();
           _loading = false;
         });
+
+        print("here is --------------- ");
+        print(extras?.data);
       }
     });
   }
@@ -1040,7 +1045,9 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                         // alcohol
                         _loading == true
                             ? Center(child: CircularProgressIndicator())
-                            : _loading == false && alcohol?.data?.data == []
+                            : (_loading == false && alcohol?.data == null) ||
+                                    (_loading == false &&
+                                        alcohol?.data?.data?.length == 0)
                                 ? Center(
                                     child: Text(
                                       "${getTranslated(context, "nodataFound")}",
@@ -1051,6 +1058,17 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                                           fontSize: size.width * 0.045),
                                     ),
                                   )
+                                // : _loading == false && alcohol?.data?.data == []
+                                //     ? Center(
+                                //         child: Text(
+                                //           "${getTranslated(context, "nodataFound")}",
+                                //           // Strings.nodataFound,
+                                //           style: TextStyle(
+                                //               color: AppColors.descriptionfirst,
+                                //               fontFamily: Fonts.dmSansBold,
+                                //               fontSize: size.width * 0.045),
+                                //         ),
+                                //       )
                                 : Container(
                                     color: AppColors.homeBackgroundLite,
                                     child: Column(
@@ -1093,7 +1111,24 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                         // mix
                         _loading == true
                             ? Center(child: CircularProgressIndicator())
-                            : _loading == false && mix?.data?.data == []
+                            :
+
+                            // _loading == false && mix?.data?.data == []
+
+                            // ? Center(
+                            //     child: Text(
+                            //       "${getTranslated(context, "nodataFound")}",
+                            //       // Strings.nodataFound,
+                            //       style: TextStyle(
+                            //           color: AppColors.descriptionfirst,
+                            //           fontFamily: Fonts.dmSansBold,
+                            //           fontSize: size.width * 0.045),
+                            //     ),
+                            //   )
+
+                            (_loading == false && mix?.data == null) ||
+                                    (_loading == false &&
+                                        mix?.data?.data?.length == 0)
                                 ? Center(
                                     child: Text(
                                       "${getTranslated(context, "nodataFound")}",
@@ -1141,7 +1176,9 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                         // extras
                         _loading == true
                             ? Center(child: CircularProgressIndicator())
-                            : _loading == false && extras?.data?.data == []
+                            : (_loading == false && extras?.data == null) ||
+                                    (_loading == false &&
+                                        extras?.data?.data?.length == 0)
                                 ? Center(
                                     child: Text(
                                       "${getTranslated(context, "nodataFound")}",
@@ -1173,7 +1210,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                                                   addFunc: addTicket,
                                                   cart: UserData
                                                       .preFiestasExtrasTicketCart,
-                                                  count: mix?.data?.data
+                                                  count: extras?.data?.data
                                                       ?.elementAt(index)
                                                       .isInMyCartQuantity,
                                                   removeFunc: ticketRemove,

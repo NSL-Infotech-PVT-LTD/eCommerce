@@ -14,6 +14,7 @@ import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
+import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 import 'package:intl/intl.dart';
 
@@ -97,7 +98,7 @@ class _FavouriteState extends State<Favourite> {
         backgroundColor: AppColors.blackBackground,
         centerTitle: true,
         title: Text(
-          Strings.favourite,
+          "${getTranslated(context, "favourite")}",
           style: TextStyle(
               color: AppColors.white,
               fontFamily: Fonts.dmSansBold,
@@ -208,9 +209,11 @@ class _FavouriteState extends State<Favourite> {
                                       fiestasFavModel?.data?.data?.length ?? 0,
                                   itemBuilder: (context, index) {
                                     return fiestasItemFav(
-                                        context: context,
-                                        index: index,
-                                        model: fiestasFavModel);
+                                      context: context,
+                                      index: index,
+                                      model: fiestasFavModel,
+                                      funcRun: getFavouriteList,
+                                    );
                                   }),
                     ],
                   ),
@@ -234,9 +237,11 @@ class _FavouriteState extends State<Favourite> {
                                       preFiestasFavModel?.data?.data?.length,
                                   itemBuilder: (context, index) {
                                     return preFiestasItem(
-                                        context: context,
-                                        index: index,
-                                        prefiestasdata: preFiestasFavModel);
+                                      context: context,
+                                      index: index,
+                                      prefiestasdata: preFiestasFavModel,
+                                      funcRunPre: getFavouriteList,
+                                    );
                                   }),
                     ],
                   ),
@@ -249,7 +254,7 @@ class _FavouriteState extends State<Favourite> {
 
 // favorItem fiestas
 
-fiestasItemFav({context, int? index, FiestasModel? model}) {
+fiestasItemFav({context, int? index, FiestasModel? model, funcRun}) {
   var size = MediaQuery.of(context).size;
 
   var data = model?.data?.data?.elementAt(index!);
@@ -390,8 +395,16 @@ fiestasItemFav({context, int? index, FiestasModel? model}) {
                   ),
                   InkWell(
                     onTap: () {
-                      navigatorPushFun(
-                          context, BookNowBeta(fiestasModel: data));
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(
+                              builder: (context) =>
+                                  BookNowBeta(fiestasModel: data)))
+                          .then((value) {
+                        funcRun();
+                      });
+
+                      // navigatorPushFun(
+                      //     context, BookNowBeta(fiestasModel: data));
                     },
                     child: roundedBoxR(
                         width: size.width * 0.23,
@@ -421,7 +434,10 @@ fiestasItemFav({context, int? index, FiestasModel? model}) {
 
 // pre
 Widget preFiestasItem(
-    {context, int? index, PrefiestasFavouriteModel? prefiestasdata}) {
+    {context,
+    int? index,
+    PrefiestasFavouriteModel? prefiestasdata,
+    funcRunPre}) {
   var data = prefiestasdata?.data?.data?.elementAt(index!);
   var size = MediaQuery.of(context).size;
 
@@ -531,15 +547,21 @@ Widget preFiestasItem(
                       GestureDetector(
                         onTap: () {
                           // print(prefiestasdata?.id);
-                          navigatorPushFun(
-                              context,
-                              PreFistaOrder(prefiestasdataMap: {
-                                'id': data?.preFiestaDetail?.id,
-                                "name": data?.preFiestaDetail?.name,
-                                "favourite": data?.preFiestaDetail?.isFavourite,
-                                "description":
-                                    data?.preFiestaDetail?.description
-                              }));
+
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      PreFistaOrder(prefiestasdataMap: {
+                                        'id': data?.preFiestaDetail?.id,
+                                        "name": data?.preFiestaDetail?.name,
+                                        "favourite":
+                                            data?.preFiestaDetail?.isFavourite,
+                                        "description":
+                                            data?.preFiestaDetail?.description
+                                      })))
+                              .then((value) {
+                            funcRunPre();
+                          });
                         },
                         child: roundedBoxR(
                             radius: size.width * 0.005,

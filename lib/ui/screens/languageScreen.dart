@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:funfy/components/sizeclass/SizeConfig.dart';
-
+import 'package:funfy/apis/introApi.dart';
+import 'package:funfy/ui/screens/auth/signin.dart';
+import 'package:funfy/ui/screens/home.dart';
+import 'package:funfy/ui/screens/intro.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/Constants.dart';
-
+import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
-
 import '../../../main.dart';
 
 class TranslationPage extends StatefulWidget {
-  const TranslationPage({Key? key}) : super(key: key);
+  final bool fromSplash;
+  const TranslationPage({Key? key, required this.fromSplash}) : super(key: key);
 
   @override
   _SigninState createState() => _SigninState();
@@ -23,6 +25,30 @@ class TranslationPage extends StatefulWidget {
 enum SingingCharacter { English, Spanish }
 
 class _SigninState extends State<TranslationPage> {
+  next() async {
+    var net = await Internetcheck.check();
+    if (net != true) {
+      Internetcheck.showdialog(context: context);
+    } else {
+      var introdata = await getIntrodata();
+      if (introdata.length != 0 && introdata != []) {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (context) => Constants.prefs?.getString("token") != null &&
+                    Constants.prefs?.getString("token") != ""
+                ? Home()
+                : Intro()));
+      } else {
+        print("no intro data");
+
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (context) => Constants.prefs?.getString("token") != null &&
+                    Constants.prefs?.getString("token") != ""
+                ? Home()
+                : Signin()));
+      }
+    }
+  }
+
   final _scaffoldKey = new GlobalKey<ScaffoldState>();
   TextEditingController _emailController = TextEditingController();
 
@@ -50,9 +76,12 @@ class _SigninState extends State<TranslationPage> {
   @override
   void initState() {
     var radioini = Constants.prefs!.getString(Strings.radioValue);
-    print(radioini);
-    _character =
-        radioini == "es" ? SingingCharacter.Spanish : SingingCharacter.English;
+    print("first language" + radioini.toString());
+    _character = radioini == null
+        ? SingingCharacter.English
+        : radioini == "en"
+            ? SingingCharacter.English
+            : SingingCharacter.Spanish;
     super.initState();
   }
 
@@ -148,10 +177,8 @@ class _SigninState extends State<TranslationPage> {
                       title: Text(
                         'English',
                         style: TextStyle(
-                          fontSize: size.width * 0.048,
-                          fontFamily: Fonts.dmSansMedium,
-                          color: AppColors.white,
-                        ),
+                            color: AppColors.white,
+                            fontSize: size.width * 0.045),
                       ),
                       trailing: Theme(
                         data: Theme.of(context).copyWith(
@@ -186,10 +213,8 @@ class _SigninState extends State<TranslationPage> {
                       title: Text(
                         'Spanish',
                         style: TextStyle(
-                          fontSize: size.width * 0.048,
-                          fontFamily: Fonts.dmSansMedium,
-                          color: AppColors.white,
-                        ),
+                            color: AppColors.white,
+                            fontSize: size.width * 0.045),
                       ),
                       trailing: Theme(
                         data: Theme.of(context).copyWith(
@@ -226,7 +251,12 @@ class _SigninState extends State<TranslationPage> {
                         onTap: () {
                           Constants.prefs
                               ?.setString(Strings.radioValue, newValue ?? "es");
-                          Navigator.pop(context);
+                          if (widget.fromSplash) {
+                            next();
+                            //  navigatorPushFun(context, TranslationPage(fromSplash: true));
+                          } else {
+                            Navigator.pop(context);
+                          }
                         },
                         child: roundedBox(
                             width: size.width * 0.78,

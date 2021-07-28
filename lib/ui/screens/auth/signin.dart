@@ -6,7 +6,6 @@ import 'package:funfy/components/navigation.dart';
 import 'package:funfy/ui/screens/auth/forgotpassword.dart';
 import 'package:funfy/ui/screens/auth/signup.dart';
 import 'package:funfy/ui/screens/home.dart';
-import 'package:funfy/ui/screens/pages/languageScreen.dart';
 import 'package:funfy/ui/widgets/inputtype.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/InternetCheck.dart';
