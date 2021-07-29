@@ -76,8 +76,8 @@ class _BookingPageState extends State<BookingPage> {
         _preFiestasLoading = false;
       });
 
-      print("res data ----------- $res");
       if (res?.code == 200 && res?.status == true) {
+        print("res data ----------- ");
         print("after return  ${res?.toJson().toString()}");
 
         setState(() {
@@ -474,7 +474,8 @@ Widget preFiestasOrderItem(
                       // order Now
                       GestureDetector(
                         onTap: () {
-                          navigatorPushFun(context, YourOrderSum());
+                          navigatorPushFun(
+                              context, YourOrderSum(orderID: data?.id));
                         },
                         child: roundedBoxR(
                             radius: size.width * 0.005,

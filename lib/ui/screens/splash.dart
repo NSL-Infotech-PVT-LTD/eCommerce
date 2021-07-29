@@ -53,7 +53,7 @@ class _SplashState extends State<Splash> {
       if (value == null) {
         navigatorPushFun(context, TranslationPage(fromSplash: true));
       } else {
-        if (introdata.length != 0) {
+        if (introdata.length != 0 && introdata != []) {
           Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (context) =>
                   Constants.prefs?.getString("token") != null &&

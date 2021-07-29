@@ -13,6 +13,7 @@ import 'package:funfy/models/preFiestasModel.dart';
 import 'package:funfy/models/prifiestasAlMxEx.dart';
 import 'package:funfy/ui/screens/bookingSuccess.dart';
 import 'package:funfy/ui/widgets/basic%20function.dart';
+import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
@@ -121,6 +122,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
       UserData.preFiestasMixesTicketCart.clear();
       UserData.totalTicketNum = 0;
       UserData.preFiestasCartid = "";
+      Constants.prefs?.setString("cartTot", "");
     });
   }
 
@@ -131,6 +133,10 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
         3, (index) => SlidingBannerProviderDetails());
     super.initState();
     preFiestadatagetFromApi();
+    setState(() {
+      UserData.preFiestasExtrasTicketCart.clear();
+      UserData.preFiestasMixesTicketCart.clear();
+    });
 
     // video
     _controller = VideoPlayerController.network(
@@ -388,14 +394,6 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
             "id": id,
             "preticketCount": cartCount,
           };
-          // if (cart!.containsKey(index)) {
-          //   cart[index]["preticketCount"] = cart[index]["preticketCount"] + 1;
-          // } else {
-          //   cart[index] = {
-          //     "id": id,
-          //     "preticketCount": cartCount,
-          //   };
-          // }
         });
       }
     });
@@ -429,22 +427,10 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
               "id": id,
               "preticketCount": cartCount,
             };
-            // if (cart!.containsKey(index)) {
-            //   cart[index]["preticketCount"] = cart[index]["preticketCount"] + 1;
-            // } else {
-            //   cart[index] = {
-            //     "id": id,
-            //     "preticketCount": cartCount,
-            //   };
-            // }
           });
         }
       });
-    } else {
-      print("Value is 0");
-    }
-
-    print("Cart Count: $cartCount");
+    } else {}
 
     if (cartCount <= 0 && cart.isNotEmpty && cart.containsKey(index)) {
       setState(() {
@@ -454,21 +440,27 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
 
     totalCount();
     print(cart);
-
-    // setState(() {
-    //   if (cart.isNotEmpty) {
-    //     if (cart.containsKey(index) && cart[index]["preticketCount"] > 1) {
-    //       cart[index]["preticketCount"] = cart[index]["preticketCount"] - 1;
-    //     } else {
-    //       cart.remove(index);
-    //     }
-    //   } else {
-    //     // clearCart();
-    //   }
-    // });
-    // totalCount();
-    // print(cart);
   }
+
+  // remove count
+
+// removeAllProductFromCart() async {
+
+//    await addToCart(id: id, cont: "0").then((value) {
+//       print("this is value $value");
+//       if (value) {
+//         setState(() {
+//           cart[index] = {
+//             "id": id,
+//             "preticketCount": cartCount,
+//           };
+
+//         });
+//       }
+//     });
+
+//     totalCount();
+// }
 
   // bottom popup
 
@@ -517,7 +509,9 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                       Container(
                         // width: SizeConfig.screenWidth * 0.40,
                         child: Text(
-                          "${getTranslated(context, "ticket")} * ${UserData.totalTicketNum}",
+                          // "${getTranslated(context, "ticket")} * ${UserData.totalTicketNum}",
+
+                          "${getTranslated(context, "ticket")} * ${Constants.prefs?.getString("cartTot")}",
                           // "${Strings.ticket} * ${UserData.totalTicketNum}",
                           style: TextStyle(
                             color: AppColors.white,
@@ -585,8 +579,13 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
       }
 
       UserData.totalTicketNum = tot;
+      Constants.prefs?.setString("cartTot", tot.toString());
 
       print(UserData.totalTicketNum);
+
+      print(UserData.preFiestasMixesTicketCart);
+      print(UserData.preFiestasExtrasTicketCart);
+      print(UserData.preFiestasAlcoholCart);
     });
   }
 
@@ -667,81 +666,6 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
       print("error $e");
     }
   }
-
-  // ------------------ //
-
-  // pre fiesta cart booking cart
-
-  // preFiestaCartBookingCart() async {
-  //   var net = await Internetcheck.check();
-
-  //   if (net != true) {
-  //     Internetcheck.showdialog(context: context);
-  //   } else {
-  //     setState(() {
-  //       _loadingCenter = true;
-  //     });
-  //     try {
-  //       String? statusCode = "0";
-  //       if (UserData.preFiestasAlcoholCart != "") {
-  //         await preFiestaBookingApi(preFiestaID: UserData.preFiestasAlcoholCart)
-  //             .then((res) {
-  //           setState(() {
-  //             statusCode = res?["code"].toString();
-  //           });
-  //         });
-  //       }
-
-  //       if (UserData.preFiestasMixesTicketCart.isNotEmpty) {
-  //         for (var i in UserData.preFiestasMixesTicketCart.values.toList()) {
-  //           await preFiestaBookingApi(
-  //                   preFiestaID: i["id"],
-  //                   quantity: i["preticketCount"].toString())
-  //               .then((res) {
-  //             setState(() {
-  //               statusCode = res?["code"].toString();
-  //             });
-  //           });
-  //         }
-  //       }
-
-  //       if (UserData.preFiestasExtrasTicketCart.isNotEmpty) {
-  //         for (var i in UserData.preFiestasMixesTicketCart.values.toList()) {
-  //           await preFiestaBookingApi(
-  //                   preFiestaID: i["id"],
-  //                   quantity: i["preticketCount"].toString())
-  //               .then((res) {
-  //             setState(() {
-  //               statusCode = res?["code"].toString();
-  //             });
-  //           });
-  //         }
-  //       }
-
-  //       // preFiestaBookingApi().then((res){});
-
-  //       if (statusCode == "201") {
-  //         setState(() {
-  //           _loadingCenter = false;
-  //           clearCart();
-  //         });
-
-  //         Navigator.pushAndRemoveUntil(
-  //             context,
-  //             MaterialPageRoute(
-  //                 builder: (BuildContext context) => BookingSuccess()),
-  //             (route) => false);
-  //       } else {
-  //         print(statusCode);
-  //       }
-  //     } catch (e) {
-  //       setState(() {
-  //         _loadingCenter = false;
-  //       });
-  //       print("error in preFiesta Bokking $e");
-  //     }
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -828,11 +752,17 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
           //         (UserData.preFiestasExtrasTicketCart.isNotEmpty ||
           //             UserData.preFiestasMixesTicketCart.isNotEmpty)
 
-          bottomSheet: UserData.preFiestasAlcoholCart != "" ||
-                  UserData.preFiestasExtrasTicketCart.isNotEmpty ||
-                  UserData.preFiestasMixesTicketCart.isNotEmpty
-              ? bottomSheet()
-              : SizedBox(),
+          bottomSheet:
+
+              //  UserData.preFiestasAlcoholCart != "" ||
+              //         UserData.preFiestasExtrasTicketCart.isNotEmpty ||
+              //         UserData.preFiestasMixesTicketCart.isNotEmpty
+
+              Constants.prefs?.getString("cartTot") != null &&
+                      Constants.prefs?.getString("cartTot") != "" &&
+                      Constants.prefs?.getString("cartTot") != "0"
+                  ? bottomSheet()
+                  : SizedBox(),
           body: Stack(
             children: [
               DefaultTabController(
@@ -1045,9 +975,9 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                         // alcohol
                         _loading == true
                             ? Center(child: CircularProgressIndicator())
-                            : (_loading == false && alcohol?.data == null) ||
-                                    (_loading == false &&
-                                        alcohol?.data?.data?.length == 0)
+                            : (_loading == false &&
+                                        alcohol?.data?.data == []) ||
+                                    (_loading == false && alcohol?.data == null)
                                 ? Center(
                                     child: Text(
                                       "${getTranslated(context, "nodataFound")}",
@@ -1058,17 +988,6 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                                           fontSize: size.width * 0.045),
                                     ),
                                   )
-                                // : _loading == false && alcohol?.data?.data == []
-                                //     ? Center(
-                                //         child: Text(
-                                //           "${getTranslated(context, "nodataFound")}",
-                                //           // Strings.nodataFound,
-                                //           style: TextStyle(
-                                //               color: AppColors.descriptionfirst,
-                                //               fontFamily: Fonts.dmSansBold,
-                                //               fontSize: size.width * 0.045),
-                                //         ),
-                                //       )
                                 : Container(
                                     color: AppColors.homeBackgroundLite,
                                     child: Column(
@@ -1111,24 +1030,8 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                         // mix
                         _loading == true
                             ? Center(child: CircularProgressIndicator())
-                            :
-
-                            // _loading == false && mix?.data?.data == []
-
-                            // ? Center(
-                            //     child: Text(
-                            //       "${getTranslated(context, "nodataFound")}",
-                            //       // Strings.nodataFound,
-                            //       style: TextStyle(
-                            //           color: AppColors.descriptionfirst,
-                            //           fontFamily: Fonts.dmSansBold,
-                            //           fontSize: size.width * 0.045),
-                            //     ),
-                            //   )
-
-                            (_loading == false && mix?.data == null) ||
-                                    (_loading == false &&
-                                        mix?.data?.data?.length == 0)
+                            : (_loading == false && mix?.data == null) ||
+                                    (_loading == false && mix?.data?.data == [])
                                 ? Center(
                                     child: Text(
                                       "${getTranslated(context, "nodataFound")}",
@@ -1178,7 +1081,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                             ? Center(child: CircularProgressIndicator())
                             : (_loading == false && extras?.data == null) ||
                                     (_loading == false &&
-                                        extras?.data?.data?.length == 0)
+                                        extras?.data?.data == [])
                                 ? Center(
                                     child: Text(
                                       "${getTranslated(context, "nodataFound")}",

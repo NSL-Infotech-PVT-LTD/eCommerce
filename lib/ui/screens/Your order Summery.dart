@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:funfy/apis/bookingApi.dart';
 import 'package:funfy/components/sizeclass/SizeConfig.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/colors.dart';
@@ -13,6 +14,9 @@ import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 
 class YourOrderSum extends StatefulWidget {
+  final orderID;
+
+  const YourOrderSum({Key? key, @required this.orderID}) : super(key: key);
   @override
   _YourOrderSumState createState() => _YourOrderSumState();
 }
@@ -20,6 +24,21 @@ class YourOrderSum extends StatefulWidget {
 class _YourOrderSumState extends State<YourOrderSum> {
   bool ratting = false;
   double currentRating = 3.0;
+
+  getPrefiestasorderItemData() async {
+    try {
+      await prefiestasShowOrderDetail(orderId: widget.orderID.toString());
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    getPrefiestasorderItemData();
+  }
 
   // rating popup
 
@@ -268,7 +287,7 @@ class _YourOrderSumState extends State<YourOrderSum> {
                               children: [
                                 Text(
                                   "${getTranslated(context, "OtherTaxes")}",
-                               //   "Other Taxes",
+                                  //   "Other Taxes",
                                   style: TextStyle(
                                       color: AppColors.white,
                                       fontSize: size.width * 0.05,
@@ -294,7 +313,7 @@ class _YourOrderSumState extends State<YourOrderSum> {
                               children: [
                                 Text(
                                   "${getTranslated(context, "GrandTotal")}",
-                               //   "Grand Total",
+                                  //   "Grand Total",
                                   style: TextStyle(
                                       color: AppColors.white,
                                       fontSize: size.width * 0.06,

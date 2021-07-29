@@ -12,8 +12,6 @@ Future<List<IntroModel>> getIntrodata() async {
   try {
     var response = json.decode(res.body);
 
-    print(response);
-
     if (response["status"] == true && response["code"] == 200) {
       Iterable itresponse = response["data"];
 

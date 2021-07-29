@@ -29,4 +29,7 @@ class Urls {
       baseUrl + "customer/favourite/prefiesta/add";
   static String preFiestasfavoriteListUrl =
       baseUrl + "customer/favourite/prefiesta/list";
+
+  static String preFiestasOrderItemDetail = baseUrl + "customer/order/detail";
+  static String preFiestasGetCartUrl = baseUrl + "customer/cart";
 }

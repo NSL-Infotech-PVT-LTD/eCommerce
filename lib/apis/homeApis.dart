@@ -17,12 +17,10 @@ Future<FiestasModel?> fiestasPostGet() async {
     'Authorization': 'Bearer ${UserData.userToken}',
   };
 
-  print("Token" + "${UserData.userToken}");
+  // print("Token" + "${UserData.userToken}");
   var res = await http.post(Uri.parse(Urls.fiestasPostUrl), headers: headers);
 
-  print("Fiestas posts-----------------------");
-
-  print(res.body);
+  // print(res.body);
 
   if (res.statusCode == 200) {
     return fiestasModelFromJson(res.body);
@@ -38,7 +36,7 @@ Future<PrefiestasModel?> prefiestasPostGet() async {
   var res =
       await http.post(Uri.parse(Urls.preFiestasPostsUrl), headers: headers);
 
-  print(res.body);
+  // print(res.body);
 
   if (res.statusCode == 200) {
     return prefiestasModelFromJson(res.body);
@@ -57,7 +55,7 @@ Future<PrefiestasAlMxExModel?> prefiestasAlMxExApi(
   var res = await http.post(Uri.parse(Urls.preFiestachildlistUrl),
       body: body, headers: headers);
 
-  print(res.body);
+  // print(res.body);
 
   if (res.statusCode == 200) {
     return prefiestasAlMxExModelFromJson(res.body);
@@ -79,7 +77,7 @@ Future fiestasAddfavouriteApi({
   var res = await http.post(Uri.parse(Urls.fiestasAddfavoriteUrl),
       body: body, headers: headers);
 
-  print(res.body);
+  // print(res.body);
 
   var response = json.decode(res.body);
 
@@ -99,7 +97,7 @@ Future prefiestasAddfavouriteApi({
   var res = await http.post(Uri.parse(Urls.preFiestasAddfavoriteUrl),
       body: body, headers: headers);
 
-  print(res.body);
+  // print(res.body);
 
   var response = json.decode(res.body);
 
@@ -116,7 +114,7 @@ Future<FiestasModel?> fiestasFavouriteListApi() async {
   var res =
       await http.post(Uri.parse(Urls.fiestasfavoriteListUrl), headers: headers);
 
-  print(res.body);
+  // print(res.body);
 
   FiestasModel response = fiestasModelFromJson(res.body);
 
@@ -137,7 +135,7 @@ Future<PrefiestasFavouriteModel?> prefiestasFavouriteListApi() async {
   var res = await http.post(Uri.parse(Urls.preFiestasfavoriteListUrl),
       headers: headers);
 
-  print(res.body);
+  // print(res.body);
 
   PrefiestasFavouriteModel response =
       prefiestasFavouriteModelFromJson(res.body);

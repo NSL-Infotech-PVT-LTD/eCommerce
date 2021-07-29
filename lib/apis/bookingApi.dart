@@ -6,6 +6,7 @@ import 'package:funfy/models/fiestasBooking.dart';
 import 'package:funfy/models/fiestasBookingListModel.dart';
 import 'package:funfy/models/makePrefiestasmodel.dart';
 import 'package:funfy/models/preFiestasBookingListModel.dart';
+import 'package:funfy/models/preFiestasCartModel.dart';
 import 'package:funfy/utils/urls.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -44,7 +45,6 @@ Future<FistaBooking?> fiestasBooking(
 // booking list show
 
 Future<FiestasBookingList?> fiestasBookingList() async {
-  print("run ----------------");
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
   };
@@ -103,8 +103,6 @@ Future<PreFiestasBookingListModel?> preFiestaBookingListApi() async {
       headers: headers);
 
   if (res.statusCode == 200) {
-    print("workking------------ ${res.body} ");
-
     return preFiestasBookingListModelFromJson(res.body);
   } else {
     print(res.body);
@@ -137,8 +135,49 @@ Future<MakeprefiestasOrderModel?> makeOrderApi(
       body: body, headers: headers);
 
   if (res.statusCode == 201) {
-    print("workking------------ ");
     return makeprefiestasOrderModelFromJson(res.body);
+  } else {
+    print("here is error ${res.body}");
+  }
+}
+
+// prefiestas Order detail show ------------------- //
+
+Future prefiestasShowOrderDetail({String? orderId}) async {
+  var headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+  };
+
+  // print("token is here - ${UserData.userToken}");
+
+  var body = {
+    "id": orderId.toString(),
+  };
+
+  var res = await http.post(Uri.parse(Urls.preFiestasOrderItemDetail),
+      body: body, headers: headers);
+
+  if (res.statusCode == 200) {
+    print(res.body);
+    return res.body;
+  } else {
+    print("here is error ${res.body}");
+  }
+}
+
+// get my prefiestas cart
+
+Future<PrefiestasCartModel?> getPrefiestasCart() async {
+  var headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+  };
+
+  var res =
+      await http.post(Uri.parse(Urls.preFiestasGetCartUrl), headers: headers);
+
+  if (res.statusCode == 200) {
+    print("here is cart - ${res.body}");
+    return prefiestasCartModelFromJson(res.body);
   } else {
     print("here is error ${res.body}");
   }
