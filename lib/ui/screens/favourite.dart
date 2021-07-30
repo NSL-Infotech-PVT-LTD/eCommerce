@@ -550,15 +550,18 @@ Widget preFiestasItem(
 
                           Navigator.of(context)
                               .push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      PreFistaOrder(prefiestasdataMap: {
-                                        'id': data?.preFiestaDetail?.id,
-                                        "name": data?.preFiestaDetail?.name,
-                                        "favourite":
-                                            data?.preFiestaDetail?.isFavourite,
-                                        "description":
-                                            data?.preFiestaDetail?.description
-                                      })))
+                                  builder: (context) => PreFistaOrder(
+                                      preFiestasID: data?.preFiestaDetail?.id
+
+                                      //  {
+                                      //   'id': data?.preFiestaDetail?.id,
+                                      //   "name": data?.preFiestaDetail?.name,
+                                      //   "favourite":
+                                      //       data?.preFiestaDetail?.isFavourite,
+                                      //   "description":
+                                      //       data?.preFiestaDetail?.description
+                                      // }
+                                      )))
                               .then((value) {
                             funcRunPre();
                           });

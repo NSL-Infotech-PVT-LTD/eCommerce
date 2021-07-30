@@ -5,6 +5,7 @@ import 'package:funfy/apis/introApi.dart';
 import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/models/preFiestasCartModel.dart';
+import 'package:funfy/ui/screens/bookingSuccess.dart';
 import 'package:funfy/ui/screens/preFistaOrderMix.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/Constants.dart';
@@ -50,7 +51,8 @@ class _CartpageState extends State<Cartpage> {
             print("error $myCartModel");
 
             count =
-                double.parse("${myCartModel?.data?.cartItems?.length}") / 10 +
+                double.parse("${myCartModel?.data?.cart?.cartItems?.length}") /
+                        10 +
                     0.15;
           });
         });
@@ -105,6 +107,8 @@ class _CartpageState extends State<Cartpage> {
   ticketRemove({String? id, int itemCount = 0, int? index, var cart}) async {
     print("remove id: $id  index: $index");
 
+    print("here count num - $itemCount");
+
     int cartCount;
 
     try {
@@ -116,7 +120,7 @@ class _CartpageState extends State<Cartpage> {
       cartCount = cartCount - 1;
     });
 
-    if (cartCount > -1) {
+    if (cartCount > 0) {
       await addToCart(id: id, cont: cartCount.toString()).then((value) {
         print("this is value $value");
         if (value) {
@@ -128,16 +132,18 @@ class _CartpageState extends State<Cartpage> {
           });
         }
       });
-    } else {}
-
-    if (cartCount <= 0 && cart.isNotEmpty && cart.containsKey(index)) {
-      setState(() {
-        cart.remove(index);
-      });
+    } else {
+      print("value is < 2");
     }
 
+    // if (cartCount <= 0 && cart.isNotEmpty && cart.containsKey(index)) {
+    //   setState(() {
+    //     cart.remove(index);
+    //   });
+    // }
+
     totalCount();
-    print(cart);
+    // print(cart);
   }
 
 // remove from list
@@ -148,7 +154,7 @@ class _CartpageState extends State<Cartpage> {
     await addToCart(id: id, cont: "0").then((value) {
       if (value) {
         setState(() {
-          myCartModel?.data?.cartItems?.removeAt(index!);
+          // myCartModel?.data?.cartItems?.removeAt(index!);
           if (type == "alcohol") {
             UserData.preFiestasAlcoholCart = "";
             print(type);
@@ -181,6 +187,7 @@ class _CartpageState extends State<Cartpage> {
 
       if (UserData.preFiestasAlcoholCart != "") {
         tot = tot + 1;
+        Constants.prefs?.setString("alcohol", "alcohol");
       }
 
       if (UserData.preFiestasMixesTicketCart.isNotEmpty) {
@@ -255,6 +262,7 @@ class _CartpageState extends State<Cartpage> {
       UserData.totalTicketNum = 0;
       UserData.preFiestasCartid = "";
       Constants.prefs?.setString("cartTot", "");
+      Constants.prefs?.setString("alcohol", "");
     });
   }
 
@@ -308,7 +316,7 @@ class _CartpageState extends State<Cartpage> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      navigatorPushFun(context, PreFistaOrder());
+                      navigatorPushFun(context, PreFistaOrder(preFiestasID: 1));
                     },
                     child: Text(
                       "${getTranslated(context, "change")}",
@@ -458,6 +466,47 @@ class _CartpageState extends State<Cartpage> {
     getMyCart();
   }
 
+  // Make Order
+
+  makeOrder() async {
+    var net = await Internetcheck.check();
+
+    if (net != true) {
+      Internetcheck.showdialog(context: context);
+    } else {
+      setState(() {
+        _centerLoading = true;
+      });
+    }
+
+    try {
+      await makeOrderApi(cartId: UserData.preFiestasCartid, addressId: "2")
+          .then((res) {
+        // print(res?.toJson().toString());
+
+        setState(() {
+          _centerLoading = false;
+        });
+
+        if (res?.status == true && res?.code == 201) {
+          setState(() {
+            clearCart();
+          });
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => BookingSuccess()),
+              (route) => false);
+        }
+      });
+    } catch (e) {
+      setState(() {
+        _centerLoading = false;
+      });
+      print("error $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -542,7 +591,7 @@ class _CartpageState extends State<Cartpage> {
                             ),
                           )
                         : _loading == false &&
-                                (myCartModel?.data?.cartItems == [] ||
+                                (myCartModel?.data?.cart?.cartItems == [] ||
                                     myCartModel == null)
                             ? Container(
                                 margin:
@@ -589,7 +638,7 @@ class _CartpageState extends State<Cartpage> {
                                                               .start,
                                                       children: [
                                                         Text(
-                                                          "${myCartModel?.data?.cartItems![0].preFiesta?.name}",
+                                                          "${myCartModel?.data?.parentDetail?.name}",
                                                           // "Pack 'La havanna",
                                                           style: TextStyle(
                                                               color: AppColors
@@ -605,7 +654,7 @@ class _CartpageState extends State<Cartpage> {
                                                               0.008,
                                                         ),
                                                         Text(
-                                                          "${myCartModel?.data?.cartItems![0].preFiesta?.description}",
+                                                          "${myCartModel?.data?.parentDetail?.description}",
                                                           // "${getTranslated(context, "lorem")}",
                                                           //Strings.lorem,
                                                           maxLines: 2,
@@ -627,19 +676,24 @@ class _CartpageState extends State<Cartpage> {
                                                   Container(
                                                       height:
                                                           size.height * 0.09,
+                                                      width: size.width * 0.2,
                                                       child: Image.network(
-                                                          "${myCartModel?.data?.cartItems![0].preFiesta?.image}"))
+                                                          "${myCartModel?.data?.parentDetail?.image}"))
                                                 ],
                                               ),
                                               Container(
                                                 height: size.height * count,
                                                 child: ListView.builder(
-                                                    itemCount: myCartModel?.data
-                                                        ?.cartItems?.length,
+                                                    itemCount: myCartModel
+                                                        ?.data
+                                                        ?.cart
+                                                        ?.cartItems
+                                                        ?.length,
                                                     itemBuilder:
                                                         (context, index) {
                                                       var type = myCartModel
                                                           ?.data
+                                                          ?.cart
                                                           ?.cartItems![index]
                                                           .preFiesta;
                                                       return Column(
@@ -653,6 +707,7 @@ class _CartpageState extends State<Cartpage> {
                                                             index: index,
                                                             pid: myCartModel
                                                                 ?.data
+                                                                ?.cart
                                                                 ?.cartItems![
                                                                     index]
                                                                 .preFiesta
@@ -662,18 +717,21 @@ class _CartpageState extends State<Cartpage> {
                                                                 ?.categories,
                                                             title: myCartModel
                                                                 ?.data
+                                                                ?.cart
                                                                 ?.cartItems![
                                                                     index]
                                                                 .preFiesta!
                                                                 .name,
                                                             price: myCartModel
                                                                 ?.data
+                                                                ?.cart
                                                                 ?.cartItems![
                                                                     index]
                                                                 .price
                                                                 .toString(),
                                                             quantity: myCartModel
                                                                 ?.data
+                                                                ?.cart
                                                                 ?.cartItems![
                                                                     index]
                                                                 .quantity
@@ -689,6 +747,7 @@ class _CartpageState extends State<Cartpage> {
                                                             context: context,
                                                             count: myCartModel
                                                                 ?.data
+                                                                ?.cart
                                                                 ?.cartItems![
                                                                     index]
                                                                 .quantity,

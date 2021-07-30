@@ -21,14 +21,15 @@ import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 import 'package:video_player/video_player.dart';
+import 'package:funfy/models/prefiestasDetailModel.dart';
 
 String bannerImage =
     "https://png.pngtree.com/thumb_back/fw800/back_our/20190621/ourmid/pngtree-tmall-beer-festival-e-commerce-carnival-banner-image_193689.jpg";
 
 class PreFistaOrder extends StatefulWidget {
-  final Map? prefiestasdataMap;
+  final preFiestasID;
 
-  const PreFistaOrder({Key? key, this.prefiestasdataMap}) : super(key: key);
+  const PreFistaOrder({Key? key, this.preFiestasID}) : super(key: key);
 
   // const PreFistaOrder({Key? key, this.fiestasModel}) : super(key: key);
 
@@ -51,22 +52,31 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
   PrefiestasAlMxExModel? alcohol;
   PrefiestasAlMxExModel? mix;
   PrefiestasAlMxExModel? extras;
+
+  //
+
+  PrefiestasDetailModel? prefiestasDetailModel = PrefiestasDetailModel();
   bool _loading = false;
 
+  bool _alcoholloading = false;
+  bool _mixloading = false;
+  bool _extrasloading = false;
+
   bool _loadingCenter = false;
+  bool _loadingBack = false;
 
   bool _favoriteBool = false;
 
   void _handleRadioValueChange(int? value) {
     addToCart(
-            id: "${alcohol!.data!.data!.elementAt(int.parse(value.toString())).id}",
+            id: "${prefiestasDetailModel?.data?.childData?.alcohol?.elementAt(value!).id}",
             cont: "1")
         .then((res) {
       if (res) {
         setState(() {
           groupValue = value;
           UserData.preFiestasAlcoholCart =
-              "${alcohol!.data!.data!.elementAt(int.parse(value.toString())).id}";
+              "${prefiestasDetailModel?.data?.childData?.alcohol?.elementAt(value!).id}";
 
           totalCount();
         });
@@ -88,8 +98,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
         _loadingMainCenter = true;
       });
       try {
-        await prefiestasAddfavouriteApi(
-                id: widget.prefiestasdataMap!["id"].toString())
+        await prefiestasAddfavouriteApi(id: widget.preFiestasID.toString())
             .then((res) {
           setState(() {
             _loadingMainCenter = false;
@@ -123,16 +132,18 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
       UserData.totalTicketNum = 0;
       UserData.preFiestasCartid = "";
       Constants.prefs?.setString("cartTot", "");
+      Constants.prefs?.setString("alcohol", "");
     });
   }
 
   @override
   void initState() {
-    _favoriteBool = widget.prefiestasdataMap!["favourite"];
+    getPrefiestasDetailfromApi();
     cardList = List<SlidingBannerProviderDetails>.generate(
         3, (index) => SlidingBannerProviderDetails());
     super.initState();
-    preFiestadatagetFromApi();
+    // preFiestadatagetFromApi();
+
     setState(() {
       UserData.preFiestasExtrasTicketCart.clear();
       UserData.preFiestasMixesTicketCart.clear();
@@ -233,14 +244,15 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
       {index,
       String? title,
       String? subtitle,
-      PrefiestasAlMxExModel? model,
+      var model,
       bool? numCount,
       Map? cart,
       addFunc,
       var count,
       removeFunc}) {
     var size = MediaQuery.of(context).size;
-    var data = model?.data?.data;
+    var data = model;
+
     return ListTile(
         title: Text("${data![index].name}",
             style: TextStyle(
@@ -278,25 +290,53 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
 
   // get data from api
 
-  preFiestadatagetFromApi() async {
+  // preFiestadatagetFromApi() async {
+  //   var net = await Internetcheck.check();
+  //   print("net = $net");
+
+  //   if (net != true) {
+  //     Internetcheck.showdialog(context: context);
+  //   } else {
+  //     try {
+  //       alcohollistget();
+  //       mixlistget();
+  //       extraslistget();
+  //     } catch (e) {
+  //       setState(() {
+  //         _loading = false;
+  //       });
+  //     }
+  //   }
+  // }
+
+  // prifiestas detail get from api
+
+  getPrefiestasDetailfromApi() async {
     var net = await Internetcheck.check();
-    print("net = $net");
+    // print("net = $net");
 
     if (net != true) {
       Internetcheck.showdialog(context: context);
     } else {
       setState(() {
-        _loading = true;
+        _loadingBack = true;
       });
-
       try {
-        alcohollistget();
-        mixlistget();
-        extraslistget();
+        await prefiestasDetailApi(id: widget.preFiestasID.toString())
+            .then((res) {
+          setState(() {
+            _loadingBack = false;
+            prefiestasDetailModel = res;
+            _favoriteBool =
+                prefiestasDetailModel!.data!.parentData!.isFavourite!;
+          });
+        });
       } catch (e) {
         setState(() {
-          _loading = false;
+          _loadingBack = false;
         });
+
+        print("error in  $e");
       }
     }
   }
@@ -304,19 +344,22 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
   // alcohol
 
   alcohollistget() async {
+    setState(() {
+      _alcoholloading = true;
+    });
     await prefiestasAlMxExApi(
-            id: widget.prefiestasdataMap!["id"].toString(),
+            // id: widget.prefiestasdataMap!["id"].toString(),
             categoriesName: Strings.alcohols)
         .then((res) {
       if (res?.status == true) {
         setState(() {
           alcohol = res;
-          _loading = false;
+          _alcoholloading = false;
         });
       } else {
         setState(() {
           alcohol = PrefiestasAlMxExModel();
-          _loading = false;
+          _alcoholloading = false;
         });
       }
     });
@@ -325,19 +368,22 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
   // mixes
 
   mixlistget() async {
+    setState(() {
+      _mixloading = true;
+    });
     await prefiestasAlMxExApi(
-            id: widget.prefiestasdataMap!["id"].toString(),
+            // id: widget.prefiestasdataMap!["id"].toString(),
             categoriesName: Strings.mixs)
         .then((res) {
       if (res?.status == true) {
         setState(() {
           mix = res;
-          _loading = false;
+          _mixloading = false;
         });
       } else {
         setState(() {
           mix = PrefiestasAlMxExModel();
-          _loading = false;
+          _mixloading = false;
         });
       }
     });
@@ -346,8 +392,11 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
   // extras
 
   extraslistget() async {
+    setState(() {
+      _extrasloading = true;
+    });
     await prefiestasAlMxExApi(
-            id: widget.prefiestasdataMap!["id"].toString(),
+            // id: widget.prefiestasdataMap!["id"].toString(),
             categoriesName: Strings.extrass)
         .then((res) {
       if (res?.status == true) {
@@ -355,12 +404,12 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
         print(res?.toJson().toString());
         setState(() {
           extras = res;
-          _loading = false;
+          _extrasloading = false;
         });
       } else {
         setState(() {
           extras = PrefiestasAlMxExModel();
-          _loading = false;
+          _extrasloading = false;
         });
 
         print("here is --------------- ");
@@ -555,6 +604,8 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
     );
   }
 
+  totalCountinSharedpreference() {}
+
   // total count
   totalCount() {
     print("total Count run");
@@ -564,10 +615,12 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
 
       if (UserData.preFiestasAlcoholCart != "") {
         tot = tot + 1;
+        Constants.prefs?.setString("alcohol", "alcohol");
       }
 
       if (UserData.preFiestasMixesTicketCart.isNotEmpty) {
         for (var i in UserData.preFiestasMixesTicketCart.values.toList()) {
+          print("Mix count $i");
           tot = tot + i["preticketCount"];
         }
       }
@@ -736,9 +789,6 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
       );
     }
 
-    // alcoholList =
-    //     List<Widget>.generate(10, (index) => alcoholGradientFunction(index));
-
     return SafeArea(
       child: Scaffold(
           // floatingActionButton: FloatingActionButton(
@@ -758,388 +808,633 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
               //         UserData.preFiestasExtrasTicketCart.isNotEmpty ||
               //         UserData.preFiestasMixesTicketCart.isNotEmpty
 
-              Constants.prefs?.getString("cartTot") != null &&
+              _loadingBack == false &&
+                      Constants.prefs?.getString("alcohol") != null &&
+                      Constants.prefs?.getString("alcohol") != "" &&
+                      Constants.prefs?.getString("cartTot") != null &&
                       Constants.prefs?.getString("cartTot") != "" &&
                       Constants.prefs?.getString("cartTot") != "0"
                   ? bottomSheet()
                   : SizedBox(),
-          body: Stack(
-            children: [
-              DefaultTabController(
-                length: 3,
-                child: NestedScrollView(
-                  headerSliverBuilder:
-                      (BuildContext context, bool innerBoxIsScrolled) {
-                    return [
-                      SliverAppBar(
-                        // backgroundColor: AppColors.white,
-                        collapsedHeight: 150.0,
-                        expandedHeight: 200.0,
-                        floating: true,
-                        pinned: true,
-                        snap: true,
-                        actions: [
-                          GestureDetector(
-                            onTap: () {
-                              addFavorite();
-                            },
-                            child: Container(
-                              margin: EdgeInsets.only(right: size.width * 0.04),
-                              child: SvgPicture.asset(
-                                "assets/svgicons/hearticon.svg",
-                                color:
-                                    _favoriteBool ? Colors.red : Colors.white,
-                              ),
-                            ),
-                          )
-                        ],
-                        actionsIconTheme: IconThemeData(opacity: 0.0),
-                        flexibleSpace: Stack(
-                          children: <Widget>[
-                            Container(
-                                color: AppColors.blackBackground,
-                                height: size.height,
-                                width: size.width),
-                            Positioned.fill(
-                                child: _controller!.value.isInitialized
-                                    ? Stack(
-                                        children: [
-                                          Center(
-                                              child: _controller!
-                                                      .value.isInitialized
-                                                  ? AspectRatio(
-                                                      aspectRatio: _controller!
-                                                          .value.aspectRatio,
-                                                      child: VideoPlayer(
-                                                          _controller!),
-                                                    )
-                                                  : Container()),
-                                          Center(
-                                            child: InkWell(
-                                                onTap: () {
-                                                  setState(() {
-                                                    _controller!.value.isPlaying
-                                                        ? _controller?.pause()
-                                                        : _controller?.play();
-                                                  });
-                                                },
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    _controller!.value.isPlaying
-                                                        ? Icon(
-                                                            Icons.pause,
-                                                            color:
-                                                                AppColors.white,
-                                                            size: size.width *
-                                                                0.11,
-                                                          )
-                                                        : SizedBox(),
-                                                    _controller!.value
-                                                                .isPlaying ==
-                                                            false
-                                                        ? Container(
-                                                            child: SvgPicture
-                                                                .asset(
-                                                              Images.playSvg,
-                                                              width:
-                                                                  size.width *
-                                                                      0.11,
-                                                            ),
-                                                          )
-                                                        : SizedBox(),
-                                                  ],
-                                                )
-
-                                                // child: _controller!.value.isPlaying
-                                                //     ?  Icon(
-                                                //         Icons.pause,
-                                                //         color: AppColors.white,
-                                                //         size: size.width * 0.11,
-                                                //       )
-                                                //     :  Container(
-                                                //         child: SvgPicture.asset(
-                                                //           Images.playSvg,
-                                                //           width: size.width * 0.11,
-                                                //         ),
-                                                //       )
-
-                                                //  Icon(
-                                                //     Icons.play_arrow,
-                                                //     color: Colors.white,
-                                                //   ),
-                                                ),
-                                          )
-                                        ],
-                                      )
-                                    : Center(
-                                        child: CircularProgressIndicator(
-                                          color: AppColors.white,
-                                        ),
-                                      )),
-                            Positioned(bottom: 0.0, child: Text(""))
-                          ],
-                        ),
-                      ),
-                      SliverPadding(
-                        padding: EdgeInsets.all(16.0),
-                        sliver: SliverList(
-                          delegate: SliverChildListDelegate([
-                            Container(
-                              color: AppColors.homeBackground,
-                              padding: EdgeInsets.all(8.0),
-                              child: Row(
-                                children: [
-                                  Column(
-                                    // mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        // cvfbgtkl;./
-                                        width: SizeConfig.screenWidth * 0.60,
-                                        //   height: SizeConfig.screenHeight,
-                                        child: Padding(
-                                          padding: EdgeInsets.only(
-                                              // left: SizeConfig.screenWidth * 0.02,
-                                              top: size.width * 0.01),
-                                          child: Text(
-                                            "${widget.prefiestasdataMap!["name"] ?? "Name"}",
-                                            style: TextStyle(
-                                                fontSize: size.width * 0.058,
-                                                fontFamily: "DM Sans Bold",
-                                                color: AppColors.white),
-                                            maxLines: 1,
-                                            softWrap: true,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        // cvfbgtkl;./
-                                        width: SizeConfig.screenWidth * 0.85,
-                                        //   height: SizeConfig.screenHeight,
-                                        child: Padding(
-                                          padding: EdgeInsets.only(
-                                              // left: SizeConfig.screenWidth * 0.02,
-                                              top: size.width * 0.01),
-                                          child: topHeadingContent(
-                                              description:
-                                                  widget.prefiestasdataMap![
-                                                      "description"],
-                                              textEnd: " ${Strings.muchMore}"),
-                                        ),
-                                      ),
-                                      SizedBox(height: size.height * 0.005),
-                                    ],
+          body: _loadingBack == true
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : Stack(
+                  children: [
+                    DefaultTabController(
+                      length: 3,
+                      child: NestedScrollView(
+                        headerSliverBuilder:
+                            (BuildContext context, bool innerBoxIsScrolled) {
+                          return [
+                            SliverAppBar(
+                              // backgroundColor: AppColors.white,
+                              collapsedHeight: 150.0,
+                              expandedHeight: 200.0,
+                              floating: true,
+                              pinned: true,
+                              snap: true,
+                              actions: [
+                                GestureDetector(
+                                  onTap: () {
+                                    addFavorite();
+                                  },
+                                  child: Container(
+                                    margin: EdgeInsets.only(
+                                        right: size.width * 0.04),
+                                    child: SvgPicture.asset(
+                                      "assets/svgicons/hearticon.svg",
+                                      color: _favoriteBool
+                                          ? Colors.red
+                                          : Colors.white,
+                                    ),
                                   ),
-                                  Spacer(),
+                                )
+                              ],
+                              actionsIconTheme: IconThemeData(opacity: 0.0),
+                              flexibleSpace: Stack(
+                                children: <Widget>[
+                                  Container(
+                                      color: AppColors.blackBackground,
+                                      height: size.height,
+                                      width: size.width),
+                                  Positioned.fill(
+                                      child: _controller!.value.isInitialized
+                                          ? Stack(
+                                              children: [
+                                                Center(
+                                                    child: _controller!
+                                                            .value.isInitialized
+                                                        ? AspectRatio(
+                                                            aspectRatio:
+                                                                _controller!
+                                                                    .value
+                                                                    .aspectRatio,
+                                                            child: VideoPlayer(
+                                                                _controller!),
+                                                          )
+                                                        : Container()),
+                                                Center(
+                                                  child: InkWell(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          _controller!.value
+                                                                  .isPlaying
+                                                              ? _controller
+                                                                  ?.pause()
+                                                              : _controller
+                                                                  ?.play();
+                                                        });
+                                                      },
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          _controller!.value
+                                                                  .isPlaying
+                                                              ? Icon(
+                                                                  Icons.pause,
+                                                                  color:
+                                                                      AppColors
+                                                                          .white,
+                                                                  size:
+                                                                      size.width *
+                                                                          0.11,
+                                                                )
+                                                              : SizedBox(),
+                                                          _controller!.value
+                                                                      .isPlaying ==
+                                                                  false
+                                                              ? Container(
+                                                                  child:
+                                                                      SvgPicture
+                                                                          .asset(
+                                                                    Images
+                                                                        .playSvg,
+                                                                    width: size
+                                                                            .width *
+                                                                        0.11,
+                                                                  ),
+                                                                )
+                                                              : SizedBox(),
+                                                        ],
+                                                      )
+
+                                                      // child: _controller!.value.isPlaying
+                                                      //     ?  Icon(
+                                                      //         Icons.pause,
+                                                      //         color: AppColors.white,
+                                                      //         size: size.width * 0.11,
+                                                      //       )
+                                                      //     :  Container(
+                                                      //         child: SvgPicture.asset(
+                                                      //           Images.playSvg,
+                                                      //           width: size.width * 0.11,
+                                                      //         ),
+                                                      //       )
+
+                                                      //  Icon(
+                                                      //     Icons.play_arrow,
+                                                      //     color: Colors.white,
+                                                      //   ),
+                                                      ),
+                                                )
+                                              ],
+                                            )
+                                          : Center(
+                                              child: CircularProgressIndicator(
+                                                color: AppColors.white,
+                                              ),
+                                            )),
+                                  Positioned(bottom: 0.0, child: Text(""))
                                 ],
                               ),
                             ),
-                            TabBar(
-                              unselectedLabelColor: Colors.grey,
-                              indicatorColor: AppColors.siginbackgrond,
-                              // labelColor: Colors.black87,
-                              // unselectedLabelColor: Colors.grey,
-                              tabs: [
-                                Tab(
-                                  icon: Text(
-                                    // Strings.alcohol
-                                    "${getTranslated(context, "alcohol")}",
-                                  ),
-                                ),
-                                Tab(
-                                  icon: Text(
-                                    "${getTranslated(context, "mixes")}",
-                                    // Strings.mixes
-                                  ),
-                                ),
-                                Tab(
-                                  icon: Text(
-                                    "${getTranslated(context, "extras")}",
-                                    // Strings.extras
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ]),
-                        ),
-                      ),
-                    ];
-                  },
-                  body: Stack(
-                    children: [
-                      TabBarView(children: [
-                        // alcohol
-                        _loading == true
-                            ? Center(child: CircularProgressIndicator())
-                            : (_loading == false &&
-                                        alcohol?.data?.data == []) ||
-                                    (_loading == false && alcohol?.data == null)
-                                ? Center(
-                                    child: Text(
-                                      "${getTranslated(context, "nodataFound")}",
-                                      // Strings.nodataFound,
-                                      style: TextStyle(
-                                          color: AppColors.descriptionfirst,
-                                          fontFamily: Fonts.dmSansBold,
-                                          fontSize: size.width * 0.045),
-                                    ),
-                                  )
-                                : Container(
-                                    color: AppColors.homeBackgroundLite,
-                                    child: Column(
+                            SliverPadding(
+                              padding: EdgeInsets.all(16.0),
+                              sliver: SliverList(
+                                delegate: SliverChildListDelegate([
+                                  Container(
+                                    color: AppColors.homeBackground,
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Row(
                                       children: [
-                                        SizedBox(
-                                          height:
-                                              SizeConfig.screenHeight * 0.03,
+                                        Column(
+                                          // mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              // cvfbgtkl;./
+                                              width:
+                                                  SizeConfig.screenWidth * 0.60,
+                                              //   height: SizeConfig.screenHeight,
+                                              child: Padding(
+                                                padding: EdgeInsets.only(
+                                                    // left: SizeConfig.screenWidth * 0.02,
+                                                    top: size.width * 0.01),
+                                                child: Text(
+                                                  "${prefiestasDetailModel?.data?.parentData?.name}",
+                                                  // "${widget.prefiestasdataMap!["name"] ?? "Name"}",
+                                                  style: TextStyle(
+                                                      fontSize:
+                                                          size.width * 0.058,
+                                                      fontFamily:
+                                                          "DM Sans Bold",
+                                                      color: AppColors.white),
+                                                  maxLines: 1,
+                                                  softWrap: true,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ),
+                                            Container(
+                                              // cvfbgtkl;./
+                                              width:
+                                                  SizeConfig.screenWidth * 0.85,
+                                              //   height: SizeConfig.screenHeight,
+                                              child: Padding(
+                                                padding: EdgeInsets.only(
+                                                    // left: SizeConfig.screenWidth * 0.02,
+                                                    top: size.width * 0.01),
+                                                child: topHeadingContent(
+                                                    description:
+                                                        "${prefiestasDetailModel?.data?.parentData?.description}",
+
+                                                    // widget
+                                                    //         .prefiestasdataMap![
+                                                    //     "description"],
+                                                    textEnd:
+                                                        " ${Strings.muchMore}"),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                                height: size.height * 0.005),
+                                          ],
                                         ),
-                                        SizedBox(
-                                          width: SizeConfig.screenWidth * 0.95,
-                                          child: richText("Select at most ",
-                                              "One", " from Alcohols"),
-                                        ),
-                                        Expanded(
-                                          child: ListView.builder(
-                                            itemCount:
-                                                alcohol?.data?.data?.length ??
-                                                    0,
-                                            itemBuilder: (BuildContext context,
-                                                int index) {
-                                              return alcoholGradientFunction(
-                                                  index: index,
-                                                  numCount: false,
-                                                  cart: UserData
-                                                      .preFiestasExtrasTicketCart,
-                                                  count: alcohol?.data?.data
-                                                              ?.elementAt(index)
-                                                              .isInMyCartQuantity ==
-                                                          1
-                                                      ? index
-                                                      : -1,
-                                                  model: alcohol);
-                                            },
-                                          ),
-                                        ),
+                                        Spacer(),
                                       ],
                                     ),
                                   ),
+                                  TabBar(
+                                    unselectedLabelColor: Colors.grey,
+                                    indicatorColor: AppColors.siginbackgrond,
+                                    // labelColor: Colors.black87,
+                                    // unselectedLabelColor: Colors.grey,
+                                    tabs: [
+                                      Tab(
+                                        icon: Text(
+                                          // Strings.alcohol
+                                          "${getTranslated(context, "alcohol")}",
+                                        ),
+                                      ),
+                                      Tab(
+                                        icon: Text(
+                                          "${getTranslated(context, "mixes")}",
+                                          // Strings.mixes
+                                        ),
+                                      ),
+                                      Tab(
+                                        icon: Text(
+                                          "${getTranslated(context, "extras")}",
+                                          // Strings.extras
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ]),
+                              ),
+                            ),
+                          ];
+                        },
+                        body: Stack(
+                          children: [
+                            TabBarView(children: [
+                              // alcohol
 
-                        // mix
-                        _loading == true
-                            ? Center(child: CircularProgressIndicator())
-                            : (_loading == false && mix?.data == null) ||
-                                    (_loading == false && mix?.data?.data == [])
-                                ? Center(
-                                    child: Text(
-                                      "${getTranslated(context, "nodataFound")}",
-                                      // Strings.nodataFound,
-                                      style: TextStyle(
-                                          color: AppColors.descriptionfirst,
-                                          fontFamily: Fonts.dmSansBold,
-                                          fontSize: size.width * 0.045),
-                                    ),
-                                  )
-                                : Container(
-                                    padding: EdgeInsets.all(8.0),
-                                    color: AppColors.homeBackgroundLite,
-                                    child: Column(
-                                      children: [
-                                        SizedBox(
+                              (prefiestasDetailModel
+                                              ?.data?.childData?.alcohol ==
+                                          null ||
+                                      prefiestasDetailModel
+                                              ?.data?.childData?.alcohol ==
+                                          [])
+                                  ? Center(
+                                      child: Text(
+                                        "${getTranslated(context, "nodataFound")}",
+                                        // Strings.nodataFound,
+                                        style: TextStyle(
+                                            color: AppColors.descriptionfirst,
+                                            fontFamily: Fonts.dmSansBold,
+                                            fontSize: size.width * 0.045),
+                                      ),
+                                    )
+                                  : Container(
+                                      color: AppColors.homeBackgroundLite,
+                                      child: Column(
+                                        children: [
+                                          SizedBox(
                                             width:
                                                 SizeConfig.screenWidth * 0.95,
                                             child: richText("Select at most ",
-                                                "Two", " from Mixes")),
-                                        Expanded(
-                                          child: ListView.builder(
-                                            itemCount:
-                                                mix?.data?.data?.length ?? 0,
-                                            itemBuilder: (BuildContext context,
-                                                int index) {
-                                              return alcoholGradientFunction(
-                                                  index: index,
-                                                  model: mix,
-                                                  cart: UserData
-                                                      .preFiestasMixesTicketCart,
-                                                  count: mix?.data?.data
-                                                      ?.elementAt(index)
-                                                      .isInMyCartQuantity,
-                                                  addFunc: addTicket,
-                                                  removeFunc: ticketRemove,
-                                                  numCount: true);
-                                            },
+                                                "One", " from Mixes"),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-
-                        // extras
-                        _loading == true
-                            ? Center(child: CircularProgressIndicator())
-                            : (_loading == false && extras?.data == null) ||
-                                    (_loading == false &&
-                                        extras?.data?.data == [])
-                                ? Center(
-                                    child: Text(
-                                      "${getTranslated(context, "nodataFound")}",
-                                      // Strings.nodataFound,
-                                      style: TextStyle(
-                                          color: AppColors.descriptionfirst,
-                                          fontFamily: Fonts.dmSansBold,
-                                          fontSize: size.width * 0.045),
-                                    ),
-                                  )
-                                : Container(
-                                    color: AppColors.homeBackgroundLite,
-                                    child: Column(
-                                      children: [
-                                        SizedBox(
-                                          width: SizeConfig.screenWidth * 0.95,
-                                          child: richText("Select at most ",
-                                              "One", " from Mixes"),
-                                        ),
-                                        Expanded(
-                                          child: ListView.builder(
-                                            itemCount:
-                                                extras?.data?.data?.length ?? 0,
-                                            itemBuilder: (BuildContext context,
-                                                int index) {
-                                              return alcoholGradientFunction(
-                                                  index: index,
-                                                  model: extras,
-                                                  addFunc: addTicket,
-                                                  cart: UserData
-                                                      .preFiestasExtrasTicketCart,
-                                                  count: extras?.data?.data
-                                                      ?.elementAt(index)
-                                                      .isInMyCartQuantity,
-                                                  removeFunc: ticketRemove,
-                                                  numCount: true);
-                                            },
+                                          Expanded(
+                                            child: ListView.builder(
+                                              itemCount: prefiestasDetailModel
+                                                      ?.data
+                                                      ?.childData
+                                                      ?.alcohol
+                                                      ?.length ??
+                                                  0,
+                                              itemBuilder:
+                                                  (BuildContext context,
+                                                      int index) {
+                                                return alcoholGradientFunction(
+                                                    index: index,
+                                                    model: prefiestasDetailModel
+                                                        ?.data
+                                                        ?.childData
+                                                        ?.alcohol,
+                                                    addFunc: addTicket,
+                                                    cart: UserData
+                                                        .preFiestasExtrasTicketCart,
+                                                    count: alcohol?.data?.data
+                                                                ?.elementAt(
+                                                                    index)
+                                                                .isInMyCartQuantity ==
+                                                            1
+                                                        ? index
+                                                        : -1,
+                                                    removeFunc: ticketRemove,
+                                                    numCount: false);
+                                              },
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                      ]),
-                      _loadingCenter
-                          ? Center(child: CircularProgressIndicator())
-                          : SizedBox()
-                    ],
-                  ),
-                ),
-              ),
 
-              // loading
+                              // alcohol
 
-              _loadingMainCenter
-                  ? Center(child: CircularProgressIndicator())
-                  : SizedBox()
-            ],
-          )),
+                              // _alcoholloading == true
+                              //     ? Center(child: CircularProgressIndicator())
+                              //     : (_alcoholloading == false &&
+                              //                 alcohol?.data?.data == []) ||
+                              //             (_alcoholloading == false &&
+                              //                 alcohol?.data == null)
+                              //         ? Center(
+                              //             child: Text(
+                              //               "${getTranslated(context, "nodataFound")}",
+                              //               // Strings.nodataFound,
+                              //               style: TextStyle(
+                              //                   color:
+                              //                       AppColors.descriptionfirst,
+                              //                   fontFamily: Fonts.dmSansBold,
+                              //                   fontSize: size.width * 0.045),
+                              //             ),
+                              //           )
+                              //         : Container(
+                              //             color: AppColors.homeBackgroundLite,
+                              //             child: Column(
+                              //               children: [
+                              //                 SizedBox(
+                              //                   height:
+                              //                       SizeConfig.screenHeight *
+                              //                           0.03,
+                              //                 ),
+                              //                 SizedBox(
+                              //                   width: SizeConfig.screenWidth *
+                              //                       0.95,
+                              //                   child: richText(
+                              //                       "Select at most ",
+                              //                       "One",
+                              //                       " from Alcohols"),
+                              //                 ),
+                              //                 Expanded(
+                              //                   child: ListView.builder(
+                              //                     itemCount: alcohol?.data?.data
+                              //                             ?.length ??
+                              //                         0,
+                              //                     itemBuilder:
+                              //                         (BuildContext context,
+                              //                             int index) {
+                              //                       return alcoholGradientFunction(
+                              //                         index: index,
+                              //                         numCount: false,
+                              //                         cart: UserData
+                              //                             .preFiestasExtrasTicketCart,
+                              // count: alcohol?.data?.data
+                              //             ?.elementAt(
+                              //                 index)
+                              //             .isInMyCartQuantity ==
+                              //         1
+                              //     ? index
+                              //     : -1,
+                              //                         // model: alcohol
+                              //                       );
+                              //                     },
+                              //                   ),
+                              //                 ),
+                              //               ],
+                              //             ),
+                              //           ),
+
+                              // mix
+
+                              (prefiestasDetailModel?.data?.childData?.mix ==
+                                          null ||
+                                      prefiestasDetailModel
+                                              ?.data?.childData?.mix ==
+                                          [])
+                                  ? Center(
+                                      child: Text(
+                                        "${getTranslated(context, "nodataFound")}",
+                                        // Strings.nodataFound,
+                                        style: TextStyle(
+                                            color: AppColors.descriptionfirst,
+                                            fontFamily: Fonts.dmSansBold,
+                                            fontSize: size.width * 0.045),
+                                      ),
+                                    )
+                                  : Container(
+                                      color: AppColors.homeBackgroundLite,
+                                      child: Column(
+                                        children: [
+                                          SizedBox(
+                                            width:
+                                                SizeConfig.screenWidth * 0.95,
+                                            child: richText("Select at most ",
+                                                "One", " from Mixes"),
+                                          ),
+                                          Expanded(
+                                            child: ListView.builder(
+                                              itemCount: prefiestasDetailModel
+                                                      ?.data
+                                                      ?.childData
+                                                      ?.mix
+                                                      ?.length ??
+                                                  0,
+                                              itemBuilder:
+                                                  (BuildContext context,
+                                                      int index) {
+                                                return alcoholGradientFunction(
+                                                    index: index,
+                                                    model: prefiestasDetailModel
+                                                        ?.data?.childData?.mix,
+                                                    addFunc: addTicket,
+                                                    cart: UserData
+                                                        .preFiestasMixesTicketCart,
+                                                    count: prefiestasDetailModel
+                                                        ?.data?.childData?.mix
+                                                        ?.elementAt(index)
+                                                        .isInMyCartQuantity,
+                                                    removeFunc: ticketRemove,
+                                                    numCount: true);
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+
+                              // mix
+                              // _mixloading == true
+                              //     ? Center(child: CircularProgressIndicator())
+                              //     : (_mixloading == false &&
+                              //                 mix?.data == null) ||
+                              //             (_mixloading == false &&
+                              //                 mix?.data?.data == [])
+                              //         ? Center(
+                              //             child: Text(
+                              //               "${getTranslated(context, "nodataFound")}",
+                              //               // Strings.nodataFound,
+                              //               style: TextStyle(
+                              //                   color:
+                              //                       AppColors.descriptionfirst,
+                              //                   fontFamily: Fonts.dmSansBold,
+                              //                   fontSize: size.width * 0.045),
+                              //             ),
+                              //           )
+                              //         : Container(
+                              //             padding: EdgeInsets.all(8.0),
+                              //             color: AppColors.homeBackgroundLite,
+                              //             child: Column(
+                              //               children: [
+                              //                 SizedBox(
+                              //                     width:
+                              //                         SizeConfig.screenWidth *
+                              //                             0.95,
+                              //                     child: richText(
+                              //                         "Select at most ",
+                              //                         "Two",
+                              //                         " from Mixes")),
+                              //                 Expanded(
+                              //                   child: ListView.builder(
+                              //                     itemCount:
+                              //                         mix?.data?.data?.length ??
+                              //                             0,
+                              //                     itemBuilder:
+                              //                         (BuildContext context,
+                              //                             int index) {
+                              //                       return alcoholGradientFunction(
+                              //                           index: index,
+                              //                           // model: mix,
+                              //                           cart: UserData
+                              //                               .preFiestasMixesTicketCart,
+                              //                           count: mix?.data?.data
+                              //                               ?.elementAt(index)
+                              //                               .isInMyCartQuantity,
+                              //                           addFunc: addTicket,
+                              //                           removeFunc:
+                              //                               ticketRemove,
+                              //                           numCount: true);
+                              //                     },
+                              //                   ),
+                              //                 ),
+                              //               ],
+                              //             ),
+                              //           ),
+
+                              // prefiestasDetailModel.data.childData.extras
+
+                              // extras
+
+                              (prefiestasDetailModel?.data?.childData?.extras ==
+                                          null ||
+                                      prefiestasDetailModel
+                                              ?.data?.childData?.extras ==
+                                          [])
+                                  ? Center(
+                                      child: Text(
+                                        "${getTranslated(context, "nodataFound")}",
+                                        // Strings.nodataFound,
+                                        style: TextStyle(
+                                            color: AppColors.descriptionfirst,
+                                            fontFamily: Fonts.dmSansBold,
+                                            fontSize: size.width * 0.045),
+                                      ),
+                                    )
+                                  : Container(
+                                      color: AppColors.homeBackgroundLite,
+                                      child: Column(
+                                        children: [
+                                          SizedBox(
+                                            width:
+                                                SizeConfig.screenWidth * 0.95,
+                                            child: richText("Select at most ",
+                                                "One", " from Mixes"),
+                                          ),
+                                          Expanded(
+                                            child: ListView.builder(
+                                              itemCount: prefiestasDetailModel
+                                                      ?.data
+                                                      ?.childData
+                                                      ?.extras
+                                                      ?.length ??
+                                                  0,
+                                              itemBuilder:
+                                                  (BuildContext context,
+                                                      int index) {
+                                                return alcoholGradientFunction(
+                                                    index: index,
+                                                    model: prefiestasDetailModel
+                                                        ?.data
+                                                        ?.childData
+                                                        ?.extras,
+                                                    addFunc: addTicket,
+                                                    cart: UserData
+                                                        .preFiestasExtrasTicketCart,
+                                                    count: prefiestasDetailModel
+                                                        ?.data
+                                                        ?.childData
+                                                        ?.extras
+                                                        ?.elementAt(index)
+                                                        .isInMyCartQuantity,
+                                                    removeFunc: ticketRemove,
+                                                    numCount: true);
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+
+                              // extras
+                              // _extrasloading == true
+                              //     ? Center(child: CircularProgressIndicator())
+                              //     : (_extrasloading == false &&
+                              //                 extras?.data == null) ||
+                              //             (_extrasloading == false &&
+                              //                 extras?.data?.data == [])
+                              //         ? Center(
+                              //             child: Text(
+                              //               "${getTranslated(context, "nodataFound")}",
+                              //               // Strings.nodataFound,
+                              //               style: TextStyle(
+                              //                   color:
+                              //                       AppColors.descriptionfirst,
+                              //                   fontFamily: Fonts.dmSansBold,
+                              //                   fontSize: size.width * 0.045),
+                              //             ),
+                              //           )
+                              //         : Container(
+                              //             color: AppColors.homeBackgroundLite,
+                              //             child: Column(
+                              //               children: [
+                              //                 SizedBox(
+                              //                   width: SizeConfig.screenWidth *
+                              //                       0.95,
+                              //                   child: richText(
+                              //                       "Select at most ",
+                              //                       "One",
+                              //                       " from Mixes"),
+                              //                 ),
+                              //                 Expanded(
+                              //                   child: ListView.builder(
+                              //                     itemCount: extras?.data?.data
+                              //                             ?.length ??
+                              //                         0,
+                              //                     itemBuilder:
+                              //                         (BuildContext context,
+                              //                             int index) {
+                              //                       return alcoholGradientFunction(
+                              //                           index: index,
+                              //                           model: extras,
+                              //                           addFunc: addTicket,
+                              //                           cart: UserData
+                              //                               .preFiestasExtrasTicketCart,
+                              //                           count: extras
+                              //                               ?.data?.data
+                              //                               ?.elementAt(index)
+                              //                               .isInMyCartQuantity,
+                              //                           removeFunc:
+                              //                               ticketRemove,
+                              //                           numCount: true);
+                              //                     },
+                              //                   ),
+                              //                 ),
+                              //               ],
+                              //             ),
+                              //           ),
+                            ]),
+                            _loadingCenter
+                                ? Center(child: CircularProgressIndicator())
+                                : SizedBox()
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    // loading
+
+                    _loadingMainCenter
+                        ? Center(child: CircularProgressIndicator())
+                        : SizedBox()
+                  ],
+                )),
     );
   }
 }

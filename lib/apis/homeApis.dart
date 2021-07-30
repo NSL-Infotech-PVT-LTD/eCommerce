@@ -5,6 +5,7 @@ import 'package:funfy/models/favourite/fiestasFavouriteModel.dart';
 import 'package:funfy/models/favourite/preFiestasFavModel.dart';
 import 'package:funfy/models/fiestasmodel.dart';
 import 'package:funfy/models/preFiestasModel.dart';
+import 'package:funfy/models/prefiestasDetailModel.dart';
 import 'package:funfy/models/prifiestasAlMxEx.dart';
 import 'package:funfy/utils/urls.dart';
 import 'package:http/http.dart' as http;
@@ -42,6 +43,26 @@ Future<PrefiestasModel?> prefiestasPostGet() async {
     return prefiestasModelFromJson(res.body);
   } else if (res.statusCode == 422) {
     print("ERRRO IN THE API in prefiestas");
+  }
+}
+
+Future<PrefiestasDetailModel?> prefiestasDetailApi({
+  String? id,
+}) async {
+  var headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+  };
+
+  Map body = {"id": id, "categories": "0"};
+  var res = await http.post(Uri.parse(Urls.preFiestachildlistUrl),
+      body: body, headers: headers);
+
+  // print(res.body);
+
+  if (res.statusCode == 200) {
+    return prefiestasDetailModelFromJson(res.body);
+  } else {
+    print("ERRRO IN THE API in prefiestas child");
   }
 }
 

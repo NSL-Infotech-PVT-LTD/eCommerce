@@ -421,6 +421,8 @@ Widget preFiestasOrderItem(
 
   var data =
       model?.data?.data?.elementAt(index!).orderItem?.elementAt(0).preFiesta;
+  String orderid =
+      "${model?.data?.data?.elementAt(index!).orderItem?.elementAt(index).orderId}";
 
   return Container(
     margin: EdgeInsets.only(top: size.height * 0.02),
@@ -475,7 +477,7 @@ Widget preFiestasOrderItem(
                       GestureDetector(
                         onTap: () {
                           navigatorPushFun(
-                              context, YourOrderSum(orderID: data?.id));
+                              context, YourOrderSum(orderID: orderid));
                         },
                         child: roundedBoxR(
                             radius: size.width * 0.005,

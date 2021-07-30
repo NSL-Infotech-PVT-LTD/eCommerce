@@ -297,12 +297,15 @@ Widget preFiestasItem({context, ProductInfo? prefiestasdata}) {
                           print(prefiestasdata?.id);
                           navigatorPushFun(
                               context,
-                              PreFistaOrder(prefiestasdataMap: {
-                                'id': prefiestasdata?.id,
-                                "name": prefiestasdata?.name,
-                                "favourite": prefiestasdata?.isFavourite,
-                                "description": prefiestasdata?.description
-                              }));
+                              PreFistaOrder(preFiestasID: prefiestasdata?.id
+                                  //   prefiestasdataMap: {
+                                  //   'id': prefiestasdata?.id,
+                                  //   "name": prefiestasdata?.name,
+                                  //   "favourite": prefiestasdata?.isFavourite,
+                                  //   "description": prefiestasdata?.description
+                                  // }
+
+                                  ));
                         },
                         child: roundedBoxR(
                             radius: size.width * 0.005,

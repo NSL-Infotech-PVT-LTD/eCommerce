@@ -1,17 +1,17 @@
 // To parse this JSON data, do
 //
-//     final prefiestasCartModel = prefiestasCartModelFromJson(jsonString);
+//     final prefiestasOrderDetailModel = prefiestasOrderDetailModelFromJson(jsonString);
 
 import 'dart:convert';
 
-PrefiestasCartModel prefiestasCartModelFromJson(String str) =>
-    PrefiestasCartModel.fromJson(json.decode(str));
+PrefiestasOrderDetailModel prefiestasOrderDetailModelFromJson(String str) =>
+    PrefiestasOrderDetailModel.fromJson(json.decode(str));
 
-String prefiestasCartModelToJson(PrefiestasCartModel data) =>
+String prefiestasOrderDetailModelToJson(PrefiestasOrderDetailModel data) =>
     json.encode(data.toJson());
 
-class PrefiestasCartModel {
-  PrefiestasCartModel({
+class PrefiestasOrderDetailModel {
+  PrefiestasOrderDetailModel({
     this.status,
     this.code,
     this.data,
@@ -21,8 +21,8 @@ class PrefiestasCartModel {
   int? code;
   Data? data;
 
-  factory PrefiestasCartModel.fromJson(Map<String, dynamic> json) =>
-      PrefiestasCartModel(
+  factory PrefiestasOrderDetailModel.fromJson(Map<String, dynamic> json) =>
+      PrefiestasOrderDetailModel(
         status: json["status"],
         code: json["code"],
         data: Data.fromJson(json["data"]),
@@ -38,72 +38,95 @@ class PrefiestasCartModel {
 class Data {
   Data({
     this.parentDetail,
-    this.cart,
+    this.orderDetail,
   });
 
   ParentDetail? parentDetail;
-  Cart? cart;
+  List<OrderDetail>? orderDetail;
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
         parentDetail: ParentDetail.fromJson(json["parentDetail"]),
-        cart: Cart.fromJson(json["Cart"]),
+        orderDetail: List<OrderDetail>.from(
+            json["orderDetail"].map((x) => OrderDetail.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
         "parentDetail": parentDetail?.toJson(),
-        "Cart": cart?.toJson(),
+        "orderDetail": List<dynamic>.from(orderDetail!.map((x) => x.toJson())),
       };
 }
 
-class Cart {
-  Cart({
+class OrderDetail {
+  OrderDetail({
     this.id,
-    this.userId,
+    this.date,
+    this.time,
+    this.orderBy,
     this.totalPrice,
-    this.cartItems,
+    this.address,
+    this.orderStatus,
+    this.paymentParams,
+    this.paymentMode,
+    this.orderItem,
   });
 
   int? id;
-  int? userId;
-  String? totalPrice;
-  List<CartItem>? cartItems;
+  DateTime? date;
+  String? time;
+  int? orderBy;
+  int? totalPrice;
+  String? address;
+  String? orderStatus;
+  dynamic paymentParams;
+  dynamic paymentMode;
+  List<OrderItem>? orderItem;
 
-  factory Cart.fromJson(Map<String, dynamic> json) => Cart(
+  factory OrderDetail.fromJson(Map<String, dynamic> json) => OrderDetail(
         id: json["id"],
-        userId: json["user_id"],
+        date: DateTime.parse(json["date"]),
+        time: json["time"],
+        orderBy: json["order_by"],
         totalPrice: json["total_price"],
-        cartItems: List<CartItem>.from(
-            json["cart_items"].map((x) => CartItem.fromJson(x))),
+        address: json["address"],
+        orderStatus: json["order_status"],
+        paymentParams: json["payment_params"],
+        paymentMode: json["payment_mode"],
+        orderItem: List<OrderItem>.from(
+            json["order_item"].map((x) => OrderItem.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "user_id": userId,
+        "date":
+            "${date!.year.toString().padLeft(4, '0')}-${date!.month.toString().padLeft(2, '0')}-${date!.day.toString().padLeft(2, '0')}",
+        "time": time,
+        "order_by": orderBy,
         "total_price": totalPrice,
-        "cart_items": List<dynamic>.from(cartItems!.map((x) => x.toJson())),
+        "address": address,
+        "order_status": orderStatus,
+        "payment_params": paymentParams,
+        "payment_mode": paymentMode,
+        "order_item": List<dynamic>.from(orderItem!.map((x) => x.toJson())),
       };
 }
 
-class CartItem {
-  CartItem({
-    this.id,
-    this.cartId,
+class OrderItem {
+  OrderItem({
+    this.orderId,
     this.preFiestaId,
     this.quantity,
     this.price,
     this.preFiesta,
   });
 
-  int? id;
-  int? cartId;
+  int? orderId;
   int? preFiestaId;
   int? quantity;
   int? price;
   ParentDetail? preFiesta;
 
-  factory CartItem.fromJson(Map<String, dynamic> json) => CartItem(
-        id: json["id"],
-        cartId: json["cart_id"],
+  factory OrderItem.fromJson(Map<String, dynamic> json) => OrderItem(
+        orderId: json["order_id"],
         preFiestaId: json["pre_fiesta_id"],
         quantity: json["quantity"],
         price: json["price"],
@@ -111,8 +134,7 @@ class CartItem {
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "cart_id": cartId,
+        "order_id": orderId,
         "pre_fiesta_id": preFiestaId,
         "quantity": quantity,
         "price": price,
@@ -124,10 +146,8 @@ class ParentDetail {
   ParentDetail({
     this.id,
     this.name,
-    this.parentId,
     this.image,
     this.price,
-    this.categories,
     this.description,
     this.isInMyCart,
     this.isInMyCartQuantity,
@@ -137,10 +157,8 @@ class ParentDetail {
 
   int? id;
   String? name;
-  int? parentId;
   String? image;
   String? price;
-  String? categories;
   String? description;
   bool? isInMyCart;
   int? isInMyCartQuantity;
@@ -150,10 +168,8 @@ class ParentDetail {
   factory ParentDetail.fromJson(Map<String, dynamic> json) => ParentDetail(
         id: json["id"],
         name: json["name"],
-        parentId: json["parent_id"],
         image: json["image"],
         price: json["price"] == null ? null : json["price"],
-        categories: json["categories"] == null ? null : json["categories"],
         description: json["description"],
         isInMyCart: json["is_in_my_cart"],
         isInMyCartQuantity: json["is_in_my_cart_quantity"],
@@ -164,10 +180,8 @@ class ParentDetail {
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
-        "parent_id": parentId,
         "image": image,
         "price": price == null ? null : price,
-        "categories": categories == null ? null : categories,
         "description": description,
         "is_in_my_cart": isInMyCart,
         "is_in_my_cart_quantity": isInMyCartQuantity,
