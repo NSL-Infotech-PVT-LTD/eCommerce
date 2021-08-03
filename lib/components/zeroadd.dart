@@ -8,3 +8,16 @@ Future<String> zeroAdd(n) async {
   }
   return "$n";
 }
+
+// 2021-04-15
+Future<String?> dateFormat({DateTime? date}) async {
+  String year = "${date?.year}";
+
+  var month = await zeroAdd(date?.month);
+
+  var day = await zeroAdd(date?.day);
+
+  // ignore: unnecessary_statements
+
+  return "$year-$month-$day";
+}

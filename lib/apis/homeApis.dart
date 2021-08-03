@@ -10,16 +10,19 @@ import 'package:funfy/models/prifiestasAlMxEx.dart';
 import 'package:funfy/utils/urls.dart';
 import 'package:http/http.dart' as http;
 
-Future<FiestasModel?> fiestasPostGet() async {
-  //print('token print here ---------  ${UserData.userToken}');
-
-  // print('token print here ---------  ${headers.toString()}');
+Future<FiestasModel?> fiestasPostGet({String? type, String? dateFilter}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
   };
 
+  var body = {
+    type == null ? "" : "type": "$type",
+    dateFilter == null || dateFilter == "" ? "" : "filter": "$dateFilter"
+  };
+
   // print("Token" + "${UserData.userToken}");
-  var res = await http.post(Uri.parse(Urls.fiestasPostUrl), headers: headers);
+  var res = await http.post(Uri.parse(Urls.fiestasPostUrl),
+      body: body, headers: headers);
 
   // print(res.body);
 

@@ -4,6 +4,7 @@ import 'package:funfy/apis/homeApis.dart';
 import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/components/locationget.dart';
 import 'package:funfy/components/navigation.dart';
+import 'package:funfy/components/zeroadd.dart';
 import 'package:funfy/main.dart';
 import 'package:funfy/models/fiestasmodel.dart';
 import 'package:funfy/models/preFiestasModel.dart';
@@ -50,7 +51,10 @@ class _FiestasPageState extends State<FiestasPage> {
 
   bool _postLoading = false;
 
-  fiestasgetPosts() async {
+  String tagType = "club";
+  String dateFilterFiestas = "";
+
+  fiestasgetPosts({String? date}) async {
     var net = await Internetcheck.check();
     if (net == false) {
       Internetcheck.showdialog(context: context);
@@ -59,31 +63,36 @@ class _FiestasPageState extends State<FiestasPage> {
       setState(() {
         _postLoading = true;
       });
-      await fiestasPostGet().then((FiestasModel? posts) {
+      await fiestasPostGet(type: tagType, dateFilter: date.toString())
+          .then((FiestasModel? posts) {
         setState(() {
           fiestasdata = posts;
           _postLoading = false;
         });
       });
-
-      preFiestasPostget();
     }
   }
 
   preFiestasPostget() async {
-    setState(() {
-      _postLoading = true;
-    });
-    await prefiestasPostGet().then((posts) {
+    var net = await Internetcheck.check();
+
+    if (net == false) {
+      Internetcheck.showdialog(context: context);
+    } else {
       setState(() {
-        prefiestasdata = posts;
+        _postLoading = true;
+      });
+      await prefiestasPostGet().then((posts) {
+        setState(() {
+          prefiestasdata = posts;
+          _postLoading = false;
+        });
+      });
+
+      setState(() {
         _postLoading = false;
       });
-    });
-
-    setState(() {
-      _postLoading = false;
-    });
+    }
   }
 
   DateTime nowdate = DateTime.now();
@@ -104,7 +113,7 @@ class _FiestasPageState extends State<FiestasPage> {
 
   // Getting the total number of days of the month
 
-  daysInMonth(DateTime date) {
+  daysInMonth(DateTime date) async {
     dates = [];
     print(date.toString());
     print(DateFormat('EE, d MMM, yyyy').format(date));
@@ -130,6 +139,7 @@ class _FiestasPageState extends State<FiestasPage> {
       });
     }
     print("noeDAte==>$nowdate");
+
     itemSelected.clear();
     itemSelected = {
       "fulldate": nowdate,
@@ -185,7 +195,7 @@ class _FiestasPageState extends State<FiestasPage> {
 
     if (picked != null && picked != selectedDate) {
       setState(() {
-        print(picked.toString());
+        // print(picked.toString());
         nowdate = picked;
         daysInMonth(picked);
       });
@@ -196,6 +206,7 @@ class _FiestasPageState extends State<FiestasPage> {
   void initState() {
     super.initState();
     fiestasgetPosts();
+    preFiestasPostget();
     determinePosition();
     print(UserData.userToken);
   }
@@ -427,17 +438,69 @@ class _FiestasPageState extends State<FiestasPage> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
+                                // Expanded(
+                                //     child: ListView.builder(
+                                //         scrollDirection: Axis.horizontal,
+                                //         itemBuilder: (context, index) {
+                                //           return tagbutton(
+                                //               context: context,
+                                //               text:
+                                //                   "${getTranslated(context, "club")}", //Strings.club,
+                                //               borderColor: AppColors.white,
+                                //               borderwidth: size.width * 0.001);
+                                //         })),
+
                                 Expanded(
-                                    child: ListView.builder(
-                                        scrollDirection: Axis.horizontal,
-                                        itemBuilder: (context, index) {
-                                          return tagbutton(
-                                              context: context,
-                                              text:
-                                                  "${getTranslated(context, "club")}", //Strings.club,
-                                              borderColor: AppColors.white,
-                                              borderwidth: size.width * 0.001);
-                                        })),
+                                    child: Container(
+                                  // color: Colors.blue,
+                                  child: Row(
+                                    children: [
+                                      // club
+
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            tagType = "club";
+                                          });
+                                          fiestasgetPosts();
+                                        },
+                                        child: tagbutton2(
+                                            context: context,
+                                            text:
+                                                "${getTranslated(context, "club")}", //Strings.club,
+                                            borderColor: tagType == "club"
+                                                ? AppColors.tagBorder
+                                                : AppColors.white,
+                                            borderwidth: tagType == "club"
+                                                ? size.width * 0.002
+                                                : size.width * 0.001),
+                                      ),
+
+                                      SizedBox(
+                                        width: size.width * 0.02,
+                                      ),
+
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            tagType = "open";
+                                          });
+                                          fiestasgetPosts();
+                                        },
+                                        child: tagbutton2(
+                                            context: context,
+                                            text:
+                                                "${getTranslated(context, "openS")}", //Strings.club,
+                                            borderColor: tagType == "open"
+                                                ? AppColors.tagBorder
+                                                : AppColors.white,
+                                            borderwidth: tagType == "open"
+                                                ? size.width * 0.002
+                                                : size.width * 0.001),
+                                      ),
+                                    ],
+                                  ),
+                                )),
 
                                 SizedBox(
                                   width: size.width * 0.02,
@@ -488,9 +551,8 @@ class _FiestasPageState extends State<FiestasPage> {
                                     height: size.height * 0.015,
                                   ),
                                   Container(
-                                      // color: Colors.blue,
                                       width: size.width,
-                                      height: size.height * 0.07,
+                                      height: size.height * 0.06,
                                       child: Row(
                                         children: [
                                           Expanded(
