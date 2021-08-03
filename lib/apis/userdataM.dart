@@ -16,6 +16,7 @@ class UserData {
   static Map preFiestasMixesTicketCart = {};
   static Map preFiestasExtrasTicketCart = {};
   static String preFiestasCartid = "";
+  static bool returnV = false;
 
   static List tiketList = [
     {

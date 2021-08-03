@@ -69,7 +69,7 @@ Future<FiestasBookingList?> fiestasBookingList() async {
   }
 }
 
-Future<CreatePrefiestasCartModel> addproductinCartPrefiestas(
+Future addproductinCartPrefiestas(
     {String? preFiestaID, String? quantity}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
@@ -87,10 +87,36 @@ Future<CreatePrefiestasCartModel> addproductinCartPrefiestas(
   var res = await http.post(Uri.parse(Urls.preFiestasBookingUrl),
       body: body, headers: headers);
 
-  print(res.body);
+  // print(res.body);
 
-  CreatePrefiestasCartModel jsonBody =
-      createPrefiestasCartModelFromJson(res.body); // .decode(res.body);
+  var jsonBody = json.decode(res.body);
+
+  print("here is json body cart $jsonBody");
+
+  // CreatePrefiestasCartModel jsonBody =
+  //     createPrefiestasCartModelFromJson(res.body); // .decode(res.body);
+  if (res.statusCode == 200 || res.statusCode == 201) {
+    return jsonBody;
+  } else {
+    return jsonBody;
+  }
+}
+
+Future cartResetPrefiestas({
+  String? preFiestaID,
+  String? quantity,
+}) async {
+  var headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+  };
+
+  // print("Bearer ${UserData.userToken}");
+  var body = {"pre_fiesta_id": preFiestaID, "quantity": quantity, "reset": "1"};
+
+  var res = await http.post(Uri.parse(Urls.preFiestasBookingUrl),
+      body: body, headers: headers);
+
+  var jsonBody = json.decode(res.body);
 
   return jsonBody;
 }

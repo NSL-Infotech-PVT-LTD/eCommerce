@@ -172,5 +172,7 @@
   "success": "Success",
   "yourAccountisSuccessfullyregistered": "Your account is successfully registered",
   "favourite": "favourite",
+  "alert!": "alert!",
+  "youhaveselecteddifferentcategoryDoyouwanttoresetCart?": "You have selected different category, Do you want to reset Cart?",
   "exit": "Exit"
 }

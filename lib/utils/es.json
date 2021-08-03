@@ -170,7 +170,9 @@
   "home": "Casa",
   "success": "éxito",
   "attendies": "Asiste",
+  "alert!": "alerta!",
   "yourAccountisSuccessfullyregistered": "su cuenta está registrada con éxito",
+  "youhaveselecteddifferentcategoryDoyouwanttoresetCart?": "Has seleccionado una categoría diferente, ¿Quieres restablecer el carrito?",
   "favourite": "favorita",
   "exit": "salida"
 }

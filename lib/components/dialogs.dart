@@ -54,13 +54,10 @@ class Dialogs {
               },
             ),
             TextButton(
-              child: new Text("${getTranslated(context, "yes")}"
-                  //  Strings.yes
-                  ),
-              onPressed: () {
-                func();
-              },
-            ),
+                child: new Text("${getTranslated(context, "yes")}"
+                    //  Strings.yes
+                    ),
+                onPressed: func),
           ],
         );
       },

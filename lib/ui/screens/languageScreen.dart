@@ -25,27 +25,38 @@ class TranslationPage extends StatefulWidget {
 enum SingingCharacter { English, Spanish }
 
 class _SigninState extends State<TranslationPage> {
+  bool _loading = false;
   next() async {
     var net = await Internetcheck.check();
     if (net != true) {
       Internetcheck.showdialog(context: context);
     } else {
-      var introdata = await getIntrodata();
-      if (introdata.length != 0 && introdata != []) {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => Constants.prefs?.getString("token") != null &&
-                    Constants.prefs?.getString("token") != ""
-                ? Home()
-                : Intro()));
-      } else {
-        print("no intro data");
+      setState(() {
+        _loading = true;
+      });
+      await getIntrodata().then((value) {
+        setState(() {
+          _loading = false;
+        });
 
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => Constants.prefs?.getString("token") != null &&
-                    Constants.prefs?.getString("token") != ""
-                ? Home()
-                : Signin()));
-      }
+        if (value.length != 0 && value != []) {
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) =>
+                  Constants.prefs?.getString("token") != null &&
+                          Constants.prefs?.getString("token") != ""
+                      ? Home()
+                      : Intro()));
+        } else {
+          print("no intro data");
+
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) =>
+                  Constants.prefs?.getString("token") != null &&
+                          Constants.prefs?.getString("token") != ""
+                      ? Home()
+                      : Signin()));
+        }
+      });
     }
   }
 
@@ -61,7 +72,7 @@ class _SigninState extends State<TranslationPage> {
 
   // String _emailError = "";
   String _passwordError = "";
-  bool _loading = false;
+
   Map facebookdata = {};
   TextEditingController facebookEmailController = TextEditingController();
   String facebookEmailError = "";

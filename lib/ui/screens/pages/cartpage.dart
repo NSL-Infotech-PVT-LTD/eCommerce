@@ -50,6 +50,8 @@ class _CartpageState extends State<Cartpage> {
             myCartModel = res;
             print("error $myCartModel");
 
+            print(res?.toJson());
+
             count =
                 double.parse("${myCartModel?.data?.cart?.cartItems?.length}") /
                         10 +
@@ -95,10 +97,12 @@ class _CartpageState extends State<Cartpage> {
             "preticketCount": cartCount,
           };
         });
+
+        totalCount2(value: true);
       }
     });
 
-    totalCount();
+    // totalCount();
     print(cart);
   }
 
@@ -130,6 +134,7 @@ class _CartpageState extends State<Cartpage> {
               "preticketCount": cartCount,
             };
           });
+          totalCount2(value: false);
         }
       });
     } else {
@@ -142,14 +147,14 @@ class _CartpageState extends State<Cartpage> {
     //   });
     // }
 
-    totalCount();
+    // totalCount();
     // print(cart);
   }
 
 // remove from list
 
   ticketremoveFromList({String? id, int? index, String? type}) async {
-    print("remove id: $id  index: $index $type");
+    print("look here remove id: $id  index: $index $type");
 
     await addToCart(id: id, cont: "0").then((value) {
       if (value) {
@@ -164,12 +169,12 @@ class _CartpageState extends State<Cartpage> {
 
           if (type == "mix") {
             UserData.preFiestasMixesTicketCart.clear();
-            print(type);
+            myCartModel?.data?.cart?.cartItems?.removeAt(index!);
           }
 
           if (type == "extras") {
             UserData.preFiestasExtrasTicketCart.clear();
-            print(type);
+            myCartModel?.data?.cart?.cartItems?.removeAt(index!);
           }
         });
       }
@@ -213,6 +218,47 @@ class _CartpageState extends State<Cartpage> {
     });
   }
 
+  totalCount2({bool? value}) {
+    print("total Count run");
+
+// ++
+    if (value!) {
+      setState(() {
+        String totnum = "${Constants.prefs?.getString("cartTot")}" == "null" ||
+                "${Constants.prefs?.getString("cartTot")}" == ""
+            ? "0"
+            : "${Constants.prefs?.getString("cartTot")}";
+
+        int totalNumnber = int.parse(totnum);
+
+        int totalCount = totalNumnber + 1;
+
+        print("here is num $totalCount");
+
+        Constants.prefs?.setString("cartTot", "$totalCount");
+      });
+    }
+
+// --
+
+    if (value == false) {
+      setState(() {
+        String totnum = "${Constants.prefs?.getString("cartTot")}" == "null" ||
+                "${Constants.prefs?.getString("cartTot")}" == ""
+            ? "0"
+            : "${Constants.prefs?.getString("cartTot")}";
+
+        int totalNumnber = int.parse(totnum);
+
+        int totalCount = totalNumnber - 1;
+
+        print("here is num $totalCount");
+
+        Constants.prefs?.setString("cartTot", "$totalCount");
+      });
+    }
+  }
+
   // pre fiesta cart booking One Func
   Future<bool> addToCart({String? id, String? cont}) async {
     var net = await Internetcheck.check();
@@ -222,27 +268,31 @@ class _CartpageState extends State<Cartpage> {
     if (net != true) {
       Internetcheck.showdialog(context: context);
     } else {
-      print("run ---------- ");
       setState(() {
         _centerLoading = true;
       });
       try {
-        await addproductinCartPrefiestas(preFiestaID: id, quantity: cont)
+        await addproductinCartPrefiestas(
+                preFiestaID: id.toString(), quantity: cont.toString())
             .then((res) {
-          print("here is res - $res");
+          print("here is res ---------- $id $cont");
+
           setState(() {
             _centerLoading = false;
           });
-          if (res.code == 201 || res.code == 200) {
+          if (res["status"] == true &&
+              (res["code"] == 200 || res["code"] == 201)) {
             returnV = true;
 
-            UserData.preFiestasCartid = "${res.data?.cart?.id}";
+            if (res["data"]["message"] != "You're cart is empty!") {
+              UserData.preFiestasCartid = res["data"]["cart"]["id"].toString();
+            }
           } else {
             returnV = false;
           }
         });
       } catch (e) {
-        print("Error $e");
+        print("Error here -------------- $e");
 
         setState(() {
           _centerLoading = false;
@@ -254,7 +304,7 @@ class _CartpageState extends State<Cartpage> {
     return returnV!;
   }
 
-  clearCart() {
+  clearCart() async {
     setState(() {
       UserData.preFiestasAlcoholCart = "";
       UserData.preFiestasExtrasTicketCart.clear();
@@ -316,7 +366,18 @@ class _CartpageState extends State<Cartpage> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      navigatorPushFun(context, PreFistaOrder(preFiestasID: 1));
+                      // print(
+                      //     "Look here pid - ${myCartModel?.data?.parentDetail?.id}");
+
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PreFistaOrder(
+                                  preFiestasID: myCartModel
+                                      ?.data?.parentDetail?.id
+                                      .toString()))).then((value) {
+                        getMyCart();
+                      });
                     },
                     child: Text(
                       "${getTranslated(context, "change")}",
@@ -489,9 +550,8 @@ class _CartpageState extends State<Cartpage> {
         });
 
         if (res?.status == true && res?.code == 201) {
-          setState(() {
-            clearCart();
-          });
+          print("we are here -------------------");
+
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
@@ -503,7 +563,7 @@ class _CartpageState extends State<Cartpage> {
       setState(() {
         _centerLoading = false;
       });
-      print("error $e");
+      print("error ----------------  $e");
     }
   }
 
@@ -514,12 +574,12 @@ class _CartpageState extends State<Cartpage> {
       color: AppColors.blackBackground,
       child: SafeArea(
         child: Scaffold(
-            floatingActionButton: FloatingActionButton(
-                onPressed: () {
-                  print("cart clear");
-                  clearCart();
-                },
-                child: Icon(Icons.local_activity)),
+            // floatingActionButton: FloatingActionButton(
+            //     onPressed: () {
+            //       print("cart clear");
+            //       clearCart();
+            //     },
+            //     child: Icon(Icons.local_activity)),
             backgroundColor: HexColor("#191512"),
             body: SingleChildScrollView(
               child: Stack(
@@ -798,19 +858,25 @@ class _CartpageState extends State<Cartpage> {
                                     SizedBox(height: size.height * 0.03),
 
                                     // button
-                                    roundedBoxR(
-                                      width: size.width,
-                                      height: size.height * 0.07,
-                                      radius: size.width * 0.02,
-                                      backgroundColor: AppColors.siginbackgrond,
-                                      child: Center(
-                                        child: Text(
-                                          "${getTranslated(context, "proceedtopay")}",
-                                          //   Strings.proceedtopay,
-                                          style: TextStyle(
-                                              color: AppColors.white,
-                                              fontFamily: Fonts.dmSansBold,
-                                              fontSize: size.width * 0.045),
+                                    GestureDetector(
+                                      onTap: () {
+                                        makeOrder();
+                                      },
+                                      child: roundedBoxR(
+                                        width: size.width,
+                                        height: size.height * 0.07,
+                                        radius: size.width * 0.02,
+                                        backgroundColor:
+                                            AppColors.siginbackgrond,
+                                        child: Center(
+                                          child: Text(
+                                            "${getTranslated(context, "proceedtopay")}",
+                                            //   Strings.proceedtopay,
+                                            style: TextStyle(
+                                                color: AppColors.white,
+                                                fontFamily: Fonts.dmSansBold,
+                                                fontSize: size.width * 0.045),
+                                          ),
                                         ),
                                       ),
                                     ),
