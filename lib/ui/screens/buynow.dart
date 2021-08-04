@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:funfy/apis/bookingApi.dart';
 import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/components/navigation.dart';
+import 'package:funfy/models/fiestasDetailmodel.dart';
 import 'package:funfy/models/fiestasmodel.dart';
 import 'package:funfy/ui/screens/CreditCardDetails.dart';
 import 'package:funfy/components/sizeclass/SizeConfig.dart';
@@ -20,7 +21,7 @@ import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 
 class BuyNow extends StatefulWidget {
-  final Datum? fiestasM;
+  final FiestasDetailModel? fiestasM;
 
   const BuyNow({Key? key, this.fiestasM}) : super(key: key);
 
@@ -113,7 +114,7 @@ class _BuyNowState extends State<BuyNow> {
         });
 
         await fiestasBooking(
-                id: widget.fiestasM?.id.toString(),
+                id: widget.fiestasM?.data?.id.toString(),
                 ticketcount: ticket,
                 standardticketcount: standard,
                 vipticketcount: vip)
@@ -246,7 +247,7 @@ class _BuyNowState extends State<BuyNow> {
 
                                   //   height: SizeConfig.screenHeight,
                                   child: Text(
-                                    "${widget.fiestasM?.name}",
+                                    "${widget.fiestasM?.data?.name}",
                                     style: TextStyle(
                                         fontSize: size.width * 0.08,
                                         fontFamily: "DM Sans Bold",

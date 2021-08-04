@@ -20,6 +20,8 @@ Future<FiestasModel?> fiestasPostGet({String? type, String? dateFilter}) async {
     dateFilter == null || dateFilter == "" ? "" : "filter": "$dateFilter"
   };
 
+  print("here is body : $body");
+
   // print("Token" + "${UserData.userToken}");
   var res = await http.post(Uri.parse(Urls.fiestasPostUrl),
       body: body, headers: headers);

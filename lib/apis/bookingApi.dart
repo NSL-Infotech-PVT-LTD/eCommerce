@@ -4,6 +4,7 @@ import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/models/createcartPreFiestasModel.dart';
 import 'package:funfy/models/fiestasBooking.dart';
 import 'package:funfy/models/fiestasBookingListModel.dart';
+import 'package:funfy/models/fiestasDetailmodel.dart';
 import 'package:funfy/models/makePrefiestasmodel.dart';
 import 'package:funfy/models/preFiestasBookingListModel.dart';
 import 'package:funfy/models/preFiestasCartModel.dart';
@@ -208,6 +209,26 @@ Future<PrefiestasCartModel?> getPrefiestasCart() async {
   if (res.statusCode == 200) {
     print("here is cart - ${res.body}");
     return prefiestasCartModelFromJson(res.body);
+  } else {
+    print("here is error ${res.body}");
+  }
+}
+
+// get fiestas by id
+
+Future<FiestasDetailModel?> getFiestasbyId({String? fiestasID}) async {
+  var headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+  };
+
+  var body = {"id": "$fiestasID"};
+
+  var res = await http.post(Uri.parse(Urls.fiestasGetByidUrl),
+      body: body, headers: headers);
+
+  if (res.statusCode == 200) {
+    print("here is cart - ${res.body}");
+    return fiestasDetailModelFromJson(res.body);
   } else {
     print("here is error ${res.body}");
   }

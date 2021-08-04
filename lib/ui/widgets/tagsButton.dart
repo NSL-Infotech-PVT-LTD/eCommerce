@@ -38,7 +38,7 @@ Widget tagbutton({context, text, borderColor, borderwidth}) {
   );
 }
 
-Widget tagbutton2({context, text, borderColor, borderwidth}) {
+Widget tagbutton2({context, text, textColor, borderColor, borderwidth}) {
   var size = MediaQuery.of(context).size;
 
   return roundedBoxBorder(
@@ -58,7 +58,7 @@ Widget tagbutton2({context, text, borderColor, borderwidth}) {
           style: TextStyle(
               fontSize: size.width * 0.035,
               fontFamily: Fonts.dmSansMedium,
-              color: AppColors.white),
+              color: textColor),
         ),
       ));
 }
