@@ -58,6 +58,7 @@ class Data {
     this.leftStandardTicket,
     this.leftVipTicket,
     this.leftNormalTicket,
+    this.clubRating,
     this.clubDetail,
     this.fiestaImages,
   });
@@ -80,9 +81,10 @@ class Data {
   String? distanceKm;
   String? distanceMiles;
   bool? isFavourite;
-  String? leftStandardTicket;
-  String? leftVipTicket;
-  String? leftNormalTicket;
+  int? leftStandardTicket;
+  int? leftVipTicket;
+  int? leftNormalTicket;
+  dynamic clubRating;
   ClubDetail? clubDetail;
   List<FiestaImage>? fiestaImages;
 
@@ -108,6 +110,7 @@ class Data {
         leftStandardTicket: json["left_standard_ticket"],
         leftVipTicket: json["left_vip_ticket"],
         leftNormalTicket: json["left_normal_ticket"],
+        clubRating: json["club_rating"],
         clubDetail: ClubDetail.fromJson(json["club_detail"]),
         fiestaImages: List<FiestaImage>.from(
             json["fiesta_images"].map((x) => FiestaImage.fromJson(x))),
@@ -135,6 +138,7 @@ class Data {
         "left_standard_ticket": leftStandardTicket,
         "left_vip_ticket": leftVipTicket,
         "left_normal_ticket": leftNormalTicket,
+        "club_rating": clubRating,
         "club_detail": clubDetail?.toJson(),
         "fiesta_images":
             List<dynamic>.from(fiestaImages!.map((x) => x.toJson())),

@@ -10,6 +10,7 @@ import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/langauge_constant.dart';
+import 'package:funfy/utils/strings.dart';
 
 class Profilepage extends StatefulWidget {
   Profilepage({Key? key}) : super(key: key);
@@ -56,6 +57,8 @@ class _ProfilepageState extends State<Profilepage> {
                             children: [
                               Text(
                                 "${Constants.prefs?.getString('name')}",
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     fontFamily: Fonts.dmSansBold,
                                     color: AppColors.white,
@@ -63,6 +66,8 @@ class _ProfilepageState extends State<Profilepage> {
                               ),
                               Text(
                                 "${Constants.prefs?.getString('email')}",
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     fontFamily: Fonts.dmSansRegular,
                                     color: AppColors.profileEmail,

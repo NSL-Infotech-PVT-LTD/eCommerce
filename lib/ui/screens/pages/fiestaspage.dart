@@ -8,7 +8,6 @@ import 'package:funfy/components/zeroadd.dart';
 import 'package:funfy/main.dart';
 import 'package:funfy/models/fiestasmodel.dart';
 import 'package:funfy/models/preFiestasModel.dart';
-import 'package:funfy/ui/screens/auth/signin.dart';
 import 'package:funfy/ui/screens/notifications.dart';
 import 'package:funfy/ui/widgets/dateButton.dart';
 import 'package:funfy/ui/widgets/postsitems.dart';
@@ -51,6 +50,10 @@ class _FiestasPageState extends State<FiestasPage> {
 
   bool _postLoading = false;
 
+  bool _fiestasPostLoading = false;
+
+  bool _prefiestasPostLoading = false;
+
   String tagType = "";
   String dateFilterFiestas = "";
 
@@ -64,13 +67,13 @@ class _FiestasPageState extends State<FiestasPage> {
     }
     {
       setState(() {
-        _postLoading = true;
+        _fiestasPostLoading = true;
       });
       await fiestasPostGet(type: tagType, dateFilter: date.toString())
           .then((FiestasModel? posts) {
         setState(() {
           fiestasdata = posts;
-          _postLoading = false;
+          _fiestasPostLoading = false;
         });
       });
     }
@@ -83,17 +86,13 @@ class _FiestasPageState extends State<FiestasPage> {
       Internetcheck.showdialog(context: context);
     } else {
       setState(() {
-        _postLoading = true;
+        _prefiestasPostLoading = true;
       });
       await prefiestasPostGet().then((posts) {
         setState(() {
           prefiestasdata = posts;
-          _postLoading = false;
+          _prefiestasPostLoading = false;
         });
-      });
-
-      setState(() {
-        _postLoading = false;
       });
     }
   }
@@ -277,13 +276,18 @@ class _FiestasPageState extends State<FiestasPage> {
                               fontFamily: Fonts.dmSansRegular,
                               color: AppColors.white),
                         ),
-                        Text(
-                          // Strings.garyadams,
-                          "${Constants.prefs?.getString("name")}",
-                          style: TextStyle(
-                              fontSize: size.width * 0.048,
-                              fontFamily: Fonts.dmSansBold,
-                              color: AppColors.white),
+                        Container(
+                          width: size.width * 0.6,
+                          child: Text(
+                            // Strings.garyadams,
+                            "${Constants.prefs?.getString("name")}",
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyle(
+                                fontSize: size.width * 0.048,
+                                fontFamily: Fonts.dmSansBold,
+                                color: AppColors.white),
+                          ),
                         ),
                         SizedBox(
                           height: size.height * 0.01,
@@ -745,7 +749,7 @@ class _FiestasPageState extends State<FiestasPage> {
                                 height: size.height * 0.015,
                               ),
                               Expanded(
-                                  child: _postLoading == true
+                                  child: _fiestasPostLoading == true
                                       ? Center(
                                           child: CircularProgressIndicator(
                                               valueColor:
@@ -785,7 +789,7 @@ class _FiestasPageState extends State<FiestasPage> {
               // pre fiestas
 
               fiestasButton == false
-                  ? preFiestas(context, prefiestasdata, _postLoading)
+                  ? preFiestas(context, prefiestasdata, _prefiestasPostLoading)
                   : SizedBox()
             ],
           ),

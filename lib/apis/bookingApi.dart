@@ -217,6 +217,7 @@ Future<PrefiestasCartModel?> getPrefiestasCart() async {
 // get fiestas by id
 
 Future<FiestasDetailModel?> getFiestasbyId({String? fiestasID}) async {
+  print("Api run ---------------- $fiestasID");
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
   };

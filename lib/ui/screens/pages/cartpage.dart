@@ -111,8 +111,6 @@ class _CartpageState extends State<Cartpage> {
   ticketRemove({String? id, int itemCount = 0, int? index, var cart}) async {
     print("remove id: $id  index: $index");
 
-    print("here count num - $itemCount");
-
     int cartCount;
 
     try {
@@ -153,11 +151,37 @@ class _CartpageState extends State<Cartpage> {
 
 // remove from list
 
-  ticketremoveFromList({String? id, int? index, String? type}) async {
-    print("look here remove id: $id  index: $index $type");
+  ticketremoveFromList(
+      {String? id, String? count = "0", int? index, String? type}) async {
+    print("look here remove id: $id  $count index: $index $type");
+
+    String totnum = Constants.prefs?.getString("cartTot") == null ||
+            Constants.prefs?.getString("cartTot") == ""
+        ? "0"
+        : "${Constants.prefs?.getString("cartTot")}";
+
+    int totalNumnber = int.parse(totnum);
+
+    int totalCount = totalNumnber - int.parse("$count");
+
+    print("here is num here  $totalCount");
 
     await addToCart(id: id, cont: "0").then((value) {
       if (value) {
+        // remove from total
+        String totnum = Constants.prefs?.getString("cartTot") == null ||
+                Constants.prefs?.getString("cartTot") == ""
+            ? "0"
+            : "${Constants.prefs?.getString("cartTot")}";
+
+        int totalNumnber = int.parse(totnum);
+
+        int totalCount = totalNumnber - int.parse("$count");
+
+        print("here is num here  $totalCount");
+
+        Constants.prefs?.setString("cartTot", "$totalCount");
+
         setState(() {
           // myCartModel?.data?.cartItems?.removeAt(index!);
           if (type == "alcohol") {
@@ -168,11 +192,13 @@ class _CartpageState extends State<Cartpage> {
           }
 
           if (type == "mix") {
+            Constants.prefs?.setString("cartTot", "$totalCount");
             UserData.preFiestasMixesTicketCart.clear();
             myCartModel?.data?.cart?.cartItems?.removeAt(index!);
           }
 
           if (type == "extras") {
+            Constants.prefs?.setString("cartTot", "$totalCount");
             UserData.preFiestasExtrasTicketCart.clear();
             myCartModel?.data?.cart?.cartItems?.removeAt(index!);
           }
@@ -180,7 +206,9 @@ class _CartpageState extends State<Cartpage> {
       }
     });
 
-    totalCount();
+    //
+
+    // totalCount();
   }
 
   // total count
@@ -392,8 +420,17 @@ class _CartpageState extends State<Cartpage> {
                 ],
               ),
               GestureDetector(
+                // String? ncountNunber =  cart!.containsKey(index)
+                //                       ? "${cart[index]["preticketCount"]}"
+                //                       : count.toString();
                 onTap: () {
-                  ticketremoveFromList(index: index, id: pid, type: type);
+                  ticketremoveFromList(
+                      index: index,
+                      count: cart!.containsKey(index)
+                          ? "${cart[index]["preticketCount"]}"
+                          : count.toString(),
+                      id: pid,
+                      type: type);
                 },
                 child: Icon(
                   Icons.close,

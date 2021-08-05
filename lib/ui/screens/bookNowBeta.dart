@@ -217,8 +217,11 @@ class _BookNowBetaState extends State<BookNowBeta> {
         if (UserData.ticketcartMap.isNotEmpty) {
           clearCart();
         }
+
         await getFiestasbyId(fiestasID: "${widget.fiestasID}").then((res) {
           setState(() {
+            print(res?.toJson());
+
             fiestasDetailModel = res;
 
             setPriceToList();
