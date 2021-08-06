@@ -137,7 +137,7 @@ class Datum {
   Map<String, dynamic> toJson() => {
         "id": id,
         "date":
-            "${date?.year.toString().padLeft(4, '0')}-${date?.month.toString().padLeft(2, '0')}-${date?.day.toString().padLeft(2, '0')}",
+            "${date!.year.toString().padLeft(4, '0')}-${date!.month.toString().padLeft(2, '0')}-${date!.day.toString().padLeft(2, '0')}",
         "time": time,
         "order_by": orderBy,
         "total_price": totalPrice,
@@ -169,9 +169,7 @@ class OrderItem {
         preFiestaId: json["pre_fiesta_id"],
         quantity: json["quantity"],
         price: json["price"],
-        preFiesta: json["pre_fiesta"] == null
-            ? null
-            : PreFiesta.fromJson(json["pre_fiesta"]),
+        preFiesta: PreFiesta.fromJson(json["pre_fiesta"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -179,7 +177,7 @@ class OrderItem {
         "pre_fiesta_id": preFiestaId,
         "quantity": quantity,
         "price": price,
-        "pre_fiesta": preFiesta == null ? null : preFiesta?.toJson(),
+        "pre_fiesta": preFiesta?.toJson(),
       };
 }
 

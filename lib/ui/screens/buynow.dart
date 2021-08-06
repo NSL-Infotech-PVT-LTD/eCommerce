@@ -40,8 +40,20 @@ class _BuyNowState extends State<BuyNow> {
   addTicket({int? index, String? name, int? count, var price, String? image}) {
     print("add button press");
 
-    print(UserData.ticketcartMap);
+    // var oldCount = 0;
+    // try {
+    //   setState(() {
+    //     oldCount = UserData.ticketcartMap[index]["ticketCount"];
+    //   });
+    // } catch (e) {
+    //   setState(() {
+    //     oldCount = 0;
+    //   });
+    // }
 
+    print(UserData.ticketcartMap);
+    // if (UserData.tiketList[index!]["max"] > 0 &&
+    //     oldCount < UserData.tiketList[index]["max"]) {
     setState(() {
       if (UserData.ticketcartMap.containsKey(index)) {
         UserData.ticketcartMap[index]["ticketCount"] =
@@ -59,6 +71,7 @@ class _BuyNowState extends State<BuyNow> {
         };
       }
     });
+    // }
   }
 
   // remove button
@@ -114,7 +127,7 @@ class _BuyNowState extends State<BuyNow> {
         });
 
         await fiestasBooking(
-                id: widget.fiestasM?.data?.id.toString(),
+                id: widget.fiestasM?.data!.id.toString(),
                 ticketcount: ticket,
                 standardticketcount: standard,
                 vipticketcount: vip)
@@ -247,7 +260,7 @@ class _BuyNowState extends State<BuyNow> {
 
                                   //   height: SizeConfig.screenHeight,
                                   child: Text(
-                                    "${widget.fiestasM?.data?.name}",
+                                    "${widget.fiestasM?.data!.name}",
                                     style: TextStyle(
                                         fontSize: size.width * 0.08,
                                         fontFamily: "DM Sans Bold",

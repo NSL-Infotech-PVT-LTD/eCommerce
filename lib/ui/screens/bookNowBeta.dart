@@ -58,15 +58,23 @@ class _BookNowBetaState extends State<BookNowBeta> {
 
   addTicket({int? index, String? name, var count, var price, String? image}) {
     print("add button press  $count  $index");
-    print("price is here $price");
-    // print(UserData.ticketcartMap[index]["ticketPrice"].runtimeType);
 
-    // print(UserData.ticketcartMap.toString());
+    // var oldCount = 0;
+    // try {
+    //   setState(() {
+    //     oldCount = UserData.ticketcartMap[index]["ticketCount"];
+    //   });
+    // } catch (e) {
+    //   setState(() {
+    //     oldCount = 0;
+    //   });
+    // }
 
+    // if (UserData.tiketList[index!]["max"] > 0 &&
+    //     oldCount < UserData.tiketList[index]["max"]) {
     setState(() {
       if (UserData.ticketcartMap.containsKey(index)) {
-        print("old add");
-        print(UserData.ticketcartMap);
+        // print(UserData.ticketcartMap);
         UserData.ticketcartMap[index]["ticketCount"] =
             UserData.ticketcartMap[index]["ticketCount"] + 1;
 
@@ -76,7 +84,7 @@ class _BookNowBetaState extends State<BookNowBeta> {
 
         totalTicket();
       } else {
-        print("new add $index");
+        // print("new add $index");
         UserData.ticketcartMap[index] = {
           "ticketname": name,
           "ticketCount": 1,
@@ -87,6 +95,7 @@ class _BookNowBetaState extends State<BookNowBeta> {
         totalTicket();
       }
     });
+    // }
   }
 
   clearCart() {
@@ -146,7 +155,7 @@ class _BookNowBetaState extends State<BookNowBeta> {
         _loadingMainCenter = true;
       });
       try {
-        await fiestasAddfavouriteApi(id: "${fiestasDetailModel?.data?.id}")
+        await fiestasAddfavouriteApi(id: "${fiestasDetailModel?.data!.id}")
             .then((res) {
           setState(() {
             _loadingMainCenter = false;
@@ -192,13 +201,22 @@ class _BookNowBetaState extends State<BookNowBeta> {
   setPriceToList() {
     setState(() {
       UserData.tiketList[0]["price"] =
-          int.parse('${fiestasDetailModel?.data?.ticketPrice}');
+          int.parse('${fiestasDetailModel?.data!.ticketPrice}');
+
+      // UserData.tiketList[0]["max"] =
+      //     int.parse('${fiestasDetailModel?.data!.leftNormalTicket}');
 
       UserData.tiketList[1]["price"] =
-          int.parse('${fiestasDetailModel?.data?.ticketPriceStandard}');
+          int.parse('${fiestasDetailModel?.data!.ticketPriceStandard}');
+
+      // UserData.tiketList[1]["max"] =
+      //     int.parse('${fiestasDetailModel?.data!.leftStandardTicket}');
 
       UserData.tiketList[2]["price"] =
-          int.parse('${fiestasDetailModel?.data?.ticketPriceVip}');
+          int.parse('${fiestasDetailModel?.data!.ticketPriceVip}');
+
+      // UserData.tiketList[2]["max"] =
+      //     int.parse('${fiestasDetailModel?.data!.leftVipTicket}');
     });
   }
 
@@ -220,7 +238,7 @@ class _BookNowBetaState extends State<BookNowBeta> {
 
         await getFiestasbyId(fiestasID: "${widget.fiestasID}").then((res) {
           setState(() {
-            print(res?.toJson());
+            // print(res?.toJson());
 
             fiestasDetailModel = res;
 
@@ -228,9 +246,9 @@ class _BookNowBetaState extends State<BookNowBeta> {
             setFavoriteBool();
 
             price = k_m_b_generator(
-                int.parse("${fiestasDetailModel?.data?.ticketPrice}"));
+                int.parse("${fiestasDetailModel?.data!.ticketPrice}"));
 
-            dateTime = DateTime.parse("${fiestasDetailModel?.data?.timestamp}");
+            dateTime = DateTime.parse("${fiestasDetailModel?.data!.timestamp}");
 
             day = DateFormat('dd').format(dateTime!);
 
@@ -239,32 +257,25 @@ class _BookNowBetaState extends State<BookNowBeta> {
             onlyTime = time?.split(" ")[0];
             amPm = time?.split(" ")[1];
 
-            if (fiestasDetailModel!.data?.fiestaImages != []) {
+            if (fiestasDetailModel?.data!.fiestaImages?.length != 0) {
+              cardList = [];
+              print("images 1 -------");
               for (var i in fiestasDetailModel!.data!.fiestaImages!) {
-                print("images 1");
-                cardList.add(SlidingBannerProviderDetails(image: "${i.image}"));
+                // print(i);
+                cardList
+                    .add(SlidingBannerProviderDetails(image: "${i['image']}"));
               }
             } else {
-              print("images 2");
-
-              for (int i = 1; i > 0; i++) {
-                print(SlidingBannerProviderDetails(
-                    image: fiestasDetailModel!.data!.clubDetail
-                        ?.image //"${widget.fiestasModel?.image}",
-                    ));
+              cardList = [];
+              print("images 2 -------");
+              for (int i = 1; i < 4; i++) {
+                print("here is i $i");
+                cardList.add(SlidingBannerProviderDetails(
+                    image: "${fiestasDetailModel?.data!.clubDetail?.image}"));
               }
             }
 
-            //   cardList = List<SlidingBannerProviderDetails>.generate(
-            //       // int.parse(
-            //       //     "${fiestasDetailModel?.data?[0].fiestaImages?.length}"),
-
-            //       2,
-            //       (index) => SlidingBannerProviderDetails(
-            //           image: fiestasDetailModel
-            //               ?.data?[0].fiestaImages![index].image
-            //               .toString() //"${widget.fiestasModel?.image}",
-            //           ));
+            // print(cardList);
 
             _loading = false;
           });
@@ -273,7 +284,7 @@ class _BookNowBetaState extends State<BookNowBeta> {
         setState(() {
           _loading = false;
         });
-        print(e);
+        print("Error in Fiestas detail Api $e");
       }
     }
   }
@@ -286,10 +297,13 @@ class _BookNowBetaState extends State<BookNowBeta> {
       child: Scaffold(
           // floatingActionButton: FloatingActionButton(
           //     onPressed: () {
-          //       getFiestasbyId(fiestasID: "20");
+          //       // print("${fiestasDetailModel?.data![0].fiestaImages}");
+
+          //       String ticket = "${fiestasDetailModel?.data?.leftNormalTicket}";
+
+          //       print(ticket);
           //     },
           //     child: Icon(Icons.add)),
-
           backgroundColor: AppColors.homeBackground,
           body: _loading
               ? Center(child: CircularProgressIndicator())
@@ -472,7 +486,7 @@ class _BookNowBetaState extends State<BookNowBeta> {
                                                             0.02,
                                                     top: size.width * 0.01),
                                                 child: Text(
-                                                  "${fiestasDetailModel?.data?.name}",
+                                                  "${fiestasDetailModel?.data!.name}",
                                                   style: TextStyle(
                                                       fontSize:
                                                           size.width * 0.058,
@@ -802,7 +816,7 @@ class _BookNowBetaState extends State<BookNowBeta> {
                                               imageName: Images.aboutProfileSvg,
                                               // ${widget.fiestasModel.total_members}
                                               text1:
-                                                  "${fiestasDetailModel?.data?.totalMembers}",
+                                                  "${fiestasDetailModel?.data!.totalMembers}",
                                               text2:
                                                   "${getTranslated(context, "attendies")}",
                                             ),
@@ -848,7 +862,7 @@ class _BookNowBetaState extends State<BookNowBeta> {
                                                         0.02),
                                                 Text(
                                                     // "${getTranslated(context, "lorem")}",
-                                                    "${fiestasDetailModel?.data?.description ?? getTranslated(context, "nodataFound")}",
+                                                    "${fiestasDetailModel?.data!.description ?? getTranslated(context, "nodataFound")}",
                                                     style: TextStyle(
                                                         fontFamily: "Product",
                                                         fontSize: 14,

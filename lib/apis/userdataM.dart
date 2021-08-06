@@ -23,19 +23,22 @@ class UserData {
       "image": Images.ticketImageSvg,
       "name": Strings.ticket,
       "description": Strings.ticketDescription,
-      "price": 0.00 //"${widget.fiestasModel?.ticketPrice}"
+      "price": 0.00,
+      // "max": 0,
     },
     {
       "image": Images.standardImageSvg,
       "name": Strings.standard,
       "description": Strings.standardDescription,
-      "price": 0.00 //"${widget.fiestasModel?.ticketPrice}"
+      "price": 0.00,
+      // "max": 0,
     },
     {
       "image": Images.vIPTableImageSvg,
       "name": Strings.vipTable,
       "description": Strings.vipTableDescription,
-      "price": 0.00 //"${widget.fiestasModel?.ticketPrice}"
+      "price": 0.00,
+      // "max": 0,
     }
   ];
 }

@@ -16,8 +16,11 @@ import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
-import 'package:hexcolor/hexcolor.dart';
-import 'package:page_transition/page_transition.dart';
+import 'package:internet_speed_test/callbacks_enum.dart';
+
+import 'package:internet_speed_test/internet_speed_test.dart';
+
+final internetSpeedTest = InternetSpeedTest();
 
 class BookingPage extends StatefulWidget {
   const BookingPage({Key? key}) : super(key: key);
@@ -98,6 +101,10 @@ class _BookingPageState extends State<BookingPage> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {},
+        //   child: Icon(Icons.add),
+        // ),
         backgroundColor: AppColors.homeBackground,
         body: Container(
             child: Column(
@@ -419,16 +426,18 @@ Widget preFiestasOrderItem(
     {context, int? index, PreFiestasBookingListModel? model}) {
   var size = MediaQuery.of(context).size;
 
+  print(model?.toJson());
+
   var data =
       model?.data?.data?.elementAt(index!).orderItem?.elementAt(0).preFiesta;
   String orderid =
-      "${model?.data?.data?.elementAt(index!).orderItem?.elementAt(index).orderId}";
+      "${model?.data?.data?.elementAt(index!).orderItem?.elementAt(0).orderId}";
 
   return Container(
     margin: EdgeInsets.only(top: size.height * 0.02),
     child: roundedBoxBorder(
         context: context,
-        height: size.height * 0.21,
+        height: size.height * 0.23,
         width: size.width,
         backgroundColor: AppColors.itemBackground,
         borderColor: AppColors.tagBorder,
@@ -480,15 +489,18 @@ Widget preFiestasOrderItem(
                               context, YourOrderSum(orderID: orderid));
                         },
                         child: roundedBoxR(
-                            radius: size.width * 0.005,
+                            radius: size.width * 0.006,
                             width: size.width * 0.3,
-                            height: size.height * 0.04,
+                            // height: size.height * 0.04,
                             backgroundColor: AppColors.siginbackgrond,
-                            child: Align(
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: size.height * 0.01,
+                                  horizontal: size.width * 0.03),
                               alignment: Alignment.center,
                               child: Text(
                                 "${getTranslated(context, "orderDetails")}",
-                                // Strings.orderDetails,
+                                textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: AppColors.white,
                                     fontSize: size.width * 0.034,

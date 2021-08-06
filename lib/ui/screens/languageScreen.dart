@@ -61,38 +61,46 @@ class _SigninState extends State<TranslationPage> {
   }
 
   final _scaffoldKey = new GlobalKey<ScaffoldState>();
-  TextEditingController _emailController = TextEditingController();
-
-  TextEditingController _passwordController = TextEditingController();
 
   String devicetype = "ios";
-  bool _passeye = true;
-  bool _credentialsError = false;
-  String _emailError = "";
 
-  // String _emailError = "";
-  String _passwordError = "";
-
-  Map facebookdata = {};
-  TextEditingController facebookEmailController = TextEditingController();
-  String facebookEmailError = "";
   var newValue;
   SingingCharacter? _character;
 
   void changeLanguage(String enes) async {
     Locale locale = await setLocale(enes);
     MyApp.setLocale(context, locale);
+
+    // print("here is value - $enes");
+
+    // if (enes == "en") {
+    //   Constants.prefs!.setString("en", "$enes");
+    // }
+    // if (enes == "es") {
+    //   Constants.prefs!.setString("es", "$enes");
+    // }
   }
 
   @override
   void initState() {
+    print("radio value - ${Strings.radioValue}");
     var radioini = Constants.prefs!.getString(Strings.radioValue);
-    print("first language" + radioini.toString());
+    print("first language " + radioini.toString());
+
+    // if (radioini == "en") {
+    //   _character = SingingCharacter.English;
+    // } else if (radioini == "es") {
+    //   _character = SingingCharacter.Spanish;
+    // } else {
+    //   _character = SingingCharacter.English;
+    // }
+
     _character = radioini == null
         ? SingingCharacter.English
         : radioini == "en"
             ? SingingCharacter.English
             : SingingCharacter.Spanish;
+
     super.initState();
   }
 
@@ -100,206 +108,215 @@ class _SigninState extends State<TranslationPage> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return SafeArea(
-        child: Scaffold(
-            resizeToAvoidBottomInset: true,
-            key: _scaffoldKey,
-            body: Stack(alignment: Alignment.topLeft, children: [
-              Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(Images.loginBackground),
-                    fit: BoxFit.cover,
+        child: WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+          resizeToAvoidBottomInset: true,
+          key: _scaffoldKey,
+          body: Stack(alignment: Alignment.topLeft, children: [
+            Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(Images.loginBackground),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: size.height * 0.15,
                   ),
-                ),
-              ),
-              SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: size.height * 0.15,
+                  Container(
+                    padding: EdgeInsets.fromLTRB(
+                      size.height * 0.04,
+                      0.0,
+                      size.height * 0.04,
+                      0.0,
                     ),
-                    Container(
-                      padding: EdgeInsets.fromLTRB(
-                        size.height * 0.04,
-                        0.0,
-                        size.height * 0.04,
-                        0.0,
-                      ),
-                      height: size.height * 0.10,
-                      child: SvgPicture.asset(
-                          "assets/pngicons/Translationicon.svg"),
-                    ),
-                    // app logo
-                    SizedBox(
-                      height: size.height * 0.05,
-                    ),
+                    height: size.height * 0.10,
+                    child:
+                        SvgPicture.asset("assets/pngicons/Translationicon.svg"),
+                  ),
+                  // app logo
+                  SizedBox(
+                    height: size.height * 0.05,
+                  ),
 
-                    // title
+                  // title
 
-                    Container(
-                      margin:
-                          EdgeInsets.symmetric(horizontal: size.width * 0.07),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                "${getTranslated(context, "welcometo")}",
-                                // Strings.welcometo,
-                                style: TextStyle(
-                                    // fontFamily: Fonts.dmSansMedium,
-                                    fontSize: size.width * 0.048,
-                                    color: AppColors.inputTitle),
-                              ),
-                              SizedBox(
-                                width: size.width * 0.02,
-                              ),
-                              Text(
-                                "${getTranslated(context, "funfypartyapp")}",
-                                // Strings.funfypartyapp,
-                                style: TextStyle(
-                                    // fontFamily: Fonts.dmSansMedium,
-                                    fontSize: size.width * 0.048,
-                                    color: AppColors.white),
-                              ),
-                            ],
-                          ),
-                          Text(
-                            "${getTranslated(context, "ChooseLanguage")}",
-                            //  Strings.TranslationPage,
-                            style: TextStyle(
-                                fontSize: size.width * 0.088,
-                                fontFamily: Fonts.abrilFatface,
-                                color: Colors.white),
-                          ),
-                          SizedBox(
-                            height: size.height * 0.015,
-                          ),
-                        ],
-                      ),
-                    ),
-                    // or
-                    SizedBox(
-                      height: size.height * 0.05,
-                    ),
-                    ListTile(
-                      title: Text(
-                        'English',
-                        style: TextStyle(
-                            color: AppColors.white,
-                            fontSize: size.width * 0.045),
-                      ),
-                      trailing: Theme(
-                        data: Theme.of(context).copyWith(
-                          unselectedWidgetColor: AppColors.white,
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: size.width * 0.07),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              "${getTranslated(context, "welcometo")}",
+                              // Strings.welcometo,
+                              style: TextStyle(
+                                  // fontFamily: Fonts.dmSansMedium,
+                                  fontSize: size.width * 0.048,
+                                  color: AppColors.inputTitle),
+                            ),
+                            SizedBox(
+                              width: size.width * 0.02,
+                            ),
+                            Text(
+                              "${getTranslated(context, "funfypartyapp")}",
+                              // Strings.funfypartyapp,
+                              style: TextStyle(
+                                  // fontFamily: Fonts.dmSansMedium,
+                                  fontSize: size.width * 0.048,
+                                  color: AppColors.white),
+                            ),
+                          ],
                         ),
-                        child: Radio<SingingCharacter>(
-                          activeColor: AppColors.radioColor,
-                          value: SingingCharacter.English,
-                          groupValue: _character,
-                          onChanged: (SingingCharacter? value) {
-                            setState(() {
-                              _character = value;
-                              if (value == SingingCharacter.English) {
-                                newValue = "en";
-                                changeLanguage(newValue);
-                                print(newValue);
-                              } else {
-                                newValue = "es";
-                                changeLanguage(newValue);
-                                print(newValue);
-                              }
-                            });
-                          },
+                        Text(
+                          "${getTranslated(context, "ChooseLanguage")}",
+                          //  Strings.TranslationPage,
+                          style: TextStyle(
+                              fontSize: size.width * 0.088,
+                              fontFamily: Fonts.abrilFatface,
+                              color: Colors.white),
                         ),
-                      ),
-                    ),
-                    Divider(
-                      thickness: size.height * 0.0006,
-                      color: Colors.white,
-                    ),
-                    ListTile(
-                      title: Text(
-                        'Spanish',
-                        style: TextStyle(
-                            color: AppColors.white,
-                            fontSize: size.width * 0.045),
-                      ),
-                      trailing: Theme(
-                        data: Theme.of(context).copyWith(
-                          unselectedWidgetColor: AppColors.white,
+                        SizedBox(
+                          height: size.height * 0.015,
                         ),
-                        child: Radio<SingingCharacter>(
-                          activeColor: AppColors.radioColor,
-                          value: SingingCharacter.Spanish,
-                          groupValue: _character,
-                          onChanged: (SingingCharacter? value) {
-                            setState(() {
-                              _character = value;
-                              if (value == SingingCharacter.English) {
-                                newValue = "en";
-                                changeLanguage(newValue);
-                                print(newValue);
-                              } else {
-                                newValue = "es";
-                                changeLanguage(newValue);
-                                print(newValue);
-                              }
-                            });
-                          },
-                        ),
+                      ],
+                    ),
+                  ),
+                  // or
+                  SizedBox(
+                    height: size.height * 0.05,
+                  ),
+                  ListTile(
+                    title: Text(
+                      'English',
+                      style: TextStyle(
+                          color: AppColors.white, fontSize: size.width * 0.045),
+                    ),
+                    trailing: Theme(
+                      data: Theme.of(context).copyWith(
+                        unselectedWidgetColor: AppColors.white,
                       ),
-                    ),
-                    // forgot password
-                    SizedBox(
-                      height: size.height * 0.20,
-                    ),
-// TranslationPage Button
-                    Center(
-                      child: GestureDetector(
-                        onTap: () {
-                          Constants.prefs
-                              ?.setString(Strings.radioValue, newValue ?? "es");
-                          if (widget.fromSplash) {
-                            next();
-                            //  navigatorPushFun(context, TranslationPage(fromSplash: true));
-                          } else {
-                            Navigator.pop(context);
-                          }
+                      child: Radio<SingingCharacter>(
+                        activeColor: AppColors.radioColor,
+                        value: SingingCharacter.English,
+                        groupValue: _character,
+                        onChanged: (SingingCharacter? value) {
+                          setState(() {
+                            _character = value;
+                            if (value == SingingCharacter.English) {
+                              newValue = "en";
+                              changeLanguage(newValue);
+                              print(newValue);
+                            } else {
+                              newValue = "es";
+                              changeLanguage(newValue);
+                              print(newValue);
+                            }
+                          });
                         },
-                        child: roundedBox(
-                            width: size.width * 0.78,
-                            height: size.height * 0.058,
-                            backgroundColor: AppColors.siginbackgrond,
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: Text(
-                                "${getTranslated(context, "Proceed")}",
-                                // Strings.TranslationPage,
-                                style: TextStyle(
-                                    fontFamily: Fonts.dmSansMedium,
-                                    fontSize: size.width * 0.05,
-                                    color: AppColors.white),
-                              ),
-                            )),
                       ),
                     ),
-
-                    SizedBox(
-                      height: size.height * 0.05,
+                  ),
+                  Divider(
+                    thickness: size.height * 0.0006,
+                    color: Colors.white,
+                  ),
+                  ListTile(
+                    title: Text(
+                      'Spanish',
+                      style: TextStyle(
+                          color: AppColors.white, fontSize: size.width * 0.045),
                     ),
-                  ],
-                ),
+                    trailing: Theme(
+                      data: Theme.of(context).copyWith(
+                        unselectedWidgetColor: AppColors.white,
+                      ),
+                      child: Radio<SingingCharacter>(
+                        activeColor: AppColors.radioColor,
+                        value: SingingCharacter.Spanish,
+                        groupValue: _character,
+                        onChanged: (SingingCharacter? value) {
+                          setState(() {
+                            _character = value;
+                            if (value == SingingCharacter.English) {
+                              newValue = "en";
+                              changeLanguage(newValue);
+                              print(newValue);
+                            } else {
+                              newValue = "es";
+                              changeLanguage(newValue);
+                              print(newValue);
+                            }
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                  // forgot password
+                  SizedBox(
+                    height: size.height * 0.20,
+                  ),
+                  // TranslationPage Button
+                  Center(
+                    child: GestureDetector(
+                      onTap: () {
+                        print(_character);
+
+                        if (_character == SingingCharacter.English) {
+                          Constants.prefs?.setString(Strings.radioValue, "en");
+                        } else if (_character == SingingCharacter.Spanish) {
+                          Constants.prefs?.setString(Strings.radioValue, "es");
+                        }
+                        // Constants.prefs
+                        //     ?.setString(Strings.radioValue, newValue ?? "es");
+                        if (widget.fromSplash) {
+                          next();
+                          //  navigatorPushFun(context, TranslationPage(fromSplash: true));
+                        } else {
+                          Navigator.pop(context);
+                        }
+                      },
+                      child: roundedBox(
+                          width: size.width * 0.78,
+                          height: size.height * 0.058,
+                          backgroundColor: AppColors.siginbackgrond,
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              "${getTranslated(context, "Proceed")}",
+                              // Strings.TranslationPage,
+                              style: TextStyle(
+                                  fontFamily: Fonts.dmSansMedium,
+                                  fontSize: size.width * 0.05,
+                                  color: AppColors.white),
+                            ),
+                          )),
+                    ),
+                  ),
+
+                  SizedBox(
+                    height: size.height * 0.05,
+                  ),
+                ],
               ),
-              _loading
-                  ? Center(
-                      child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                              AppColors.siginbackgrond)))
-                  : SizedBox()
-            ])));
+            ),
+            _loading
+                ? Center(
+                    child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                            AppColors.siginbackgrond)))
+                : SizedBox()
+          ])),
+    ));
   }
 }
 
