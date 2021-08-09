@@ -59,43 +59,44 @@ class _BookNowBetaState extends State<BookNowBeta> {
   addTicket({int? index, String? name, var count, var price, String? image}) {
     print("add button press  $count  $index");
 
-    // var oldCount = 0;
-    // try {
-    //   setState(() {
-    //     oldCount = UserData.ticketcartMap[index]["ticketCount"];
-    //   });
-    // } catch (e) {
-    //   setState(() {
-    //     oldCount = 0;
-    //   });
-    // }
+    var oldCount = 0;
+    try {
+      setState(() {
+        oldCount = UserData.ticketcartMap[index]["ticketCount"];
+      });
+    } catch (e) {
+      setState(() {
+        oldCount = 0;
+      });
+    }
 
-    // if (UserData.tiketList[index!]["max"] > 0 &&
-    //     oldCount < UserData.tiketList[index]["max"]) {
-    setState(() {
-      if (UserData.ticketcartMap.containsKey(index)) {
-        // print(UserData.ticketcartMap);
-        UserData.ticketcartMap[index]["ticketCount"] =
-            UserData.ticketcartMap[index]["ticketCount"] + 1;
+    if (UserData.tiketList[index!]["max"] > 0 &&
+        oldCount < UserData.tiketList[index]["max"]) {
+      setState(() {
+        if (UserData.ticketcartMap.containsKey(index)) {
+          // print(UserData.ticketcartMap);
+          UserData.ticketcartMap[index]["ticketCount"] =
+              UserData.ticketcartMap[index]["ticketCount"] + 1;
 
-        UserData.ticketcartMap[index]["ticketPrice"] =
-            int.parse(UserData.ticketcartMap[index]["ticketCount"].toString()) *
-                int.parse(UserData.tiketList[index!]["price"].toString());
+          UserData.ticketcartMap[index]["ticketPrice"] = int.parse(
+                  UserData.ticketcartMap[index]["ticketCount"].toString()) *
+              int.parse(UserData.tiketList[index]["price"].toString());
 
-        totalTicket();
-      } else {
-        // print("new add $index");
-        UserData.ticketcartMap[index] = {
-          "ticketname": name,
-          "ticketCount": 1,
-          "ticketPrice": price,
-          "ticketimage": image
-        };
+          totalTicket();
+        } else {
+          // print("new add $index");
+          UserData.ticketcartMap[index] = {
+            "ticketname": name,
+            "ticketCount": 1,
+            "ticketPrice": price,
+            "ticketimage": image,
+            "index": index
+          };
 
-        totalTicket();
-      }
-    });
-    // }
+          totalTicket();
+        }
+      });
+    }
   }
 
   clearCart() {
@@ -203,20 +204,29 @@ class _BookNowBetaState extends State<BookNowBeta> {
       UserData.tiketList[0]["price"] =
           int.parse('${fiestasDetailModel?.data!.ticketPrice}');
 
-      // UserData.tiketList[0]["max"] =
-      //     int.parse('${fiestasDetailModel?.data!.leftNormalTicket}');
+      UserData.tiketList[0]["max"] =
+          int.parse('${fiestasDetailModel?.data!.leftNormalTicket}');
+
+      UserData.tiketList[0]["tickets"] =
+          int.parse('${fiestasDetailModel?.data!.totalNormalTickets}');
 
       UserData.tiketList[1]["price"] =
           int.parse('${fiestasDetailModel?.data!.ticketPriceStandard}');
 
-      // UserData.tiketList[1]["max"] =
-      //     int.parse('${fiestasDetailModel?.data!.leftStandardTicket}');
+      UserData.tiketList[1]["max"] =
+          int.parse('${fiestasDetailModel?.data!.leftStandardTicket}');
+
+      UserData.tiketList[1]["tickets"] =
+          int.parse('${fiestasDetailModel?.data!.totalStandardTickets}');
 
       UserData.tiketList[2]["price"] =
           int.parse('${fiestasDetailModel?.data!.ticketPriceVip}');
 
-      // UserData.tiketList[2]["max"] =
-      //     int.parse('${fiestasDetailModel?.data!.leftVipTicket}');
+      UserData.tiketList[2]["max"] =
+          int.parse('${fiestasDetailModel?.data!.leftVipTicket}');
+
+      UserData.tiketList[2]["tickets"] =
+          int.parse('${fiestasDetailModel?.data!.totalVipTickets}');
     });
   }
 
@@ -257,13 +267,13 @@ class _BookNowBetaState extends State<BookNowBeta> {
             onlyTime = time?.split(" ")[0];
             amPm = time?.split(" ")[1];
 
-            if (fiestasDetailModel?.data!.fiestaImages?.length != 0) {
+            if (fiestasDetailModel?.data!.fiestaImages?.length != 0 &&
+                fiestasDetailModel?.data!.fiestaImages != null) {
               cardList = [];
               print("images 1 -------");
               for (var i in fiestasDetailModel!.data!.fiestaImages!) {
                 // print(i);
-                cardList
-                    .add(SlidingBannerProviderDetails(image: "${i['image']}"));
+                cardList.add(SlidingBannerProviderDetails(image: "${i.image}"));
               }
             } else {
               cardList = [];

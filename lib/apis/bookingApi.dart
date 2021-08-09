@@ -1,7 +1,7 @@
 import 'dart:convert';
-
 import 'package:funfy/apis/userdataM.dart';
-import 'package:funfy/models/createcartPreFiestasModel.dart';
+import 'package:funfy/components/dialogs.dart';
+import 'package:funfy/components/navigation.dart';
 import 'package:funfy/models/fiestasBooking.dart';
 import 'package:funfy/models/fiestasBookingListModel.dart';
 import 'package:funfy/models/fiestasDetailmodel.dart';
@@ -9,12 +9,14 @@ import 'package:funfy/models/makePrefiestasmodel.dart';
 import 'package:funfy/models/preFiestasBookingListModel.dart';
 import 'package:funfy/models/preFiestasCartModel.dart';
 import 'package:funfy/models/prefiestasOrderDetailModel.dart';
+import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/urls.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 Future<FistaBooking?> fiestasBooking(
     {String? id,
+    context,
     String? ticketcount,
     String? standardticketcount,
     String? vipticketcount}) async {
@@ -37,9 +39,18 @@ Future<FistaBooking?> fiestasBooking(
 
   var response = Map<String, dynamic>.from(jsonRes);
 
+  print("here is res $response");
+
   if (res.statusCode == 201) {
     return FistaBooking.fromJson(response);
   } else {
+    Dialogs.simpleOkAlertDialog(
+        context: context,
+        title: "${getTranslated(context, "alert!")}",
+        content: "${getTranslated(context, "sorryTicketsaresold")}",
+        func: () {
+          navigatePopFun(context);
+        });
     // print(res.body);
   }
 }
@@ -196,7 +207,7 @@ Future<PrefiestasOrderDetailModel?> prefiestasShowOrderDetail(
   }
 }
 
-// get my prefiestas cart
+// get my prefiestas cart..
 
 Future<PrefiestasCartModel?> getPrefiestasCart() async {
   var headers = {

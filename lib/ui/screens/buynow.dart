@@ -1,19 +1,13 @@
-import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:funfy/apis/bookingApi.dart';
 import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/models/fiestasDetailmodel.dart';
-import 'package:funfy/models/fiestasmodel.dart';
-import 'package:funfy/ui/screens/CreditCardDetails.dart';
 import 'package:funfy/components/sizeclass/SizeConfig.dart';
 import 'package:funfy/ui/screens/bookingSuccess.dart';
-import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/widgets/rating.dart';
-import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
@@ -37,41 +31,47 @@ class _BuyNowState extends State<BuyNow> {
 
   // - + funtion
 
-  addTicket({int? index, String? name, int? count, var price, String? image}) {
-    print("add button press");
+  addTicket(
+      {int? index,
+      int? indexMap,
+      String? name,
+      int? count,
+      var price,
+      String? image}) {
+    print("add button press indexMap : $indexMap");
 
-    // var oldCount = 0;
-    // try {
-    //   setState(() {
-    //     oldCount = UserData.ticketcartMap[index]["ticketCount"];
-    //   });
-    // } catch (e) {
-    //   setState(() {
-    //     oldCount = 0;
-    //   });
-    // }
+    var oldCount = 0;
+    try {
+      setState(() {
+        oldCount = UserData.ticketcartMap[indexMap]["ticketCount"];
+      });
+    } catch (e) {
+      setState(() {
+        oldCount = 0;
+      });
+    }
 
     print(UserData.ticketcartMap);
-    // if (UserData.tiketList[index!]["max"] > 0 &&
-    //     oldCount < UserData.tiketList[index]["max"]) {
-    setState(() {
-      if (UserData.ticketcartMap.containsKey(index)) {
-        UserData.ticketcartMap[index]["ticketCount"] =
-            UserData.ticketcartMap[index]["ticketCount"] + 1;
+    if (UserData.tiketList[indexMap!]["max"] > 0 &&
+        oldCount < UserData.tiketList[indexMap]["max"]) {
+      setState(() {
+        if (UserData.ticketcartMap.containsKey(index)) {
+          UserData.ticketcartMap[index]["ticketCount"] =
+              UserData.ticketcartMap[index]["ticketCount"] + 1;
 
-        UserData.ticketcartMap[index]["ticketPrice"] =
-            UserData.ticketcartMap[index]["ticketCount"] *
-                UserData.tiketList[index!]["price"];
-      } else {
-        UserData.ticketcartMap[index] = {
-          "ticketname": name,
-          "ticketCount": count,
-          "ticketPrice": price,
-          "ticketimage": image
-        };
-      }
-    });
-    // }
+          UserData.ticketcartMap[index]["ticketPrice"] =
+              UserData.ticketcartMap[index]["ticketCount"] *
+                  UserData.tiketList[index!]["price"];
+        } else {
+          UserData.ticketcartMap[index] = {
+            "ticketname": name,
+            "ticketCount": count,
+            "ticketPrice": price,
+            "ticketimage": image
+          };
+        }
+      });
+    }
   }
 
   // remove button
@@ -130,11 +130,14 @@ class _BuyNowState extends State<BuyNow> {
                 id: widget.fiestasM?.data!.id.toString(),
                 ticketcount: ticket,
                 standardticketcount: standard,
-                vipticketcount: vip)
+                vipticketcount: vip,
+                context: context)
             .then((res) {
           setState(() {
             _loading = false;
           });
+
+          print("here is ${res?.toJson()}");
 
           if (res?.status == true && res?.code == 201) {
             setState(() {
@@ -349,6 +352,7 @@ class _BuyNowState extends State<BuyNow> {
                                     image: data["ticketimage"],
                                     count: data["ticketCount"],
                                     price: data["ticketPrice"],
+                                    mapIndex: data["index"],
                                     remove: ticketRemove,
                                     add: addTicket);
                               }),
@@ -426,6 +430,7 @@ Widget cartItem(
     int? count,
     var price,
     add,
+    int? mapIndex,
     remove}) {
   return Container(
     margin: EdgeInsets.symmetric(
@@ -514,6 +519,7 @@ Widget cartItem(
                     onTap: () {
                       add(
                           index: index,
+                          indexMap: mapIndex,
                           name: title,
                           count: count,
                           price: price,

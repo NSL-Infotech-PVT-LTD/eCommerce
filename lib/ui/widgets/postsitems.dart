@@ -336,12 +336,12 @@ Widget preFiestasItem({context, ProductInfo? prefiestasdata}) {
                     top: size.height * 0.02, bottom: size.height * 0.013),
                 width: size.width * 0.25,
                 decoration: BoxDecoration(),
-                child: Image.network(
-                  prefiestasdata?.image != ""
-                      ? "${prefiestasdata?.image}"
-                      : Images.beerNetwork,
-                  // fit: BoxFit.cover,
-                ),
+                child: Image.network(Images.beerNetwork
+                    // prefiestasdata?.image != ""
+                    //     ? "${prefiestasdata?.image}"
+                    //     : Images.beerNetwork,
+                    // fit: BoxFit.cover,
+                    ),
               )
             ],
           ),

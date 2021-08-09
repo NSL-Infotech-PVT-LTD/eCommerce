@@ -81,12 +81,12 @@ class Data {
   String? distanceKm;
   String? distanceMiles;
   bool? isFavourite;
-  String? leftStandardTicket;
-  String? leftVipTicket;
-  String? leftNormalTicket;
+  var leftStandardTicket;
+  var leftVipTicket;
+  var leftNormalTicket;
   dynamic clubRating;
   ClubDetail? clubDetail;
-  List<dynamic>? fiestaImages;
+  List<FiestaImage>? fiestaImages;
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
         id: json["id"],
@@ -112,7 +112,8 @@ class Data {
         leftNormalTicket: json["left_normal_ticket"],
         clubRating: json["club_rating"],
         clubDetail: ClubDetail.fromJson(json["club_detail"]),
-        fiestaImages: List<dynamic>.from(json["fiesta_images"].map((x) => x)),
+        fiestaImages: List<FiestaImage>.from(
+            json["fiesta_images"].map((x) => FiestaImage.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -139,7 +140,8 @@ class Data {
         "left_normal_ticket": leftNormalTicket,
         "club_rating": clubRating,
         "club_detail": clubDetail?.toJson(),
-        "fiesta_images": List<dynamic>.from(fiestaImages!.map((x) => x)),
+        "fiesta_images":
+            List<dynamic>.from(fiestaImages!.map((x) => x.toJson())),
       };
 }
 
@@ -184,5 +186,29 @@ class ClubDetail {
         "location": location,
         "latitude": latitude,
         "longitude": longitude,
+      };
+}
+
+class FiestaImage {
+  FiestaImage({
+    this.id,
+    this.image,
+    this.fiestaId,
+  });
+
+  int? id;
+  String? image;
+  int? fiestaId;
+
+  factory FiestaImage.fromJson(Map<String, dynamic> json) => FiestaImage(
+        id: json["id"],
+        image: json["image"],
+        fiestaId: json["fiesta_id"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "image": image,
+        "fiesta_id": fiestaId,
       };
 }

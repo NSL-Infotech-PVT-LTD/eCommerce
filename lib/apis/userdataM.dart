@@ -24,21 +24,24 @@ class UserData {
       "name": Strings.ticket,
       "description": Strings.ticketDescription,
       "price": 0.00,
-      // "max": 0,
+      "max": 0,
+      "tickets": 0,
     },
     {
       "image": Images.standardImageSvg,
       "name": Strings.standard,
       "description": Strings.standardDescription,
       "price": 0.00,
-      // "max": 0,
+      "max": 0,
+      "tickets": 0,
     },
     {
       "image": Images.vIPTableImageSvg,
       "name": Strings.vipTable,
       "description": Strings.vipTableDescription,
       "price": 0.00,
-      // "max": 0,
+      "max": 0,
+      "tickets": 0,
     }
   ];
 }

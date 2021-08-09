@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:funfy/apis/bookingApi.dart';
-import 'package:funfy/apis/homeApis.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/models/fiestasBookingListModel.dart';
 import 'package:funfy/models/preFiestasBookingListModel.dart';
 import 'package:funfy/ui/screens/Your%20order%20Summery.dart';
 import 'package:funfy/ui/screens/fiestasMoreOrderDetails.dart';
-import 'package:funfy/ui/widgets/postsitems.dart';
 import 'package:funfy/ui/widgets/rating.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/InternetCheck.dart';
@@ -16,7 +14,6 @@ import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
-import 'package:internet_speed_test/callbacks_enum.dart';
 
 import 'package:internet_speed_test/internet_speed_test.dart';
 
@@ -421,17 +418,15 @@ Widget fiestasOrdersItem({context, index, FiestasBookingList? model}) {
   );
 }
 
-//
 Widget preFiestasOrderItem(
     {context, int? index, PreFiestasBookingListModel? model}) {
   var size = MediaQuery.of(context).size;
 
   print(model?.toJson());
 
-  var data =
-      model?.data?.data?.elementAt(index!).orderItem?.elementAt(0).preFiesta;
-  String orderid =
-      "${model?.data?.data?.elementAt(index!).orderItem?.elementAt(0).orderId}";
+  var data = model?.data?.data?.elementAt(index!).categoryDetail;
+  // String orderid =
+  //     "${model?.data?.data?.elementAt(index!).orderItem?.elementAt(0).orderId}";
 
   return Container(
     margin: EdgeInsets.only(top: size.height * 0.02),
@@ -486,7 +481,12 @@ Widget preFiestasOrderItem(
                       GestureDetector(
                         onTap: () {
                           navigatorPushFun(
-                              context, YourOrderSum(orderID: orderid));
+                              context,
+                              YourOrderSum(
+                                  orderID: model?.data?.data
+                                      ?.elementAt(index!)
+                                      .id
+                                      .toString()));
                         },
                         child: roundedBoxR(
                             radius: size.width * 0.006,
@@ -514,12 +514,16 @@ Widget preFiestasOrderItem(
               // right image
 
               Container(
+                // color: Colors.blue,
+                margin: EdgeInsets.only(right: size.width * 0.03),
+
                 padding: EdgeInsets.only(
                     top: size.height * 0.02, bottom: size.height * 0.013),
                 width: size.width * 0.25,
                 // decoration: BoxDecoration(),
                 child: Image.network(
                   "${data?.image ?? Images.beerNetwork}",
+                  // "${Images.beerNetwork}"
 
                   // fit: BoxFit.fill,
                 ),
