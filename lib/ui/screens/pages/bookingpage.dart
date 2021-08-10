@@ -53,6 +53,11 @@ class _BookingPageState extends State<BookingPage> {
 
             setState(() {
               fiestasBookingListModel = res;
+
+              var rlist =
+                  fiestasBookingListModel?.data?.data?.reversed.toList();
+
+              fiestasBookingListModel?.data?.data = rlist;
               _loading = false;
             });
           }
@@ -82,6 +87,9 @@ class _BookingPageState extends State<BookingPage> {
 
         setState(() {
           preFiestasBookingList = res;
+
+          var rlist = preFiestasBookingList?.data?.data?.reversed.toList();
+          preFiestasBookingList?.data?.data = rlist;
           _preFiestasLoading = false;
         });
       }

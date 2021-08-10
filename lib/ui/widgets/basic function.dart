@@ -84,7 +84,7 @@ Widget ticket({context, index, mapdata, addFunc, removeFunc}) {
                           Container(
                             width: SizeConfig.screenWidth * 0.40,
                             child: Text(
-                              mapdata["name"] + " - ${mapdata['max']}",
+                              mapdata["name"] + " : ${mapdata['max']}",
                               style: TextStyle(
                                 color: AppColors.white,
                                 fontSize: 22,
