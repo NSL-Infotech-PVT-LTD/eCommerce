@@ -8,6 +8,7 @@ import 'package:funfy/components/zeroadd.dart';
 import 'package:funfy/main.dart';
 import 'package:funfy/models/fiestasmodel.dart';
 import 'package:funfy/models/preFiestasModel.dart';
+import 'package:funfy/ui/screens/fiestasAll.dart';
 import 'package:funfy/ui/screens/notifications.dart';
 import 'package:funfy/ui/widgets/dateButton.dart';
 import 'package:funfy/ui/widgets/postsitems.dart';
@@ -45,8 +46,8 @@ class _FiestasPageState extends State<FiestasPage> {
 
   bool fiestasButton = true;
 
-  FiestasModel? fiestasdata;
   PrefiestasModel? prefiestasdata;
+  // FiestasModel? fiestasdata;
 
   bool _postLoading = false;
 
@@ -72,7 +73,7 @@ class _FiestasPageState extends State<FiestasPage> {
       await fiestasPostGet(type: tagType, dateFilter: date.toString())
           .then((FiestasModel? posts) {
         setState(() {
-          fiestasdata = posts;
+          UserData.fiestasdata = posts;
           _fiestasPostLoading = false;
         });
       });
@@ -170,7 +171,7 @@ class _FiestasPageState extends State<FiestasPage> {
 
   clearFilter() {
     setState(() {
-      filterDate = "";
+      // filterDate = "";
       tagType = "";
     });
   }
@@ -735,13 +736,21 @@ class _FiestasPageState extends State<FiestasPage> {
                                         fontFamily: Fonts.dmSansBold,
                                         color: AppColors.white),
                                   ),
-                                  Text(
-                                    "${getTranslated(context, "seeall")}",
-                                    //   Strings.seeall,
-                                    style: TextStyle(
-                                        fontSize: size.width * 0.04,
-                                        fontFamily: Fonts.dmSansBold,
-                                        color: AppColors.siginbackgrond),
+                                  GestureDetector(
+                                    onTap: () {
+                                      navigatorPushFun(context, FiestasAll());
+                                    },
+                                    child: Container(
+                                      // color: Colors.blue,
+                                      child: Text(
+                                        "${getTranslated(context, "seeall")}",
+                                        //   Strings.seeall,
+                                        style: TextStyle(
+                                            fontSize: size.width * 0.04,
+                                            fontFamily: Fonts.dmSansBold,
+                                            color: AppColors.siginbackgrond),
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -755,7 +764,9 @@ class _FiestasPageState extends State<FiestasPage> {
                                               valueColor:
                                                   AlwaysStoppedAnimation<Color>(
                                                       AppColors.white)))
-                                      : fiestasdata?.data?.data?.length == 0 &&
+                                      : UserData.fiestasdata?.data?.data
+                                                      ?.length ==
+                                                  0 &&
                                               _postLoading == false
                                           ? Center(
                                               child: Text(
@@ -769,14 +780,14 @@ class _FiestasPageState extends State<FiestasPage> {
                                             )
                                           : ListView.builder(
                                               physics: BouncingScrollPhysics(),
-                                              itemCount: fiestasdata
+                                              itemCount: UserData.fiestasdata
                                                       ?.data?.data?.length ??
                                                   0,
                                               itemBuilder: (context, index) {
                                                 return fiestasItem(
                                                     context: context,
-                                                    postModeldata: fiestasdata
-                                                        ?.data?.data
+                                                    postModeldata: UserData
+                                                        .fiestasdata?.data?.data
                                                         ?.elementAt(index));
                                               })),
                             ],

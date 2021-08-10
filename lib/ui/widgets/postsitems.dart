@@ -11,6 +11,7 @@ import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
+import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 import 'package:intl/intl.dart';
 
@@ -21,6 +22,7 @@ String yellowImageLink =
     "https://i.pinimg.com/736x/e3/e7/d8/e3e7d871074c2b2256207b23a4eaeca4.jpg";
 
 Widget fiestasItem({context, Datum? postModeldata}) {
+  bool available = false;
   var size = MediaQuery.of(context).size;
 
   DateTime? date = DateTime.parse("${postModeldata?.timestamp}");
@@ -28,6 +30,12 @@ Widget fiestasItem({context, Datum? postModeldata}) {
   String month = DateFormat('MMM').format(date);
 
   String price = k_m_b_generator(int.parse("${postModeldata?.ticketPrice}"));
+
+  if (postModeldata?.leftNormalTicket.toString() == "0" &&
+      postModeldata?.leftStandardTicket.toString() == "0" &&
+      postModeldata?.leftVipTicket.toString() == "0") {
+    available = true;
+  }
 
   return Container(
     margin: EdgeInsets.only(top: size.width * 0.04),
@@ -77,7 +85,7 @@ Widget fiestasItem({context, Datum? postModeldata}) {
               horizontal: size.width * 0.03, vertical: size.height * 0.01),
           height: size.height * 0.15,
           decoration: BoxDecoration(
-              color: AppColors.homeBackground,
+              color: available ? Colors.grey[700] : AppColors.homeBackground,
               border: Border(
                 left: BorderSide(
                     width: size.height * 0.001, color: AppColors.tagBorder),
@@ -161,18 +169,27 @@ Widget fiestasItem({context, Datum? postModeldata}) {
                   ),
                   InkWell(
                     onTap: () {
-                      navigatorPushFun(
-                          context, BookNowBeta(fiestasID: postModeldata?.id));
+                      if (available != true) {
+                        navigatorPushFun(
+                            context, BookNowBeta(fiestasID: postModeldata?.id));
+                      }
                     },
                     child: roundedBoxR(
                         width: size.width * 0.23,
                         height: size.height * 0.033,
                         radius: 3.0,
-                        backgroundColor: AppColors.siginbackgrond,
+                        backgroundColor: available
+                            ? Colors.grey[800]
+                            : AppColors.siginbackgrond,
                         child: Align(
                           alignment: Alignment.center,
                           child: Text(
-                            Strings.booknow,
+                            // Strings.booknow,
+
+                            available
+                                ? "${getTranslated(context, "full")}"
+                                : "${getTranslated(context, "booknow")}",
+
                             style: TextStyle(
                                 fontSize: size.width * 0.03,
                                 fontFamily: Fonts.dmSansBold,

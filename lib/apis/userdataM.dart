@@ -1,3 +1,4 @@
+import 'package:funfy/models/fiestasmodel.dart';
 import 'package:funfy/models/userModel.dart';
 import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/imagesIcons.dart';
@@ -17,6 +18,8 @@ class UserData {
   static Map preFiestasExtrasTicketCart = {};
   static String preFiestasCartid = "";
   static bool returnV = false;
+
+  static FiestasModel? fiestasdata;
 
   static List tiketList = [
     {
