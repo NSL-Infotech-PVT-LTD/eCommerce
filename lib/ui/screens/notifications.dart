@@ -38,24 +38,57 @@ class _NotificationsState extends State<Notifications> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // today
-          Container(
-            margin: EdgeInsets.only(
-                left: size.width * 0.05,
-                top: size.height * 0.02,
-                bottom: size.height * 0.01),
-            child: Text(
-              "${getTranslated(context, "today")}",
-              // Strings.today,
-              style: TextStyle(
-                  color: AppColors.white,
-                  fontFamily: Fonts.dmSansMedium,
-                  fontSize: size.width * 0.045),
-            ),
-          ),
+          // Container(
+          //   margin: EdgeInsets.only(
+          //       left: size.width * 0.05,
+          //       top: size.height * 0.02,
+          //       bottom: size.height * 0.01),
+          //   child: Text(
+          //     "${getTranslated(context, "today")}",
+          //     // Strings.today,
+          //     style: TextStyle(
+          //         color: AppColors.white,
+          //         fontFamily: Fonts.dmSansMedium,
+          //         fontSize: size.width * 0.045),
+          //   ),
+          // ),
           Expanded(
             child: ListView.builder(
-                itemCount: 5,
-                itemBuilder: (context, indxe) {
+                itemCount: 15,
+                itemBuilder: (context, index) {
+                  if (index == 0) {
+                    return Container(
+                      margin: EdgeInsets.only(
+                          left: size.width * 0.05,
+                          top: size.height * 0.02,
+                          bottom: size.height * 0.01),
+                      child: Text(
+                        "${getTranslated(context, "today")}",
+                        // Strings.today,
+                        style: TextStyle(
+                            color: AppColors.white,
+                            fontFamily: Fonts.dmSansMedium,
+                            fontSize: size.width * 0.045),
+                      ),
+                    );
+                  }
+
+                  if (index == 5) {
+                    return Container(
+                      margin: EdgeInsets.only(
+                          left: size.width * 0.05,
+                          top: size.height * 0.02,
+                          bottom: size.height * 0.01),
+                      child: Text(
+                        "${getTranslated(context, "earlier")}",
+                        // Strings.today,
+                        style: TextStyle(
+                            color: AppColors.white,
+                            fontFamily: Fonts.dmSansMedium,
+                            fontSize: size.width * 0.045),
+                      ),
+                    );
+                  }
                   return notificationItem(
                       context: context,
                       imageUrl: Images.beerNetwork,
@@ -66,32 +99,32 @@ class _NotificationsState extends State<Notifications> {
           ),
 
           /// earlier
-          Container(
-            margin: EdgeInsets.only(
-                left: size.width * 0.05,
-                top: size.height * 0.02,
-                bottom: size.height * 0.01),
-            child: Text(
-              "${getTranslated(context, "earlier")}",
-              // Strings.earlier,
-              style: TextStyle(
-                  color: AppColors.white,
-                  fontFamily: Fonts.dmSansMedium,
-                  fontSize: size.width * 0.045),
-            ),
-          ),
-          Expanded(
-            child: ListView.builder(
-                itemCount: 5,
-                itemBuilder: (context, indxe) {
-                  return notificationItem(
-                      context: context,
-                      imageUrl: Images.beerNetwork,
-                      title: Strings.lorem,
-                      time: "30 Min",
-                      active: true);
-                }),
-          )
+          // Container(
+          //   margin: EdgeInsets.only(
+          //       left: size.width * 0.05,
+          //       top: size.height * 0.02,
+          //       bottom: size.height * 0.01),
+          //   child: Text(
+          //     "${getTranslated(context, "earlier")}",
+          //     // Strings.earlier,
+          //     style: TextStyle(
+          //         color: AppColors.white,
+          //         fontFamily: Fonts.dmSansMedium,
+          //         fontSize: size.width * 0.045),
+          //   ),
+          // ),
+          // Expanded(
+          //   child: ListView.builder(
+          //       itemCount: 5,
+          //       itemBuilder: (context, indxe) {
+          //         return notificationItem(
+          //             context: context,
+          //             imageUrl: Images.beerNetwork,
+          //             title: Strings.lorem,
+          //             time: "30 Min",
+          //             active: true);
+          //       }),
+          // )
         ],
       ),
     );
@@ -107,7 +140,7 @@ Widget notificationItem(
         : AppColors.blackBackground,
     padding: EdgeInsets.symmetric(
         vertical: size.height * 0.02, horizontal: size.width * 0.03),
-    margin: EdgeInsets.only(top: size.height * 0.002),
+    margin: EdgeInsets.only(top: size.height * 0.005),
     child: Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,

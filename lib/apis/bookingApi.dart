@@ -1,19 +1,22 @@
 import 'dart:convert';
-
 import 'package:funfy/apis/userdataM.dart';
-import 'package:funfy/models/createcartPreFiestasModel.dart';
+import 'package:funfy/components/dialogs.dart';
+import 'package:funfy/components/navigation.dart';
 import 'package:funfy/models/fiestasBooking.dart';
 import 'package:funfy/models/fiestasBookingListModel.dart';
+import 'package:funfy/models/fiestasDetailmodel.dart';
 import 'package:funfy/models/makePrefiestasmodel.dart';
 import 'package:funfy/models/preFiestasBookingListModel.dart';
 import 'package:funfy/models/preFiestasCartModel.dart';
 import 'package:funfy/models/prefiestasOrderDetailModel.dart';
+import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/urls.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 Future<FistaBooking?> fiestasBooking(
     {String? id,
+    context,
     String? ticketcount,
     String? standardticketcount,
     String? vipticketcount}) async {
@@ -36,9 +39,18 @@ Future<FistaBooking?> fiestasBooking(
 
   var response = Map<String, dynamic>.from(jsonRes);
 
+  print("here is res $response");
+
   if (res.statusCode == 201) {
     return FistaBooking.fromJson(response);
   } else {
+    Dialogs.simpleOkAlertDialog(
+        context: context,
+        title: "${getTranslated(context, "alert!")}",
+        content: "${getTranslated(context, "sorryTicketsaresold")}",
+        func: () {
+          navigatePopFun(context);
+        });
     // print(res.body);
   }
 }
@@ -195,7 +207,7 @@ Future<PrefiestasOrderDetailModel?> prefiestasShowOrderDetail(
   }
 }
 
-// get my prefiestas cart
+// get my prefiestas cart..
 
 Future<PrefiestasCartModel?> getPrefiestasCart() async {
   var headers = {
@@ -208,6 +220,26 @@ Future<PrefiestasCartModel?> getPrefiestasCart() async {
   if (res.statusCode == 200) {
     print("here is cart - ${res.body}");
     return prefiestasCartModelFromJson(res.body);
+  } else {
+    print("here is error ${res.body}");
+  }
+}
+
+// get fiestas by id
+
+Future<FiestasDetailModel?> getFiestasbyId({String? fiestasID}) async {
+  var headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+  };
+
+  var body = {"id": "$fiestasID"};
+
+  var res = await http.post(Uri.parse(Urls.fiestasGetByidUrl),
+      body: body, headers: headers);
+
+  if (res.statusCode == 200) {
+    // print("here is fiestas detail - ${res.body}");
+    return fiestasDetailModelFromJson(res.body);
   } else {
     print("here is error ${res.body}");
   }

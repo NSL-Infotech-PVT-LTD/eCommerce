@@ -8,7 +8,6 @@ import 'package:funfy/components/zeroadd.dart';
 import 'package:funfy/main.dart';
 import 'package:funfy/models/fiestasmodel.dart';
 import 'package:funfy/models/preFiestasModel.dart';
-import 'package:funfy/ui/screens/auth/signin.dart';
 import 'package:funfy/ui/screens/notifications.dart';
 import 'package:funfy/ui/widgets/dateButton.dart';
 import 'package:funfy/ui/widgets/postsitems.dart';
@@ -51,8 +50,15 @@ class _FiestasPageState extends State<FiestasPage> {
 
   bool _postLoading = false;
 
-  String tagType = "club";
+  bool _fiestasPostLoading = false;
+
+  bool _prefiestasPostLoading = false;
+
+  String tagType = "";
   String dateFilterFiestas = "";
+
+  DateTime nowdate = DateTime.now();
+  String? filterDate = "";
 
   fiestasgetPosts({String? date}) async {
     var net = await Internetcheck.check();
@@ -61,13 +67,13 @@ class _FiestasPageState extends State<FiestasPage> {
     }
     {
       setState(() {
-        _postLoading = true;
+        _fiestasPostLoading = true;
       });
       await fiestasPostGet(type: tagType, dateFilter: date.toString())
           .then((FiestasModel? posts) {
         setState(() {
           fiestasdata = posts;
-          _postLoading = false;
+          _fiestasPostLoading = false;
         });
       });
     }
@@ -80,22 +86,17 @@ class _FiestasPageState extends State<FiestasPage> {
       Internetcheck.showdialog(context: context);
     } else {
       setState(() {
-        _postLoading = true;
+        _prefiestasPostLoading = true;
       });
       await prefiestasPostGet().then((posts) {
         setState(() {
           prefiestasdata = posts;
-          _postLoading = false;
+          _prefiestasPostLoading = false;
         });
-      });
-
-      setState(() {
-        _postLoading = false;
       });
     }
   }
 
-  DateTime nowdate = DateTime.now();
   ScrollController _scrollController = ScrollController();
 
   DateTime? selectedDate;
@@ -146,18 +147,20 @@ class _FiestasPageState extends State<FiestasPage> {
       "date": nowdate.day,
       "month": "${nowdate.month}",
       "year": "${nowdate.year}",
-      "active": true
+      "active": filterDate == "" ? false : true
     };
+
     print("selectDate==>$itemSelected");
 
     for (var i = 0; i < daysnum; i++) {
       if (dates[i]['date'] == itemSelected['date']) {
         print("fhskhfkh-===" + dates[i].toString());
-        dates[i]['active'] = true;
+        dates[i]['active'] = filterDate == "" ? false : true;
         _scrollController.animateTo(
             i * MediaQuery.of(context).size.width * 0.13,
             duration: new Duration(seconds: 2),
             curve: Curves.ease);
+
         break;
       }
     }
@@ -165,24 +168,31 @@ class _FiestasPageState extends State<FiestasPage> {
     //
   }
 
-  checkDateSelected(date) {
-    print(date);
-
-    for (var i in dates) {
-      // print(i["fulldate"]);
-      if (i["active"] == true) {
-        setState(() {
-          i["active"] = false;
-          return;
-        });
-      } else {
-        setState(() {
-          i["active"] = true;
-          return;
-        });
-      }
-    }
+  clearFilter() {
+    setState(() {
+      filterDate = "";
+      tagType = "";
+    });
   }
+
+  // checkDateSelected(date) {
+  //   print(date);
+
+  //   for (var i in dates) {
+  //     // print(i["fulldate"]);
+  //     if (i["active"] == true) {
+  //       setState(() {
+  //         i["active"] = false;
+  //         return;
+  //       });
+  //     } else {
+  //       setState(() {
+  //         i["active"] = true;
+  //         return;
+  //       });
+  //     }
+  //   }
+  // }
 
   Future<void> selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -199,13 +209,23 @@ class _FiestasPageState extends State<FiestasPage> {
         nowdate = picked;
         daysInMonth(picked);
       });
+
+      // get fiestast post
+
+      String? fomatDate = await dateFormat(date: picked);
+
+      setState(() {
+        filterDate = fomatDate;
+      });
+
+      fiestasgetPosts(date: fomatDate);
     }
   }
 
   @override
   void initState() {
     super.initState();
-    fiestasgetPosts();
+    fiestasgetPosts(date: filterDate);
     preFiestasPostget();
     determinePosition();
     print(UserData.userToken);
@@ -216,6 +236,12 @@ class _FiestasPageState extends State<FiestasPage> {
     daysInMonth(nowdate);
     var size = MediaQuery.of(context).size;
     return Scaffold(
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     print("here is filter date $filterDate D");
+      //   },
+      //   child: Icon(Icons.add),
+      // ),
       body: Container(
         color: AppColors.homeBackground,
         width: size.width,
@@ -250,13 +276,18 @@ class _FiestasPageState extends State<FiestasPage> {
                               fontFamily: Fonts.dmSansRegular,
                               color: AppColors.white),
                         ),
-                        Text(
-                          // Strings.garyadams,
-                          "${Constants.prefs?.getString("name")}",
-                          style: TextStyle(
-                              fontSize: size.width * 0.048,
-                              fontFamily: Fonts.dmSansBold,
-                              color: AppColors.white),
+                        Container(
+                          width: size.width * 0.6,
+                          child: Text(
+                            // Strings.garyadams,
+                            "${Constants.prefs?.getString("name")}",
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyle(
+                                fontSize: size.width * 0.048,
+                                fontFamily: Fonts.dmSansBold,
+                                color: AppColors.white),
+                          ),
                         ),
                         SizedBox(
                           height: size.height * 0.01,
@@ -462,7 +493,7 @@ class _FiestasPageState extends State<FiestasPage> {
                                           setState(() {
                                             tagType = "club";
                                           });
-                                          fiestasgetPosts();
+                                          fiestasgetPosts(date: filterDate);
                                         },
                                         child: tagbutton2(
                                             context: context,
@@ -471,9 +502,12 @@ class _FiestasPageState extends State<FiestasPage> {
                                             borderColor: tagType == "club"
                                                 ? AppColors.tagBorder
                                                 : AppColors.white,
+                                            textColor: tagType == "club"
+                                                ? AppColors.tagBorder
+                                                : AppColors.white,
                                             borderwidth: tagType == "club"
-                                                ? size.width * 0.002
-                                                : size.width * 0.001),
+                                                ? size.width * 0.003
+                                                : size.width * 0.002),
                                       ),
 
                                       SizedBox(
@@ -485,7 +519,7 @@ class _FiestasPageState extends State<FiestasPage> {
                                           setState(() {
                                             tagType = "open";
                                           });
-                                          fiestasgetPosts();
+                                          fiestasgetPosts(date: filterDate);
                                         },
                                         child: tagbutton2(
                                             context: context,
@@ -494,9 +528,30 @@ class _FiestasPageState extends State<FiestasPage> {
                                             borderColor: tagType == "open"
                                                 ? AppColors.tagBorder
                                                 : AppColors.white,
+                                            textColor: tagType == "open"
+                                                ? AppColors.tagBorder
+                                                : AppColors.white,
                                             borderwidth: tagType == "open"
-                                                ? size.width * 0.002
-                                                : size.width * 0.001),
+                                                ? size.width * 0.003
+                                                : size.width * 0.002),
+                                      ),
+
+                                      SizedBox(
+                                        width: size.width * 0.02,
+                                      ),
+
+                                      GestureDetector(
+                                        onTap: () {
+                                          clearFilter();
+                                          fiestasgetPosts(date: filterDate);
+                                        },
+                                        child: tagbutton2(
+                                            context: context,
+                                            text:
+                                                "${getTranslated(context, "clearfilter")}", //Strings.club,
+                                            borderColor: AppColors.white,
+                                            textColor: AppColors.white,
+                                            borderwidth: size.width * 0.002),
                                       ),
                                     ],
                                   ),
@@ -564,7 +619,7 @@ class _FiestasPageState extends State<FiestasPage> {
                                                     Axis.horizontal,
                                                 itemBuilder: (context, index) {
                                                   return GestureDetector(
-                                                    onTap: () {
+                                                    onTap: () async {
                                                       String pic = dates[index]
                                                               ["fulldate"]
                                                           .toString();
@@ -572,10 +627,24 @@ class _FiestasPageState extends State<FiestasPage> {
                                                           DateTime.parse(pic);
 
                                                       print(picked);
+
                                                       setState(() {
                                                         nowdate = picked;
                                                         daysInMonth(picked);
                                                       });
+
+                                                      // get fiestast post
+
+                                                      String? fomatDate =
+                                                          await dateFormat(
+                                                              date: picked);
+
+                                                      setState(() {
+                                                        filterDate = fomatDate;
+                                                      });
+
+                                                      fiestasgetPosts(
+                                                          date: fomatDate);
                                                     },
                                                     child: Container(
                                                       margin: EdgeInsets.only(
@@ -680,7 +749,7 @@ class _FiestasPageState extends State<FiestasPage> {
                                 height: size.height * 0.015,
                               ),
                               Expanded(
-                                  child: _postLoading == true
+                                  child: _fiestasPostLoading == true
                                       ? Center(
                                           child: CircularProgressIndicator(
                                               valueColor:
@@ -720,7 +789,7 @@ class _FiestasPageState extends State<FiestasPage> {
               // pre fiestas
 
               fiestasButton == false
-                  ? preFiestas(context, prefiestasdata, _postLoading)
+                  ? preFiestas(context, prefiestasdata, _prefiestasPostLoading)
                   : SizedBox()
             ],
           ),

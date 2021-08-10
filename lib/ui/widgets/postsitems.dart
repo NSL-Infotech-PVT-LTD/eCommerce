@@ -5,7 +5,6 @@ import 'package:funfy/components/shortPrices.dart';
 import 'package:funfy/models/fiestasmodel.dart';
 import 'package:funfy/models/preFiestasModel.dart';
 import 'package:funfy/ui/screens/bookNowBeta.dart';
-import 'package:funfy/ui/screens/pages/BookNow.dart';
 import 'package:funfy/ui/screens/preFistaOrderMix.dart';
 import 'package:funfy/ui/widgets/rating.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
@@ -36,7 +35,10 @@ Widget fiestasItem({context, Datum? postModeldata}) {
     height: size.height * 0.28,
     decoration: BoxDecoration(
         image: DecorationImage(
-            image: NetworkImage("${postModeldata?.image}"), fit: BoxFit.cover)),
+            image: NetworkImage(
+              "${postModeldata?.clubDetail?.image}",
+            ),
+            fit: BoxFit.cover)),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -160,7 +162,7 @@ Widget fiestasItem({context, Datum? postModeldata}) {
                   InkWell(
                     onTap: () {
                       navigatorPushFun(
-                          context, BookNowBeta(fiestasModel: postModeldata));
+                          context, BookNowBeta(fiestasID: postModeldata?.id));
                     },
                     child: roundedBoxR(
                         width: size.width * 0.23,
@@ -334,12 +336,12 @@ Widget preFiestasItem({context, ProductInfo? prefiestasdata}) {
                     top: size.height * 0.02, bottom: size.height * 0.013),
                 width: size.width * 0.25,
                 decoration: BoxDecoration(),
-                child: Image.network(
-                  prefiestasdata?.image != ""
-                      ? "${prefiestasdata?.image}"
-                      : Images.beerNetwork,
-                  // fit: BoxFit.cover,
-                ),
+                child: Image.network(Images.beerNetwork
+                    // prefiestasdata?.image != ""
+                    //     ? "${prefiestasdata?.image}"
+                    //     : Images.beerNetwork,
+                    // fit: BoxFit.cover,
+                    ),
               )
             ],
           ),

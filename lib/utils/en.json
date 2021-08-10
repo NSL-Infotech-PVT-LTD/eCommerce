@@ -171,9 +171,11 @@
   "attendies": "Attendies",
   "success": "Success",
   "yourAccountisSuccessfullyregistered": "Your account is successfully registered",
-  "favourite": "favourite",
+  "favourite": "Favourite",
   "alert!": "alert!",
   "openS": "Open",
+  "clearfilter": "Clear filter",
+  "sorryTicketsaresold": "Sorry Tickets are sold",
   "youhaveselecteddifferentcategoryDoyouwanttoresetCart?": "You have selected different category, Do you want to reset Cart?",
   "exit": "Exit"
 }

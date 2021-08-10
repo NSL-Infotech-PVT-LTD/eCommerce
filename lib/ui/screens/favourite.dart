@@ -271,7 +271,12 @@ fiestasItemFav({context, int? index, FiestasModel? model, funcRun}) {
     height: size.height * 0.28,
     decoration: BoxDecoration(
         image: DecorationImage(
-            image: NetworkImage("${data?.image}"), fit: BoxFit.cover)),
+            image: NetworkImage(
+              Images.beerNetwork,
+            ),
+            // "${data?.image}"),
+
+            fit: BoxFit.cover)),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -398,7 +403,7 @@ fiestasItemFav({context, int? index, FiestasModel? model, funcRun}) {
                       Navigator.of(context)
                           .push(MaterialPageRoute(
                               builder: (context) =>
-                                  BookNowBeta(fiestasModel: data)))
+                                  BookNowBeta(fiestasID: data?.id)))
                           .then((value) {
                         funcRun();
                       });

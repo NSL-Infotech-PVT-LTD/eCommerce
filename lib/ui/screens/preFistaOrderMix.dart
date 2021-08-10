@@ -73,7 +73,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
 
   Future<void> _handleRadioValueChange(int? value) async {
     setState(() {
-      alcoholCountNum = Constants.prefs?.getString("alcohol") == "null" ||
+      alcoholCountNum = Constants.prefs?.getString("alcohol") == null ||
               Constants.prefs?.getString("alcohol") == ""
           ? 0
           : 1;
@@ -88,8 +88,8 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
         UserData.preFiestasAlcoholCart =
             "${prefiestasDetailModel?.data?.childData?.alcohol?.elementAt(value!).id}";
 
-        Constants.prefs?.setString("alcohol", "alcohol");
         alcoholCountNum = 1;
+        Constants.prefs?.setString("alcohol", "alcohol");
       });
     }
 
@@ -119,12 +119,13 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
 
               if (resp["status"] == true && resp["code"] == 201) {
                 setState(() {
+                  clearCart();
                   groupValue = value;
                   UserData.preFiestasAlcoholCart =
                       "${prefiestasDetailModel?.data?.childData?.alcohol?.elementAt(value!).id}";
 
-                  Constants.prefs?.setString("alcohol", "alcohol");
                   alcoholCountNum = 1;
+                  Constants.prefs?.setString("alcohol", "alcohol");
                 });
               }
             });
@@ -173,6 +174,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
   }
 
   clearCart() {
+    UserData.preFiestasAlcoholCart = "";
     setState(() {
       UserData.preFiestasAlcoholCart = "";
       UserData.preFiestasExtrasTicketCart.clear();
@@ -186,8 +188,8 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
 
   @override
   void initState() {
-    alcoholCountNum = "${Constants.prefs?.getString("alcohol")}" == "null" ||
-            "${Constants.prefs?.getString("alcohol")}" == ""
+    alcoholCountNum = Constants.prefs?.getString("alcohol") == null ||
+            Constants.prefs?.getString("alcohol") == ""
         ? 0
         : 1;
     getPrefiestasDetailfromApi();
@@ -377,10 +379,11 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
         await prefiestasDetailApi(id: widget.preFiestasID.toString())
             .then((res) {
           setState(() {
-            _loadingBack = false;
             prefiestasDetailModel = res;
             _favoriteBool =
                 prefiestasDetailModel!.data!.parentData!.isFavourite!;
+
+            _loadingBack = false;
           });
         });
       } catch (e) {
@@ -393,189 +396,116 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
     }
   }
 
-  // // alcohol
-
-  // alcohollistget() async {
-  //   setState(() {
-  //     _alcoholloading = true;
-  //   });
-  //   await prefiestasAlMxExApi(
-  //           // id: widget.prefiestasdataMap!["id"].toString(),
-  //           categoriesName: Strings.alcohols)
-  //       .then((res) {
-  //     if (res?.status == true) {
-  //       setState(() {
-  //         alcohol = res;
-  //         _alcoholloading = false;
-  //       });
-  //     } else {
-  //       setState(() {
-  //         alcohol = PrefiestasAlMxExModel();
-  //         _alcoholloading = false;
-  //       });
-  //     }
-  //   });
-  // }
-
-  // // mixes
-
-  // mixlistget() async {
-  //   setState(() {
-  //     _mixloading = true;
-  //   });
-  //   await prefiestasAlMxExApi(
-  //           // id: widget.prefiestasdataMap!["id"].toString(),
-  //           categoriesName: Strings.mixs)
-  //       .then((res) {
-  //     if (res?.status == true) {
-  //       setState(() {
-  //         mix = res;
-  //         _mixloading = false;
-  //       });
-  //     } else {
-  //       setState(() {
-  //         mix = PrefiestasAlMxExModel();
-  //         _mixloading = false;
-  //       });
-  //     }
-  //   });
-  // }
-
-  // // extras
-
-  // extraslistget() async {
-  //   setState(() {
-  //     _extrasloading = true;
-  //   });
-  //   await prefiestasAlMxExApi(
-  //           // id: widget.prefiestasdataMap!["id"].toString(),
-  //           categoriesName: Strings.extrass)
-  //       .then((res) {
-  //     if (res?.status == true) {
-  //       print("here is --------------- ");
-  //       print(res?.toJson().toString());
-  //       setState(() {
-  //         extras = res;
-  //         _extrasloading = false;
-  //       });
-  //     } else {
-  //       setState(() {
-  //         extras = PrefiestasAlMxExModel();
-  //         _extrasloading = false;
-  //       });
-
-  //       print("here is --------------- ");
-  //       print(extras?.data);
-  //     }
-  //   });
-  // }
-
   // - + funtion
 
   addTicket({int? index, int itemCount = 0, String? id, var cart}) async {
     print("add button press  index: $index  id: $id");
-    int cartCount;
 
-    try {
-      cartCount = cart[index]["preticketCount"];
-    } catch (e) {
-      cartCount = itemCount;
-    }
-    setState(() {
-      cartCount = cartCount + 1;
-    });
+    if (_loadingCenter == false) {
+      int cartCount;
 
-    String returnRes = await addToCart(id: id, cont: cartCount.toString());
-
-    if (returnRes == "true") {
+      try {
+        cartCount = cart[index]["preticketCount"];
+      } catch (e) {
+        cartCount = itemCount;
+      }
       setState(() {
-        cart[index] = {
-          "id": id,
-          "preticketCount": cartCount,
-        };
+        cartCount = cartCount + 1;
       });
 
-      totalCount(value: true);
-    }
+      String returnRes = await addToCart(id: id, cont: cartCount.toString());
 
-    if (returnRes == "422") {
-      Dialogs.simpleAlertDialog(
-          context: context,
-          title: "${getTranslated(context, "alert!")}",
-          content:
-              "${getTranslated(context, "youhaveselecteddifferentcategoryDoyouwanttoresetCart?")}",
-          func: () async {
-            navigatePopFun(context);
+      if (returnRes == "true") {
+        setState(() {
+          cart[index] = {
+            "id": id,
+            "preticketCount": cartCount,
+          };
+        });
 
-            setState(() {
-              _loadingCenter = true;
-            });
+        totalCount(value: true);
+      }
 
-            await cartResetPrefiestas(
-                    preFiestaID: id, quantity: cartCount.toString())
-                .then((resp) {
+      if (returnRes == "422") {
+        Dialogs.simpleAlertDialog(
+            context: context,
+            title: "${getTranslated(context, "alert!")}",
+            content:
+                "${getTranslated(context, "youhaveselecteddifferentcategoryDoyouwanttoresetCart?")}",
+            func: () async {
+              navigatePopFun(context);
+
               setState(() {
-                _loadingCenter = false;
+                _loadingCenter = true;
               });
 
-              print("here is json body ---------- $resp");
-
-              if (resp["status"] == true && resp["code"] == 201) {
+              await cartResetPrefiestas(
+                      preFiestaID: id, quantity: cartCount.toString())
+                  .then((resp) {
                 setState(() {
-                  clearCart();
-                  cart[index] = {
-                    "id": id,
-                    "preticketCount": cartCount,
-                  };
+                  _loadingCenter = false;
                 });
 
-                totalCount(value: true);
-              }
+                if (resp["status"] == true && resp["code"] == 201) {
+                  setState(() {
+                    clearCart();
+                    cart[index] = {
+                      "id": id,
+                      "preticketCount": cartCount,
+                    };
+
+                    totalCount(value: true);
+                  });
+                }
+              });
             });
-          });
+      }
     }
   }
 
   // remove button
 
-  ticketRemove({String? id, int itemCount = 0, int? index, var cart}) async {
+  ticketRemove(
+      {String? id, int itemCount = 0, int? index, dynamic cart}) async {
     print("remove id: $id  index: $index");
 
-    int cartCount;
+    if (_loadingCenter == false) {
+      int cartCount;
 
-    try {
-      cartCount = cart[index]["preticketCount"];
-    } catch (e) {
-      cartCount = itemCount;
-    }
-    setState(() {
-      cartCount = cartCount - 1;
-    });
+      try {
+        cartCount = cart[index]["preticketCount"];
+        print("fkndnfjdk  $cartCount");
+      } catch (e) {
+        cartCount = itemCount;
+        print("fkndnfjdkEcceptiopm  $cartCount");
+      }
+      setState(() {
+        cartCount = cartCount - 1;
+      });
 
-    if (cartCount > -1) {
-      await addToCart(id: id, cont: cartCount.toString()).then((value) {
-        print("this is value $value");
-        if (value == "true") {
+      print("Actual value ==$cartCount");
+      if (cartCount > -1) {
+        String returnRes = await addToCart(id: id, cont: cartCount.toString());
+        print("returnRes $returnRes");
+        if (returnRes == "true") {
           setState(() {
             cart[index] = {
               "id": id,
               "preticketCount": cartCount,
             };
+            totalCount(value: false);
           });
-
-          totalCount(value: false);
         }
-      });
-    } else {}
+      }
+      // if (cartCount <= 0 && cart.isNotEmpty && cart.containsKey(index)) {
+      //   setState(() {
+      //     cart.remove(index);
+      //   });
+      // }
 
-    if (cartCount <= 0 && cart.isNotEmpty && cart.containsKey(index)) {
-      setState(() {
-        cart.remove(index);
-      });
+      // totalCount();
+      print(cart);
     }
-
-    // totalCount();
-    print(cart);
   }
 
   // remove count
@@ -602,6 +532,11 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
 
   Widget bottomSheet() {
     var size = MediaQuery.of(context).size;
+
+    String totalNum = Constants.prefs?.getString("cartTot") != "" &&
+            Constants.prefs?.getString("cartTot") != null
+        ? "${Constants.prefs?.getString("cartTot")}"
+        : "0";
 
     return Container(
       height: size.height * 0.1,
@@ -647,7 +582,9 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                         child: Text(
                           // "${getTranslated(context, "ticket")} * ${UserData.totalTicketNum}",
 
-                          "${getTranslated(context, "ticket")} * ${int.parse('${Constants.prefs?.getString("cartTot")}') + alcoholCountNum}",
+                          // int.parse(totalNum) + alcoholCountNum
+
+                          "${getTranslated(context, "ticket")} * ${int.parse(totalNum) + alcoholCountNum}",
                           // "${Strings.ticket} * ${UserData.totalTicketNum}",
                           style: TextStyle(
                             color: AppColors.white,
@@ -936,9 +873,8 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
       child: Scaffold(
           // floatingActionButton: FloatingActionButton(
           //   onPressed: () {
-          //     // totalCount(value: false);
-          //     print(
-          //         "here is alcohol  - ${Constants.prefs?.getString("alcohol")}");
+          //     print("here is ");
+          //     print(Constants.prefs?.getString("alcohol"));
           //   },
           //   child: Icon(Icons.add),
           // ),
@@ -947,20 +883,14 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
           //         (UserData.preFiestasExtrasTicketCart.isNotEmpty ||
           //             UserData.preFiestasMixesTicketCart.isNotEmpty)
 
-          bottomSheet:
-
-              //  UserData.preFiestasAlcoholCart != "" ||
-              //         UserData.preFiestasExtrasTicketCart.isNotEmpty ||
-              //         UserData.preFiestasMixesTicketCart.isNotEmpty
-
-              _loadingBack == false &&
-                      Constants.prefs?.getString("alcohol") != null &&
-                      Constants.prefs?.getString("alcohol") != ""
-                  // Constants.prefs?.getString("cartTot") != null &&
-                  // Constants.prefs?.getString("cartTot") != "" &&
-                  // Constants.prefs?.getString("cartTot") != "0"
-                  ? bottomSheet()
-                  : SizedBox(),
+          bottomSheet: _loadingBack == false &&
+                  (Constants.prefs?.getString("alcohol") != null &&
+                      Constants.prefs?.getString("alcohol") != "")
+              // Constants.prefs?.getString("cartTot") != null &&
+              // Constants.prefs?.getString("cartTot") != "" &&
+              // Constants.prefs?.getString("cartTot") != "0"
+              ? bottomSheet()
+              : SizedBox(),
           body: _loadingBack == true
               ? Center(
                   child: CircularProgressIndicator(),

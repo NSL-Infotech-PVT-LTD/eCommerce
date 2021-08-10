@@ -32,4 +32,6 @@ class Urls {
 
   static String preFiestasOrderItemDetail = baseUrl + "customer/order/detail";
   static String preFiestasGetCartUrl = baseUrl + "customer/cart";
+
+  static String fiestasGetByidUrl = baseUrl + "customer/fiesta/detail";
 }

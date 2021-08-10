@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:funfy/apis/bookingApi.dart';
-import 'package:funfy/apis/homeApis.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/models/fiestasBookingListModel.dart';
 import 'package:funfy/models/preFiestasBookingListModel.dart';
 import 'package:funfy/ui/screens/Your%20order%20Summery.dart';
 import 'package:funfy/ui/screens/fiestasMoreOrderDetails.dart';
-import 'package:funfy/ui/widgets/postsitems.dart';
 import 'package:funfy/ui/widgets/rating.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/InternetCheck.dart';
@@ -16,8 +14,10 @@ import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
-import 'package:hexcolor/hexcolor.dart';
-import 'package:page_transition/page_transition.dart';
+
+import 'package:internet_speed_test/internet_speed_test.dart';
+
+final internetSpeedTest = InternetSpeedTest();
 
 class BookingPage extends StatefulWidget {
   const BookingPage({Key? key}) : super(key: key);
@@ -98,6 +98,10 @@ class _BookingPageState extends State<BookingPage> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {},
+        //   child: Icon(Icons.add),
+        // ),
         backgroundColor: AppColors.homeBackground,
         body: Container(
             child: Column(
@@ -414,21 +418,21 @@ Widget fiestasOrdersItem({context, index, FiestasBookingList? model}) {
   );
 }
 
-//
 Widget preFiestasOrderItem(
     {context, int? index, PreFiestasBookingListModel? model}) {
   var size = MediaQuery.of(context).size;
 
-  var data =
-      model?.data?.data?.elementAt(index!).orderItem?.elementAt(0).preFiesta;
-  String orderid =
-      "${model?.data?.data?.elementAt(index!).orderItem?.elementAt(index).orderId}";
+  print(model?.toJson());
+
+  var data = model?.data?.data?.elementAt(index!).categoryDetail;
+  // String orderid =
+  //     "${model?.data?.data?.elementAt(index!).orderItem?.elementAt(0).orderId}";
 
   return Container(
     margin: EdgeInsets.only(top: size.height * 0.02),
     child: roundedBoxBorder(
         context: context,
-        height: size.height * 0.21,
+        height: size.height * 0.23,
         width: size.width,
         backgroundColor: AppColors.itemBackground,
         borderColor: AppColors.tagBorder,
@@ -477,18 +481,26 @@ Widget preFiestasOrderItem(
                       GestureDetector(
                         onTap: () {
                           navigatorPushFun(
-                              context, YourOrderSum(orderID: orderid));
+                              context,
+                              YourOrderSum(
+                                  orderID: model?.data?.data
+                                      ?.elementAt(index!)
+                                      .id
+                                      .toString()));
                         },
                         child: roundedBoxR(
-                            radius: size.width * 0.005,
+                            radius: size.width * 0.006,
                             width: size.width * 0.3,
-                            height: size.height * 0.04,
+                            // height: size.height * 0.04,
                             backgroundColor: AppColors.siginbackgrond,
-                            child: Align(
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: size.height * 0.01,
+                                  horizontal: size.width * 0.03),
                               alignment: Alignment.center,
                               child: Text(
                                 "${getTranslated(context, "orderDetails")}",
-                                // Strings.orderDetails,
+                                textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: AppColors.white,
                                     fontSize: size.width * 0.034,
@@ -502,12 +514,16 @@ Widget preFiestasOrderItem(
               // right image
 
               Container(
+                // color: Colors.blue,
+                margin: EdgeInsets.only(right: size.width * 0.03),
+
                 padding: EdgeInsets.only(
                     top: size.height * 0.02, bottom: size.height * 0.013),
                 width: size.width * 0.25,
                 // decoration: BoxDecoration(),
                 child: Image.network(
                   "${data?.image ?? Images.beerNetwork}",
+                  // "${Images.beerNetwork}"
 
                   // fit: BoxFit.fill,
                 ),

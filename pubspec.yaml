@@ -55,6 +55,7 @@ dependencies:
   firebase_messaging: ^10.0.4
   firebase_core: ^1.4.0
   flutter_local_notifications: ^5.0.0+4
+  internet_speed_test: ^1.5.0
 
 
 dev_dependencies:

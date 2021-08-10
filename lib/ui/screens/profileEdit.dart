@@ -58,9 +58,11 @@ class _EditProfileState extends State<EditProfile> {
       _genderError = "";
 // fullname
       if (_fullnameController.text == "") {
-        _fullnameError =   "${getTranslated(context, "pleaseEnterYourfullname")}";//Strings.pleaseEnterYourfullname;
+        _fullnameError =
+            "${getTranslated(context, "pleaseEnterYourfullname")}"; //Strings.pleaseEnterYourfullname;
       } else if (_fullnameController.text.length < 3) {
-        _fullnameError ="${getTranslated(context, "yourNameMustBeAbove3Characters")}";// Strings.yourNameMustBeAbove3Characters;
+        _fullnameError =
+            "${getTranslated(context, "yourNameMustBeAbove3Characters")}"; // Strings.yourNameMustBeAbove3Characters;
       } else if (validateName(_fullnameController.text) != "") {
         _fullnameError = validateName(_fullnameController.text);
       }
@@ -68,14 +70,17 @@ class _EditProfileState extends State<EditProfile> {
       if (Constants.prefs?.getString("social").toString() == "false") {
 // dob
         if (_dobController.text == "") {
-          _dobError = "${getTranslated(context, "dateofbirthhint")}";//Strings.dateofbirthhint;
+          _dobError =
+              "${getTranslated(context, "dateofbirthhint")}"; //Strings.dateofbirthhint;
         } else if (calculateAge(dobDateTime) != "") {
-          _dobError = "${getTranslated(context, "agemustbe18")}"; //Strings.agemustbe18;
+          _dobError =
+              "${getTranslated(context, "agemustbe18")}"; //Strings.agemustbe18;
         }
 
 // gender
         if (_genderController.text == "") {
-          _genderError = "${getTranslated(context, "pleaseEnterYourGender")}"; //Strings.pleaseEnterYourGender;
+          _genderError =
+              "${getTranslated(context, "pleaseEnterYourGender")}"; //Strings.pleaseEnterYourGender;
         }
         if (_fullnameError == "" && _dobError == "" && _genderError == "") {
           _updateProfile();
@@ -237,7 +242,8 @@ class _EditProfileState extends State<EditProfile> {
                 ListTile(
                   onTap: () {
                     setState(() {
-                      gender ="${getTranslated(context, "male")}";// Strings.male;
+                      gender =
+                          "${getTranslated(context, "male")}"; // Strings.male;
                       _genderController.text = gender;
                     });
                     Navigator.of(context).pop();
@@ -259,15 +265,15 @@ class _EditProfileState extends State<EditProfile> {
                 ListTile(
                   onTap: () {
                     setState(() {
-                      gender = "${getTranslated(context, "female")}"; //Strings.female;
+                      gender =
+                          "${getTranslated(context, "female")}"; //Strings.female;
                       _genderController.text = gender;
                     });
                     Navigator.of(context).pop();
                   },
                   // leading: Icon(Icons.female),
                   leading: Icon(Icons.female),
-                  title:
-                  Text(
+                  title: Text(
                       //Strings.female,
                       "${getTranslated(context, "female")}",
                       style: TextStyle(
@@ -286,8 +292,7 @@ class _EditProfileState extends State<EditProfile> {
                   },
                   leading: Icon(Icons.female),
                   // leading: Icon(Icons.error),
-                  title: Text(
-                      "${getTranslated(context, "other")}",
+                  title: Text("${getTranslated(context, "other")}",
                       // Strings.other,
                       style: TextStyle(
                           fontFamily: Fonts.dmSansBold,
@@ -353,7 +358,9 @@ class _EditProfileState extends State<EditProfile> {
   // pick image
 
   pickImage({cameraOrGallery}) async {
-    await _picker.getImage(source: cameraOrGallery).then((image) {
+    await _picker
+        .getImage(imageQuality: 60, source: cameraOrGallery)
+        .then((image) {
       setState(() {
         _image = File(image!.path);
       });
@@ -381,7 +388,8 @@ class _EditProfileState extends State<EditProfile> {
     if (Constants.prefs?.getString('gender') != "null") {
       _genderController.text = "${Constants.prefs?.getString('gender')}";
     } else {
-      _genderController.text = "${getTranslated(context, "genderHint")}"; //Strings.genderHint;
+      _genderController.text =
+          "${getTranslated(context, "genderHint")}"; //Strings.genderHint;
     }
 
     // print('this is date $dobDateTime');
@@ -517,8 +525,10 @@ class _EditProfileState extends State<EditProfile> {
                             context: context,
                             controller: _fullnameController,
                             obscureTextBool: false,
-                            titletxt:"${getTranslated(context, "fullname")}",// Strings.fullname,
-                            hinttxt:"${getTranslated(context, "fullnamehint")}", //Strings.fullnamehint,
+                            titletxt:
+                                "${getTranslated(context, "fullname")}", // Strings.fullname,
+                            hinttxt:
+                                "${getTranslated(context, "fullnamehint")}", //Strings.fullnamehint,
                             inputError: _fullnameError,
                             readonly: false,
                             ontapFun: null),
@@ -527,8 +537,10 @@ class _EditProfileState extends State<EditProfile> {
                             context: context,
                             controller: _emailController,
                             obscureTextBool: false,
-                            titletxt:"${getTranslated(context, "email")}", // Strings.email,
-                            hinttxt:"${getTranslated(context, "emailHint")}",  // Strings.emailHint,
+                            titletxt:
+                                "${getTranslated(context, "email")}", // Strings.email,
+                            hinttxt:
+                                "${getTranslated(context, "emailHint")}", // Strings.emailHint,
                             inputError: "",
                             ontapFun: null,
                             readonly: true),
@@ -587,8 +599,10 @@ class _EditProfileState extends State<EditProfile> {
                                 context: context,
                                 controller: _dobController,
                                 obscureTextBool: false,
-                                titletxt:"${getTranslated(context, "dateofbirth")}", // Strings.dateofbirth,
-                                hinttxt:"${getTranslated(context, "dobtypehint")}",// Strings.dobtypehint,
+                                titletxt:
+                                    "${getTranslated(context, "dateofbirth")}", // Strings.dateofbirth,
+                                hinttxt:
+                                    "${getTranslated(context, "dobtypehint")}", // Strings.dobtypehint,
                                 inputError: _dobError,
                                 ontapFun: selectDate,
                                 readonly: true)
@@ -598,8 +612,10 @@ class _EditProfileState extends State<EditProfile> {
                                 context: context,
                                 controller: _genderController,
                                 obscureTextBool: false,
-                                titletxt:"${getTranslated(context, "gender")}",// Strings.gender,
-                                hinttxt: "${getTranslated(context, "genderHint")}", //Strings.genderHint,
+                                titletxt:
+                                    "${getTranslated(context, "gender")}", // Strings.gender,
+                                hinttxt:
+                                    "${getTranslated(context, "genderHint")}", //Strings.genderHint,
                                 inputError: _genderError,
                                 ontapFun: _showBottomSheetgender,
                                 readonly: true)
