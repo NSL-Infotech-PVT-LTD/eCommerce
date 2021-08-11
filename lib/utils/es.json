@@ -63,7 +63,7 @@
   "ExpireDate": "Fecha de caducidad",
   "Swipetopay": "Deslizar para pagar",
   "Ticket": "Boleto",
-  "Qty": "Cantidad:2",
+  "Qty": "Cantidad",
   "club": "Club",
   "Skip": "Skip",
   "specialEvent": "Eventos Especiales",
@@ -178,5 +178,9 @@
   "favourite": "Favorita",
   "clearfilter": "Filtro claro",
   "openS": "abierta",
-  "exit": "salida"
+  "exit": "salida",
+  "addCreditDebitCard": "Agregar tarjeta de crédito / débito",
+  "cardHoldername": "Nombre del titular de la tarjeta",
+  "cardNumber": "Número de tarjeta",
+  "expireDate": "Fecha de caducidad"
 }

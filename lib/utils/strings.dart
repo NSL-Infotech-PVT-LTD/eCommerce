@@ -130,7 +130,8 @@ class Strings {
       thisisthefinalstepafteryoutouchingPayNowbuttonthepaymentwillbetransaction =
       "This is the final step, after you touching Pay Now button, the payment will be transaction";
   static String mybookings = "My Bookings";
-  static String checkyourticketsyouboughtforFiestas = "Check your tickets you bought for Fiestas";
+  static String checkyourticketsyouboughtforFiestas =
+      "Check your tickets you bought for Fiestas";
   static String fiestasOrders = "Fiestas Orders";
   static String preFiestasOrders = "Pre-Fiestas Orders";
   static String moreDetails = "More details";
@@ -196,9 +197,21 @@ class Strings {
   static String favourite = "Favourite";
   static String listEmpty = "List is Empty";
   static String empty = "Empty";
+
+  // payment detail
+
+  static String publishKey =
+      "pk_test_51BTUDGJAJfZb9HEBwDg86TN1KNprHjkfipXmEDMb0gSCassK5T3ZfxsAbcgKVmAIXF7oZ6ItlZZbXO6idTHE67IM007EwQ4uN3";
+  static String merChantId =
+      "TUDGJAJfZb9HEBwDg86TN1KNprHjkfipXmEDMb0gSCassK5T3ZfxsAbcgKVmAIXF7oZ6Itl";
+  static String androidPayMode = "fZb9HEBwDg86TN1KNprHjkfi";
   // dummy
   static String garyadams = "Gary F. Adams";
   static String madridspain = "Madrid, Spain";
+  static const String appName = 'Payment Card Demo';
+  static const String fieldReq = 'This field is required';
+  static const String numberIsInvalid = 'Card is invalid';
+  static const String pay = 'Validate';
 
   static String lorem =
       "Lorem Ipsum is simply dummy text of the printing and typesetting standard. Lorem Ipsum has been the industry's standardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandardstandard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially";

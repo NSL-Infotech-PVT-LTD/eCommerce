@@ -214,7 +214,7 @@ Widget centerlistItem(
     onTapfunc}) {
   var size = MediaQuery.of(context).size;
 
-  return GestureDetector(
+  return InkWell(
     onTap: () {
       onTapfunc();
     },

@@ -6,7 +6,9 @@ import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/models/fiestasDetailmodel.dart';
 import 'package:funfy/components/sizeclass/SizeConfig.dart';
+import 'package:funfy/ui/screens/CreditCardDetails.dart';
 import 'package:funfy/ui/screens/bookingSuccess.dart';
+import 'package:funfy/ui/screens/cardDetail.dart';
 import 'package:funfy/ui/widgets/rating.dart';
 import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/colors.dart';
@@ -376,7 +378,9 @@ class _BuyNowState extends State<BuyNow> {
                                   fontFamily: Fonts.dmSansBold),
                             ),
                             onPressed: () {
-                              fiestasBookingApi();
+                              // fiestasBookingApi();
+
+                              navigatorPushFun(context, CartDetail());
 
                               // navigatorPushFun(context, CreditCard());
                             },

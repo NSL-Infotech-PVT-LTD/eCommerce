@@ -63,7 +63,7 @@
   "ExpireDate": "Expire Date",
   "Swipetopay": "Swipe to pay",
   "Ticket": "Ticket",
-  "Qty": "Qty:2",
+  "Qty": "Qty",
   "club": "Club",
   "Skip": "Skip",
   "specialEvent": "Special Events",
@@ -178,5 +178,9 @@
   "clearfilter": "Clear filter",
   "sorryTicketsaresold": "Sorry Tickets are sold",
   "youhaveselecteddifferentcategoryDoyouwanttoresetCart?": "You have selected different category, Do you want to reset Cart?",
-  "exit": "Exit"
+  "exit": "Exit",
+  "addCreditDebitCard": "Add Credit/ Debit Card",
+  "cardHoldername": "Card Holder's Name",
+  "cardNumber": "Card Number",
+  "expireDate": "Expire Date"
 }

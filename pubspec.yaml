@@ -82,6 +82,7 @@ flutter:
     - lib/utils/en.json
     - lib/utils/es.json
     - assets/
+    - assets/images/
     - assets/svgicons/
     - assets/images/introimage.jpg
     - assets/images/logo.png

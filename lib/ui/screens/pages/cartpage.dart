@@ -17,6 +17,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:funfy/components/sizeclass/SizeConfig.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:stripe_payment/stripe_payment.dart';
 import '../../../utils/strings.dart';
 
 class Cartpage extends StatefulWidget {
@@ -27,6 +28,8 @@ class Cartpage extends StatefulWidget {
 
 class _CartpageState extends State<Cartpage> {
   PrefiestasCartModel? myCartModel = PrefiestasCartModel();
+
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   bool _loading = false;
   bool _centerLoading = false;
 
@@ -556,6 +559,12 @@ class _CartpageState extends State<Cartpage> {
   @override
   void initState() {
     super.initState();
+
+    StripePayment.setOptions(StripeOptions(
+        publishableKey: Strings.publishKey,
+        merchantId: Strings.merChantId,
+        androidPayMode: Strings.androidPayMode));
+
     setState(() {
       UserData.preFiestasExtrasTicketCart.clear();
       UserData.preFiestasMixesTicketCart.clear();
@@ -604,6 +613,23 @@ class _CartpageState extends State<Cartpage> {
     }
   }
 
+  // payment code
+
+  paymentRun() {
+    print("Payment code run");
+
+    StripePayment.paymentRequestWithCardForm(CardFormPaymentRequest())
+        .then((paymentMethod) {
+      _scaffoldKey.currentState?.showSnackBar(
+          SnackBar(content: Text('Received ${paymentMethod.id}')));
+      // setState(() {
+      //   _paymentMethod = paymentMethod;
+      // });
+    }).catchError((error) {
+      print("Here is Payment $error");
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -611,12 +637,11 @@ class _CartpageState extends State<Cartpage> {
       color: AppColors.blackBackground,
       child: SafeArea(
         child: Scaffold(
-            // floatingActionButton: FloatingActionButton(
-            //     onPressed: () {
-            //       print("cart clear");
-            //       clearCart();
-            //     },
-            //     child: Icon(Icons.local_activity)),
+            floatingActionButton: FloatingActionButton(
+                onPressed: () {
+                  paymentRun();
+                },
+                child: Icon(Icons.local_activity)),
             backgroundColor: HexColor("#191512"),
             body: SingleChildScrollView(
               child: Stack(

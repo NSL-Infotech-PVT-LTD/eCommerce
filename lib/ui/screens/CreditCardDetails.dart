@@ -77,7 +77,7 @@ class _CreditCardState extends State<CreditCard> {
                             ),
                             Text(
                               "${getTranslated(context, "yourCart")}",
-                         //     Strings.yourCart,
+                              //     Strings.yourCart,
                               style: TextStyle(
                                   fontSize: size.width * 0.045,
                                   fontFamily: Fonts.dmSansMedium,
@@ -113,7 +113,6 @@ class _CreditCardState extends State<CreditCard> {
                                   mainAxisSize: MainAxisSize.min,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-
                                     Text(
                                         //"Ticket",
                                         "${getTranslated(context, "Ticket")}",
@@ -194,7 +193,7 @@ class _CreditCardState extends State<CreditCard> {
                                             ),
                                             Text(
                                                 "${getTranslated(context, "AddCreditDebitCard")}",
-                                           //     "Add Credit / Debit Card",
+                                                //     "Add Credit / Debit Card",
                                                 style: TextStyle(
                                                     fontSize:
                                                         size.width * 0.045,
@@ -257,7 +256,7 @@ class _CreditCardState extends State<CreditCard> {
                                         ),
                                         Text(
                                             "${getTranslated(context, "ExpireDate")}",
-                                          //  "Expire Date",
+                                            //  "Expire Date",
                                             style: TextStyle(
                                                 fontSize: size.width * 0.045,
                                                 fontFamily: Fonts.dmSansMedium,
@@ -370,12 +369,13 @@ class _CreditCardState extends State<CreditCard> {
                                     child: ElevatedButton(
                                       child: Text(
                                         "${getTranslated(context, "Swipetopay")}",
-                                       // 'Swipe to pay',
+                                        // 'Swipe to pay',
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold),
                                       ),
                                       onPressed: () {
-                                        navigatorPushFun( context, BookingSuccess());
+                                        navigatorPushFun(
+                                            context, BookingSuccess());
                                       },
                                       style: ElevatedButton.styleFrom(
                                         padding: EdgeInsets.symmetric(
