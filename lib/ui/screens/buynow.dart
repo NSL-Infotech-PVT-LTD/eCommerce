@@ -380,7 +380,10 @@ class _BuyNowState extends State<BuyNow> {
                             onPressed: () {
                               // fiestasBookingApi();
 
-                              navigatorPushFun(context, CartDetail());
+                              navigatorPushFun(
+                                  context,
+                                  CartDetail(
+                                      fiestasId: widget.fiestasM?.data?.id));
 
                               // navigatorPushFun(context, CreditCard());
                             },

@@ -176,19 +176,23 @@ Widget fiestasItem({context, Datum? postModeldata}) {
                     },
                     child: roundedBoxR(
                         width: size.width * 0.23,
-                        height: size.height * 0.033,
+                        // height: size.height * 0.033,
                         radius: 3.0,
                         backgroundColor: available
                             ? Colors.grey[800]
                             : AppColors.siginbackgrond,
-                        child: Align(
+                        child: Container(
                           alignment: Alignment.center,
+                          padding: EdgeInsets.symmetric(
+                              vertical: size.height * 0.001),
                           child: Text(
                             // Strings.booknow,
 
                             available
                                 ? "${getTranslated(context, "full")}"
                                 : "${getTranslated(context, "booknow")}",
+
+                            textAlign: TextAlign.center,
 
                             style: TextStyle(
                                 fontSize: size.width * 0.03,

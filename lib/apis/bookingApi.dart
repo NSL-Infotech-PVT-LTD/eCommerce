@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/components/dialogs.dart';
 import 'package:funfy/components/navigation.dart';
+import 'package:funfy/models/cardListmodel.dart';
 import 'package:funfy/models/fiestasBooking.dart';
 import 'package:funfy/models/fiestasBookingListModel.dart';
 import 'package:funfy/models/fiestasDetailmodel.dart';
@@ -19,7 +20,8 @@ Future<FistaBooking?> fiestasBooking(
     context,
     String? ticketcount,
     String? standardticketcount,
-    String? vipticketcount}) async {
+    String? vipticketcount,
+    String? cardId}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
   };
@@ -29,7 +31,9 @@ Future<FistaBooking?> fiestasBooking(
     "ticket_price_standard":
         standardticketcount != null ? "$standardticketcount" : "0",
     "ticket_price_vip": vipticketcount != null ? "$vipticketcount" : "0",
-    "ticket_price": ticketcount != null ? "$ticketcount" : "0"
+    "ticket_price": ticketcount != null ? "$ticketcount" : "0",
+    "payment_mode": "card",
+    "card_id": cardId ?? ""
   };
 
   var res = await http.post(Uri.parse(Urls.fiestasBookingUrl),
@@ -167,7 +171,7 @@ Future<MakeprefiestasOrderModel?> makeOrderApi(
     "cart_id": cartId,
     "date": date,
     "time": time,
-    "address_id": addressId
+    "address_id": addressId,
   };
 
   var res = await http.post(Uri.parse(Urls.makeOrderUrl),
@@ -240,6 +244,70 @@ Future<FiestasDetailModel?> getFiestasbyId({String? fiestasID}) async {
   if (res.statusCode == 200) {
     // print("here is fiestas detail - ${res.body}");
     return fiestasDetailModelFromJson(res.body);
+  } else {
+    print("here is error ${res.body}");
+  }
+}
+
+// add card for payment
+
+Future storePaymentCard({String? cardToken}) async {
+  var headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+  };
+
+  var body = {"token": "$cardToken"};
+
+  var res = await http.post(Uri.parse(Urls.addPaymentCardUrl),
+      body: body, headers: headers);
+
+  if (res.statusCode == 201) {
+    // print("here is fiestas detail - ${res.body}");
+
+    print("Card added  ${res.body}");
+  } else {
+    print("here is error ${res.body}");
+  }
+}
+
+// get card list
+
+Future<CardListModel?> getCardList({String? cardToken}) async {
+  var headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+  };
+
+  var body = {"token": "$cardToken"};
+
+  var res = await http.post(Uri.parse(Urls.getCardListUrl),
+      body: body, headers: headers);
+
+  if (res.statusCode == 200) {
+    // print("here is fiestas detail - ${res.body}");
+
+    print("Card added  ${res.body}");
+    return cardListModelFromJson(res.body);
+  } else {
+    print("here is error ${res.body}");
+  }
+}
+
+// delete card
+
+Future deleteCard({String? cardIds}) async {
+  var headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+  };
+
+  var body = {"card_id": "$cardIds"};
+
+  var res = await http.post(Uri.parse(Urls.deleteCardUrl),
+      body: body, headers: headers);
+
+  if (res.statusCode == 200) {
+    print("here is delete - ${res.body}");
+
+    return cardListModelFromJson(res.body);
   } else {
     print("here is error ${res.body}");
   }

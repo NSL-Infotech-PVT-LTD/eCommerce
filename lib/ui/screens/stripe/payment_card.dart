@@ -240,4 +240,28 @@ class CardUtils {
     }
     return cardType;
   }
+
+  static CardType getCardTypeUSingString(String input) {
+    CardType cardType;
+    if (input == "Master") {
+      cardType = CardType.Master;
+    } else if (input == "Visa") {
+      cardType = CardType.Visa;
+    } else if (input == "Verve") {
+      cardType = CardType.Verve;
+    } else if (input == "AmericanExpress") {
+      cardType = CardType.AmericanExpress;
+    } else if (input == "Discover") {
+      cardType = CardType.Discover;
+    } else if (input == "DinersClub") {
+      cardType = CardType.DinersClub;
+    } else if (input == "Jcb") {
+      cardType = CardType.Jcb;
+    } else if (input.length <= 8) {
+      cardType = CardType.Others;
+    } else {
+      cardType = CardType.Invalid;
+    }
+    return cardType;
+  }
 }

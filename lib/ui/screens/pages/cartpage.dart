@@ -637,11 +637,11 @@ class _CartpageState extends State<Cartpage> {
       color: AppColors.blackBackground,
       child: SafeArea(
         child: Scaffold(
-            floatingActionButton: FloatingActionButton(
-                onPressed: () {
-                  paymentRun();
-                },
-                child: Icon(Icons.local_activity)),
+            // floatingActionButton: FloatingActionButton(
+            //     onPressed: () {
+            //       paymentRun();
+            //     },
+            //     child: Icon(Icons.local_activity)),
             backgroundColor: HexColor("#191512"),
             body: SingleChildScrollView(
               child: Stack(

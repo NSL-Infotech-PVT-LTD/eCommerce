@@ -201,10 +201,10 @@ class Strings {
   // payment detail
 
   static String publishKey =
-      "pk_test_51BTUDGJAJfZb9HEBwDg86TN1KNprHjkfipXmEDMb0gSCassK5T3ZfxsAbcgKVmAIXF7oZ6ItlZZbXO6idTHE67IM007EwQ4uN3";
+      "pk_test_51JGPQADcOtdo7kZUXLf0gPlnvzIw8bXoyjwh0fzHLwEyUHcoXXJcjtRU96CEODZdvr7TcjVUVod9KKSGyBR5bdWH00CNB60WE1";
   static String merChantId =
-      "TUDGJAJfZb9HEBwDg86TN1KNprHjkfipXmEDMb0gSCassK5T3ZfxsAbcgKVmAIXF7oZ6Itl";
-  static String androidPayMode = "fZb9HEBwDg86TN1KNprHjkfi";
+      "sk_test_51JGPQADcOtdo7kZU4OGSpJg2hPJzccVR1XWI7SQGugKawWWoviXy40Gs2Dqj8XVBOcXXU6MMAImcMscYBphHkR5B00i9JlPtnJ";
+  static String androidPayMode = "test_mode";
   // dummy
   static String garyadams = "Gary F. Adams";
   static String madridspain = "Madrid, Spain";

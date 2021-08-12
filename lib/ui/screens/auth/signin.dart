@@ -487,29 +487,48 @@ class _SigninState extends State<Signin> {
                           SizedBox(
                             height: size.height * 0.015,
                           ),
-                          Row(
-                            children: [
-                              Text(
-                                "${getTranslated(context, "welcometo")}",
-                                // Strings.welcometo,
-                                style: TextStyle(
-                                    // fontFamily: Fonts.dmSansMedium,
-                                    fontSize: size.width * 0.048,
-                                    color: AppColors.inputTitle),
-                              ),
-                              SizedBox(
-                                width: size.width * 0.02,
-                              ),
-                              Text(
-                                "${getTranslated(context, "funfypartyapp")}",
-                                // Strings.funfypartyapp,
-                                style: TextStyle(
-                                    // fontFamily: Fonts.dmSansMedium,
-                                    fontSize: size.width * 0.048,
-                                    color: AppColors.white),
-                              ),
-                            ],
-                          ),
+                          //
+
+                          Text.rich(TextSpan(
+                              text:
+                                  "${getTranslated(context, "welcometo")}", // Strings.byContinuingYouAgreetoOur,
+                              style: TextStyle(
+                                  fontSize: size.width * 0.048,
+                                  color: AppColors.inputTitle),
+                              children: <InlineSpan>[
+                                TextSpan(
+                                  text:
+                                      " ${getTranslated(context, "funfypartyapp")} ", //"${Strings.termsOfService}",
+                                  style: TextStyle(
+                                      fontSize: size.width * 0.048,
+                                      color: AppColors.white),
+                                ),
+                              ])),
+
+                          ///
+                          // Row(
+                          //   children: [
+                          //     Text(
+                          //       "${getTranslated(context, "welcometo")}",
+                          //       // Strings.welcometo,
+                          //       style: TextStyle(
+                          //           // fontFamily: Fonts.dmSansMedium,
+                          //           fontSize: size.width * 0.048,
+                          //           color: AppColors.inputTitle),
+                          //     ),
+                          //     SizedBox(
+                          //       width: size.width * 0.02,
+                          //     ),
+                          //     Text(
+                          //       "${getTranslated(context, "funfypartyapp")}",
+                          //       // Strings.funfypartyapp,
+                          //       style: TextStyle(
+                          //           // fontFamily: Fonts.dmSansMedium,
+                          //           fontSize: size.width * 0.048,
+                          //           color: AppColors.white),
+                          //     ),
+                          //   ],
+                          // ),
                         ],
                       ),
                     ),

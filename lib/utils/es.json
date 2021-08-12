@@ -136,7 +136,7 @@
   "time": "Hora",
   "checkinType": "Tipo de registro",
   "orderId": "Id. de pedido",
-  "hyphens": "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -",
+  "hyphens": "- - - - - - - - - - - - - - - - - - - - - - - ",
   "alcohol": "alcohol",
   "change": "cambio",
   "mix": "mezclar",
@@ -182,5 +182,10 @@
   "addCreditDebitCard": "Agregar tarjeta de crédito / débito",
   "cardHoldername": "Nombre del titular de la tarjeta",
   "cardNumber": "Número de tarjeta",
-  "expireDate": "Fecha de caducidad"
+  "expireDate": "Fecha de caducidad",
+  "viewYourCard": "Vea su tarjeta",
+  "swipetopay": "Deslizar para pagar",
+  "delete": "Borrar",
+  "dowanttoDeleteCard": "¿Quieres eliminar la tarjeta?",
+  "item": "Artículo"
 }

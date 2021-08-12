@@ -847,14 +847,14 @@ Widget preFiestas(context, PrefiestasModel? prefiestasdata, _postLoading) {
   var size = MediaQuery.of(context).size;
   return Column(
     children: [
-      Container(
-          margin: EdgeInsets.symmetric(
-              horizontal: size.width * 0.03, vertical: size.height * 0.01),
-          width: size.width,
-          height: size.height * 0.17,
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: NetworkImage(bannerImage), fit: BoxFit.cover))),
+      // Container(
+      //     margin: EdgeInsets.symmetric(
+      //         horizontal: size.width * 0.03, vertical: size.height * 0.01),
+      //     width: size.width,
+      //     height: size.height * 0.17,
+      //     decoration: BoxDecoration(
+      //         image: DecorationImage(
+      //             image: NetworkImage(bannerImage), fit: BoxFit.cover))),
 
       // posts
 

@@ -14,6 +14,7 @@ class UserData {
   static num totalTicketNum = 0;
   static num fiestastotalTicketNum = 0;
   static String preFiestasAlcoholCart = "";
+  static Map preFiestasMixesAlcohol = {};
   static Map preFiestasMixesTicketCart = {};
   static Map preFiestasExtrasTicketCart = {};
   static String preFiestasCartid = "";

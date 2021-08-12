@@ -535,7 +535,8 @@ class _BookNowBetaState extends State<BookNowBeta> {
                                               // color: Colors.blue,
                                               alignment: Alignment.center,
                                               padding: EdgeInsets.symmetric(
-                                                  horizontal: size.width * 0.03,
+                                                  horizontal:
+                                                      size.width * 0.025,
                                                   vertical: size.height * 0.01),
                                               child: Column(
                                                 crossAxisAlignment:

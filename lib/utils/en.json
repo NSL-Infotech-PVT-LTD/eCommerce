@@ -136,7 +136,7 @@
   "time": "Time",
   "checkinType": "Check In Type",
   "orderId": "Order ID",
-  "hyphens": "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -",
+  "hyphens": "- - - - - - - - - - - - - - - - - - - - - - - ",
   "alcohol": "Alcohol",
   "change": "Change",
   "mix": "Mix",
@@ -182,5 +182,10 @@
   "addCreditDebitCard": "Add Credit/ Debit Card",
   "cardHoldername": "Card Holder's Name",
   "cardNumber": "Card Number",
-  "expireDate": "Expire Date"
+  "expireDate": "Expire Date",
+  "viewYourCard": "View Your Card",
+  "swipetopay": "Swipe to pay",
+  "delete": "Delete",
+  "dowanttoDeleteCard": "Do want to Delete Card !",
+  "item": "Item"
 }

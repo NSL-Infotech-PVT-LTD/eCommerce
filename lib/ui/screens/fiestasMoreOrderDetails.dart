@@ -85,6 +85,7 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                       height: 50,
                       child: Text(
                         "${getTranslated(context, "hyphens")}",
+
                         //Strings.hyphens,
                         maxLines: 1,
                         overflow: TextOverflow.clip,

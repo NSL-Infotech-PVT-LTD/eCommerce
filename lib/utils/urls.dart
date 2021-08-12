@@ -34,4 +34,10 @@ class Urls {
   static String preFiestasGetCartUrl = baseUrl + "customer/cart";
 
   static String fiestasGetByidUrl = baseUrl + "customer/fiesta/detail";
+
+  static String addPaymentCardUrl = baseUrl + "customer/cards/store";
+
+  static String getCardListUrl = baseUrl + "customer/cards/list";
+
+  static String deleteCardUrl = baseUrl + "customer/cards/delete";
 }

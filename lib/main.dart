@@ -190,34 +190,35 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: "funfy",
-        theme: ThemeData(
-          primarySwatch: Colors.red,
-        ),
-        locale: _locale,
-        localizationsDelegates: const [
-          MyLocalization.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: [
-          const Locale('en', 'US'), // English, no country code
-          const Locale('es', 'ES'), // Arabic, no country code
-        ],
-        localeResolutionCallback: (locale, supportedLocales) {
-          for (var supportedLocale in supportedLocales) {
-            if (supportedLocale.languageCode == locale!.languageCode &&
-                supportedLocale.countryCode == locale.countryCode) {
-              return supportedLocale;
-            }
+      debugShowCheckedModeBanner: false,
+      title: "funfy",
+      theme: ThemeData(
+        primarySwatch: Colors.red,
+      ),
+      locale: _locale,
+      localizationsDelegates: const [
+        MyLocalization.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('en', 'US'), // English, no country code
+        const Locale('es', 'ES'), // Arabic, no country code
+      ],
+      localeResolutionCallback: (locale, supportedLocales) {
+        for (var supportedLocale in supportedLocales) {
+          if (supportedLocale.languageCode == locale!.languageCode &&
+              supportedLocale.countryCode == locale.countryCode) {
+            return supportedLocale;
           }
-          print("hello + ${supportedLocales.first}");
-          return supportedLocales.first;
-        },
-        darkTheme: ThemeData.dark(), //
-        // home: Splash(),
-        home: CartDetail());
+        }
+        print("hello + ${supportedLocales.first}");
+        return supportedLocales.first;
+      },
+      darkTheme: ThemeData.dark(), //
+      home: Splash(),
+      // home: CartDetail()
+    );
   }
 }

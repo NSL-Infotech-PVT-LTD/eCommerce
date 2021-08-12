@@ -342,27 +342,6 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
               ));
   }
 
-  // get data from api
-
-  // preFiestadatagetFromApi() async {
-  //   var net = await Internetcheck.check();
-  //   print("net = $net");
-
-  //   if (net != true) {
-  //     Internetcheck.showdialog(context: context);
-  //   } else {
-  //     try {
-  //       alcohollistget();
-  //       mixlistget();
-  //       extraslistget();
-  //     } catch (e) {
-  //       setState(() {
-  //         _loading = false;
-  //       });
-  //     }
-  //   }
-  // }
-
   // prifiestas detail get from api
 
   getPrefiestasDetailfromApi() async {
@@ -497,36 +476,10 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
           });
         }
       }
-      // if (cartCount <= 0 && cart.isNotEmpty && cart.containsKey(index)) {
-      //   setState(() {
-      //     cart.remove(index);
-      //   });
-      // }
 
-      // totalCount();
       print(cart);
     }
   }
-
-  // remove count
-
-// removeAllProductFromCart() async {
-
-//    await addToCart(id: id, cont: "0").then((value) {
-//       print("this is value $value");
-//       if (value) {
-//         setState(() {
-//           cart[index] = {
-//             "id": id,
-//             "preticketCount": cartCount,
-//           };
-
-//         });
-//       }
-//     });
-
-//     totalCount();
-// }
 
   // bottom popup
 
@@ -558,33 +511,38 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "${getTranslated(context, "addtocart")}",
-                      // Strings.addtocart,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: AppColors.brownlite,
-                          fontSize: size.width * 0.03),
-                    ),
                     SizedBox(
                       height: SizeConfig.screenHeight * 0.01,
                     ),
+                    Row(
+                      children: [
+                        SvgPicture.asset(
+                          "assets/svgicons/cartsvg.svg",
+                          width: size.width * 0.04,
+                        ),
+                        SizedBox(
+                          width: size.width * 0.02,
+                        ),
+                        Text(
+                          "${getTranslated(context, "addtocart")}",
+                          // Strings.addtocart,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: AppColors.white,
+                              fontSize: size.width * 0.03),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: SizeConfig.screenHeight * 0.008,
+                    ),
                     Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                      SvgPicture.asset(
-                        "assets/images/ticket.svg",
-                        width: size.width * 0.07,
-                      ),
                       SizedBox(
                         width: size.width * 0.02,
                       ),
                       Container(
-                        // width: SizeConfig.screenWidth * 0.40,
                         child: Text(
-                          // "${getTranslated(context, "ticket")} * ${UserData.totalTicketNum}",
-
-                          // int.parse(totalNum) + alcoholCountNum
-
-                          "${getTranslated(context, "ticket")} * ${int.parse(totalNum) + alcoholCountNum}",
+                          "${int.parse(totalNum) + alcoholCountNum}  ${getTranslated(context, "item")}",
                           // "${Strings.ticket} * ${UserData.totalTicketNum}",
                           style: TextStyle(
                             color: AppColors.white,
@@ -700,7 +658,6 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
     if (net != true) {
       Internetcheck.showdialog(context: context);
     } else {
-      print("run ---------- ");
       setState(() {
         _loadingCenter = true;
       });
@@ -878,17 +835,30 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
           //   },
           //   child: Icon(Icons.add),
           // ),
-          backgroundColor: AppColors.homeBackground,
-          // bottomSheet: UserData.preFiestasAlcoholCart != "" &&
-          //         (UserData.preFiestasExtrasTicketCart.isNotEmpty ||
-          //             UserData.preFiestasMixesTicketCart.isNotEmpty)
 
+          appBar: AppBar(
+            backgroundColor: AppColors.blackBackground,
+            title: Text("Pre-Fiestas"),
+            centerTitle: true,
+            actions: [
+              GestureDetector(
+                onTap: () {
+                  addFavorite();
+                },
+                child: Container(
+                  margin: EdgeInsets.only(right: size.width * 0.04),
+                  child: SvgPicture.asset(
+                    "assets/svgicons/hearticon.svg",
+                    color: _favoriteBool ? Colors.red : Colors.white,
+                  ),
+                ),
+              )
+            ],
+          ),
+          backgroundColor: AppColors.homeBackground,
           bottomSheet: _loadingBack == false &&
                   (Constants.prefs?.getString("alcohol") != null &&
                       Constants.prefs?.getString("alcohol") != "")
-              // Constants.prefs?.getString("cartTot") != null &&
-              // Constants.prefs?.getString("cartTot") != "" &&
-              // Constants.prefs?.getString("cartTot") != "0"
               ? bottomSheet()
               : SizedBox(),
           body: _loadingBack == true
@@ -910,23 +880,24 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                               floating: true,
                               pinned: true,
                               snap: true,
-                              actions: [
-                                GestureDetector(
-                                  onTap: () {
-                                    addFavorite();
-                                  },
-                                  child: Container(
-                                    margin: EdgeInsets.only(
-                                        right: size.width * 0.04),
-                                    child: SvgPicture.asset(
-                                      "assets/svgicons/hearticon.svg",
-                                      color: _favoriteBool
-                                          ? Colors.red
-                                          : Colors.white,
-                                    ),
-                                  ),
-                                )
-                              ],
+                              automaticallyImplyLeading: false,
+                              // actions: [
+                              //   GestureDetector(
+                              //     onTap: () {
+                              //       addFavorite();
+                              //     },
+                              //     child: Container(
+                              //       margin: EdgeInsets.only(
+                              //           right: size.width * 0.04),
+                              //       child: SvgPicture.asset(
+                              //         "assets/svgicons/hearticon.svg",
+                              //         color: _favoriteBool
+                              //             ? Colors.red
+                              //             : Colors.white,
+                              //       ),
+                              //     ),
+                              //   )
+                              // ],
                               actionsIconTheme: IconThemeData(opacity: 0.0),
                               flexibleSpace: Stack(
                                 children: <Widget>[
@@ -1175,18 +1146,15 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                                                         ?.alcohol,
                                                     addFunc: addTicket,
                                                     cart: UserData
-                                                        .preFiestasExtrasTicketCart,
+                                                        .preFiestasMixesAlcohol,
                                                     count: prefiestasDetailModel
-                                                                ?.data
-                                                                ?.childData
-                                                                ?.alcohol![
-                                                                    index]
-                                                                .isInMyCartQuantity ==
-                                                            1
-                                                        ? index
-                                                        : -1,
+                                                        ?.data
+                                                        ?.childData
+                                                        ?.alcohol
+                                                        ?.elementAt(index)
+                                                        .isInMyCartQuantity,
                                                     removeFunc: ticketRemove,
-                                                    numCount: false);
+                                                    numCount: true);
                                               },
                                             ),
                                           ),

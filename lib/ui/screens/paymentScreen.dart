@@ -92,19 +92,19 @@
 //           ),
 //           Divider(),
 //           // with form
-//           RaisedButton(
-//             child: Text("Create Token with Card Form"),
-//             onPressed: () {
-//               StripePayment.paymentRequestWithCardForm(CardFor mPaymentRequest())
-//                   .then((paymentMethod) {
-//                 _scaffoldKey.currentState?.showSnackBar(
-//                     SnackBar(content: Text('Received ${paymentMethod.id}')));
-//                 setState(() {
-//                   _paymentMethod = paymentMethod;
-//                 });
-//               }).catchError(setError);
-//             },
-//           ),
+//           // RaisedButton(
+//           //   child: Text("Create Token with Card Form"),
+//           //   onPressed: () {
+//           //     StripePayment.paymentRequestWithCardForm(CardFor mPaymentRequest())
+//           //         .then((paymentMethod) {
+//           //       _scaffoldKey.currentState?.showSnackBar(
+//           //           SnackBar(content: Text('Received ${paymentMethod.id}')));
+//           //       setState(() {
+//           //         _paymentMethod = paymentMethod;
+//           //       });
+//           //     }).catchError(setError);
+//           //   },
+//           // ),
 //           // with cart detail
 //           RaisedButton(
 //             child: Text("Create Token with Card !"),

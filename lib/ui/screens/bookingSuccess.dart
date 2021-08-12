@@ -32,7 +32,7 @@ class _BookingSuccessState extends State<BookingSuccess> {
               ),
               Text(
                 "${getTranslated(context, "bookingSuccessfull")}",
-              //  Strings.bookingSuccessfull,
+                //  Strings.bookingSuccessfull,
                 style: TextStyle(
                     color: AppColors.white,
                     fontFamily: Fonts.dmSansBold,
@@ -65,7 +65,7 @@ class _BookingSuccessState extends State<BookingSuccess> {
                     child: Align(
                       child: Text(
                         "${getTranslated(context, "seeReceipt")}",
-                     //   Strings.seeReceipt,
+                        //   Strings.seeReceipt,
                         style: TextStyle(
                             color: AppColors.white,
                             fontFamily: Fonts.dmSansBold,
@@ -84,10 +84,8 @@ class _BookingSuccessState extends State<BookingSuccess> {
                           builder: (BuildContext context) => Home()),
                       (route) => false);
                 },
-                child: Text
-                  (
-                    "${getTranslated(context, "backtoHome")}",
-                   // Strings.backtoHome,
+                child: Text("${getTranslated(context, "backtoHome")}",
+                    // Strings.backtoHome,
                     style: TextStyle(
                         color: AppColors.white,
                         fontFamily: Fonts.dmSansRegular,
