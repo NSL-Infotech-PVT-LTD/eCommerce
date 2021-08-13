@@ -9,6 +9,7 @@ import 'package:funfy/ui/screens/cardDetail.dart';
 import 'package:funfy/ui/screens/notifications.dart';
 import 'package:funfy/ui/screens/paymentScreen.dart';
 import 'package:funfy/ui/screens/splash.dart';
+import 'package:funfy/ui/testingFileDart.dart';
 import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/localizing.dart';
@@ -219,6 +220,7 @@ class _MyAppState extends State<MyApp> {
       darkTheme: ThemeData.dark(), //
       home: Splash(),
       // home: CartDetail()
+      // home: MyHomePage(),
     );
   }
 }

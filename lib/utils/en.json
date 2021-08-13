@@ -187,5 +187,7 @@
   "swipetopay": "Swipe to pay",
   "delete": "Delete",
   "dowanttoDeleteCard": "Do want to Delete Card !",
-  "item": "Item"
+  "item": "Item",
+  "continue": "Continue",
+  "pleaseWait": "Please Wait"
 }

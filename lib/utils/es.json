@@ -187,5 +187,7 @@
   "swipetopay": "Deslizar para pagar",
   "delete": "Borrar",
   "dowanttoDeleteCard": "¿Quieres eliminar la tarjeta?",
-  "item": "Artículo"
+  "item": "Artículo",
+  "continue": "Continuar",
+  "pleaseWait": "Espera"
 }

@@ -111,7 +111,12 @@ class _CartpageState extends State<Cartpage> {
 
   // remove button
 
-  ticketRemove({String? id, int itemCount = 0, int? index, var cart}) async {
+  ticketRemove(
+      {String? id,
+      int itemCount = 0,
+      int? index,
+      var cart,
+      int? itemType}) async {
     print("remove id: $id  index: $index");
 
     int cartCount;
@@ -135,6 +140,10 @@ class _CartpageState extends State<Cartpage> {
               "preticketCount": cartCount,
             };
           });
+
+          if (cartCount == 0) {
+            setItemValue(type: itemType, valueTureFalse: false);
+          }
           totalCount2(value: false);
         }
       });
@@ -340,10 +349,13 @@ class _CartpageState extends State<Cartpage> {
       UserData.preFiestasAlcoholCart = "";
       UserData.preFiestasExtrasTicketCart.clear();
       UserData.preFiestasMixesTicketCart.clear();
+      UserData.preFiestasAlcoholCartMap.clear();
       UserData.totalTicketNum = 0;
       UserData.preFiestasCartid = "";
       Constants.prefs?.setString("cartTot", "");
       Constants.prefs?.setString("alcohol", "");
+      Constants.prefs?.setString("mix", "");
+      Constants.prefs?.setString("extras", "");
     });
   }
 
@@ -361,6 +373,7 @@ class _CartpageState extends State<Cartpage> {
     int? count,
     Map? cart,
     String? type,
+    int? itemTypes,
     required BuildContext context,
   }) {
     return Container(
@@ -481,7 +494,8 @@ class _CartpageState extends State<Cartpage> {
                                   index: index,
                                   itemCount: count ?? 0,
                                   id: pid,
-                                  cart: cart);
+                                  cart: cart,
+                                  itemType: itemTypes);
                             },
                             child: Container(
                               decoration: BoxDecoration(
@@ -613,20 +627,21 @@ class _CartpageState extends State<Cartpage> {
     }
   }
 
-  // payment code
+  // set item value in share preference
 
-  paymentRun() {
-    print("Payment code run");
+  setItemValue({int? type, bool? valueTureFalse}) {
+    setState(() {
+      if (type == 1) {
+        Constants.prefs?.setString("alcohol", "${valueTureFalse! ? type : ''}");
+      }
 
-    StripePayment.paymentRequestWithCardForm(CardFormPaymentRequest())
-        .then((paymentMethod) {
-      _scaffoldKey.currentState?.showSnackBar(
-          SnackBar(content: Text('Received ${paymentMethod.id}')));
-      // setState(() {
-      //   _paymentMethod = paymentMethod;
-      // });
-    }).catchError((error) {
-      print("Here is Payment $error");
+      if (type == 2) {
+        Constants.prefs?.setString("mix", "${valueTureFalse! ? type : ''}");
+      }
+
+      if (type == 3) {
+        Constants.prefs?.setString("extras", "${valueTureFalse! ? type : ''}");
+      }
     });
   }
 
@@ -826,61 +841,66 @@ class _CartpageState extends State<Cartpage> {
                                                                     0.03,
                                                           ),
                                                           listItem(
-                                                            index: index,
-                                                            pid: myCartModel
-                                                                ?.data
-                                                                ?.cart
-                                                                ?.cartItems![
-                                                                    index]
-                                                                .preFiesta
-                                                                ?.id
-                                                                .toString(),
-                                                            topTile: type
-                                                                ?.categories,
-                                                            title: myCartModel
-                                                                ?.data
-                                                                ?.cart
-                                                                ?.cartItems![
-                                                                    index]
-                                                                .preFiesta!
-                                                                .name,
-                                                            price: myCartModel
-                                                                ?.data
-                                                                ?.cart
-                                                                ?.cartItems![
-                                                                    index]
-                                                                .price
-                                                                .toString(),
-                                                            quantity: myCartModel
-                                                                ?.data
-                                                                ?.cart
-                                                                ?.cartItems![
-                                                                    index]
-                                                                .quantity
-                                                                .toString(),
-                                                            size: size,
-                                                            type: type
-                                                                ?.categories,
-                                                            boolCount:
-                                                                type?.categories ==
-                                                                        "alcohol"
-                                                                    ? null
-                                                                    : true,
-                                                            context: context,
-                                                            count: myCartModel
-                                                                ?.data
-                                                                ?.cart
-                                                                ?.cartItems![
-                                                                    index]
-                                                                .quantity,
-                                                            cart: type
-                                                                        ?.categories ==
-                                                                    "mix"
-                                                                ? UserData
-                                                                    .preFiestasMixesTicketCart
-                                                                : UserData
-                                                                    .preFiestasExtrasTicketCart,
-                                                          ),
+                                                              index: index,
+                                                              pid: myCartModel
+                                                                  ?.data
+                                                                  ?.cart
+                                                                  ?.cartItems![
+                                                                      index]
+                                                                  .preFiesta
+                                                                  ?.id
+                                                                  .toString(),
+                                                              topTile: type
+                                                                  ?.categories,
+                                                              title: myCartModel
+                                                                  ?.data
+                                                                  ?.cart
+                                                                  ?.cartItems![
+                                                                      index]
+                                                                  .preFiesta!
+                                                                  .name,
+                                                              price: myCartModel
+                                                                  ?.data
+                                                                  ?.cart
+                                                                  ?.cartItems![
+                                                                      index]
+                                                                  .price
+                                                                  .toString(),
+                                                              quantity: myCartModel
+                                                                  ?.data
+                                                                  ?.cart
+                                                                  ?.cartItems![
+                                                                      index]
+                                                                  .quantity
+                                                                  .toString(),
+                                                              size: size,
+                                                              type: type
+                                                                  ?.categories,
+                                                              // boolCount:
+                                                              //     type?.categories ==
+                                                              //             "alcohol"
+                                                              //         ? null
+                                                              //         : true,
+
+                                                              boolCount: true,
+                                                              context: context,
+                                                              count: myCartModel
+                                                                  ?.data
+                                                                  ?.cart
+                                                                  ?.cartItems![
+                                                                      index]
+                                                                  .quantity,
+                                                              cart: type?.categories ==
+                                                                      "mix"
+                                                                  ? UserData.preFiestasMixesTicketCart
+                                                                  : type?.categories == "extras"
+                                                                      ? UserData.preFiestasExtrasTicketCart
+                                                                      : UserData.preFiestasAlcoholCartMap,
+                                                              itemTypes: type?.categories == "alcohol"
+                                                                  ? 1
+                                                                  : type?.categories == "extras"
+                                                                      ? 2
+                                                                      : 3),
                                                         ],
                                                       );
                                                     }),

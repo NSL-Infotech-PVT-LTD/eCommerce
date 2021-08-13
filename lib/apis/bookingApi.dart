@@ -92,13 +92,7 @@ Future addproductinCartPrefiestas(
   };
 
   // print("Bearer ${UserData.userToken}");
-  var body = {};
-
-  if (quantity != null) {
-    body = {"pre_fiesta_id": preFiestaID, "quantity": quantity};
-  } else {
-    body = {"pre_fiesta_id": preFiestaID};
-  }
+  var body = {"pre_fiesta_id": preFiestaID, "quantity": quantity, "reset": "0"};
 
   var res = await http.post(Uri.parse(Urls.preFiestasBookingUrl),
       body: body, headers: headers);

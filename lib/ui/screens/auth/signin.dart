@@ -471,8 +471,9 @@ class _SigninState extends State<Signin> {
                     // title
 
                     Container(
+                      width: size.width,
                       margin:
-                          EdgeInsets.symmetric(horizontal: size.width * 0.07),
+                          EdgeInsets.symmetric(horizontal: size.width * 0.1),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

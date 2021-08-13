@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_swipe_button/flutter_swipe_button.dart';
 import 'package:funfy/apis/bookingApi.dart';
 import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/components/dialogs.dart';
@@ -52,12 +53,27 @@ class _CartDetailState extends State<CartDetail> {
 
   bool cardFormShow = true;
 
+  bool payLoading = false;
+
+  bool addCardLoading = false;
+
+  bool swipebuttonShowBool = false;
+
   // card detail
   CreditCard? testCard;
 
   _handleRadioValueChange(int? value) {
     setState(() {
       groupValue = value;
+    });
+  }
+
+  clearCardDetail() {
+    setState(() {
+      cardHolderNameController.clear();
+      cardNumberController.clear();
+      expireDateController.clear();
+      securityController.clear();
     });
   }
 
@@ -97,7 +113,7 @@ class _CartDetailState extends State<CartDetail> {
           expYear: year,
           cvc: securityController.text);
       setState(() {
-        _loading = true;
+        addCardLoading = true;
       });
       paymentWithcardDetail(cardDetail);
     }
@@ -156,7 +172,7 @@ class _CartDetailState extends State<CartDetail> {
     try {
       storePaymentCard(cardToken: cardToken ?? "").then((value) {
         setState(() {
-          _loading = false;
+          addCardLoading = false;
 
           getCardListApi();
 
@@ -173,7 +189,7 @@ class _CartDetailState extends State<CartDetail> {
       });
     } catch (e) {
       setState(() {
-        _loading = false;
+        addCardLoading = false;
       });
 
       print("error in add card api $e");
@@ -190,6 +206,7 @@ class _CartDetailState extends State<CartDetail> {
       deleteCard(cardIds: cardIdd).then((value) {
         setState(() {
           _loading = false;
+          clearCardDetail();
 
           getCardListApi();
 
@@ -263,7 +280,8 @@ class _CartDetailState extends State<CartDetail> {
 
   fiestasBookingApi({String? cardid}) async {
     setState(() {
-      _loading = true;
+      payLoading = true;
+      swipebuttonShowBool = false;
     });
     var net = await Internetcheck.check();
     try {
@@ -297,7 +315,7 @@ class _CartDetailState extends State<CartDetail> {
                 context: context)
             .then((res) {
           setState(() {
-            _loading = false;
+            payLoading = false;
           });
 
           print("here is ${res?.toJson()}");
@@ -317,7 +335,7 @@ class _CartDetailState extends State<CartDetail> {
       }
     } catch (e) {
       setState(() {
-        _loading = false;
+        payLoading = false;
       });
 
       print("Error in book fiestas-------------$e");
@@ -459,8 +477,6 @@ class _CartDetailState extends State<CartDetail> {
 
                         //center content
 
-                        // _loading?
-
                         // Card lsit
 
                         _loading
@@ -486,38 +502,72 @@ class _CartDetailState extends State<CartDetail> {
                                                 index: i)
                                         ],
                                       ),
-                                      groupValue != -1
-                                          ? InkWell(
-                                              onTap: () {
+                                      groupValue != -1 && swipebuttonShowBool
+                                          ? SwipeButton(
+                                              thumb: SvgPicture.asset(
+                                                Images.swipeButtonSvg,
+                                                fit: BoxFit.cover,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              activeTrackColor:
+                                                  AppColors.siginbackgrond,
+                                              height: size.height * 0.07,
+                                              child: Text(
+                                                  "${getTranslated(context, "swipetopay")}",
+                                                  style: TextStyle(
+                                                      color: AppColors.white,
+                                                      fontFamily:
+                                                          Fonts.dmSansBold,
+                                                      fontSize:
+                                                          size.width * 0.05)),
+                                              onSwipeEnd: () {
                                                 fiestasBookingApi(
                                                     cardid: cardId);
                                               },
-                                              child: roundedBoxR(
-                                                radius: size.width * 0.02,
-                                                width: size.width,
-                                                height: size.height * 0.07,
-                                                backgroundColor:
-                                                    AppColors.siginbackgrond,
-                                                child: Center(
-                                                  child: _loading
-                                                      ? CircularProgressIndicator(
-                                                          color:
-                                                              AppColors.white)
-                                                      : Text(
-                                                          "${getTranslated(context, "swipetopay")}",
-                                                          style: TextStyle(
-                                                              fontSize:
-                                                                  size.width *
-                                                                      0.045,
-                                                              fontFamily: Fonts
-                                                                  .dmSansMedium,
-                                                              color: AppColors
-                                                                  .white),
-                                                        ),
-                                                ),
-                                              ),
                                             )
-                                          : SizedBox()
+                                          : payLoading &&
+                                                  swipebuttonShowBool == false
+                                              ? roundedBoxR(
+                                                  radius: size.width * 0.02,
+                                                  width: size.width,
+                                                  height: size.height * 0.07,
+                                                  backgroundColor:
+                                                      AppColors.siginbackgrond,
+                                                  child: Center(
+                                                      child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      SizedBox(
+                                                        height:
+                                                            size.height * 0.03,
+                                                        width:
+                                                            size.width * 0.06,
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                                color: AppColors
+                                                                    .white),
+                                                      ),
+                                                      SizedBox(
+                                                          width: size.width *
+                                                              0.02),
+                                                      Text(
+                                                        "${getTranslated(context, "pleaseWait")}",
+                                                        style: TextStyle(
+                                                            fontSize:
+                                                                size.width *
+                                                                    0.045,
+                                                            fontFamily: Fonts
+                                                                .dmSansMedium,
+                                                            color: AppColors
+                                                                .white),
+                                                      ),
+                                                    ],
+                                                  )),
+                                                )
+                                              : SizedBox()
                                     ],
                                   )
 
@@ -630,7 +680,6 @@ class _CartDetailState extends State<CartDetail> {
                                                             size.width * 0.02,
                                                       ),
                                                       Text(
-                                                        // "Agregar tarjeta de crédito / débito",
                                                         "${getTranslated(context, "addCreditDebitCard")}",
                                                         style: TextStyle(
                                                             fontSize:
@@ -734,11 +783,40 @@ class _CartDetailState extends State<CartDetail> {
                                           backgroundColor:
                                               AppColors.siginbackgrond,
                                           child: Center(
-                                            child: _loading
-                                                ? CircularProgressIndicator(
-                                                    color: AppColors.white)
+                                            child: addCardLoading
+                                                ? Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      SizedBox(
+                                                        height:
+                                                            size.height * 0.03,
+                                                        width:
+                                                            size.width * 0.06,
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                                color: AppColors
+                                                                    .white),
+                                                      ),
+                                                      SizedBox(
+                                                          width: size.width *
+                                                              0.02),
+                                                      Text(
+                                                        "${getTranslated(context, "pleaseWait")}",
+                                                        style: TextStyle(
+                                                            fontSize:
+                                                                size.width *
+                                                                    0.045,
+                                                            fontFamily: Fonts
+                                                                .dmSansMedium,
+                                                            color: AppColors
+                                                                .white),
+                                                      ),
+                                                    ],
+                                                  )
                                                 : Text(
-                                                    "${getTranslated(context, "swipetopay")}",
+                                                    "${getTranslated(context, "continue")}",
                                                     style: TextStyle(
                                                         fontSize:
                                                             size.width * 0.045,
@@ -1026,6 +1104,8 @@ class _CartDetailState extends State<CartDetail> {
 
                                     setState(() {
                                       cardId = model?.id ?? "";
+
+                                      swipebuttonShowBool = true;
 
                                       print(" here is card id : $cardId");
 

@@ -179,10 +179,13 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
       UserData.preFiestasAlcoholCart = "";
       UserData.preFiestasExtrasTicketCart.clear();
       UserData.preFiestasMixesTicketCart.clear();
+      UserData.preFiestasAlcoholCartMap.clear();
       UserData.totalTicketNum = 0;
       UserData.preFiestasCartid = "";
       Constants.prefs?.setString("cartTot", "");
       Constants.prefs?.setString("alcohol", "");
+      Constants.prefs?.setString("mix", "");
+      Constants.prefs?.setString("extras", "");
     });
   }
 
@@ -221,14 +224,25 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
 
   // + - count button
   Widget insdecButton(
-      {int? index, var count, String? pid, add, remove, Map? cart}) {
+      {int? index,
+      int? itemType,
+      var count,
+      String? pid,
+      add,
+      remove,
+      Map? cart}) {
     var size = MediaQuery.of(context).size;
     return Container(
       child: Row(
         children: [
           GestureDetector(
             onTap: () {
-              remove(index: index, id: pid, cart: cart, itemCount: count);
+              remove(
+                  index: index,
+                  id: pid,
+                  cart: cart,
+                  itemCount: count,
+                  itemType: itemType);
             },
             child: Container(
               decoration: BoxDecoration(
@@ -269,7 +283,12 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
           ),
           GestureDetector(
             onTap: () {
-              add(index: index, id: pid, cart: cart, itemCount: count);
+              add(
+                  index: index,
+                  id: pid,
+                  cart: cart,
+                  itemCount: count,
+                  itemType: itemType);
             },
             child: Container(
               decoration: BoxDecoration(
@@ -296,6 +315,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
 
   ListTile alcoholGradientFunction(
       {index,
+      int? type,
       String? title,
       String? subtitle,
       var model,
@@ -333,6 +353,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
             : Container(
                 width: size.width * 0.25,
                 child: insdecButton(
+                    itemType: type,
                     add: addFunc,
                     remove: removeFunc,
                     index: index,
@@ -377,7 +398,12 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
 
   // - + funtion
 
-  addTicket({int? index, int itemCount = 0, String? id, var cart}) async {
+  addTicket(
+      {int? index,
+      int itemCount = 0,
+      String? id,
+      var cart,
+      int? itemType}) async {
     print("add button press  index: $index  id: $id");
 
     if (_loadingCenter == false) {
@@ -401,6 +427,8 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
             "preticketCount": cartCount,
           };
         });
+
+        setItemValue(type: itemType, valueTureFalse: true);
 
         totalCount(value: true);
       }
@@ -445,8 +473,12 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
   // remove button
 
   ticketRemove(
-      {String? id, int itemCount = 0, int? index, dynamic cart}) async {
-    print("remove id: $id  index: $index");
+      {String? id,
+      int itemCount = 0,
+      int? index,
+      dynamic cart,
+      int? itemType}) async {
+    print("remove itemCount: $itemCount id: $id  index: $index");
 
     if (_loadingCenter == false) {
       int cartCount;
@@ -462,7 +494,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
         cartCount = cartCount - 1;
       });
 
-      print("Actual value ==$cartCount");
+      print("Actual value ==$cartCount  index: $index  id: $id");
       if (cartCount > -1) {
         String returnRes = await addToCart(id: id, cont: cartCount.toString());
         print("returnRes $returnRes");
@@ -472,7 +504,12 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
               "id": id,
               "preticketCount": cartCount,
             };
-            totalCount(value: false);
+            if (cartCount == 0) {
+              setItemValue(type: itemType, valueTureFalse: false);
+            }
+            totalCount(
+              value: false,
+            );
           });
         }
       }
@@ -542,7 +579,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                       ),
                       Container(
                         child: Text(
-                          "${int.parse(totalNum) + alcoholCountNum}  ${getTranslated(context, "item")}",
+                          "${int.parse(totalNum)}  ${getTranslated(context, "item")}",
                           // "${Strings.ticket} * ${UserData.totalTicketNum}",
                           style: TextStyle(
                             color: AppColors.white,
@@ -586,25 +623,43 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
     );
   }
 
-  totalAlcoholCountinSharedpreference() {
-    String alcoholNum = "${Constants.prefs?.getString("alcohol")}";
+  // totalAlcoholCountinSharedpreference() {
+  //   String alcoholNum = "${Constants.prefs?.getString("alcohol")}";
 
-    if (alcoholNum == "" && alcoholNum == "null") {
-      setState(() {
-        String totnum = "${Constants.prefs?.getString("cartTot")}" == "null" ||
-                "${Constants.prefs?.getString("cartTot")}" == ""
-            ? "0"
-            : "${Constants.prefs?.getString("cartTot")}";
+  //   if (alcoholNum == "" && alcoholNum == "null") {
+  //     setState(() {
+  //       String totnum = "${Constants.prefs?.getString("cartTot")}" == "null" ||
+  //               "${Constants.prefs?.getString("cartTot")}" == ""
+  //           ? "0"
+  //           : "${Constants.prefs?.getString("cartTot")}";
 
-        int totalNumnber = int.parse(totnum);
+  //       int totalNumnber = int.parse(totnum);
 
-        int totalCount = totalNumnber + 1;
+  //       int totalCount = totalNumnber + 1;
 
-        print("here is num $totalCount");
+  //       print("here is num $totalCount");
 
-        Constants.prefs?.setString("cartTot", "$totalCount");
-      });
-    }
+  //       Constants.prefs?.setString("cartTot", "$totalCount");
+  //     });
+  //   }
+  // }
+
+  // set item value in share preference
+
+  setItemValue({int? type, bool? valueTureFalse}) {
+    setState(() {
+      if (type == 1) {
+        Constants.prefs?.setString("alcohol", "${valueTureFalse! ? type : ''}");
+      }
+
+      if (type == 2) {
+        Constants.prefs?.setString("mix", "${valueTureFalse! ? type : ''}");
+      }
+
+      if (type == 3) {
+        Constants.prefs?.setString("extras", "${valueTureFalse! ? type : ''}");
+      }
+    });
   }
 
   // total count
@@ -669,7 +724,9 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
           });
           if (res["status"] == true &&
               (res["code"] == 200 || res["code"] == 201)) {
-            UserData.preFiestasCartid = "${res["data"]["cart"]["id"]}";
+            if (res["code"] == 201) {
+              UserData.preFiestasCartid = "${res['data']['cart']['id']}";
+            }
             setState(() {
               returnV = "true";
             });
@@ -1139,6 +1196,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                                                   (BuildContext context,
                                                       int index) {
                                                 return alcoholGradientFunction(
+                                                    type: 1,
                                                     index: index,
                                                     model: prefiestasDetailModel
                                                         ?.data
@@ -1146,7 +1204,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                                                         ?.alcohol,
                                                     addFunc: addTicket,
                                                     cart: UserData
-                                                        .preFiestasMixesAlcohol,
+                                                        .preFiestasAlcoholCartMap,
                                                     count: prefiestasDetailModel
                                                         ?.data
                                                         ?.childData
@@ -1201,6 +1259,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                                                   (BuildContext context,
                                                       int index) {
                                                 return alcoholGradientFunction(
+                                                    type: 2,
                                                     index: index,
                                                     model: prefiestasDetailModel
                                                         ?.data?.childData?.mix,
@@ -1259,6 +1318,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                                                   (BuildContext context,
                                                       int index) {
                                                 return alcoholGradientFunction(
+                                                    type: 3,
                                                     index: index,
                                                     model: prefiestasDetailModel
                                                         ?.data

@@ -32,6 +32,8 @@ class Images {
   static String notificationspng = "assets/pngicons/notificationPrfile.png";
   static String helppng = "assets/pngicons/help.png";
   static String aboutpng = "assets/pngicons/about.png";
+  static String swipeButtonPng = "assets/pngicons/swipeButton.png";
+  static String swipeButtonSvg = "assets/svgicons/swipeButton.svg";
   static String locationspng = "assets/pngicons/locationIc.png";
   static String editpen = "assets/pngicons/editpen.png";
   static String logout = "assets/pngicons/logout.png";
