@@ -94,7 +94,7 @@ class _SigninState extends State<Signin> {
                 social: "false");
 
             Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => Home()));
+                MaterialPageRoute(builder: (context) => Home(pageIndexNum: 0)));
           } else {
             setState(() {
               _credentialsError = true;
@@ -203,8 +203,8 @@ class _SigninState extends State<Signin> {
               token: response?.data?.token,
               profileImage: response?.data?.user?.image,
               social: "true");
-          Navigator.of(context)
-              .pushReplacement(MaterialPageRoute(builder: (context) => Home()));
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => Home(pageIndexNum: 0)));
         }
       });
     } catch (e) {
@@ -407,7 +407,8 @@ class _SigninState extends State<Signin> {
 
             Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (BuildContext context) => Home()),
+                MaterialPageRoute(
+                    builder: (BuildContext context) => Home(pageIndexNum: 0)),
                 (route) => false);
           } else {
             setState(() {

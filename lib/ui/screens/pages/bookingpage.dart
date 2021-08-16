@@ -29,7 +29,9 @@ class BookingPage extends StatefulWidget {
 class _BookingPageState extends State<BookingPage> {
   bool fiestasButton = true;
 
-  FiestasBookingList? fiestasBookingListModel = FiestasBookingList();
+  // FiestasBookingList? fiestasBookingListModel = FiestasBookingList();
+
+  List fiestasBookingListRes = [];
   PreFiestasBookingListModel? preFiestasBookingList =
       PreFiestasBookingListModel();
   bool _loading = false;
@@ -48,22 +50,38 @@ class _BookingPageState extends State<BookingPage> {
       });
       try {
         await fiestasBookingList().then((res) {
-          if (res?.code == 200 && res?.status == true) {
-            // print("after return  ${res?.toJson().toString()}");
+          print("here is json");
 
-            setState(() {
-              fiestasBookingListModel = res;
+          print(res[0]["id"]);
+          // print(res.body);
 
-              var rlist =
-                  fiestasBookingListModel?.data?.data?.reversed.toList();
+          Iterable data = res.reversed.toList();
 
-              fiestasBookingListModel?.data?.data = rlist;
-              _loading = false;
-            });
-          }
+          print(data);
+
+          setState(() {
+            fiestasBookingListRes = data.toList();
+            _loading = false;
+          });
+
+          // if (res!["code"] == 200 && res["status"] == true) {
+          //   // print("after return  ${res?.toJson().toString()}");
+
+          //   // Iterable data = res["data"]["data"].tolist;
+
+          //   print(res);
+
+          //   setState(() {
+          //     // fiestasBookingListModel = res;
+
+          //     // var rlist =
+          //     //     fiestasBookingListModel?.data?.data?.reversed.toList();
+
+          //     // fiestasBookingListModel?.data?.data = rlist;
+          //     _loading = false;
+          //   });
+          // }
         });
-
-        priFiestasBookings();
       } catch (e) {
         setState(() {
           _loading = false;
@@ -82,8 +100,8 @@ class _BookingPageState extends State<BookingPage> {
       });
 
       if (res?.code == 200 && res?.status == true) {
-        print("res data ----------- ");
-        print("after return  ${res?.toJson().toString()}");
+        // print("res data ----------- ");
+        // print("after return  ${res?.toJson().toString()}");
 
         setState(() {
           preFiestasBookingList = res;
@@ -100,6 +118,7 @@ class _BookingPageState extends State<BookingPage> {
   void initState() {
     super.initState();
     bookingListget();
+    priFiestasBookings();
   }
 
   @override
@@ -247,8 +266,8 @@ class _BookingPageState extends State<BookingPage> {
                       _loading
                           ? Center(child: CircularProgressIndicator())
                           : _loading == false &&
-                                  fiestasBookingListModel?.data?.data?.length ==
-                                      0
+                                  // fiestasBookingListModel?.data?.data?.length ==
+                                  fiestasBookingListRes.length == 0
                               ? Center(
                                   child: Text(
                                   "${Strings.listEmpty}",
@@ -257,14 +276,16 @@ class _BookingPageState extends State<BookingPage> {
                                       fontSize: size.width * 0.05),
                                 ))
                               : ListView.builder(
-                                  itemCount: fiestasBookingListModel
-                                          ?.data?.data?.length ??
-                                      0,
+                                  // itemCount: fiestasBookingListModel
+                                  //         ?.data?.data?.length ??
+                                  // 0,
+
+                                  itemCount: fiestasBookingListRes.length,
                                   itemBuilder: (context, index) {
                                     return fiestasOrdersItem(
                                         context: context,
                                         index: index,
-                                        model: fiestasBookingListModel);
+                                        model: fiestasBookingListRes);
                                   }),
                     ],
                   ))
@@ -300,10 +321,16 @@ class _BookingPageState extends State<BookingPage> {
   }
 }
 
-Widget fiestasOrdersItem({context, index, FiestasBookingList? model}) {
+Widget fiestasOrdersItem(
+    {context,
+    index,
+// FiestasBookingList?
+    List? model}) {
   var size = MediaQuery.of(context).size;
 
-  var data = model?.data?.data?.elementAt(index);
+  // var data = model?.data?.data?.elementAt(index);
+
+  // print("here is name - ${data!.fiestaDetail!.clubDetail!.name!}");
 
   return Container(
     // color: AppColors.brownLite,
@@ -345,7 +372,8 @@ Widget fiestasOrdersItem({context, index, FiestasBookingList? model}) {
           height: size.height * 0.003,
         ),
         Text(
-          "${data?.fiestaDetail?.name}",
+          // data!.fiestaDetail!.clubDetail!.name!.toString(),
+          "${model![index]['fiesta_detail']['club_detail']['name']}",
           style: TextStyle(
               fontFamily: Fonts.dmSansBold,
               color: AppColors.white,
@@ -394,7 +422,8 @@ Widget fiestasOrdersItem({context, index, FiestasBookingList? model}) {
             ),
             Spacer(),
             Text(
-              Strings.euro + "${data?.totalPrice}",
+              Strings.euro +
+                  "${model[index]['total_price']}", //"${data?.totalPrice}",
               style: TextStyle(
                   fontFamily: Fonts.dmSansMedium,
                   color: AppColors.white,
@@ -409,7 +438,9 @@ Widget fiestasOrdersItem({context, index, FiestasBookingList? model}) {
           child: GestureDetector(
             onTap: () {
               navigatorPushFun(
-                  context, FiestasMoreOrderDetail(fiestaData: data));
+                  context,
+                  FiestasMoreOrderDetail(
+                      fiestaBookingId: "${model[index]['id']}"));
             },
             child: Text(
               "${getTranslated(context, "moreDetails")}",
@@ -433,111 +464,120 @@ Widget preFiestasOrderItem(
   print(model?.toJson());
 
   var data = model?.data?.data?.elementAt(index!).categoryDetail;
+
   // String orderid =
   //     "${model?.data?.data?.elementAt(index!).orderItem?.elementAt(0).orderId}";
 
-  return Container(
-    margin: EdgeInsets.only(top: size.height * 0.02),
-    child: roundedBoxBorder(
-        context: context,
-        height: size.height * 0.23,
-        width: size.width,
-        backgroundColor: AppColors.itemBackground,
-        borderColor: AppColors.tagBorder,
-        borderSize: size.width * 0.0025,
-        child: Container(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // center content
-              Container(
+  return InkWell(
+    onTap: () {
+      navigatorPushFun(
+          context,
+          YourOrderSum(
+              orderID: model?.data?.data?.elementAt(index!).id.toString()));
+    },
+    child: Container(
+      margin: EdgeInsets.only(top: size.height * 0.02),
+      child: roundedBoxBorder(
+          context: context,
+          height: size.height * 0.23,
+          width: size.width,
+          backgroundColor: AppColors.itemBackground,
+          borderColor: AppColors.tagBorder,
+          borderSize: size.width * 0.0025,
+          child: Container(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // center content
+                Container(
+                    padding: EdgeInsets.only(
+                        top: size.height * 0.025, left: size.width * 0.05),
+                    width: size.width * 0.7,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "${data?.name}",
+                          // "${data?.name}",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              color: AppColors.white,
+                              fontSize: size.width * 0.054,
+                              fontFamily: Fonts.dmSansBold),
+                        ),
+                        SizedBox(
+                          height: size.height * 0.008,
+                        ),
+                        Text(
+                          "${data?.description}",
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              color: AppColors.itemDescription,
+                              fontSize: size.width * 0.033,
+                              fontFamily: Fonts.dmSansRegular),
+                        ),
+
+                        SizedBox(
+                          height: size.height * 0.016,
+                        ),
+
+                        // order Now
+                        GestureDetector(
+                          onTap: () {
+                            navigatorPushFun(
+                                context,
+                                YourOrderSum(
+                                    orderID: model?.data?.data
+                                        ?.elementAt(index!)
+                                        .id
+                                        .toString()));
+                          },
+                          child: roundedBoxR(
+                              radius: size.width * 0.006,
+                              width: size.width * 0.3,
+                              // height: size.height * 0.04,
+                              backgroundColor: AppColors.siginbackgrond,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: size.height * 0.01,
+                                    horizontal: size.width * 0.03),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  "${getTranslated(context, "orderDetails")}",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: AppColors.white,
+                                      fontSize: size.width * 0.034,
+                                      fontFamily: Fonts.dmSansBold),
+                                ),
+                              )),
+                        )
+                      ],
+                    )),
+
+                // right image
+
+                Container(
+                  // color: Colors.blue,
+                  margin: EdgeInsets.only(right: size.width * 0.03),
+
                   padding: EdgeInsets.only(
-                      top: size.height * 0.025, left: size.width * 0.05),
-                  width: size.width * 0.7,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "${data?.name}",
-                        // "${data?.name}",
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            color: AppColors.white,
-                            fontSize: size.width * 0.054,
-                            fontFamily: Fonts.dmSansBold),
-                      ),
-                      SizedBox(
-                        height: size.height * 0.008,
-                      ),
-                      Text(
-                        "${data?.description}",
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            color: AppColors.itemDescription,
-                            fontSize: size.width * 0.033,
-                            fontFamily: Fonts.dmSansRegular),
-                      ),
+                      top: size.height * 0.02, bottom: size.height * 0.013),
+                  width: size.width * 0.25,
+                  // decoration: BoxDecoration(),
+                  child: Image.network(
+                    "${data?.image ?? Images.beerNetwork}",
+                    // "${Images.beerNetwork}"
 
-                      SizedBox(
-                        height: size.height * 0.016,
-                      ),
-
-                      // order Now
-                      GestureDetector(
-                        onTap: () {
-                          navigatorPushFun(
-                              context,
-                              YourOrderSum(
-                                  orderID: model?.data?.data
-                                      ?.elementAt(index!)
-                                      .id
-                                      .toString()));
-                        },
-                        child: roundedBoxR(
-                            radius: size.width * 0.006,
-                            width: size.width * 0.3,
-                            // height: size.height * 0.04,
-                            backgroundColor: AppColors.siginbackgrond,
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: size.height * 0.01,
-                                  horizontal: size.width * 0.03),
-                              alignment: Alignment.center,
-                              child: Text(
-                                "${getTranslated(context, "orderDetails")}",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: AppColors.white,
-                                    fontSize: size.width * 0.034,
-                                    fontFamily: Fonts.dmSansBold),
-                              ),
-                            )),
-                      )
-                    ],
-                  )),
-
-              // right image
-
-              Container(
-                // color: Colors.blue,
-                margin: EdgeInsets.only(right: size.width * 0.03),
-
-                padding: EdgeInsets.only(
-                    top: size.height * 0.02, bottom: size.height * 0.013),
-                width: size.width * 0.25,
-                // decoration: BoxDecoration(),
-                child: Image.network(
-                  "${data?.image ?? Images.beerNetwork}",
-                  // "${Images.beerNetwork}"
-
-                  // fit: BoxFit.fill,
-                ),
-              )
-            ],
-          ),
-        )),
+                    // fit: BoxFit.fill,
+                  ),
+                )
+              ],
+            ),
+          )),
+    ),
   );
 }

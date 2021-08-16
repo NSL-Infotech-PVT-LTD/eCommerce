@@ -7,6 +7,7 @@ import 'package:funfy/components/dialogs.dart';
 import 'package:funfy/components/inputvalid.dart';
 import 'package:funfy/components/zeroadd.dart';
 import 'package:funfy/ui/screens/auth/signin.dart';
+import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/widgets/inputtype.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/InternetCheck.dart';
@@ -127,17 +128,19 @@ class _SignUpState extends State<SignUp> {
           devicetype: Platform.isAndroid ? "android" : "ios",
         ).then((value) {
           if (value["bool"] == true) {
-            Dialogs.simpleOkAlertDialog(
-                context: context,
-                title: "${getTranslated(context, 'success')}",
-                content:
-                    "${getTranslated(context, 'yourAccountisSuccessfullyregistered')}",
-                func: () {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => Signin()));
-                });
-            // Navigator.of(context).pushReplacement(
-            //     MaterialPageRoute(builder: (context) => Home()));
+            // Dialogs.simpleOkAlertDialog(
+            //     context: context,
+            //     title: "${getTranslated(context, 'success')}",
+            //     content:
+            //         "${getTranslated(context, 'yourAccountisSuccessfullyregistered')}",
+            //     func: () {
+            //       Navigator.of(context).pushReplacement(
+            //           MaterialPageRoute(builder: (context) => Signin()));
+            //     });
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => Home(
+                      pageIndexNum: 0,
+                    )));
           } else {
             print(value["res"]["error"]);
 

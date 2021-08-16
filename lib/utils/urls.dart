@@ -40,4 +40,7 @@ class Urls {
   static String getCardListUrl = baseUrl + "customer/cards/list";
 
   static String deleteCardUrl = baseUrl + "customer/cards/delete";
+
+  static String fiestasBookingOrderDetail =
+      baseUrl + "customer/booking/itemByID";
 }

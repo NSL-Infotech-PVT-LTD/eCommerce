@@ -136,7 +136,7 @@
   "time": "Hora",
   "checkinType": "Tipo de registro",
   "orderId": "Id. de pedido",
-  "hyphens": "- - - - - - - - - - - - - - - - - - - - - - - ",
+  "hyphens": "- - - - - - - - - - - - - - - - - - - - - - - - - - - - -",
   "alcohol": "alcohol",
   "change": "cambio",
   "mix": "mezclar",
@@ -189,5 +189,7 @@
   "dowanttoDeleteCard": "¿Quieres eliminar la tarjeta?",
   "item": "Artículo",
   "continue": "Continuar",
-  "pleaseWait": "Espera"
+  "pleaseWait": "Espera",
+  "viewcart": "ver carrito",
+  "pay": "Pagar"
 }

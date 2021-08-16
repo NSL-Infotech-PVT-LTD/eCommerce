@@ -14,6 +14,7 @@ import 'package:funfy/components/sizeclass/SizeConfig.dart';
 import 'package:funfy/models/preFiestasModel.dart';
 import 'package:funfy/models/prifiestasAlMxEx.dart';
 import 'package:funfy/ui/screens/bookingSuccess.dart';
+import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/widgets/basic%20function.dart';
 import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/InternetCheck.dart';
@@ -601,12 +602,17 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                 Spacer(),
                 ElevatedButton(
                   child: Text(
-                    "${getTranslated(context, "buyNow")}",
+                    "${getTranslated(context, "viewcart")}",
                     // 'Buy Now',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   onPressed: () {
-                    makeOrder();
+                    // makeOrder();
+                    navigatorPushFun(
+                        context,
+                        Home(
+                          pageIndexNum: 1,
+                        ));
                   },
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(

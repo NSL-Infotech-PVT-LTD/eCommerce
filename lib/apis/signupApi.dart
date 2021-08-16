@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:funfy/apis/signinApi.dart';
 import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/models/updateModel.dart';
 import 'package:funfy/models/userModel.dart';
@@ -33,14 +34,16 @@ Future<Map> signApiCall(
   print(response);
 
   if (response["status"] == true && response["code"] == 201) {
-    // Iterable userdata = response["data"];
-
-    // Constants.prefs?.setString("token", response["data"]['token']);
-
-    // print(response["data"]);
-
-    // UserDataM.user =
-    //     userdata.map((model) => UserModel.fromJson(model)).toList();
+    var resp = response["data"]["user"];
+    saveDataInshareP(
+      name: resp["name"],
+      email: resp["email"],
+      dob: resp["dob"].toString(),
+      gender: resp["gender"],
+      profileImage: "",
+      social: "false",
+      token: response["data"]["token"],
+    );
 
     return {"bool": true, "res": response};
   }

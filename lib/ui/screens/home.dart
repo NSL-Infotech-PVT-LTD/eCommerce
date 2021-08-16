@@ -20,7 +20,9 @@ import 'package:funfy/utils/strings.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+  final pageIndexNum;
+
+  const Home({Key? key, this.pageIndexNum}) : super(key: key);
 
   @override
   _HomeState createState() => _HomeState();
@@ -45,15 +47,17 @@ class _HomeState extends State<Home> {
     });
   }
 
-  void ontabTap(int page) {
+  void ontabTap({int page = 0}) {
     onpageChange(page);
     this.pageController?.animateToPage(pageIndex,
-        duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+        duration: Duration(milliseconds: 100), curve: Curves.easeInOut);
   }
 
   @override
   void initState() {
     super.initState();
+
+    ontabTap(page: widget.pageIndexNum);
     // token
     UserData.userToken = Constants.prefs?.getString("token");
     pageController = PageController(initialPage: pageIndex);
@@ -118,7 +122,7 @@ class _HomeState extends State<Home> {
           backgroundColor: AppColors.bottomnavBackground,
           currentIndex: pageIndex,
           onTap: (i) {
-            ontabTap(i);
+            ontabTap(page: i);
           },
           items: [
             BottomNavigationBarItem(

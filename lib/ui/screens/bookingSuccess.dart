@@ -54,7 +54,9 @@ class _BookingSuccessState extends State<BookingSuccess> {
                   Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                          builder: (BuildContext context) => Home()),
+                          builder: (BuildContext context) => Home(
+                                pageIndexNum: 0,
+                              )),
                       (route) => false);
                 },
                 child: roundedBoxR(
@@ -81,7 +83,9 @@ class _BookingSuccessState extends State<BookingSuccess> {
                   Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                          builder: (BuildContext context) => Home()),
+                          builder: (BuildContext context) => Home(
+                                pageIndexNum: 0,
+                              )),
                       (route) => false);
                 },
                 child: Text("${getTranslated(context, "backtoHome")}",

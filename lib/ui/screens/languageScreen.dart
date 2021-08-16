@@ -79,6 +79,12 @@ class _SigninState extends State<TranslationPage> {
     // if (enes == "es") {
     //   Constants.prefs!.setString("es", "$enes");
     // }
+
+    if (_character == SingingCharacter.English) {
+      Constants.prefs?.setString(Strings.radioValue, "en");
+    } else if (_character == SingingCharacter.Spanish) {
+      Constants.prefs?.setString(Strings.radioValue, "es");
+    }
   }
 
   @override
@@ -86,14 +92,6 @@ class _SigninState extends State<TranslationPage> {
     print("radio value - ${Strings.radioValue}");
     var radioini = Constants.prefs!.getString(Strings.radioValue);
     print("first language " + radioini.toString());
-
-    // if (radioini == "en") {
-    //   _character = SingingCharacter.English;
-    // } else if (radioini == "es") {
-    //   _character = SingingCharacter.Spanish;
-    // } else {
-    //   _character = SingingCharacter.English;
-    // }
 
     _character = radioini == null
         ? SingingCharacter.English
@@ -108,10 +106,6 @@ class _SigninState extends State<TranslationPage> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return SafeArea(
-        child: WillPopScope(
-      onWillPop: () async {
-        return false;
-      },
       child: Scaffold(
           resizeToAvoidBottomInset: true,
           key: _scaffoldKey,
@@ -316,7 +310,7 @@ class _SigninState extends State<TranslationPage> {
                             AppColors.siginbackgrond)))
                 : SizedBox()
           ])),
-    ));
+    );
   }
 }
 

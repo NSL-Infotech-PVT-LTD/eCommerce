@@ -136,7 +136,7 @@
   "time": "Time",
   "checkinType": "Check In Type",
   "orderId": "Order ID",
-  "hyphens": "- - - - - - - - - - - - - - - - - - - - - - - ",
+  "hyphens": "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -",
   "alcohol": "Alcohol",
   "change": "Change",
   "mix": "Mix",
@@ -189,5 +189,7 @@
   "dowanttoDeleteCard": "Do want to Delete Card !",
   "item": "Item",
   "continue": "Continue",
-  "pleaseWait": "Please Wait"
+  "pleaseWait": "Please Wait",
+  "viewcart": "View cart",
+  "pay": "Pay"
 }
