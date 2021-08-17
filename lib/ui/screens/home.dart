@@ -142,12 +142,18 @@ class _HomeState extends State<Home> {
               //Strings.bottomNavCart,
             ),
             BottomNavigationBarItem(
-              activeIcon: buttomIconImage(
-                  size: size, svgimage: Images.bookingIconActSvg),
-              icon: buttomIconImage(
-                  size: size,
-                  // image: Images.bookingIconUnActPng
-                  svgimage: Images.bookingIconUnActSvg),
+              activeIcon: Container(
+                padding: EdgeInsets.only(bottom: 2.5),
+                child: buttomIconImage(
+                    size: size, svgimage: Images.bookingIconActSvg),
+              ),
+              icon: Container(
+                padding: EdgeInsets.only(bottom: 2.5),
+                child: buttomIconImage(
+                    size: size,
+                    // image: Images.bookingIconUnActPng
+                    svgimage: Images.bookingIconUnActSvg),
+              ),
               label: "${getTranslated(context, "bottomNavBookings")}",
               //Strings.bottomNavBookings,
             ),

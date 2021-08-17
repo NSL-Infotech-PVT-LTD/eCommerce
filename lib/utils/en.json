@@ -191,5 +191,9 @@
   "continue": "Continue",
   "pleaseWait": "Please Wait",
   "viewcart": "View cart",
-  "pay": "Pay"
+  "pay": "Pay",
+  "notificationAlerts": "Notification Alerts",
+  "switchOn": "Switch On",
+  "switchoff": "Switch Off",
+  "SeeAllNotifications": "See all notifications"
 }

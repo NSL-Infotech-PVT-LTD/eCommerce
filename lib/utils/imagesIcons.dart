@@ -40,6 +40,8 @@ class Images {
   static String heart = "assets/pngicons/hearticonbig.png";
   static String assetsSvgIcons = "assets/svgicons/";
 
+  static String notificationBellRed = "assets/svgicons/notificationBellRed.svg";
+
   static String aboutcalender = "assets/pngicons/aboutCalender.png";
   static String aboutProfile = "assets/pngicons/aboutProfile.png";
   static String aboutWatch = "assets/pngicons/aboutWatch.png";

@@ -219,7 +219,7 @@ class _MyAppState extends State<MyApp> {
       },
       darkTheme: ThemeData.dark(), //
       home: Splash(),
-      // home: CartDetail()
+      // home: TestingW()
       // home: MyHomePage(),
     );
   }

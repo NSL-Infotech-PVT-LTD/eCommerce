@@ -144,11 +144,14 @@ class _CartDetailState extends State<CartDetail> {
   // total amount
 
   totalAmount() {
+    print("running........... ");
     int tot = 0;
 
     for (var i in UserData.ticketcartMap.values) {
       int price =
           int.parse("${i['ticketCount']}") * int.parse("${i['ticketPrice']}");
+
+      print(i);
 
       tot = tot + price;
     }

@@ -6,7 +6,6 @@ import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/models/fiestasDetailmodel.dart';
 import 'package:funfy/components/sizeclass/SizeConfig.dart';
-import 'package:funfy/ui/screens/CreditCardDetails.dart';
 import 'package:funfy/ui/screens/bookingSuccess.dart';
 import 'package:funfy/ui/screens/cardDetail.dart';
 import 'package:funfy/ui/widgets/rating.dart';
@@ -72,6 +71,7 @@ class _BuyNowState extends State<BuyNow> {
             "ticketimage": image
           };
         }
+        totalTicket();
       });
     }
   }
@@ -96,7 +96,25 @@ class _BuyNowState extends State<BuyNow> {
       if (UserData.ticketcartMap.isEmpty) {
         navigatePopFun(context);
       }
+
+      totalTicket();
     });
+  }
+
+  // total ticket count
+
+  totalTicket() {
+    // UserData.totalTicketNum = 0;
+
+    num tot = 0;
+
+    // print(UserData.totalTicketNum);
+    for (var i in UserData.ticketcartMap.values.toList()) {
+      // print(i["ticketCount"] + 1);
+      tot = tot + i["ticketCount"];
+    }
+
+    UserData.totalTicketNum = tot;
   }
 
   // booking api call

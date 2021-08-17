@@ -459,7 +459,7 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
                                                 height: size.height * 0.004,
                                               ),
                                               Text(
-                                                  "${getTranslated(context, "Qty")} : 0",
+                                                  "${getTranslated(context, "Qty")} : ${Constants.prefs?.getString('cartTot')}",
                                                   style: TextStyle(
                                                       fontSize:
                                                           size.width * 0.035,

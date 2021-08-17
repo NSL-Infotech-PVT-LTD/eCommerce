@@ -132,7 +132,7 @@ Future prefiestasAddfavouriteApi({
 
 // favourite list fiestas
 
-Future<FiestasModel?> fiestasFavouriteListApi() async {
+Future<FiestasFavouriteModel?> fiestasFavouriteListApi() async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
   };
@@ -142,7 +142,7 @@ Future<FiestasModel?> fiestasFavouriteListApi() async {
 
   // print(res.body);
 
-  FiestasModel response = fiestasModelFromJson(res.body);
+  var response = fiestasFavouriteModelFromJson(res.body);
 
   if (res.statusCode == 200) {
     return response;
