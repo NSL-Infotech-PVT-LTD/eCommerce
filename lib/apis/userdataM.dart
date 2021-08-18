@@ -1,4 +1,6 @@
+import 'package:funfy/models/cardListmodel.dart';
 import 'package:funfy/models/fiestasmodel.dart';
+import 'package:funfy/models/preFiestasCartModel.dart';
 import 'package:funfy/models/userModel.dart';
 import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/imagesIcons.dart';
@@ -14,10 +16,13 @@ class UserData {
   static num totalTicketNum = 0;
   static num fiestastotalTicketNum = 0;
   static String preFiestasAlcoholCart = "";
+  static Map preFiestasAlcoholCartMap = {};
   static Map preFiestasMixesTicketCart = {};
   static Map preFiestasExtrasTicketCart = {};
   static String preFiestasCartid = "";
   static bool returnV = false;
+  static PrefiestasCartModel? myCartModel;
+  // static CardListModel? cardList;
 
   static FiestasModel? fiestasdata;
 

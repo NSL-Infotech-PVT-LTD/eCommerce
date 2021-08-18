@@ -118,7 +118,7 @@ class Datum {
   int? totalPrice;
   String? address;
   String? orderStatus;
-  dynamic paymentMode;
+  String? paymentMode;
   CategoryDetail? categoryDetail;
   List<OrderItem>? orderItem;
 
@@ -131,7 +131,7 @@ class Datum {
         totalPrice: json["total_price"],
         address: json["address"],
         orderStatus: json["order_status"],
-        paymentMode: json["payment_mode"],
+        paymentMode: json["payment_mode"] == null ? null : json["payment_mode"],
         categoryDetail: CategoryDetail.fromJson(json["category_detail"]),
         orderItem: List<OrderItem>.from(
             json["order_item"].map((x) => OrderItem.fromJson(x))),
@@ -147,7 +147,7 @@ class Datum {
         "total_price": totalPrice,
         "address": address,
         "order_status": orderStatus,
-        "payment_mode": paymentMode,
+        "payment_mode": paymentMode == null ? null : paymentMode,
         "category_detail": categoryDetail?.toJson(),
         "order_item": List<dynamic>.from(orderItem!.map((x) => x.toJson())),
       };

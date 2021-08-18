@@ -6,6 +6,7 @@ import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/models/preFiestasCartModel.dart';
 import 'package:funfy/ui/screens/bookingSuccess.dart';
+import 'package:funfy/ui/screens/preFiestasCardDetail.dart';
 import 'package:funfy/ui/screens/preFistaOrderMix.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/Constants.dart';
@@ -17,6 +18,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:funfy/components/sizeclass/SizeConfig.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:stripe_payment/stripe_payment.dart';
 import '../../../utils/strings.dart';
 
 class Cartpage extends StatefulWidget {
@@ -26,7 +28,9 @@ class Cartpage extends StatefulWidget {
 }
 
 class _CartpageState extends State<Cartpage> {
-  PrefiestasCartModel? myCartModel = PrefiestasCartModel();
+  // PrefiestasCartModel? myCartModel = PrefiestasCartModel();
+
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   bool _loading = false;
   bool _centerLoading = false;
 
@@ -47,23 +51,23 @@ class _CartpageState extends State<Cartpage> {
             _loading = false;
           });
           setState(() {
-            myCartModel = res;
-            print("error $myCartModel");
+            UserData.myCartModel = res;
+            // print("error $myCartModel");
 
             print(res?.toJson());
 
-            count =
-                double.parse("${myCartModel?.data?.cart?.cartItems?.length}") /
-                        10 +
-                    0.15;
+            count = double.parse(
+                        "${UserData.myCartModel?.data?.cart?.cartItems?.length}") /
+                    10 +
+                0.15;
           });
         });
       } catch (e) {
         setState(() {
           _loading = false;
-          myCartModel = null;
+          UserData.myCartModel = null;
         });
-        print("error in my cart $myCartModel");
+        print("error in my cart $UserData.myCartModel");
         print(e);
       }
     }
@@ -108,7 +112,12 @@ class _CartpageState extends State<Cartpage> {
 
   // remove button
 
-  ticketRemove({String? id, int itemCount = 0, int? index, var cart}) async {
+  ticketRemove(
+      {String? id,
+      int itemCount = 0,
+      int? index,
+      var cart,
+      int? itemType}) async {
     print("remove id: $id  index: $index");
 
     int cartCount;
@@ -132,6 +141,10 @@ class _CartpageState extends State<Cartpage> {
               "preticketCount": cartCount,
             };
           });
+
+          if (cartCount == 0) {
+            setItemValue(type: itemType, valueTureFalse: false);
+          }
           totalCount2(value: false);
         }
       });
@@ -147,6 +160,24 @@ class _CartpageState extends State<Cartpage> {
 
     // totalCount();
     // print(cart);
+  }
+
+  // set item value in share preference
+
+  setItemValue({int? type, bool? valueTureFalse}) {
+    setState(() {
+      if (type == 1) {
+        Constants.prefs?.setString("alcohol", "${valueTureFalse! ? type : ''}");
+      }
+
+      if (type == 2) {
+        Constants.prefs?.setString("mix", "${valueTureFalse! ? type : ''}");
+      }
+
+      if (type == 3) {
+        Constants.prefs?.setString("extras", "${valueTureFalse! ? type : ''}");
+      }
+    });
   }
 
 // remove from list
@@ -194,13 +225,13 @@ class _CartpageState extends State<Cartpage> {
           if (type == "mix") {
             Constants.prefs?.setString("cartTot", "$totalCount");
             UserData.preFiestasMixesTicketCart.clear();
-            myCartModel?.data?.cart?.cartItems?.removeAt(index!);
+            UserData.myCartModel?.data?.cart?.cartItems?.removeAt(index!);
           }
 
           if (type == "extras") {
             Constants.prefs?.setString("cartTot", "$totalCount");
             UserData.preFiestasExtrasTicketCart.clear();
-            myCartModel?.data?.cart?.cartItems?.removeAt(index!);
+            UserData.myCartModel?.data?.cart?.cartItems?.removeAt(index!);
           }
         });
       }
@@ -337,10 +368,13 @@ class _CartpageState extends State<Cartpage> {
       UserData.preFiestasAlcoholCart = "";
       UserData.preFiestasExtrasTicketCart.clear();
       UserData.preFiestasMixesTicketCart.clear();
+      UserData.preFiestasAlcoholCartMap.clear();
       UserData.totalTicketNum = 0;
       UserData.preFiestasCartid = "";
       Constants.prefs?.setString("cartTot", "");
       Constants.prefs?.setString("alcohol", "");
+      Constants.prefs?.setString("mix", "");
+      Constants.prefs?.setString("extras", "");
     });
   }
 
@@ -358,6 +392,7 @@ class _CartpageState extends State<Cartpage> {
     int? count,
     Map? cart,
     String? type,
+    int? itemTypes,
     required BuildContext context,
   }) {
     return Container(
@@ -401,8 +436,8 @@ class _CartpageState extends State<Cartpage> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => PreFistaOrder(
-                                  preFiestasID: myCartModel
-                                      ?.data?.parentDetail?.id
+                                  preFiestasID: UserData
+                                      .myCartModel?.data?.parentDetail?.id
                                       .toString()))).then((value) {
                         getMyCart();
                       });
@@ -478,7 +513,8 @@ class _CartpageState extends State<Cartpage> {
                                   index: index,
                                   itemCount: count ?? 0,
                                   id: pid,
-                                  cart: cart);
+                                  cart: cart,
+                                  itemType: itemTypes);
                             },
                             child: Container(
                               decoration: BoxDecoration(
@@ -556,7 +592,14 @@ class _CartpageState extends State<Cartpage> {
   @override
   void initState() {
     super.initState();
+
+    StripePayment.setOptions(StripeOptions(
+        publishableKey: Strings.publishKey,
+        merchantId: Strings.merChantId,
+        androidPayMode: Strings.androidPayMode));
+
     setState(() {
+      UserData.preFiestasAlcoholCartMap.clear();
       UserData.preFiestasExtrasTicketCart.clear();
       UserData.preFiestasMixesTicketCart.clear();
     });
@@ -604,6 +647,24 @@ class _CartpageState extends State<Cartpage> {
     }
   }
 
+  // set item value in share preference
+
+  Value({int? type, bool? valueTureFalse}) {
+    setState(() {
+      if (type == 1) {
+        Constants.prefs?.setString("alcohol", "${valueTureFalse! ? type : ''}");
+      }
+
+      if (type == 2) {
+        Constants.prefs?.setString("mix", "${valueTureFalse! ? type : ''}");
+      }
+
+      if (type == 3) {
+        Constants.prefs?.setString("extras", "${valueTureFalse! ? type : ''}");
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -613,8 +674,7 @@ class _CartpageState extends State<Cartpage> {
         child: Scaffold(
             // floatingActionButton: FloatingActionButton(
             //     onPressed: () {
-            //       print("cart clear");
-            //       clearCart();
+            //       paymentRun();
             //     },
             //     child: Icon(Icons.local_activity)),
             backgroundColor: HexColor("#191512"),
@@ -688,8 +748,9 @@ class _CartpageState extends State<Cartpage> {
                             ),
                           )
                         : _loading == false &&
-                                (myCartModel?.data?.cart?.cartItems == [] ||
-                                    myCartModel == null)
+                                (UserData.myCartModel?.data?.cart?.cartItems ==
+                                        [] ||
+                                    UserData.myCartModel == null)
                             ? Container(
                                 margin:
                                     EdgeInsets.only(top: size.height * 0.33),
@@ -735,7 +796,7 @@ class _CartpageState extends State<Cartpage> {
                                                               .start,
                                                       children: [
                                                         Text(
-                                                          "${myCartModel?.data?.parentDetail?.name}",
+                                                          "${UserData.myCartModel?.data?.parentDetail?.name}",
                                                           // "Pack 'La havanna",
                                                           style: TextStyle(
                                                               color: AppColors
@@ -751,7 +812,7 @@ class _CartpageState extends State<Cartpage> {
                                                               0.008,
                                                         ),
                                                         Text(
-                                                          "${myCartModel?.data?.parentDetail?.description}",
+                                                          "${UserData.myCartModel?.data?.parentDetail?.description}",
                                                           // "${getTranslated(context, "lorem")}",
                                                           //Strings.lorem,
                                                           maxLines: 2,
@@ -775,91 +836,198 @@ class _CartpageState extends State<Cartpage> {
                                                           size.height * 0.09,
                                                       width: size.width * 0.2,
                                                       child: Image.network(
-                                                          "${myCartModel?.data?.parentDetail?.image}"))
+                                                          "${UserData.myCartModel?.data?.parentDetail?.image}"))
                                                 ],
                                               ),
-                                              Container(
-                                                height: size.height * count,
-                                                child: ListView.builder(
-                                                    itemCount: myCartModel
-                                                        ?.data
-                                                        ?.cart
-                                                        ?.cartItems
-                                                        ?.length,
-                                                    itemBuilder:
-                                                        (context, index) {
-                                                      var type = myCartModel
-                                                          ?.data
-                                                          ?.cart
-                                                          ?.cartItems![index]
-                                                          .preFiesta;
-                                                      return Column(
-                                                        children: [
-                                                          SizedBox(
-                                                            height:
-                                                                size.height *
-                                                                    0.03,
-                                                          ),
-                                                          listItem(
-                                                            index: index,
-                                                            pid: myCartModel
+
+                                              Column(
+                                                children: [
+                                                  for (int i = 0;
+                                                      i <
+                                                          int.parse(
+                                                              "${UserData.myCartModel?.data?.cart?.cartItems?.length}");
+                                                      i++)
+                                                    Column(
+                                                      children: [
+                                                        SizedBox(
+                                                          height: size.height *
+                                                              0.03,
+                                                        ),
+                                                        listItem(
+                                                            index: i,
+                                                            pid: UserData
+                                                                .myCartModel
                                                                 ?.data
                                                                 ?.cart
-                                                                ?.cartItems![
-                                                                    index]
+                                                                ?.cartItems![i]
                                                                 .preFiesta
                                                                 ?.id
                                                                 .toString(),
-                                                            topTile: type
-                                                                ?.categories,
-                                                            title: myCartModel
+                                                            topTile: UserData
+                                                                .myCartModel
                                                                 ?.data
                                                                 ?.cart
-                                                                ?.cartItems![
-                                                                    index]
+                                                                ?.cartItems![i]
+                                                                .preFiesta
+                                                                ?.categories,
+                                                            title: UserData
+                                                                .myCartModel
+                                                                ?.data
+                                                                ?.cart
+                                                                ?.cartItems![i]
                                                                 .preFiesta!
                                                                 .name,
-                                                            price: myCartModel
+                                                            price: UserData
+                                                                .myCartModel
                                                                 ?.data
                                                                 ?.cart
-                                                                ?.cartItems![
-                                                                    index]
+                                                                ?.cartItems![i]
                                                                 .price
                                                                 .toString(),
-                                                            quantity: myCartModel
+                                                            quantity: UserData
+                                                                .myCartModel
                                                                 ?.data
                                                                 ?.cart
-                                                                ?.cartItems![
-                                                                    index]
+                                                                ?.cartItems![i]
                                                                 .quantity
                                                                 .toString(),
                                                             size: size,
-                                                            type: type
-                                                                ?.categories,
-                                                            boolCount:
-                                                                type?.categories ==
-                                                                        "alcohol"
-                                                                    ? null
-                                                                    : true,
-                                                            context: context,
-                                                            count: myCartModel
+                                                            type: UserData
+                                                                .myCartModel
                                                                 ?.data
                                                                 ?.cart
-                                                                ?.cartItems![
-                                                                    index]
+                                                                ?.cartItems![i]
+                                                                .preFiesta
+                                                                ?.categories,
+                                                            // boolCount:
+                                                            //     type?.categories ==
+                                                            //             "alcohol"
+                                                            //         ? null
+                                                            //         : true,
+
+                                                            boolCount: true,
+                                                            context: context,
+                                                            count: UserData
+                                                                .myCartModel
+                                                                ?.data
+                                                                ?.cart
+                                                                ?.cartItems![i]
                                                                 .quantity,
-                                                            cart: type
+                                                            cart: UserData
+                                                                        .myCartModel
+                                                                        ?.data
+                                                                        ?.cart
+                                                                        ?.cartItems![
+                                                                            i]
+                                                                        .preFiesta
                                                                         ?.categories ==
                                                                     "mix"
-                                                                ? UserData
-                                                                    .preFiestasMixesTicketCart
-                                                                : UserData
-                                                                    .preFiestasExtrasTicketCart,
-                                                          ),
-                                                        ],
-                                                      );
-                                                    }),
-                                              ),
+                                                                ? UserData.preFiestasMixesTicketCart
+                                                                : UserData.myCartModel?.data?.cart?.cartItems![i].preFiesta?.categories == "extras"
+                                                                    ? UserData.preFiestasExtrasTicketCart
+                                                                    : UserData.preFiestasAlcoholCartMap,
+                                                            itemTypes: UserData.myCartModel?.data?.cart?.cartItems![i].preFiesta?.categories == "alcohol"
+                                                                ? 1
+                                                                : UserData.myCartModel?.data?.cart?.cartItems![i].preFiesta?.categories == "extras"
+                                                                    ? 2
+                                                                    : 3),
+                                                      ],
+                                                    )
+                                                ],
+                                              )
+                                              // Container(
+                                              //   height: size.height * count,
+                                              //   child: ListView.builder(
+                                              //       itemCount: UserData
+                                              //           .myCartModel
+                                              //           ?.data
+                                              //           ?.cart
+                                              //           ?.cartItems
+                                              //           ?.length,
+                                              //       itemBuilder:
+                                              //           (context, index) {
+                                              //         var type = UserData
+                                              //             .myCartModel
+                                              //             ?.data
+                                              //             ?.cart
+                                              //             ?.cartItems![index]
+                                              //             .preFiesta;
+                                              //         return Column(
+                                              //           children: [
+                                              //             SizedBox(
+                                              //               height:
+                                              //                   size.height *
+                                              //                       0.03,
+                                              //             ),
+                                              //             listItem(
+                                              //                 index: index,
+                                              //                 pid: UserData
+                                              //                     .myCartModel
+                                              //                     ?.data
+                                              //                     ?.cart
+                                              //                     ?.cartItems![
+                                              //                         index]
+                                              //                     .preFiesta
+                                              //                     ?.id
+                                              //                     .toString(),
+                                              //                 topTile: type
+                                              //                     ?.categories,
+                                              //                 title: UserData
+                                              //                     .myCartModel
+                                              //                     ?.data
+                                              //                     ?.cart
+                                              //                     ?.cartItems![
+                                              //                         index]
+                                              //                     .preFiesta!
+                                              //                     .name,
+                                              //                 price: UserData
+                                              //                     .myCartModel
+                                              //                     ?.data
+                                              //                     ?.cart
+                                              //                     ?.cartItems![
+                                              //                         index]
+                                              //                     .price
+                                              //                     .toString(),
+                                              //                 quantity: UserData
+                                              //                     .myCartModel
+                                              //                     ?.data
+                                              //                     ?.cart
+                                              //                     ?.cartItems![
+                                              //                         index]
+                                              //                     .quantity
+                                              //                     .toString(),
+                                              //                 size: size,
+                                              //                 type: type
+                                              //                     ?.categories,
+                                              //                 // boolCount:
+                                              //                 //     type?.categories ==
+                                              //                 //             "alcohol"
+                                              //                 //         ? null
+                                              //                 //         : true,
+
+                                              //                 boolCount: true,
+                                              //                 context: context,
+                                              //                 count: UserData
+                                              //                     .myCartModel
+                                              //                     ?.data
+                                              //                     ?.cart
+                                              //                     ?.cartItems![
+                                              //                         index]
+                                              //                     .quantity,
+                                              //                 cart: type?.categories == "mix"
+                                              //                     ? UserData.preFiestasMixesTicketCart
+                                              //                     : type?.categories == "extras"
+                                              //                         ? UserData.preFiestasExtrasTicketCart
+                                              //                         : UserData.preFiestasAlcoholCartMap,
+                                              //                 itemTypes: type?.categories == "alcohol"
+                                              //                     ? 1
+                                              //                     : type?.categories == "extras"
+                                              //                         ? 2
+                                              //                         : 3),
+                                              //           ],
+                                              //         );
+                                              //       }),
+                                              // ),
 
                                               // items
                                               // SizedBox(
@@ -895,28 +1063,36 @@ class _CartpageState extends State<Cartpage> {
                                     SizedBox(height: size.height * 0.03),
 
                                     // button
-                                    GestureDetector(
-                                      onTap: () {
-                                        makeOrder();
-                                      },
-                                      child: roundedBoxR(
-                                        width: size.width,
-                                        height: size.height * 0.07,
-                                        radius: size.width * 0.02,
-                                        backgroundColor:
-                                            AppColors.siginbackgrond,
-                                        child: Center(
-                                          child: Text(
-                                            "${getTranslated(context, "proceedtopay")}",
-                                            //   Strings.proceedtopay,
-                                            style: TextStyle(
-                                                color: AppColors.white,
-                                                fontFamily: Fonts.dmSansBold,
-                                                fontSize: size.width * 0.045),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                                    UserData.myCartModel!.data!.cart!.cartItems!
+                                                .length >
+                                            0
+                                        ? GestureDetector(
+                                            onTap: () {
+                                              // makeOrder();
+                                              navigatorPushFun(context,
+                                                  PrefiestasCardDetail());
+                                            },
+                                            child: roundedBoxR(
+                                              width: size.width,
+                                              height: size.height * 0.07,
+                                              radius: size.width * 0.02,
+                                              backgroundColor:
+                                                  AppColors.siginbackgrond,
+                                              child: Center(
+                                                child: Text(
+                                                  "${getTranslated(context, "proceedtopay")}",
+                                                  //   Strings.proceedtopay,
+                                                  style: TextStyle(
+                                                      color: AppColors.white,
+                                                      fontFamily:
+                                                          Fonts.dmSansBold,
+                                                      fontSize:
+                                                          size.width * 0.045),
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        : SizedBox()
 
                                     //  SizedBox(height: size.height * 0.05),
                                   ],

@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:funfy/apis/homeApis.dart';
 import 'package:funfy/apis/signinApi.dart';
 import 'package:funfy/components/navigation.dart';
+import 'package:funfy/ui/screens/aboutScreen.dart';
 import 'package:funfy/ui/screens/favourite.dart';
+import 'package:funfy/ui/screens/helpScreen.dart';
 import 'package:funfy/ui/screens/languageScreen.dart';
+import 'package:funfy/ui/screens/notifications.dart';
 import 'package:funfy/ui/screens/profileEdit.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/Constants.dart';
@@ -11,6 +16,7 @@ import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 class Profilepage extends StatefulWidget {
   Profilepage({Key? key}) : super(key: key);
@@ -20,6 +26,163 @@ class Profilepage extends StatefulWidget {
 }
 
 class _ProfilepageState extends State<Profilepage> {
+  bool toggleBool = false;
+  bool notiLoading = false;
+  static GlobalKey<ScaffoldState> _keyScaffold = GlobalKey();
+  void showNotificationBottomSheet() {
+    var size = MediaQuery.of(context).size;
+    showModalBottomSheet(
+        backgroundColor: Colors.white,
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(
+            key: _keyScaffold,
+            builder: (context, setstate) {
+              return Container(
+                margin: EdgeInsets.only(top: size.height * 0.008),
+                // color: Colors.white,
+                height: size.height * 0.5,
+                width: size.width,
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: size.height * 0.008,
+                    ),
+
+                    roundedBoxR(
+                        height: size.height * 0.012,
+                        width: size.width * 0.4,
+                        radius: size.width * 0.2,
+                        backgroundColor: Colors.grey[100]),
+
+                    SizedBox(
+                      height: size.height * 0.04,
+                    ),
+
+                    Container(
+                      alignment: Alignment.center,
+                      height: size.height * 0.15,
+                      // width: size.width * 0.1,
+                      child: SvgPicture.asset(Images.notificationBellRed),
+                    ),
+
+                    SizedBox(
+                      height: size.height * 0.05,
+                    ),
+
+                    // toggle
+
+                    // StatefulBuilder()
+
+                    Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: size.width * 0.05),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Notification Alerts",
+                                style: TextStyle(
+                                  color: HexColor("#4e4e4e"),
+                                  fontSize: size.width * 0.065,
+                                  fontFamily: Fonts.dmSansMedium,
+                                ),
+                              ),
+                              Text(
+                                "${toggleBool ? getTranslated(context, "switchOn") : getTranslated(context, "switchoff")}",
+                                style: TextStyle(
+                                  color: HexColor("#aeaeae"),
+                                  fontSize: size.width * 0.045,
+                                  fontFamily: Fonts.dmSansMedium,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Spacer(),
+                          notiLoading
+                              ? Container(
+                            margin: EdgeInsets.only(top: size.height * 0.02),
+                                child: Row(
+                                    children: [
+                                      Container(
+                                          // height: size.height * 0.033,
+                                          // width: size.width * 0.06,
+                                        height: 20,
+                                          width: 20,
+                                          child: CircularProgressIndicator()),
+                                      SizedBox(
+                                        width: size.width * 0.04,
+                                      )
+                                    ],
+                                  ),
+                              )
+                              : Switch(
+                                  onChanged: (v) async {
+                                    setstate(() {
+                                      notiLoading = true;
+                                    });
+
+                                    await notificationOffApi(
+                                            notificationNum: v ? 1 : 0)
+                                        .then((value) {
+                                      print("res value $value");
+                                      setstate(() {
+                                        notiLoading = false;
+                                        toggleBool = value!;
+                                      });
+                                    });
+
+                                    setstate(() {
+                                      notiLoading = false;
+                                    });
+                                  },
+                                  value: toggleBool,
+                                  activeColor: AppColors.white,
+                                  activeTrackColor: AppColors.siginbackgrond,
+                                  inactiveThumbColor: AppColors.white,
+                                  inactiveTrackColor: Colors.grey[300],
+                                )
+                        ],
+                      ),
+                    ),
+
+                    SizedBox(
+                      height: size.height * 0.06,
+                    ),
+
+                    InkWell(
+                      onTap: () {
+                        navigatePopFun(context);
+                        navigatorPushFun(context, Notifications());
+                      },
+                      child: Text(
+                        "${getTranslated(context, "SeeAllNotifications")}",
+                        style: TextStyle(
+                          color: HexColor("#2f2c2c"),
+                          fontSize: size.width * 0.05,
+                          fontFamily: Fonts.dmSansBold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    toggleBool = Constants.prefs!.getBool("notif") == null
+        ? false
+        : Constants.prefs!.getBool("notif")!;
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -98,12 +261,12 @@ class _ProfilepageState extends State<Profilepage> {
 
                 SizedBox(height: size.height * 0.05),
 
-                centerlistItem(
-                    context: context,
-                    title: "${getTranslated(context, "orders")}",
-                    //Strings.orders,
-                    leftIconImage: Images.orderIIconpng,
-                    onTapfunc: () {}),
+                // centerlistItem(
+                //     context: context,
+                //     title: "${getTranslated(context, "orders")}",
+                //     //Strings.orders,
+                //     leftIconImage: Images.orderIIconpng,
+                //     onTapfunc: () {}),
 
                 centerlistItem(
                     context: context,
@@ -143,21 +306,27 @@ class _ProfilepageState extends State<Profilepage> {
                     title: "${getTranslated(context, "notification")}",
                     // Strings.notification,
                     leftIconImage: Images.notificationspng,
-                    onTapfunc: () {}),
+                    onTapfunc: () {
+                      showNotificationBottomSheet();
+                    }),
 
                 centerlistItem(
                     context: context,
                     title: "${getTranslated(context, "help")}",
                     //  Strings.help,
                     leftIconImage: Images.helppng,
-                    onTapfunc: () {}),
+                    onTapfunc: () {
+                      navigatorPushFun(context, HelpScreen());
+                    }),
 
                 centerlistItem(
                     context: context,
                     title: "${getTranslated(context, "about")}",
                     //Strings.about,
                     leftIconImage: Images.aboutpng,
-                    onTapfunc: () {}),
+                    onTapfunc: () {
+                      navigatorPushFun(context, AboutScreen());
+                    }),
 
                 SizedBox(
                   height: size.height * 0.04,
@@ -214,7 +383,7 @@ Widget centerlistItem(
     onTapfunc}) {
   var size = MediaQuery.of(context).size;
 
-  return GestureDetector(
+  return InkWell(
     onTap: () {
       onTapfunc();
     },

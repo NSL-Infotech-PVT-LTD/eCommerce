@@ -102,11 +102,13 @@ class Datum {
     this.clubId,
     this.name,
     this.timestamp,
-    this.image,
     this.description,
     this.ticketPrice,
+    this.totalNormalTickets,
     this.ticketPriceStandard,
+    this.totalStandardTickets,
     this.ticketPriceVip,
+    this.totalVipTickets,
     this.totalMembers,
     this.dressCode,
     this.partyMusic,
@@ -118,18 +120,24 @@ class Datum {
     this.distanceKm,
     this.distanceMiles,
     this.isFavourite,
+    this.leftStandardTicket,
+    this.leftVipTicket,
+    this.leftNormalTicket,
+    this.clubRating,
   });
 
   int? id;
   String? type;
   int? clubId;
   String? name;
-  String? timestamp;
-  String? image;
+  DateTime? timestamp;
   String? description;
   String? ticketPrice;
+  String? totalNormalTickets;
   String? ticketPriceStandard;
+  String? totalStandardTickets;
   String? ticketPriceVip;
+  String? totalVipTickets;
   String? totalMembers;
   String? dressCode;
   String? partyMusic;
@@ -141,18 +149,24 @@ class Datum {
   String? distanceKm;
   String? distanceMiles;
   bool? isFavourite;
+  dynamic leftStandardTicket;
+  dynamic leftVipTicket;
+  dynamic leftNormalTicket;
+  dynamic clubRating;
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
         id: json["id"],
         type: json["type"],
         clubId: json["club_id"],
         name: json["name"],
-        timestamp: json["timestamp"],
-        image: json["image"],
+        timestamp: DateTime.parse(json["timestamp"]),
         description: json["description"],
         ticketPrice: json["ticket_price"],
+        totalNormalTickets: json["total_normal_tickets"],
         ticketPriceStandard: json["ticket_price_standard"],
+        totalStandardTickets: json["total_standard_tickets"],
         ticketPriceVip: json["ticket_price_vip"],
+        totalVipTickets: json["total_vip_tickets"],
         totalMembers: json["total_members"],
         dressCode: json["dress_code"],
         partyMusic: json["party_music"],
@@ -164,6 +178,10 @@ class Datum {
         distanceKm: json["distance_km"],
         distanceMiles: json["distance_miles"],
         isFavourite: json["is_favourite"],
+        leftStandardTicket: json["left_standard_ticket"],
+        leftVipTicket: json["left_vip_ticket"],
+        leftNormalTicket: json["left_normal_ticket"],
+        clubRating: json["club_rating"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -171,12 +189,14 @@ class Datum {
         "type": type,
         "club_id": clubId,
         "name": name,
-        "timestamp": timestamp,
-        "image": image,
+        "timestamp": timestamp?.toIso8601String(),
         "description": description,
         "ticket_price": ticketPrice,
+        "total_normal_tickets": totalNormalTickets,
         "ticket_price_standard": ticketPriceStandard,
+        "total_standard_tickets": totalStandardTickets,
         "ticket_price_vip": ticketPriceVip,
+        "total_vip_tickets": totalVipTickets,
         "total_members": totalMembers,
         "dress_code": dressCode,
         "party_music": partyMusic,
@@ -188,5 +208,9 @@ class Datum {
         "distance_km": distanceKm,
         "distance_miles": distanceMiles,
         "is_favourite": isFavourite,
+        "left_standard_ticket": leftStandardTicket,
+        "left_vip_ticket": leftVipTicket,
+        "left_normal_ticket": leftNormalTicket,
+        "club_rating": clubRating,
       };
 }

@@ -14,6 +14,7 @@ import 'package:funfy/components/sizeclass/SizeConfig.dart';
 import 'package:funfy/models/preFiestasModel.dart';
 import 'package:funfy/models/prifiestasAlMxEx.dart';
 import 'package:funfy/ui/screens/bookingSuccess.dart';
+import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/widgets/basic%20function.dart';
 import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/InternetCheck.dart';
@@ -52,14 +53,8 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
 
   int alcoholCountNum = 0;
 
-// model data
-  // PrefiestasAlMxExModel? alcohol;
-  // PrefiestasAlMxExModel? mix;
-  // PrefiestasAlMxExModel? extras;
-
-  //
-
   PrefiestasDetailModel? prefiestasDetailModel = PrefiestasDetailModel();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   bool _loading = false;
 
   bool _alcoholloading = false;
@@ -71,67 +66,67 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
 
   bool _favoriteBool = false;
 
-  Future<void> _handleRadioValueChange(int? value) async {
-    setState(() {
-      alcoholCountNum = Constants.prefs?.getString("alcohol") == null ||
-              Constants.prefs?.getString("alcohol") == ""
-          ? 0
-          : 1;
-    });
-    String cartReturnV = await addToCart(
-        id: "${prefiestasDetailModel?.data?.childData?.alcohol?.elementAt(value!).id}",
-        cont: "1");
+  // Future<void> _handleRadioValueChange(int? value) async {
+  //   setState(() {
+  //     alcoholCountNum = Constants.prefs?.getString("alcohol") == null ||
+  //             Constants.prefs?.getString("alcohol") == ""
+  //         ? 0
+  //         : 1;
+  //   });
+  //   String cartReturnV = await addToCart(
+  //       id: "${prefiestasDetailModel?.data?.childData?.alcohol?.elementAt(value!).id}",
+  //       cont: "1");
 
-    if (cartReturnV == "true") {
-      setState(() {
-        groupValue = value;
-        UserData.preFiestasAlcoholCart =
-            "${prefiestasDetailModel?.data?.childData?.alcohol?.elementAt(value!).id}";
+  //   if (cartReturnV == "true") {
+  //     setState(() {
+  //       groupValue = value;
+  //       UserData.preFiestasAlcoholCart =
+  //           "${prefiestasDetailModel?.data?.childData?.alcohol?.elementAt(value!).id}";
 
-        alcoholCountNum = 1;
-        Constants.prefs?.setString("alcohol", "alcohol");
-      });
-    }
+  //       alcoholCountNum = 1;
+  //       Constants.prefs?.setString("alcohol", "alcohol");
+  //     });
+  //   }
 
-    if (cartReturnV == "422") {
-      Dialogs.simpleAlertDialog(
-          context: context,
-          title: "${getTranslated(context, "alert!")}",
-          content:
-              "${getTranslated(context, "youhaveselecteddifferentcategoryDoyouwanttoresetCart?")}",
-          func: () async {
-            navigatePopFun(context);
+  //   if (cartReturnV == "422") {
+  //     Dialogs.simpleAlertDialog(
+  //         context: context,
+  //         title: "${getTranslated(context, "alert!")}",
+  //         content:
+  //             "${getTranslated(context, "youhaveselecteddifferentcategoryDoyouwanttoresetCart?")}",
+  //         func: () async {
+  //           navigatePopFun(context);
 
-            setState(() {
-              _loadingCenter = true;
-            });
+  //           setState(() {
+  //             _loadingCenter = true;
+  //           });
 
-            await cartResetPrefiestas(
-                    preFiestaID:
-                        "${prefiestasDetailModel?.data?.childData?.alcohol?.elementAt(value!).id}",
-                    quantity: "1")
-                .then((resp) {
-              setState(() {
-                _loadingCenter = false;
-              });
+  //           await cartResetPrefiestas(
+  //                   preFiestaID:
+  //                       "${prefiestasDetailModel?.data?.childData?.alcohol?.elementAt(value!).id}",
+  //                   quantity: "1")
+  //               .then((resp) {
+  //             setState(() {
+  //               _loadingCenter = false;
+  //             });
 
-              print("here is json body $resp");
+  //             print("here is json body $resp");
 
-              if (resp["status"] == true && resp["code"] == 201) {
-                setState(() {
-                  clearCart();
-                  groupValue = value;
-                  UserData.preFiestasAlcoholCart =
-                      "${prefiestasDetailModel?.data?.childData?.alcohol?.elementAt(value!).id}";
+  //             if (resp["status"] == true && resp["code"] == 201) {
+  //               setState(() {
+  //                 clearCart();
+  //                 groupValue = value;
+  //                 UserData.preFiestasAlcoholCart =
+  //                     "${prefiestasDetailModel?.data?.childData?.alcohol?.elementAt(value!).id}";
 
-                  alcoholCountNum = 1;
-                  Constants.prefs?.setString("alcohol", "alcohol");
-                });
-              }
-            });
-          });
-    }
-  }
+  //                 alcoholCountNum = 1;
+  //                 Constants.prefs?.setString("alcohol", "alcohol");
+  //               });
+  //             }
+  //           });
+  //         });
+  //   }
+  // }
 
   // add favorite
 
@@ -174,15 +169,17 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
   }
 
   clearCart() {
-    UserData.preFiestasAlcoholCart = "";
     setState(() {
       UserData.preFiestasAlcoholCart = "";
       UserData.preFiestasExtrasTicketCart.clear();
       UserData.preFiestasMixesTicketCart.clear();
+      UserData.preFiestasAlcoholCartMap.clear();
       UserData.totalTicketNum = 0;
       UserData.preFiestasCartid = "";
       Constants.prefs?.setString("cartTot", "");
       Constants.prefs?.setString("alcohol", "");
+      Constants.prefs?.setString("mix", "");
+      Constants.prefs?.setString("extras", "");
     });
   }
 
@@ -199,6 +196,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
     // preFiestadatagetFromApi();
 
     setState(() {
+      UserData.preFiestasAlcoholCartMap.clear();
       UserData.preFiestasExtrasTicketCart.clear();
       UserData.preFiestasMixesTicketCart.clear();
     });
@@ -211,24 +209,35 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
       });
   }
 
-  pauseButtonHide() {
-    Timer(Duration(seconds: 3), () {
-      setState(() {
-        pauseBool = false;
-      });
-    });
-  }
+  // pauseButtonHide() {
+  //   Timer(Duration(seconds: 3), () {
+  //     setState(() {
+  //       pauseBool = false;
+  //     });
+  //   });
+  // }
 
   // + - count button
   Widget insdecButton(
-      {int? index, var count, String? pid, add, remove, Map? cart}) {
+      {int? index,
+      int? itemType,
+      var count,
+      String? pid,
+      add,
+      remove,
+      Map? cart}) {
     var size = MediaQuery.of(context).size;
     return Container(
       child: Row(
         children: [
           GestureDetector(
             onTap: () {
-              remove(index: index, id: pid, cart: cart, itemCount: count);
+              remove(
+                  index: index,
+                  id: pid,
+                  cart: cart,
+                  itemCount: count,
+                  itemType: itemType);
             },
             child: Container(
               decoration: BoxDecoration(
@@ -269,7 +278,21 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
           ),
           GestureDetector(
             onTap: () {
-              add(index: index, id: pid, cart: cart, itemCount: count);
+              if ((Constants.prefs?.getString("alcohol") == null ||
+                      Constants.prefs?.getString("alcohol") == "") &&
+                  itemType != 1) {
+                _scaffoldKey.currentState?.showSnackBar(new SnackBar(
+                    duration: Duration(milliseconds: 600),
+                    content: new Text(
+                        "${getTranslated(context, "pleaseSelectAlcohol")}")));
+              } else {
+                add(
+                    index: index,
+                    id: pid,
+                    cart: cart,
+                    itemCount: count,
+                    itemType: itemType);
+              }
             },
             child: Container(
               decoration: BoxDecoration(
@@ -296,6 +319,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
 
   ListTile alcoholGradientFunction(
       {index,
+      int? type,
       String? title,
       String? subtitle,
       var model,
@@ -318,50 +342,34 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                 color: AppColors.grayFont,
                 fontFamily: Fonts.dmSansBold,
                 fontSize: SizeConfig.screenWidth * 0.040)),
-        trailing: numCount != true
-            ? Theme(
-                data: Theme.of(context).copyWith(
-                  unselectedWidgetColor: AppColors.white,
-                ),
-                child: Radio<int?>(
-                    value: index,
-                    groupValue: groupValue != -1
-                        ? groupValue
-                        : count, //count == 1 && groupValue != -1 ? count : groupValue,
-                    onChanged: _handleRadioValueChange),
-              )
-            : Container(
-                width: size.width * 0.25,
-                child: insdecButton(
-                    add: addFunc,
-                    remove: removeFunc,
-                    index: index,
-                    count: count,
-                    cart: cart,
-                    pid: data[index].id.toString()),
-              ));
+        trailing:
+
+            // numCount != true
+            //     ? Theme(
+            //         data: Theme.of(context).copyWith(
+            //           unselectedWidgetColor: AppColors.white,
+            //         ),
+            //         child: Radio<int?>(
+            //             value: index,
+            //             groupValue: groupValue != -1
+            //                 ? groupValue
+            //                 : count, //count == 1 && groupValue != -1 ? count : groupValue,
+            //             onChanged: _handleRadioValueChange),
+            //       )
+            //     :
+
+            Container(
+          width: size.width * 0.25,
+          child: insdecButton(
+              itemType: type,
+              add: addFunc,
+              remove: removeFunc,
+              index: index,
+              count: count,
+              cart: cart,
+              pid: data[index].id.toString()),
+        ));
   }
-
-  // get data from api
-
-  // preFiestadatagetFromApi() async {
-  //   var net = await Internetcheck.check();
-  //   print("net = $net");
-
-  //   if (net != true) {
-  //     Internetcheck.showdialog(context: context);
-  //   } else {
-  //     try {
-  //       alcohollistget();
-  //       mixlistget();
-  //       extraslistget();
-  //     } catch (e) {
-  //       setState(() {
-  //         _loading = false;
-  //       });
-  //     }
-  //   }
-  // }
 
   // prifiestas detail get from api
 
@@ -398,8 +406,13 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
 
   // - + funtion
 
-  addTicket({int? index, int itemCount = 0, String? id, var cart}) async {
-    print("add button press  index: $index  id: $id");
+  addTicket(
+      {int? index,
+      int itemCount = 0,
+      String? id,
+      var cart,
+      int? itemType}) async {
+    // print("add button press  index: $index  id: $id");
 
     if (_loadingCenter == false) {
       int cartCount;
@@ -413,6 +426,8 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
         cartCount = cartCount + 1;
       });
 
+      // print("Here is Map : ${UserData.preFiestasAlcoholCartMap}");
+
       String returnRes = await addToCart(id: id, cont: cartCount.toString());
 
       if (returnRes == "true") {
@@ -422,6 +437,8 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
             "preticketCount": cartCount,
           };
         });
+
+        setItemValue(type: itemType, valueTureFalse: true);
 
         totalCount(value: true);
       }
@@ -439,25 +456,39 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                 _loadingCenter = true;
               });
 
-              await cartResetPrefiestas(
-                      preFiestaID: id, quantity: cartCount.toString())
-                  .then((resp) {
+              if (itemType != 1) {
+                _scaffoldKey.currentState?.showSnackBar(new SnackBar(
+                    backgroundColor: AppColors.siginbackgrond,
+                    duration: Duration(milliseconds: 700),
+                    content: new Text(
+                        "${getTranslated(context, "pleaseSelectAlcohol")}")));
                 setState(() {
                   _loadingCenter = false;
                 });
-
-                if (resp["status"] == true && resp["code"] == 201) {
+              } else {
+                await cartResetPrefiestas(
+                        preFiestaID: id, quantity: cartCount.toString())
+                    .then((resp) {
                   setState(() {
                     clearCart();
-                    cart[index] = {
-                      "id": id,
-                      "preticketCount": cartCount,
-                    };
-
-                    totalCount(value: true);
+                    _loadingCenter = false;
                   });
-                }
-              });
+
+                  if (resp["status"] == true && resp["code"] == 201) {
+                    print("here is response : ${resp["code"]}");
+                    setState(() {
+                      clearCart();
+                      cart[index] = {
+                        "id": id,
+                        "preticketCount": cartCount,
+                      };
+                      Constants.prefs?.setString("alcohol", "1");
+
+                      totalCount(value: true);
+                    });
+                  }
+                });
+              }
             });
       }
     }
@@ -466,8 +497,12 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
   // remove button
 
   ticketRemove(
-      {String? id, int itemCount = 0, int? index, dynamic cart}) async {
-    print("remove id: $id  index: $index");
+      {String? id,
+      int itemCount = 0,
+      int? index,
+      dynamic cart,
+      int? itemType}) async {
+    // print("remove itemCount: $itemCount id: $id  index: $index");
 
     if (_loadingCenter == false) {
       int cartCount;
@@ -483,7 +518,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
         cartCount = cartCount - 1;
       });
 
-      print("Actual value ==$cartCount");
+      print("Actual value ==$cartCount  index: $index  id: $id");
       if (cartCount > -1) {
         String returnRes = await addToCart(id: id, cont: cartCount.toString());
         print("returnRes $returnRes");
@@ -493,40 +528,23 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
               "id": id,
               "preticketCount": cartCount,
             };
-            totalCount(value: false);
+            if (cartCount == 0) {
+              setItemValue(type: itemType, valueTureFalse: false);
+              // alcohol clear cart
+              if (itemType == 1) {
+                clearCart();
+              }
+            }
+            totalCount(
+              value: false,
+            );
           });
         }
       }
-      // if (cartCount <= 0 && cart.isNotEmpty && cart.containsKey(index)) {
-      //   setState(() {
-      //     cart.remove(index);
-      //   });
-      // }
 
-      // totalCount();
       print(cart);
     }
   }
-
-  // remove count
-
-// removeAllProductFromCart() async {
-
-//    await addToCart(id: id, cont: "0").then((value) {
-//       print("this is value $value");
-//       if (value) {
-//         setState(() {
-//           cart[index] = {
-//             "id": id,
-//             "preticketCount": cartCount,
-//           };
-
-//         });
-//       }
-//     });
-
-//     totalCount();
-// }
 
   // bottom popup
 
@@ -558,33 +576,38 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "${getTranslated(context, "addtocart")}",
-                      // Strings.addtocart,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: AppColors.brownlite,
-                          fontSize: size.width * 0.03),
-                    ),
                     SizedBox(
                       height: SizeConfig.screenHeight * 0.01,
                     ),
+                    Row(
+                      children: [
+                        SvgPicture.asset(
+                          "assets/svgicons/cartsvg.svg",
+                          width: size.width * 0.04,
+                        ),
+                        SizedBox(
+                          width: size.width * 0.02,
+                        ),
+                        Text(
+                          "${getTranslated(context, "addtocart")}",
+                          // Strings.addtocart,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: AppColors.white,
+                              fontSize: size.width * 0.03),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: SizeConfig.screenHeight * 0.008,
+                    ),
                     Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                      SvgPicture.asset(
-                        "assets/images/ticket.svg",
-                        width: size.width * 0.07,
-                      ),
                       SizedBox(
                         width: size.width * 0.02,
                       ),
                       Container(
-                        // width: SizeConfig.screenWidth * 0.40,
                         child: Text(
-                          // "${getTranslated(context, "ticket")} * ${UserData.totalTicketNum}",
-
-                          // int.parse(totalNum) + alcoholCountNum
-
-                          "${getTranslated(context, "ticket")} * ${int.parse(totalNum) + alcoholCountNum}",
+                          "${int.parse(totalNum)}  ${getTranslated(context, "item")}",
                           // "${Strings.ticket} * ${UserData.totalTicketNum}",
                           style: TextStyle(
                             color: AppColors.white,
@@ -606,12 +629,17 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                 Spacer(),
                 ElevatedButton(
                   child: Text(
-                    "${getTranslated(context, "buyNow")}",
+                    "${getTranslated(context, "viewcart")}",
                     // 'Buy Now',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   onPressed: () {
-                    makeOrder();
+                    // makeOrder();
+                    navigatorPushFun(
+                        context,
+                        Home(
+                          pageIndexNum: 1,
+                        ));
                   },
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(
@@ -628,25 +656,22 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
     );
   }
 
-  totalAlcoholCountinSharedpreference() {
-    String alcoholNum = "${Constants.prefs?.getString("alcohol")}";
+  // set item value in share preference
 
-    if (alcoholNum == "" && alcoholNum == "null") {
-      setState(() {
-        String totnum = "${Constants.prefs?.getString("cartTot")}" == "null" ||
-                "${Constants.prefs?.getString("cartTot")}" == ""
-            ? "0"
-            : "${Constants.prefs?.getString("cartTot")}";
+  setItemValue({int? type, bool? valueTureFalse}) {
+    setState(() {
+      if (type == 1) {
+        Constants.prefs?.setString("alcohol", "${valueTureFalse! ? type : ''}");
+      }
 
-        int totalNumnber = int.parse(totnum);
+      if (type == 2) {
+        Constants.prefs?.setString("mix", "${valueTureFalse! ? type : ''}");
+      }
 
-        int totalCount = totalNumnber + 1;
-
-        print("here is num $totalCount");
-
-        Constants.prefs?.setString("cartTot", "$totalCount");
-      });
-    }
+      if (type == 3) {
+        Constants.prefs?.setString("extras", "${valueTureFalse! ? type : ''}");
+      }
+    });
   }
 
   // total count
@@ -656,16 +681,16 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
 // ++
     if (value!) {
       setState(() {
-        String totnum = "${Constants.prefs?.getString("cartTot")}" == "null" ||
-                "${Constants.prefs?.getString("cartTot")}" == ""
+        String totnum = Constants.prefs?.getString("cartTot") == null ||
+                Constants.prefs?.getString("cartTot") == ""
             ? "0"
             : "${Constants.prefs?.getString("cartTot")}";
+
+        // print("here is tot num - $totnum");
 
         int totalNumnber = int.parse(totnum);
 
         int totalCount = totalNumnber + 1;
-
-        print("here is num $totalCount");
 
         Constants.prefs?.setString("cartTot", "$totalCount");
       });
@@ -675,8 +700,8 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
 
     if (value == false) {
       setState(() {
-        String totnum = "${Constants.prefs?.getString("cartTot")}" == "null" ||
-                "${Constants.prefs?.getString("cartTot")}" == ""
+        String totnum = Constants.prefs?.getString("cartTot") == null ||
+                Constants.prefs?.getString("cartTot") == ""
             ? "0"
             : "${Constants.prefs?.getString("cartTot")}";
 
@@ -686,7 +711,9 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
 
         print("here is num $totalCount");
 
-        Constants.prefs?.setString("cartTot", "$totalCount");
+        if (totalCount > 0) {
+          Constants.prefs?.setString("cartTot", "$totalCount");
+        }
       });
     }
   }
@@ -700,7 +727,6 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
     if (net != true) {
       Internetcheck.showdialog(context: context);
     } else {
-      print("run ---------- ");
       setState(() {
         _loadingCenter = true;
       });
@@ -712,7 +738,9 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
           });
           if (res["status"] == true &&
               (res["code"] == 200 || res["code"] == 201)) {
-            UserData.preFiestasCartid = "${res["data"]["cart"]["id"]}";
+            if (res["code"] == 201) {
+              UserData.preFiestasCartid = "${res['data']['cart']['id']}";
+            }
             setState(() {
               returnV = "true";
             });
@@ -871,6 +899,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
 
     return SafeArea(
       child: Scaffold(
+          key: _scaffoldKey,
           // floatingActionButton: FloatingActionButton(
           //   onPressed: () {
           //     print("here is ");
@@ -878,17 +907,30 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
           //   },
           //   child: Icon(Icons.add),
           // ),
-          backgroundColor: AppColors.homeBackground,
-          // bottomSheet: UserData.preFiestasAlcoholCart != "" &&
-          //         (UserData.preFiestasExtrasTicketCart.isNotEmpty ||
-          //             UserData.preFiestasMixesTicketCart.isNotEmpty)
 
+          appBar: AppBar(
+            backgroundColor: AppColors.blackBackground,
+            title: Text("Pre-Fiestas"),
+            centerTitle: true,
+            actions: [
+              GestureDetector(
+                onTap: () {
+                  addFavorite();
+                },
+                child: Container(
+                  margin: EdgeInsets.only(right: size.width * 0.04),
+                  child: SvgPicture.asset(
+                    "assets/svgicons/hearticon.svg",
+                    color: _favoriteBool ? Colors.red : Colors.white,
+                  ),
+                ),
+              )
+            ],
+          ),
+          backgroundColor: AppColors.homeBackground,
           bottomSheet: _loadingBack == false &&
                   (Constants.prefs?.getString("alcohol") != null &&
                       Constants.prefs?.getString("alcohol") != "")
-              // Constants.prefs?.getString("cartTot") != null &&
-              // Constants.prefs?.getString("cartTot") != "" &&
-              // Constants.prefs?.getString("cartTot") != "0"
               ? bottomSheet()
               : SizedBox(),
           body: _loadingBack == true
@@ -910,23 +952,24 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                               floating: true,
                               pinned: true,
                               snap: true,
-                              actions: [
-                                GestureDetector(
-                                  onTap: () {
-                                    addFavorite();
-                                  },
-                                  child: Container(
-                                    margin: EdgeInsets.only(
-                                        right: size.width * 0.04),
-                                    child: SvgPicture.asset(
-                                      "assets/svgicons/hearticon.svg",
-                                      color: _favoriteBool
-                                          ? Colors.red
-                                          : Colors.white,
-                                    ),
-                                  ),
-                                )
-                              ],
+                              automaticallyImplyLeading: false,
+                              // actions: [
+                              //   GestureDetector(
+                              //     onTap: () {
+                              //       addFavorite();
+                              //     },
+                              //     child: Container(
+                              //       margin: EdgeInsets.only(
+                              //           right: size.width * 0.04),
+                              //       child: SvgPicture.asset(
+                              //         "assets/svgicons/hearticon.svg",
+                              //         color: _favoriteBool
+                              //             ? Colors.red
+                              //             : Colors.white,
+                              //       ),
+                              //     ),
+                              //   )
+                              // ],
                               actionsIconTheme: IconThemeData(opacity: 0.0),
                               flexibleSpace: Stack(
                                 children: <Widget>[
@@ -1168,6 +1211,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                                                   (BuildContext context,
                                                       int index) {
                                                 return alcoholGradientFunction(
+                                                    type: 1,
                                                     index: index,
                                                     model: prefiestasDetailModel
                                                         ?.data
@@ -1175,18 +1219,15 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                                                         ?.alcohol,
                                                     addFunc: addTicket,
                                                     cart: UserData
-                                                        .preFiestasExtrasTicketCart,
+                                                        .preFiestasAlcoholCartMap,
                                                     count: prefiestasDetailModel
-                                                                ?.data
-                                                                ?.childData
-                                                                ?.alcohol![
-                                                                    index]
-                                                                .isInMyCartQuantity ==
-                                                            1
-                                                        ? index
-                                                        : -1,
+                                                        ?.data
+                                                        ?.childData
+                                                        ?.alcohol
+                                                        ?.elementAt(index)
+                                                        .isInMyCartQuantity,
                                                     removeFunc: ticketRemove,
-                                                    numCount: false);
+                                                    numCount: true);
                                               },
                                             ),
                                           ),
@@ -1233,6 +1274,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                                                   (BuildContext context,
                                                       int index) {
                                                 return alcoholGradientFunction(
+                                                    type: 2,
                                                     index: index,
                                                     model: prefiestasDetailModel
                                                         ?.data?.childData?.mix,
@@ -1291,6 +1333,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                                                   (BuildContext context,
                                                       int index) {
                                                 return alcoholGradientFunction(
+                                                    type: 3,
                                                     index: index,
                                                     model: prefiestasDetailModel
                                                         ?.data

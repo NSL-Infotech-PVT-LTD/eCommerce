@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/components/dialogs.dart';
 import 'package:funfy/components/navigation.dart';
+import 'package:funfy/models/cardListmodel.dart';
 import 'package:funfy/models/fiestasBooking.dart';
+import 'package:funfy/models/fiestasBookingDetailModel.dart';
 import 'package:funfy/models/fiestasBookingListModel.dart';
 import 'package:funfy/models/fiestasDetailmodel.dart';
 import 'package:funfy/models/makePrefiestasmodel.dart';
@@ -19,7 +21,8 @@ Future<FistaBooking?> fiestasBooking(
     context,
     String? ticketcount,
     String? standardticketcount,
-    String? vipticketcount}) async {
+    String? vipticketcount,
+    String? cardId}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
   };
@@ -29,7 +32,9 @@ Future<FistaBooking?> fiestasBooking(
     "ticket_price_standard":
         standardticketcount != null ? "$standardticketcount" : "0",
     "ticket_price_vip": vipticketcount != null ? "$vipticketcount" : "0",
-    "ticket_price": ticketcount != null ? "$ticketcount" : "0"
+    "ticket_price": ticketcount != null ? "$ticketcount" : "0",
+    "payment_mode": "card",
+    "card_id": cardId ?? ""
   };
 
   var res = await http.post(Uri.parse(Urls.fiestasBookingUrl),
@@ -56,26 +61,27 @@ Future<FistaBooking?> fiestasBooking(
 }
 
 // booking list show
-
-Future<FiestasBookingList?> fiestasBookingList() async {
+// <FiestasBookingList?>
+Future fiestasBookingList() async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
   };
-
-  // Map<String, String> body = {
-
-  // };
 
   var res =
       await http.post(Uri.parse(Urls.fiestasBookingListUrl), headers: headers);
 
   final jsonRes = json.decode(res.body);
 
-  var response = Map<String, dynamic>.from(jsonRes);
+  print("here is fiestas body");
+
+  // print(res.body);
+
+  // print(jsonRes["data"]["data"]);
 
   if (res.statusCode == 200) {
     // print("newModle" + res.body);
-    return FiestasBookingList.fromJson(response);
+    // return fiestasBookingListFromJson(res.body);
+    return jsonRes["data"]["data"];
   } else {
     // print(res.body);
   }
@@ -88,13 +94,7 @@ Future addproductinCartPrefiestas(
   };
 
   // print("Bearer ${UserData.userToken}");
-  var body = {};
-
-  if (quantity != null) {
-    body = {"pre_fiesta_id": preFiestaID, "quantity": quantity};
-  } else {
-    body = {"pre_fiesta_id": preFiestaID};
-  }
+  var body = {"pre_fiesta_id": preFiestaID, "quantity": quantity, "reset": "0"};
 
   var res = await http.post(Uri.parse(Urls.preFiestasBookingUrl),
       body: body, headers: headers);
@@ -141,18 +141,19 @@ Future<PreFiestasBookingListModel?> preFiestaBookingListApi() async {
   var res = await http.post(Uri.parse(Urls.preFiestasBookingListUrl),
       headers: headers);
 
+  // print(res.body);
+
   if (res.statusCode == 200) {
     return preFiestasBookingListModelFromJson(res.body);
   } else {
-    print(res.body);
     // print(res.body);
+
   }
 }
 
 // make Order ------------------- //
 
-Future<MakeprefiestasOrderModel?> makeOrderApi(
-    {String? cartId, String? addressId}) async {
+Future makeOrderApi({String? cartId, String? addressId, String? cardID}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
   };
@@ -167,14 +168,20 @@ Future<MakeprefiestasOrderModel?> makeOrderApi(
     "cart_id": cartId,
     "date": date,
     "time": time,
-    "address_id": addressId
+    "address_id": addressId,
+    "payment_mode": "card",
+    "card_id": cardID,
   };
+
+  print("here is body : $body");
 
   var res = await http.post(Uri.parse(Urls.makeOrderUrl),
       body: body, headers: headers);
 
+  var resp = json.decode(res.body);
+
   if (res.statusCode == 201) {
-    return makeprefiestasOrderModelFromJson(res.body);
+    return resp;
   } else {
     print("here is error ${res.body}");
   }
@@ -184,8 +191,6 @@ Future<MakeprefiestasOrderModel?> makeOrderApi(
 
 Future<PrefiestasOrderDetailModel?> prefiestasShowOrderDetail(
     {String? orderId}) async {
-  // String tok =
-  //     "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjE1OWM2MzBmNWFmMjhkOGM5NWIwNDVhZTA5NThhZjA0MWMwOTAxMWY4NGIzMGJjNjhhNzhjZGI5YTAwZWViNTg0Nzc4YmNjZmNiODhlZGRmIn0.eyJhdWQiOiIxIiwianRpIjoiMTU5YzYzMGY1YWYyOGQ4Yzk1YjA0NWFlMDk1OGFmMDQxYzA5MDExZjg0YjMwYmM2OGE3OGNkYjlhMDBlZWI1ODQ3NzhiY2NmY2I4OGVkZGYiLCJpYXQiOjE2Mjc2NDg1OTUsIm5iZiI6MTYyNzY0ODU5NSwiZXhwIjoxNjU5MTg0NTk1LCJzdWIiOiI1Iiwic2NvcGVzIjpbXX0.qi0Y9uK-BosCzq7nCs5VMNWuHSZx5XRhU0xJnM51-_XW8uQikUsX-eE1lcvXA681imCI7HOQ6_3Rvt8PosU0GUedl_X9VZRUQJyhv75LWjLh93QbayjTZk6P6THEfiGKYJhlERnE0ZrUBLX32tJvzbI0q8oTsZuEqGz-qqJ00HEZg_UYVp6AN4cereXb9qCQvcUYOxohZp3dhx889p2S_alq3PNyxTk4PjvYxWZznuPQmDcDTkadjEnjyLFiErUXgGn5WUZ_LeIZxd13dX4iUPzZ4AHQjz4nTNkP6zW8pfer3zXVcMlq3b-bPMd1k7Ov-0d0CYwBJwlvIT8Gr9oboZgh2h5sq9s0EV2_Zq0MKt45rw8rJovDRrBXqAB4VgS6ARhde1vy7_xYQVLW8_yrlZ5JpfWeh-3xG1MRQwullCWmwv5habNdI3Xjy3x87ckHex_qXbg51G-_5MyINso9DWbsBfFPZqBPiuA32lUC85YeFpnFj8zG_OpSSrmm-pVn-yzVDT8zMnVyg5CDNzvcI7Ku40OQOv0ApVKm5FKotXtd6YQN17UEHmH0JvSE_RzPouq_3GpkE5LCuem8rfMKG14TjyWR3cjkyaP0fvRZS9o-LLXfR77tHkzHoHUJX9XJLMY4yPievoJa2N6eshEz9uA3AqrjxZRi_cRHWuResJE";
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
   };
@@ -242,5 +247,92 @@ Future<FiestasDetailModel?> getFiestasbyId({String? fiestasID}) async {
     return fiestasDetailModelFromJson(res.body);
   } else {
     print("here is error ${res.body}");
+  }
+}
+
+// add card for payment
+
+Future storePaymentCard({String? cardToken}) async {
+  var headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+  };
+
+  var body = {"token": "$cardToken"};
+
+  var res = await http.post(Uri.parse(Urls.addPaymentCardUrl),
+      body: body, headers: headers);
+
+  if (res.statusCode == 201) {
+    // print("here is fiestas detail - ${res.body}");
+
+    print("Card added  ${res.body}");
+  } else {
+    print("here is error ${res.body}");
+  }
+}
+
+// get card list
+
+Future<CardListModel?> getCardList({String? cardToken}) async {
+  var headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+  };
+
+  var body = {"token": "$cardToken"};
+
+  var res = await http.post(Uri.parse(Urls.getCardListUrl),
+      body: body, headers: headers);
+
+  if (res.statusCode == 200) {
+    // print("here is fiestas detail - ${res.body}");
+
+    print("Card added  ${res.body}");
+    return cardListModelFromJson(res.body);
+  } else {
+    print("here is error ${res.body}");
+  }
+}
+
+// delete card
+
+Future deleteCard({String? cardIds}) async {
+  var headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+  };
+
+  var body = {"card_id": "$cardIds"};
+
+  var res = await http.post(Uri.parse(Urls.deleteCardUrl),
+      body: body, headers: headers);
+
+  if (res.statusCode == 200) {
+    print("here is delete - ${res.body}");
+
+    return cardListModelFromJson(res.body);
+  } else {
+    print("here is error ${res.body}");
+  }
+}
+
+// fiestas booking order detail
+
+Future<FiestasBookingDetailModel?> fiestaBookingOrderDetailApi(
+    {String? fiestasId}) async {
+  var headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+  };
+
+  var body = {"id": "$fiestasId"};
+
+  var res = await http.post(Uri.parse(Urls.fiestasBookingOrderDetail),
+      headers: headers, body: body);
+
+  // print(res.body);
+
+  if (res.statusCode == 200) {
+    return fiestasBookingDetailModelFromJson(res.body);
+  } else {
+    // print(res.body);
+
   }
 }

@@ -5,9 +5,11 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:funfy/ui/screens/cardDetail.dart';
 import 'package:funfy/ui/screens/notifications.dart';
 import 'package:funfy/ui/screens/paymentScreen.dart';
 import 'package:funfy/ui/screens/splash.dart';
+import 'package:funfy/ui/testingFileDart.dart';
 import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/localizing.dart';
@@ -217,7 +219,8 @@ class _MyAppState extends State<MyApp> {
       },
       darkTheme: ThemeData.dark(), //
       home: Splash(),
-      // home: Payment()
+      // home: TestingW()
+      // home: MyHomePage(),
     );
   }
 }

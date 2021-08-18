@@ -32,11 +32,15 @@ class Images {
   static String notificationspng = "assets/pngicons/notificationPrfile.png";
   static String helppng = "assets/pngicons/help.png";
   static String aboutpng = "assets/pngicons/about.png";
+  static String swipeButtonPng = "assets/pngicons/swipeButton.png";
+  static String swipeButtonSvg = "assets/svgicons/swipeButton.svg";
   static String locationspng = "assets/pngicons/locationIc.png";
   static String editpen = "assets/pngicons/editpen.png";
   static String logout = "assets/pngicons/logout.png";
   static String heart = "assets/pngicons/hearticonbig.png";
   static String assetsSvgIcons = "assets/svgicons/";
+
+  static String notificationBellRed = "assets/svgicons/notificationBellRed.svg";
 
   static String aboutcalender = "assets/pngicons/aboutCalender.png";
   static String aboutProfile = "assets/pngicons/aboutProfile.png";

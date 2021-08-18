@@ -28,11 +28,11 @@ class _BookingSuccessState extends State<BookingSuccess> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-                height: size.height * 0.17,
+                height: size.height * 0.14,
               ),
               Text(
                 "${getTranslated(context, "bookingSuccessfull")}",
-              //  Strings.bookingSuccessfull,
+                //  Strings.bookingSuccessfull,
                 style: TextStyle(
                     color: AppColors.white,
                     fontFamily: Fonts.dmSansBold,
@@ -47,14 +47,16 @@ class _BookingSuccessState extends State<BookingSuccess> {
                 width: size.width * 0.75,
               )),
               SizedBox(
-                height: size.height * 0.2,
+                height: size.height * 0.16,
               ),
               GestureDetector(
                 onTap: () {
                   Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                          builder: (BuildContext context) => Home()),
+                          builder: (BuildContext context) => Home(
+                                pageIndexNum: 0,
+                              )),
                       (route) => false);
                 },
                 child: roundedBoxR(
@@ -65,7 +67,7 @@ class _BookingSuccessState extends State<BookingSuccess> {
                     child: Align(
                       child: Text(
                         "${getTranslated(context, "seeReceipt")}",
-                     //   Strings.seeReceipt,
+                        //   Strings.seeReceipt,
                         style: TextStyle(
                             color: AppColors.white,
                             fontFamily: Fonts.dmSansBold,
@@ -81,13 +83,13 @@ class _BookingSuccessState extends State<BookingSuccess> {
                   Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                          builder: (BuildContext context) => Home()),
+                          builder: (BuildContext context) => Home(
+                                pageIndexNum: 0,
+                              )),
                       (route) => false);
                 },
-                child: Text
-                  (
-                    "${getTranslated(context, "backtoHome")}",
-                   // Strings.backtoHome,
+                child: Text("${getTranslated(context, "backtoHome")}",
+                    // Strings.backtoHome,
                     style: TextStyle(
                         color: AppColors.white,
                         fontFamily: Fonts.dmSansRegular,

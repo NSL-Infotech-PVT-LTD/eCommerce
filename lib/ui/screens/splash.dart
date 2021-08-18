@@ -58,7 +58,7 @@ class _SplashState extends State<Splash> {
               builder: (context) =>
                   Constants.prefs?.getString("token") != null &&
                           Constants.prefs?.getString("token") != ""
-                      ? Home()
+                      ? Home(pageIndexNum: 0)
                       // : Intro()
                       : Signin()));
         } else {
@@ -68,7 +68,7 @@ class _SplashState extends State<Splash> {
               builder: (context) =>
                   Constants.prefs?.getString("token") != null &&
                           Constants.prefs?.getString("token") != ""
-                      ? Home()
+                      ? Home(pageIndexNum: 0)
                       : Signin()));
         }
       }

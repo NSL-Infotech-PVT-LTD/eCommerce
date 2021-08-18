@@ -423,7 +423,7 @@ class _YourOrderSumState extends State<YourOrderSum> {
                       SizedBox(height: SizeConfig.screenHeight * 0.02),
                       Container(
                         width: SizeConfig.screenWidth,
-                        height: SizeConfig.screenHeight * 0.10,
+                        height: SizeConfig.screenHeight * 0.11,
                         child: DottedBorder(
                           radius: Radius.elliptical(100, 100),
                           color: AppColors.borderColor,

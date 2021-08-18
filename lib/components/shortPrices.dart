@@ -8,7 +8,7 @@ String k_m_b_generator(num) {
   } else if (num > 999999999) {
     return "${(num / 1000000000).toStringAsFixed(1)} B";
   } else {
-    print(num);
+    // print(num);
     return num.toString();
   }
 }

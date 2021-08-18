@@ -99,6 +99,7 @@ class _FiestasPageState extends State<FiestasPage> {
   }
 
   ScrollController _scrollController = ScrollController();
+  ScrollController _fiestaSscrollController = ScrollController();
 
   DateTime? selectedDate;
   Map<String, dynamic> itemSelected = {};
@@ -117,7 +118,7 @@ class _FiestasPageState extends State<FiestasPage> {
 
   daysInMonth(DateTime date) async {
     dates = [];
-    print(date.toString());
+    // print(date.toString());
     print(DateFormat('EE, d MMM, yyyy').format(date));
 
     var firstDayThisMonth = new DateTime(date.year, date.month, date.day);
@@ -140,7 +141,7 @@ class _FiestasPageState extends State<FiestasPage> {
         });
       });
     }
-    print("noeDAte==>$nowdate");
+    // print("noeDAte==>$nowdate");
 
     itemSelected.clear();
     itemSelected = {
@@ -151,11 +152,11 @@ class _FiestasPageState extends State<FiestasPage> {
       "active": filterDate == "" ? false : true
     };
 
-    print("selectDate==>$itemSelected");
+    // print("selectDate==>$itemSelected");
 
     for (var i = 0; i < daysnum; i++) {
       if (dates[i]['date'] == itemSelected['date']) {
-        print("fhskhfkh-===" + dates[i].toString());
+        // print("fhskhfkh-===" + dates[i].toString());
         dates[i]['active'] = filterDate == "" ? false : true;
         _scrollController.animateTo(
             i * MediaQuery.of(context).size.width * 0.13,
@@ -225,12 +226,42 @@ class _FiestasPageState extends State<FiestasPage> {
 
   @override
   void initState() {
+    // _fiestaSscrollController.addListener(_scrollListener);
     super.initState();
     fiestasgetPosts(date: filterDate);
     preFiestasPostget();
     determinePosition();
-    print(UserData.userToken);
+    // print(UserData.userToken);
   }
+
+  int number = 0;
+
+  // void _scrollListener() {
+  //   var size = MediaQuery.of(context).size;
+  //   print("Scroling here");
+
+  //   // double maxScroll = _scrollController.position.maxScrollExtent;
+  //   // double currentScroll = _scrollController.position.pixels;
+  //   // double delta = MediaQuery.of(context).size.height * 0.28;
+  //   // print("delta : $delta");
+  //   // print("currentScroll : $currentScroll");
+
+  //   // print("maxScroll : $maxScroll");
+  //   // if (maxScroll - currentScroll <= delta) {
+  //   //   print("delta : $delta");
+  //   // }
+
+  //   // if (number > 100) {
+  //   //   number = 0;
+  //   //   navigatorPushFun(context, FiestasAll());
+  //   // }
+
+  //   // print(number);
+
+  //   // setState(() {
+  //   //   // var index = (_scrollController.offset / itemSize).round() + 1;
+  //   // });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -627,7 +658,7 @@ class _FiestasPageState extends State<FiestasPage> {
                                                       DateTime picked =
                                                           DateTime.parse(pic);
 
-                                                      print(picked);
+                                                      // print(picked);
 
                                                       setState(() {
                                                         nowdate = picked;
@@ -648,6 +679,7 @@ class _FiestasPageState extends State<FiestasPage> {
                                                           date: fomatDate);
                                                     },
                                                     child: Container(
+
                                                       margin: EdgeInsets.only(
                                                           left: size.width *
                                                               0.01),
@@ -779,6 +811,8 @@ class _FiestasPageState extends State<FiestasPage> {
                                               ),
                                             )
                                           : ListView.builder(
+                                              controller:
+                                                  _fiestaSscrollController,
                                               physics: BouncingScrollPhysics(),
                                               itemCount: UserData.fiestasdata
                                                       ?.data?.data?.length ??

@@ -20,6 +20,7 @@ Widget dateButton(
       width: size.width * 0.12,
       height: size.height * 0.06,
       backgroundColor: backgroundColor,
+
       borderColor: borderColor,
       child: Container(
         padding: EdgeInsets.symmetric(
@@ -34,7 +35,8 @@ Widget dateButton(
                 child: Text(
                   text,
                   style: TextStyle(
-                      fontSize: size.width * 0.05,
+                    fontSize: size.height * 0.024,
+                      // fontSize: size.width * 0.05,
                       fontFamily: Fonts.dmSansBold,
                       color: textColor),
                 ),
