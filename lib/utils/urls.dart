@@ -43,4 +43,8 @@ class Urls {
 
   static String fiestasBookingOrderDetail =
       baseUrl + "customer/booking/itemByID";
+
+  static String aboutUsUrl = baseUrl + "config/about_us";
+  static String helpUrl = baseUrl + "config/help_and_contact_us";
+  static String notificationonOffUrl = baseUrl + "notification/status";
 }

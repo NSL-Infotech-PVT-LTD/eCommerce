@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:funfy/apis/homeApis.dart';
 import 'package:funfy/apis/signinApi.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/ui/screens/aboutScreen.dart';
@@ -26,6 +27,7 @@ class Profilepage extends StatefulWidget {
 
 class _ProfilepageState extends State<Profilepage> {
   bool toggleBool = false;
+  bool notiLoading = false;
   static GlobalKey<ScaffoldState> _keyScaffold = GlobalKey();
   void showNotificationBottomSheet() {
     var size = MediaQuery.of(context).size;
@@ -43,16 +45,6 @@ class _ProfilepageState extends State<Profilepage> {
                 width: size.width,
                 child: Column(
                   children: [
-                    // Align(
-                    //   alignment: Alignment.topRight,
-                    //   child: IconButton(
-                    //     onPressed: () {
-                    //       Navigator.of(context).pop();
-                    //     },
-                    //     icon: Icon(Icons.cancel_outlined),
-                    //   ),
-                    // ),
-
                     SizedBox(
                       height: size.height * 0.008,
                     ),
@@ -110,20 +102,44 @@ class _ProfilepageState extends State<Profilepage> {
                             ],
                           ),
                           Spacer(),
-                          Switch(
-                            onChanged: (v) {
-                              setstate(() {
-                                toggleBool
-                                    ? toggleBool = false
-                                    : toggleBool = true;
-                              });
-                            },
-                            value: toggleBool,
-                            activeColor: AppColors.white,
-                            activeTrackColor: AppColors.siginbackgrond,
-                            inactiveThumbColor: AppColors.white,
-                            inactiveTrackColor: Colors.grey[300],
-                          )
+                          notiLoading
+                              ? Row(
+                                  children: [
+                                    Container(
+                                        height: size.height * 0.03,
+                                        width: size.width * 0.06,
+                                        child: CircularProgressIndicator()),
+                                    SizedBox(
+                                      width: size.width * 0.04,
+                                    )
+                                  ],
+                                )
+                              : Switch(
+                                  onChanged: (v) async {
+                                    setstate(() {
+                                      notiLoading = true;
+                                    });
+
+                                    await notificationOffApi(
+                                            notificationNum: v ? 1 : 0)
+                                        .then((value) {
+                                      print("res value $value");
+                                      setstate(() {
+                                        notiLoading = false;
+                                        toggleBool = value!;
+                                      });
+                                    });
+
+                                    setstate(() {
+                                      notiLoading = false;
+                                    });
+                                  },
+                                  value: toggleBool,
+                                  activeColor: AppColors.white,
+                                  activeTrackColor: AppColors.siginbackgrond,
+                                  inactiveThumbColor: AppColors.white,
+                                  inactiveTrackColor: Colors.grey[300],
+                                )
                         ],
                       ),
                     ),
@@ -152,6 +168,14 @@ class _ProfilepageState extends State<Profilepage> {
             },
           );
         });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    toggleBool = Constants.prefs!.getBool("notif") == null
+        ? false
+        : Constants.prefs!.getBool("notif")!;
   }
 
   @override
@@ -232,12 +256,12 @@ class _ProfilepageState extends State<Profilepage> {
 
                 SizedBox(height: size.height * 0.05),
 
-                centerlistItem(
-                    context: context,
-                    title: "${getTranslated(context, "orders")}",
-                    //Strings.orders,
-                    leftIconImage: Images.orderIIconpng,
-                    onTapfunc: () {}),
+                // centerlistItem(
+                //     context: context,
+                //     title: "${getTranslated(context, "orders")}",
+                //     //Strings.orders,
+                //     leftIconImage: Images.orderIIconpng,
+                //     onTapfunc: () {}),
 
                 centerlistItem(
                     context: context,

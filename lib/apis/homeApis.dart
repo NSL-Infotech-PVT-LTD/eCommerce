@@ -7,6 +7,7 @@ import 'package:funfy/models/fiestasmodel.dart';
 import 'package:funfy/models/preFiestasModel.dart';
 import 'package:funfy/models/prefiestasDetailModel.dart';
 import 'package:funfy/models/prifiestasAlMxEx.dart';
+import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/urls.dart';
 import 'package:http/http.dart' as http;
 
@@ -173,6 +174,84 @@ Future<PrefiestasFavouriteModel?> prefiestasFavouriteListApi() async {
   }
 }
 
+// help Api
 
-// getcart 
+// favourite list prefiestas
 
+Future<String?> helpApi() async {
+  var headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+  };
+
+  var res = await http.get(
+    Uri.parse(Urls.helpUrl),
+  );
+
+  // print(res.body);
+
+  var response = jsonDecode(res.body);
+
+  if (res.statusCode == 200) {
+    return response["data"]["config"];
+  } else {
+    print(res.body);
+
+    return "false";
+  }
+}
+
+// about us Api
+
+Future<String?> aboutApi() async {
+  var headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+  };
+
+  var res = await http.get(
+    Uri.parse(Urls.aboutUsUrl),
+  );
+
+  print(res.body);
+
+  var reponse = jsonDecode(res.body);
+
+  if (res.statusCode == 200) {
+    return reponse["data"]["config"];
+  } else {
+    print(res.body);
+
+    return "false";
+  }
+}
+
+// notification on off api
+
+Future<bool?> notificationOffApi({int? notificationNum}) async {
+  print("notiBoolNum $notificationNum");
+  var headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+  };
+
+  var body = {"is_notify": "$notificationNum"};
+
+  var res = await http.post(
+      Uri.parse(
+        Urls.notificationonOffUrl,
+      ),
+      body: body,
+      headers: headers);
+
+  var response = jsonDecode(res.body);
+
+  print("here is ${response["data"]}");
+
+  bool notif = response["data"]["user"]["is_notify"] == "1" ? true : false;
+
+  Constants.prefs?.setBool("notif", notif);
+
+  if (res.statusCode == 201) {
+    return notif;
+  } else {
+    print(res.body);
+  }
+}

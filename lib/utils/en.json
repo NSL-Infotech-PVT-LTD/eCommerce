@@ -195,5 +195,6 @@
   "notificationAlerts": "Notification Alerts",
   "switchOn": "Switch On",
   "switchoff": "Switch Off",
-  "SeeAllNotifications": "See all notifications"
+  "SeeAllNotifications": "See all notifications",
+  "pleaseSelectAlcohol": "Please select alcohol"
 }

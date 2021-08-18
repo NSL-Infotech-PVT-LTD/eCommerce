@@ -599,6 +599,7 @@ class _CartpageState extends State<Cartpage> {
         androidPayMode: Strings.androidPayMode));
 
     setState(() {
+      UserData.preFiestasAlcoholCartMap.clear();
       UserData.preFiestasExtrasTicketCart.clear();
       UserData.preFiestasMixesTicketCart.clear();
     });

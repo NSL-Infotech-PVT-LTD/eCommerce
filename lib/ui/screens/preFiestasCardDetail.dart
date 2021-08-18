@@ -136,6 +136,7 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
       int year = int.parse("${expiredate[1]}");
 
       CreditCard cardDetail = CreditCard(
+          name: cardHolderNameController.text,
           number: cardNumber,
           expMonth: month,
           expYear: year,
@@ -519,7 +520,11 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
                                                 index: i)
                                         ],
                                       ),
-                                      groupValue != -1 && swipebuttonShowBool
+                                      groupValue != -1 &&
+                                              swipebuttonShowBool &&
+                                              int.parse(
+                                                      "${cardList?.data?.data?.length}") >
+                                                  0
                                           ? SwipeButton(
                                               thumb: SvgPicture.asset(
                                                 Images.swipeButtonSvg,
