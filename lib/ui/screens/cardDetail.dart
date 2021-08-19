@@ -549,10 +549,12 @@ class _CartDetailState extends State<CartDetail> {
                                                             .center,
                                                     children: [
                                                       SizedBox(
-                                                        height:
-                                                            size.height * 0.03,
-                                                        width:
-                                                            size.width * 0.06,
+                                                        // height:
+                                                        //     size.height * 0.03,
+                                                        // width:
+                                                        //     size.width * 0.06,
+                                                        height: 20,
+                                                        width: 20,
                                                         child:
                                                             CircularProgressIndicator(
                                                                 color: AppColors
@@ -1128,7 +1130,7 @@ class _CartDetailState extends State<CartDetail> {
                                     title:
                                         "${getTranslated(context, "delete")}",
                                     content:
-                                        "${getTranslated(context, "dowanttoDeleteCard")}",
+                                        "${getTranslated(context, "Doyouwanttodeletethecard")}",
                                     func: () {
                                       navigatePopFun(context);
                                       deleteCardApi(cardIdd: model?.id ?? "");

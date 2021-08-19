@@ -41,7 +41,7 @@ class _ProfilepageState extends State<Profilepage> {
               return Container(
                 margin: EdgeInsets.only(top: size.height * 0.008),
                 // color: Colors.white,
-                height: size.height * 0.5,
+                height: size.height * 0.42,
                 width: size.width,
                 child: Column(
                   children: [
@@ -50,7 +50,7 @@ class _ProfilepageState extends State<Profilepage> {
                     ),
 
                     roundedBoxR(
-                        height: size.height * 0.012,
+                        height: size.height * 0.011,
                         width: size.width * 0.4,
                         radius: size.width * 0.2,
                         backgroundColor: Colors.grey[100]),
@@ -61,7 +61,7 @@ class _ProfilepageState extends State<Profilepage> {
 
                     Container(
                       alignment: Alignment.center,
-                      height: size.height * 0.15,
+                      height: size.height * 0.12,
                       // width: size.width * 0.1,
                       child: SvgPicture.asset(Images.notificationBellRed),
                     ),
@@ -84,10 +84,10 @@ class _ProfilepageState extends State<Profilepage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Notification Alerts",
+                                "${getTranslated(context, 'notificationAlerts')}",
                                 style: TextStyle(
                                   color: HexColor("#4e4e4e"),
-                                  fontSize: size.width * 0.065,
+                                  fontSize: size.width * 0.062,
                                   fontFamily: Fonts.dmSansMedium,
                                 ),
                               ),
@@ -103,16 +103,23 @@ class _ProfilepageState extends State<Profilepage> {
                           ),
                           Spacer(),
                           notiLoading
-                              ? Row(
-                                  children: [
-                                    Container(
-                                        height: size.height * 0.03,
-                                        width: size.width * 0.06,
-                                        child: CircularProgressIndicator()),
-                                    SizedBox(
-                                      width: size.width * 0.04,
-                                    )
-                                  ],
+                              ? Container(
+                                  margin:
+                                      EdgeInsets.only(top: size.height * 0.02),
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Container(
+                                          // height: size.height * 0.03,
+                                          // width: size.width * 0.06,
+                                          height: 20,
+                                          width: 20,
+                                          child: CircularProgressIndicator()),
+                                      SizedBox(
+                                        width: size.width * 0.04,
+                                      )
+                                    ],
+                                  ),
                                 )
                               : Switch(
                                   onChanged: (v) async {
@@ -185,13 +192,16 @@ class _ProfilepageState extends State<Profilepage> {
       backgroundColor: AppColors.profileBackground,
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Container(
-            margin: EdgeInsets.symmetric(
-                horizontal: size.width * 0.05, vertical: size.height * 0.035),
-            child: Column(
-              children: [
-                // top content
-                Row(
+          child: Column(
+            children: [
+              // top content
+              Container(
+                padding: EdgeInsets.symmetric(
+                    horizontal: size.width * 0.05,
+                    vertical: size.height * 0.035),
+                width: size.width,
+                color: AppColors.siginbackgrond,
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // image
@@ -228,7 +238,7 @@ class _ProfilepageState extends State<Profilepage> {
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     fontFamily: Fonts.dmSansRegular,
-                                    color: AppColors.profileEmail,
+                                    color: AppColors.white,
                                     fontSize: size.width * 0.046),
                               ),
                             ]),
@@ -253,116 +263,124 @@ class _ProfilepageState extends State<Profilepage> {
                   ],
                   // edit
                 ),
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(
+                    horizontal: size.width * 0.05,
+                    vertical: size.height * 0.035),
+                child: Column(
+                  children: [
+                    SizedBox(height: size.height * 0.01),
 
-                SizedBox(height: size.height * 0.05),
+                    // centerlistItem(
+                    //     context: context,
+                    //     title: "${getTranslated(context, "orders")}",
+                    //     //Strings.orders,
+                    //     leftIconImage: Images.orderIIconpng,
+                    //     onTapfunc: () {}),
 
-                // centerlistItem(
-                //     context: context,
-                //     title: "${getTranslated(context, "orders")}",
-                //     //Strings.orders,
-                //     leftIconImage: Images.orderIIconpng,
-                //     onTapfunc: () {}),
+                    centerlistItem(
+                        context: context,
+                        title: "${getTranslated(context, "deliveryAddress")}",
+                        //  Strings.deliveryAddress,
+                        leftIconImage: Images.locationspng,
+                        onTapfunc: () {}),
 
-                centerlistItem(
-                    context: context,
-                    title: "${getTranslated(context, "deliveryAddress")}",
-                    //  Strings.deliveryAddress,
-                    leftIconImage: Images.locationspng,
-                    onTapfunc: () {}),
+                    centerlistItem(
+                        context: context,
+                        title: "${getTranslated(context, "favourite")}",
+                        //  Strings.deliveryAddress,
+                        leftIconImage: "assets/pngicons/hearticonbig.png",
+                        onTapfunc: () {
+                          navigatorPushFun(context, Favourite());
+                        }),
 
-                centerlistItem(
-                    context: context,
-                    title: "${getTranslated(context, "favourite")}",
-                    //  Strings.deliveryAddress,
-                    leftIconImage: "assets/pngicons/hearticonbig.png",
-                    onTapfunc: () {
-                      navigatorPushFun(context, Favourite());
-                    }),
+                    centerlistItem(
+                        context: context,
+                        title: "${getTranslated(context, "language")}",
+                        //  Strings.deliveryAddress,
+                        leftIconImage: Images.locationspng,
+                        onTapfunc: () {
+                          navigatorPushFun(
+                              context, TranslationPage(fromSplash: false));
+                        }),
 
-                centerlistItem(
-                    context: context,
-                    title: "${getTranslated(context, "language")}",
-                    //  Strings.deliveryAddress,
-                    leftIconImage: Images.locationspng,
-                    onTapfunc: () {
-                      navigatorPushFun(
-                          context, TranslationPage(fromSplash: false));
-                    }),
+                    // centerlistItem(
+                    //     context: context,
+                    //     title: "${getTranslated(context, "paymentMethods")}",
+                    //     //    Strings.paymentMethods,
+                    //     leftIconImage: Images.paymentIconpng,
+                    //     onTapfunc: () {}),
 
-                centerlistItem(
-                    context: context,
-                    title: "${getTranslated(context, "paymentMethods")}",
-                    //    Strings.paymentMethods,
-                    leftIconImage: Images.paymentIconpng,
-                    onTapfunc: () {}),
+                    centerlistItem(
+                        context: context,
+                        title: "${getTranslated(context, "notification")}",
+                        // Strings.notification,
+                        leftIconImage: Images.notificationspng,
+                        onTapfunc: () {
+                          showNotificationBottomSheet();
+                        }),
 
-                centerlistItem(
-                    context: context,
-                    title: "${getTranslated(context, "notification")}",
-                    // Strings.notification,
-                    leftIconImage: Images.notificationspng,
-                    onTapfunc: () {
-                      showNotificationBottomSheet();
-                    }),
+                    centerlistItem(
+                        context: context,
+                        title: "${getTranslated(context, "help")}",
+                        //  Strings.help,
+                        leftIconImage: Images.helppng,
+                        onTapfunc: () {
+                          navigatorPushFun(context, HelpScreen());
+                        }),
 
-                centerlistItem(
-                    context: context,
-                    title: "${getTranslated(context, "help")}",
-                    //  Strings.help,
-                    leftIconImage: Images.helppng,
-                    onTapfunc: () {
-                      navigatorPushFun(context, HelpScreen());
-                    }),
+                    centerlistItem(
+                        context: context,
+                        title: "${getTranslated(context, "about")}",
+                        //Strings.about,
+                        leftIconImage: Images.aboutpng,
+                        onTapfunc: () {
+                          navigatorPushFun(context, AboutScreen());
+                        }),
 
-                centerlistItem(
-                    context: context,
-                    title: "${getTranslated(context, "about")}",
-                    //Strings.about,
-                    leftIconImage: Images.aboutpng,
-                    onTapfunc: () {
-                      navigatorPushFun(context, AboutScreen());
-                    }),
+                    SizedBox(
+                      height: size.height * 0.04,
+                    ),
 
-                SizedBox(
-                  height: size.height * 0.04,
+                    // logout
+
+                    GestureDetector(
+                      onTap: () {
+                        logout(context);
+                      },
+                      child: roundedBox(
+                          height: size.height * 0.065,
+                          width: size.width * 0.6,
+                          backgroundColor: AppColors.logoutBackground,
+                          child: Align(
+                              alignment: Alignment.center,
+                              child: Row(
+                                children: [
+                                  SizedBox(width: size.width * 0.045),
+                                  Container(
+                                      // color: Colors.green,
+                                      height: size.height * 0.031,
+                                      width: size.width * 0.06,
+                                      child: Image.asset(Images.logout)),
+                                  SizedBox(
+                                    width: size.width * 0.12,
+                                  ),
+                                  Text(
+                                    "${getTranslated(context, "logout")}",
+                                    //   Strings.logout,
+                                    style: TextStyle(
+                                        color: AppColors.white,
+                                        fontFamily: Fonts.dmSansBold,
+                                        fontSize: size.width * 0.045),
+                                  ),
+                                ],
+                              ))),
+                    )
+                  ],
                 ),
-
-                // logout
-
-                GestureDetector(
-                  onTap: () {
-                    logout(context);
-                  },
-                  child: roundedBox(
-                      height: size.height * 0.065,
-                      width: size.width * 0.6,
-                      backgroundColor: AppColors.logoutBackground,
-                      child: Align(
-                          alignment: Alignment.center,
-                          child: Row(
-                            children: [
-                              SizedBox(width: size.width * 0.045),
-                              Container(
-                                  // color: Colors.green,
-                                  height: size.height * 0.031,
-                                  width: size.width * 0.06,
-                                  child: Image.asset(Images.logout)),
-                              SizedBox(
-                                width: size.width * 0.12,
-                              ),
-                              Text(
-                                "${getTranslated(context, "logout")}",
-                                //   Strings.logout,
-                                style: TextStyle(
-                                    color: AppColors.white,
-                                    fontFamily: Fonts.dmSansBold,
-                                    fontSize: size.width * 0.045),
-                              ),
-                            ],
-                          ))),
-                )
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

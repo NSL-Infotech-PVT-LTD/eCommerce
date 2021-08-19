@@ -4,6 +4,7 @@ import 'package:funfy/apis/bookingApi.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/models/fiestasBookingDetailModel.dart';
 import 'package:funfy/models/fiestasBookingListModel.dart';
+import 'package:funfy/ui/screens/bookNowBeta.dart';
 import 'package:funfy/ui/screens/qrCodeZoomin.dart';
 import 'package:funfy/ui/widgets/rating.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
@@ -139,6 +140,7 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                           ),
                           Container(
                             alignment: Alignment.center,
+                            width: size.width * 0.6,
                             height: 50,
                             child: Text(
                               "${getTranslated(context, "hyphens")}",
@@ -199,8 +201,9 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                                             type:
                                                 PageTransitionType.topToBottom,
                                             child: QrCodeZoomIn(
-                                                qrId: fiestasBookingDetailModel
-                                                    ?.data![0].id)));
+                                              qrId: fiestasBookingDetailModel
+                                                  ?.data![0].fiestaId,
+                                            )));
 
                                     // navigatorPushFun(context, QrCodeZoomIn());
                                   },
@@ -230,7 +233,7 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                               // color: Colors.yellow,
                               child: QrImage(
                                 data:
-                                    "${fiestasBookingDetailModel?.data![0].id}",
+                                    "${fiestasBookingDetailModel?.data![0].fiestaId}",
                                 version: QrVersions.auto,
                                 size: size.width * 0.5,
                               ),
@@ -361,20 +364,30 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                         height: size.height * 0.04,
                       ),
 
-                      roundedBoxR(
-                          height: size.height * 0.065,
-                          width: size.width * 0.7,
-                          backgroundColor: AppColors.blackBackground,
-                          radius: size.width * 0.02,
-                          child: Center(
-                              child: Text(
-                            "${getTranslated(context, "seeClubProfile")}",
-                            // Strings.seeClubProfile,
-                            style: TextStyle(
-                                color: AppColors.white,
-                                fontFamily: Fonts.dmSansBold,
-                                fontSize: size.width * 0.045),
-                          ))),
+                      InkWell(
+                        onTap: () {
+                          navigatorPushFun(
+                              context,
+                              BookNowBeta(
+                                fiestasID: fiestasBookingDetailModel
+                                    ?.data![0].fiestaId,
+                              ));
+                        },
+                        child: roundedBoxR(
+                            height: size.height * 0.065,
+                            width: size.width * 0.7,
+                            backgroundColor: AppColors.blackBackground,
+                            radius: size.width * 0.02,
+                            child: Center(
+                                child: Text(
+                              "${getTranslated(context, "seeClubProfile")}",
+                              // Strings.seeClubProfile,
+                              style: TextStyle(
+                                  color: AppColors.white,
+                                  fontFamily: Fonts.dmSansBold,
+                                  fontSize: size.width * 0.045),
+                            ))),
+                      ),
 
                       SizedBox(
                         height: size.height * 0.04,

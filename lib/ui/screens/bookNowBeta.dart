@@ -314,6 +314,20 @@ class _BookNowBetaState extends State<BookNowBeta> {
           //       print(ticket);
           //     },
           //     child: Icon(Icons.add)),
+          appBar: AppBar(
+            backgroundColor: AppColors.blackBackground,
+            title: Text("Fiestas"),
+            centerTitle: true,
+            actions: [
+              IconButton(
+                onPressed: addFavorite,
+                icon: Container(
+                  child: SvgPicture.asset("assets/svgicons/hearticon.svg",
+                      color: _fiestasfavoriteBool ? Colors.red : Colors.white),
+                ),
+              )
+            ],
+          ),
           backgroundColor: AppColors.homeBackground,
           body: _loading
               ? Center(child: CircularProgressIndicator())
@@ -332,18 +346,18 @@ class _BookNowBetaState extends State<BookNowBeta> {
                               pinned: true,
                               snap: true,
                               actions: [
-                                GestureDetector(
-                                  onTap: () {
-                                    addFavorite();
-                                  },
-                                  child: Container(
-                                    child: SvgPicture.asset(
-                                        "assets/svgicons/hearticon.svg",
-                                        color: _fiestasfavoriteBool
-                                            ? Colors.red
-                                            : Colors.white),
-                                  ),
-                                )
+                                // GestureDetector(
+                                //   onTap: () {
+                                //     addFavorite();
+                                //   },
+                                //   child: Container(
+                                //     child: SvgPicture.asset(
+                                //         "assets/svgicons/hearticon.svg",
+                                //         color: _fiestasfavoriteBool
+                                //             ? Colors.red
+                                //             : Colors.white),
+                                //   ),
+                                // )
                               ],
                               actionsIconTheme: IconThemeData(opacity: 0.0),
                               flexibleSpace: Stack(
@@ -398,21 +412,11 @@ class _BookNowBetaState extends State<BookNowBeta> {
                                                 Container(
                                                   decoration: BoxDecoration(
                                                     //
-                                                    color: fiestasDetailModel
-                                                                ?.data!.type ==
-                                                            "open"
-                                                        ? AppColors.green
-                                                        : AppColors
-                                                            .blackBackground,
+                                                    color: AppColors.green,
 
                                                     border: Border.all(
-                                                        color: fiestasDetailModel
-                                                                    ?.data!
-                                                                    .type ==
-                                                                "open"
-                                                            ? AppColors
-                                                                .blackBackground
-                                                            : AppColors.white),
+                                                        color: AppColors
+                                                            .blackBackground),
                                                     borderRadius:
                                                         BorderRadius.all(
                                                             Radius.circular(6)),
@@ -434,55 +438,131 @@ class _BookNowBetaState extends State<BookNowBeta> {
                                                           size.width * 0.045,
                                                     ),
                                                   )),
-                                                ),
-                                                SizedBox(
-                                                    width:
-                                                        SizeConfig.screenWidth *
-                                                            0.03),
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                    //
-                                                    color: fiestasDetailModel
-                                                                ?.data!.type ==
-                                                            "club"
-                                                        ? AppColors.green
-                                                        : AppColors
-                                                            .blackBackground,
+                                                )
+                                                // fiestasDetailModel
+                                                //             ?.data!.type ==
+                                                //         "open"
+                                                //     ? Container(
+                                                //         decoration:
+                                                //             BoxDecoration(
+                                                //           //
+                                                //           color:
+                                                //               AppColors.green,
 
-                                                    border: Border.all(
-                                                        color: fiestasDetailModel
-                                                                    ?.data!
-                                                                    .type ==
-                                                                "club"
-                                                            ? AppColors
-                                                                .blackBackground
-                                                            : AppColors.white),
-                                                    // color: AppColors.homeBackground,
-                                                    // border: Border.all(
-                                                    //     color: AppColors.white),
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(6)),
-                                                  ),
-                                                  height:
-                                                      SizeConfig.screenHeight *
-                                                          0.03,
-                                                  width:
-                                                      SizeConfig.screenWidth *
-                                                          0.15,
-                                                  child: Center(
-                                                      child: Text(
-                                                    "${getTranslated(context, "club")}",
-                                                    // Strings.club,
-                                                    style: TextStyle(
-                                                      color: AppColors.white,
-                                                      fontFamily:
-                                                          "DM Sans Medium",
-                                                      fontSize:
-                                                          size.width * 0.035,
-                                                    ),
-                                                  )),
-                                                ),
+                                                //           border: Border.all(
+                                                //               color: AppColors
+                                                //                   .blackBackground),
+                                                //           borderRadius:
+                                                //               BorderRadius.all(
+                                                //                   Radius
+                                                //                       .circular(
+                                                //                           6)),
+                                                //         ),
+                                                //         height: SizeConfig
+                                                //                 .screenHeight *
+                                                //             0.03,
+                                                //         width: SizeConfig
+                                                //                 .screenWidth *
+                                                //             0.15,
+                                                //         child: Center(
+                                                //             child: Text(
+                                                //           "${getTranslated(context, "open")}",
+                                                //           // Strings.open,
+                                                //           style: TextStyle(
+                                                //             color:
+                                                //                 AppColors.white,
+                                                //             fontFamily:
+                                                //                 "BabasNeue",
+                                                //             fontSize:
+                                                //                 size.width *
+                                                //                     0.045,
+                                                //           ),
+                                                //         )),
+                                                //       )
+                                                //     : Container(
+                                                //         decoration:
+                                                //             BoxDecoration(
+                                                //           //
+                                                //           color: Colors.red,
+
+                                                //           border: Border.all(
+                                                //               color: AppColors
+                                                //                   .blackBackground),
+                                                //           borderRadius:
+                                                //               BorderRadius.all(
+                                                //                   Radius
+                                                //                       .circular(
+                                                //                           6)),
+                                                //         ),
+                                                //         height: SizeConfig
+                                                //                 .screenHeight *
+                                                //             0.03,
+                                                //         width: SizeConfig
+                                                //                 .screenWidth *
+                                                //             0.15,
+                                                //         child: Center(
+                                                //             child: Text(
+                                                //           "${getTranslated(context, "close")}",
+                                                //           // Strings.open,
+                                                //           style: TextStyle(
+                                                //             color:
+                                                //                 AppColors.white,
+                                                //             fontFamily:
+                                                //                 "BabasNeue",
+                                                //             fontSize:
+                                                //                 size.width *
+                                                //                     0.045,
+                                                //           ),
+                                                //         )),
+                                                //       ),
+                                                // SizedBox(
+                                                //     width:
+                                                //         SizeConfig.screenWidth *
+                                                //             0.03),
+                                                // Container(
+                                                //   decoration: BoxDecoration(
+                                                //     //
+                                                //     color: fiestasDetailModel
+                                                //                 ?.data!.type ==
+                                                //             "club"
+                                                //         ? AppColors.green
+                                                //         : AppColors
+                                                //             .blackBackground,
+
+                                                //     border: Border.all(
+                                                //         color: fiestasDetailModel
+                                                //                     ?.data!
+                                                //                     .type ==
+                                                //                 "club"
+                                                //             ? AppColors
+                                                //                 .blackBackground
+                                                //             : AppColors.white),
+                                                //     // color: AppColors.homeBackground,
+                                                //     // border: Border.all(
+                                                //     //     color: AppColors.white),
+                                                //     borderRadius:
+                                                //         BorderRadius.all(
+                                                //             Radius.circular(6)),
+                                                //   ),
+                                                //   height:
+                                                //       SizeConfig.screenHeight *
+                                                //           0.03,
+                                                //   width:
+                                                //       SizeConfig.screenWidth *
+                                                //           0.15,
+                                                //   child: Center(
+                                                //       child: Text(
+                                                //     "${getTranslated(context, "club")}",
+                                                //     // Strings.club,
+                                                //     style: TextStyle(
+                                                //       color: AppColors.white,
+                                                //       fontFamily:
+                                                //           "DM Sans Medium",
+                                                //       fontSize:
+                                                //           size.width * 0.035,
+                                                //     ),
+                                                //   )),
+                                                // ),
                                               ],
                                             ),
                                             Container(

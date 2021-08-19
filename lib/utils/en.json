@@ -196,5 +196,7 @@
   "switchOn": "Switch On",
   "switchoff": "Switch Off",
   "SeeAllNotifications": "See all notifications",
-  "pleaseSelectAlcohol": "Please select alcohol"
+  "pleaseSelectAlcohol": "Please select alcohol",
+  "close": "CLOSED",
+  "Doyouwanttodeletethecard": "Do you want to delete the card ?"
 }

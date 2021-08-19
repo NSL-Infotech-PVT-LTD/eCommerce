@@ -24,7 +24,7 @@ Future<Map> signApiCall(
     "password": password,
     "dob": dob,
     "gender": gender,
-    "device_token": "test",
+    "device_token": UserData.deviceToken,
     "device_type": devicetype
   };
 

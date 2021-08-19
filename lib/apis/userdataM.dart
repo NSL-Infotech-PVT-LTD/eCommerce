@@ -22,6 +22,8 @@ class UserData {
   static String preFiestasCartid = "";
   static bool returnV = false;
   static PrefiestasCartModel? myCartModel;
+  static String deviceToken = '';
+
   // static CardListModel? cardList;
 
   static FiestasModel? fiestasdata;

@@ -4,6 +4,7 @@ import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/models/favourite/fiestasFavouriteModel.dart';
 import 'package:funfy/models/favourite/preFiestasFavModel.dart';
 import 'package:funfy/models/fiestasmodel.dart';
+import 'package:funfy/models/notificationListModel.dart';
 import 'package:funfy/models/preFiestasModel.dart';
 import 'package:funfy/models/prefiestasDetailModel.dart';
 import 'package:funfy/models/prifiestasAlMxEx.dart';
@@ -251,6 +252,28 @@ Future<bool?> notificationOffApi({int? notificationNum}) async {
 
   if (res.statusCode == 201) {
     return notif;
+  } else {
+    print(res.body);
+  }
+}
+
+// notification List api
+
+Future<NotificationListModel?> notificatiListApi({int? notificationNum}) async {
+  var headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+  };
+
+  var res = await http.post(
+      Uri.parse(
+        Urls.notificationUrl,
+      ),
+      headers: headers);
+
+  print(res.body);
+
+  if (res.statusCode == 200) {
+    return notificationListModelFromJson(res.body);
   } else {
     print(res.body);
   }

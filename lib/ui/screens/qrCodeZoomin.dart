@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:funfy/components/navigation.dart';
+import 'package:funfy/ui/screens/bookNowBeta.dart';
 import 'package:funfy/ui/widgets/rating.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/colors.dart';
@@ -103,20 +105,29 @@ class _QrCodeZoomInState extends State<QrCodeZoomIn> {
                 height: size.height * 0.04,
               ),
 
-              roundedBoxR(
-                  height: size.height * 0.065,
-                  width: size.width * 0.7,
-                  backgroundColor: AppColors.blackBackground,
-                  radius: size.width * 0.02,
-                  child: Center(
-                      child: Text(
-                        "${getTranslated(context, "seeClubProfile")}",
-                    // Strings.seeClubProfile,
-                    style: TextStyle(
-                        color: AppColors.white,
-                        fontFamily: Fonts.dmSansBold,
-                        fontSize: size.width * 0.045),
-                  ))),
+              InkWell(
+                onTap: () {
+                  navigatorPushFun(
+                      context,
+                      BookNowBeta(
+                        fiestasID: widget.qrId,
+                      ));
+                },
+                child: roundedBoxR(
+                    height: size.height * 0.065,
+                    width: size.width * 0.7,
+                    backgroundColor: AppColors.blackBackground,
+                    radius: size.width * 0.02,
+                    child: Center(
+                        child: Text(
+                      "${getTranslated(context, "seeClubProfile")}",
+                      // Strings.seeClubProfile,
+                      style: TextStyle(
+                          color: AppColors.white,
+                          fontFamily: Fonts.dmSansBold,
+                          fontSize: size.width * 0.045),
+                    ))),
+              ),
 
               SizedBox(
                 height: size.height * 0.04,
