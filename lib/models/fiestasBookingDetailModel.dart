@@ -103,7 +103,7 @@ class FiestaDetail {
   String? distanceMiles;
   bool? isFavourite;
   int? leftStandardTicket;
-  int? leftVipTicket;
+  String? leftVipTicket;
   int? leftNormalTicket;
   dynamic clubRating;
   ClubDetail? clubDetail;

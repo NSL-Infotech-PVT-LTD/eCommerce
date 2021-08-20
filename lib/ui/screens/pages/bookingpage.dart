@@ -365,9 +365,13 @@ Widget preFiestasOrderItemsNew(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              color: Colors.green,
+              // color: Colors.green,
               height: 20,
               width: 20,
+              child: Image.asset(
+                "assets/pngicons/activeBook.png",
+                fit: BoxFit.cover,
+              ),
             ),
             SizedBox(width: size.width * 0.03),
             Expanded(
@@ -401,7 +405,7 @@ Widget preFiestasOrderItemsNew(
               ),
             ),
             SizedBox(
-              width: size.width * 0.001,
+              width: size.width * 0.002,
             ),
             Column(
               children: [

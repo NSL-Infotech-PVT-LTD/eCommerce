@@ -327,12 +327,68 @@ Future<FiestasBookingDetailModel?> fiestaBookingOrderDetailApi(
   var res = await http.post(Uri.parse(Urls.fiestasBookingOrderDetail),
       headers: headers, body: body);
 
-  // print(res.body);
+  print(res.body);
 
   if (res.statusCode == 200) {
+    // return null;
     return fiestasBookingDetailModelFromJson(res.body);
+  } else {
+    print(res.body);
+  }
+}
+
+// fiestas rating Api
+
+Future<bool?> fiestaRatingApi(
+    {String? orderId, String? fiestasId, double? rating}) async {
+  var headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+  };
+
+  var body = {
+    "fiesta_id": fiestasId,
+    "booking_id": orderId,
+    "rate": "$rating",
+    "review": "Rating"
+  };
+
+  print("here is $body");
+
+  var res = await http.post(Uri.parse(Urls.fiestasRatingUrl),
+      headers: headers, body: body);
+
+  print(res.body);
+
+  if (res.statusCode == 200) {
+    return true;
   } else {
     // print(res.body);
 
+    return false;
+  }
+}
+
+// fiestas rating Api
+
+Future<bool?> prefiestaRatingApi({String? orderId, double? rating}) async {
+  var headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+  };
+
+  var body = {"order_id": orderId, "rate": "$rating", "review": "Rating"};
+
+  print("here is $body");
+
+  var res = await http.post(Uri.parse(Urls.prefiestasRatingUrl),
+      headers: headers, body: body);
+
+  print(res.body);
+
+  if (res.statusCode == 200) {
+    return true;
+  } else {
+    // print(res.body);
+
+    return false;
   }
 }

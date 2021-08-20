@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:funfy/apis/bookingApi.dart';
+import 'package:funfy/components/dialogs.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/models/fiestasBookingDetailModel.dart';
 import 'package:funfy/models/fiestasBookingListModel.dart';
@@ -18,6 +20,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:flash/flash.dart';
 
 class FiestasMoreOrderDetail extends StatefulWidget {
   final fiestaBookingId;
@@ -31,8 +34,12 @@ class FiestasMoreOrderDetail extends StatefulWidget {
 
 class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
   bool _loading = false;
+  bool ratting = false;
+  double currentRating = 3.0;
 
   FiestasBookingDetailModel? fiestasBookingDetailModel;
+  static GlobalKey<ScaffoldState> _keyScaffold = GlobalKey();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   DateTime? dateTime;
 
@@ -51,8 +58,8 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
       Internetcheck.showdialog(context: context);
     } else {
       try {
-        await fiestaBookingOrderDetailApi(fiestasId: widget.fiestaBookingId)
-            .then((value) {
+        await fiestaBookingOrderDetailApi(fiestasId: "3").then((value) {
+          // print("here is model : ${value?.toJson()}");
           setState(() {
             fiestasBookingDetailModel = value;
             _loading = false;
@@ -63,9 +70,15 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
             date = DateFormat('dd MMM yyyy').format(dateTime!);
 
             time = DateFormat('hh:mm a').format(dateTime!);
+
+            if (fiestasBookingDetailModel?.data![0].bookingStatus ==
+                "completed") {
+              showRatingBottomSheet();
+            }
           });
         });
       } catch (e) {
+        print("here is error $e");
         setState(() {
           _loading = false;
         });
@@ -79,6 +92,147 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
     getFiestasBookingDetail();
   }
 
+  // showRating() {
+  //   Future.delayed(
+  //       Duration(
+  //         seconds: 2,
+  //       ), () {
+  //     showRatingBottomSheet();
+  //   });
+  // }
+
+  // rating Api
+  rating() {
+    navigatePopFun(context);
+    var data = fiestasBookingDetailModel?.data![0];
+
+    fiestaRatingApi(
+            orderId: "${data?.id}",
+            fiestasId: "${data?.fiestaId}",
+            rating: currentRating)
+        .then((value) {
+      if (value == false) {
+        showRatingBottomSheet();
+      } else {
+        // print("here is else part");
+        Dialogs.showBasicsFlash(
+            context: context,
+            content: "${getTranslated(context, "successfullyRated")}",
+            duration: Duration(seconds: 1));
+      }
+    });
+  }
+
+  // fiestas rating botton sheet
+
+  void showRatingBottomSheet() {
+    var size = MediaQuery.of(context).size;
+    showModalBottomSheet(
+        backgroundColor: AppColors.blackBackground,
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(
+            key: _scaffoldKey,
+            builder: (context, setstate) {
+              return Container(
+                  margin: EdgeInsets.only(top: size.height * 0.008),
+                  color: AppColors.blackBackground,
+                  height: size.height * 0.4,
+                  width: size.width,
+                  child: Container(
+                    child: Column(
+                      children: [
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: IconButton(
+                              onPressed: () {
+                                navigatePopFun(context);
+                              },
+                              icon: Icon(
+                                Icons.cancel,
+                                color: AppColors.white,
+                              )),
+                        ),
+                        roundedBoxR(
+                            radius: size.width * 0.02,
+                            width: size.width,
+                            height: size.width * 0.4,
+                            backgroundColor: AppColors.blackBackground,
+                            child: Container(
+                              alignment: Alignment.center,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "${getTranslated(context, "doYouLikeOurService")}",
+                                    // Strings.doYouLikeOurService,
+                                    style: TextStyle(
+                                        color: AppColors.white,
+                                        fontFamily: Fonts.dmSansMedium,
+                                        fontSize: size.width * 0.044),
+                                  ),
+                                  SizedBox(
+                                    height: size.height * 0.02,
+                                  ),
+                                  RatingBar.builder(
+                                    itemSize: size.width * 0.125,
+                                    initialRating: currentRating,
+                                    // ignoreGestures: true,
+                                    minRating: 1,
+                                    direction: Axis.horizontal,
+                                    allowHalfRating: false,
+                                    itemCount: 5,
+                                    unratedColor: AppColors.starUnselect,
+                                    itemPadding: EdgeInsets.symmetric(
+                                        horizontal: size.width * 0.01),
+                                    itemBuilder: (context, _) => Icon(
+                                      Icons.star,
+                                      color: AppColors.ratingYellow,
+                                    ),
+                                    onRatingUpdate: (rating) {
+                                      print(rating);
+                                      setState(() {
+                                        currentRating = rating;
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                            )),
+                        SizedBox(
+                          height: size.height * 0.02,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            rating();
+                          },
+                          child: roundedBoxR(
+                              width: size.width * 0.7,
+                              height: size.height * 0.06,
+                              radius: size.width * 0.02,
+                              backgroundColor: AppColors.siginbackgrond,
+                              child: Center(
+                                child: Text(
+                                  "${getTranslated(context, "submitReview")}",
+                                  // Strings.submitReview,
+                                  style: TextStyle(
+                                      fontFamily: Fonts.dmSansBold,
+                                      fontSize: size.width * 0.04,
+                                      color: AppColors.white),
+                                ),
+                              )),
+                        ),
+                        SizedBox(
+                          height: size.height * 0.01,
+                        )
+                      ],
+                    ),
+                  ));
+            },
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -88,8 +242,15 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
     var data = fiestasBookingDetailModel?.data![0].fiestaDetail;
 
     return Scaffold(
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     showRatingBottomSheet();
+      //   },
+      //   child: Icon(Icons.add),
+      // ),
       backgroundColor: AppColors.siginbackgrond,
       appBar: AppBar(
+        key: _keyScaffold,
         backgroundColor: Colors.transparent,
         centerTitle: true,
         elevation: 0,

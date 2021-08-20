@@ -101,10 +101,10 @@ class ProductInfo {
     this.id,
     this.name,
     this.parentId,
-    this.categories,
-    this.description,
     this.image,
+    this.description,
     this.price,
+    this.videoUrl,
     this.isInMyCart,
     this.isInMyCartQuantity,
     this.isFavourite,
@@ -113,10 +113,10 @@ class ProductInfo {
   int? id;
   String? name;
   int? parentId;
-  dynamic categories;
-  String? description;
   String? image;
+  String? description;
   String? price;
+  String? videoUrl;
   bool? isInMyCart;
   int? isInMyCartQuantity;
   bool? isFavourite;
@@ -125,10 +125,10 @@ class ProductInfo {
         id: json["id"],
         name: json["name"],
         parentId: json["parent_id"],
-        categories: json["categories"],
-        description: json["description"],
         image: json["image"],
+        description: json["description"],
         price: json["price"],
+        videoUrl: json["video_url"],
         isInMyCart: json["is_in_my_cart"],
         isInMyCartQuantity: json["is_in_my_cart_quantity"],
         isFavourite: json["is_favourite"],
@@ -138,10 +138,10 @@ class ProductInfo {
         "id": id,
         "name": name,
         "parent_id": parentId,
-        "categories": categories,
-        "description": description,
         "image": image,
+        "description": description,
         "price": price,
+        "video_url": videoUrl,
         "is_in_my_cart": isInMyCart,
         "is_in_my_cart_quantity": isInMyCartQuantity,
         "is_favourite": isFavourite,

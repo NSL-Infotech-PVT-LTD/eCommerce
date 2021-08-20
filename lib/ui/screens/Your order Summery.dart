@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:funfy/apis/bookingApi.dart';
+import 'package:funfy/components/dialogs.dart';
+import 'package:funfy/components/navigation.dart';
 import 'package:funfy/components/sizeclass/SizeConfig.dart';
 import 'package:funfy/models/prefiestasOrderDetailModel.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
@@ -52,6 +54,11 @@ class _YourOrderSumState extends State<YourOrderSum> {
             print("here is lis");
 
             print(prefiestasOrderDetailModel?.data?.orderDetail![0].toJson());
+
+            if (prefiestasOrderDetailModel?.data?.orderDetail![0].orderStatus ==
+                "completed") {
+              ratting = true;
+            }
           });
         });
       } catch (e) {
@@ -61,6 +68,31 @@ class _YourOrderSumState extends State<YourOrderSum> {
         print(e);
       }
     }
+  }
+
+  // rating Api
+  rating() {
+    // navigatePopFun(context);
+    setState(() {
+      ratting = false;
+    });
+
+    var data = prefiestasOrderDetailModel?.data?.orderDetail![0];
+
+    prefiestaRatingApi(orderId: "${data?.id}", rating: currentRating)
+        .then((value) {
+      if (value == false) {
+      } else {
+        setState(() {
+          ratting = true;
+        });
+        // print("here is else part");
+        Dialogs.showBasicsFlash(
+            context: context,
+            content: "${getTranslated(context, "successfullyRated")}",
+            duration: Duration(seconds: 1));
+      }
+    });
   }
 
   @override
@@ -127,21 +159,26 @@ class _YourOrderSumState extends State<YourOrderSum> {
           SizedBox(
             height: size.height * 0.02,
           ),
-          roundedBoxR(
-              width: size.width * 0.7,
-              height: size.height * 0.06,
-              radius: size.width * 0.02,
-              backgroundColor: AppColors.siginbackgrond,
-              child: Center(
-                child: Text(
-                  "${getTranslated(context, "submitReview")}",
-                  // Strings.submitReview,
-                  style: TextStyle(
-                      fontFamily: Fonts.dmSansBold,
-                      fontSize: size.width * 0.04,
-                      color: AppColors.white),
-                ),
-              ))
+          InkWell(
+            onTap: () {
+              rating();
+            },
+            child: roundedBoxR(
+                width: size.width * 0.7,
+                height: size.height * 0.06,
+                radius: size.width * 0.02,
+                backgroundColor: AppColors.siginbackgrond,
+                child: Center(
+                  child: Text(
+                    "${getTranslated(context, "submitReview")}",
+                    // Strings.submitReview,
+                    style: TextStyle(
+                        fontFamily: Fonts.dmSansBold,
+                        fontSize: size.width * 0.04,
+                        color: AppColors.white),
+                  ),
+                )),
+          )
         ],
       ),
     );
@@ -176,7 +213,7 @@ class _YourOrderSumState extends State<YourOrderSum> {
                     children: [
                       // rating popup
 
-                      ratingPopup(size: size),
+                      ratting ? ratingPopup(size: size) : SizedBox(),
 
                       SizedBox(
                         height: size.height * 0.02,

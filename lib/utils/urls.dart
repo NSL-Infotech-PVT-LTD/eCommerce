@@ -48,4 +48,6 @@ class Urls {
   static String helpUrl = baseUrl + "config/help_and_contact_us";
   static String notificationonOffUrl = baseUrl + "notification/status";
   static String notificationUrl = baseUrl + "notification/list";
+  static String fiestasRatingUrl = baseUrl + "customer/booking/rate";
+  static String prefiestasRatingUrl = baseUrl + "customer/rate/order";
 }

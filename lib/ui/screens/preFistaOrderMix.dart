@@ -202,11 +202,11 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
     });
 
     // video
-    _controller = VideoPlayerController.network(
-        'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_20mb.mp4')
-      ..initialize().then((_) {
-        setState(() {});
-      });
+    // _controller = VideoPlayerController.network(
+    //     'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_20mb.mp4')
+    //   ..initialize().then((_) {
+    //     setState(() {});
+    //   });
   }
 
   // pauseButtonHide() {
@@ -390,6 +390,18 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
             prefiestasDetailModel = res;
             _favoriteBool =
                 prefiestasDetailModel!.data!.parentData!.isFavourite!;
+
+            print(
+                "video Url : ${prefiestasDetailModel!.data!.parentData!.videoUrl}");
+
+            // video
+            _controller = VideoPlayerController.network(
+                // "https://www.youtube.com/watch?v=637wpikrN7s")
+                "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_20mb.mp4")
+              // "${prefiestasDetailModel!.data!.parentData!.videoUrl ?? 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_20mb.mp4'}")
+              ..initialize().then((_) {
+                setState(() {});
+              });
 
             _loadingBack = false;
           });

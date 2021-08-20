@@ -854,7 +854,9 @@ Widget preFiestas(context, PrefiestasModel? prefiestasdata, _postLoading) {
           height: size.height * 0.17,
           decoration: BoxDecoration(
               image: DecorationImage(
-                  image: NetworkImage(bannerImage), fit: BoxFit.cover))),
+                  // image: NetworkImage(bannerImage),
+                  image: AssetImage("assets/images/prefiestasBanner.png"),
+                  fit: BoxFit.cover))),
 
       // posts
 

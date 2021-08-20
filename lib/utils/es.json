@@ -198,5 +198,7 @@
   "SeeAllNotifications": "Ver todas las notificaciones",
   "pleaseSelectAlcohol": "Por favor seleccione alcohol",
   "close": "CERRADA",
-  "Doyouwanttodeletethecard": "Do you want to delete the card ?"
+  "Doyouwanttodeletethecard": "Do you want to delete the card ?",
+  "successfullyRated": "Calificado con éxito",
+  "outofStock": "Agotado"
 }

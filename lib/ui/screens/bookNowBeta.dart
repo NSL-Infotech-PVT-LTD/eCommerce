@@ -340,6 +340,7 @@ class _BookNowBetaState extends State<BookNowBeta> {
                             (BuildContext context, bool innerBoxIsScrolled) {
                           return [
                             SliverAppBar(
+                              automaticallyImplyLeading: false,
                               collapsedHeight: 150.0,
                               expandedHeight: 200.0,
                               floating: true,
@@ -605,51 +606,53 @@ class _BookNowBetaState extends State<BookNowBeta> {
                                         ),
                                         Spacer(),
 
-                                        roundedBoxR(
-                                            height: size.height * 0.1,
-                                            // width: size.width * 0.3,
-                                            radius: size.width * 0.02,
-                                            backgroundColor:
-                                                AppColors.brownLite,
-                                            child: Container(
-                                              // color: Colors.blue,
-                                              alignment: Alignment.center,
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal:
-                                                      size.width * 0.025,
-                                                  vertical: size.height * 0.01),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Text(
-                                                    Strings.startingfrom,
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        color:
-                                                            AppColors.brownlite,
-                                                        fontSize:
-                                                            size.width * 0.026),
-                                                  ),
-                                                  Text(
-                                                    "${Strings.euro} " +
-                                                        "$price",
-                                                    style: TextStyle(
-                                                        color: AppColors.white,
-                                                        fontFamily:
-                                                            Fonts.dmSansBold,
-                                                        fontSize:
-                                                            price!.length > 3
-                                                                ? size.width *
-                                                                    0.04
-                                                                : size.width *
-                                                                    0.06),
-                                                  )
-                                                ],
-                                              ),
-                                            ))
+                                        // Rate box
+
+                                        // roundedBoxR(
+                                        //     height: size.height * 0.1,
+                                        //     // width: size.width * 0.3,
+                                        //     radius: size.width * 0.02,
+                                        //     backgroundColor:
+                                        //         AppColors.brownLite,
+                                        //     child: Container(
+                                        //       // color: Colors.blue,
+                                        //       alignment: Alignment.center,
+                                        //       padding: EdgeInsets.symmetric(
+                                        //           horizontal:
+                                        //               size.width * 0.025,
+                                        //           vertical: size.height * 0.01),
+                                        //       child: Column(
+                                        //         crossAxisAlignment:
+                                        //             CrossAxisAlignment.center,
+                                        //         mainAxisAlignment:
+                                        //             MainAxisAlignment.center,
+                                        //         children: [
+                                        //           Text(
+                                        //             Strings.startingfrom,
+                                        //             textAlign: TextAlign.center,
+                                        //             style: TextStyle(
+                                        //                 color:
+                                        //                     AppColors.brownlite,
+                                        //                 fontSize:
+                                        //                     size.width * 0.026),
+                                        //           ),
+                                        //           Text(
+                                        //             "${Strings.euro} " +
+                                        //                 "$price",
+                                        //             style: TextStyle(
+                                        //                 color: AppColors.white,
+                                        //                 fontFamily:
+                                        //                     Fonts.dmSansBold,
+                                        //                 fontSize:
+                                        //                     price!.length > 3
+                                        //                         ? size.width *
+                                        //                             0.04
+                                        //                         : size.width *
+                                        //                             0.06),
+                                        //           )
+                                        //         ],
+                                        //       ),
+                                        //     ))
 
                                         // Container(
                                         //   child: Stack(children: [
