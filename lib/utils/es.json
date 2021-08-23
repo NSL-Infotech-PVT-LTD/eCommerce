@@ -200,5 +200,6 @@
   "close": "CERRADA",
   "Doyouwanttodeletethecard": "Do you want to delete the card ?",
   "successfullyRated": "Calificado con éxito",
-  "outofStock": "Agotado"
+  "outofStock": "Agotado",
+  "yourPaymentisfailed": "Tu pago ha fallado"
 }

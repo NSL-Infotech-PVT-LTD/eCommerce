@@ -328,6 +328,8 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
             payLoading = false;
           });
 
+          print("here is $res");
+
           // print("here is ${res?.toJson()}");
 
           if (res["status"] == true && res["code"] == 201) {
@@ -335,17 +337,40 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
-                    builder: (BuildContext context) => BookingSuccess()),
+                    builder: (BuildContext context) => BookingSuccess(
+                        orderidFiestas: [res["data"]["order"]["id"], 1])),
                 (route) => false);
+          } else {
+            setState(() {
+              payLoading = false;
+              swipebuttonShowBool = true;
+            });
+            Dialogs.simpleOkAlertDialog(
+                context: context,
+                title: "${getTranslated(context, "alert!")}",
+                content: "${getTranslated(context, "yourPaymentisfailed")}",
+                func: () {
+                  navigatePopFun(context);
+                });
           }
         });
       }
     } catch (e) {
       setState(() {
         payLoading = false;
+
+        swipebuttonShowBool = true;
       });
 
-      print("Error in book fiestas-------------$e");
+      // Dialogs.simpleOkAlertDialog(
+      //     context: context,
+      //     title: "${getTranslated(context, "alert!")}",
+      //     content: "${getTranslated(context, "yourPaymentisfailed")}",
+      //     func: () {
+      //       navigatePopFun(context);
+      //     });
+
+      print("Error in book prefiestas-------------$e");
     }
   }
 

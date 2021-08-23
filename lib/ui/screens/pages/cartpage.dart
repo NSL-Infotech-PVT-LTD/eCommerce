@@ -75,7 +75,8 @@ class _CartpageState extends State<Cartpage> {
 
   // - + funtion
 
-  addTicket({int? index, int itemCount = 0, String? id, var cart}) async {
+  addTicket(
+      {int? index, int? type, int itemCount = 0, String? id, var cart}) async {
     // clear
 
     print("add button press  index: $index  id: $id");
@@ -103,6 +104,14 @@ class _CartpageState extends State<Cartpage> {
         });
 
         totalCount2(value: true);
+
+        if (type == 1) {
+          var alco = Constants.prefs?.getString('alcohol');
+          int alcohol = alco == null ? 0 : int.parse("$alco");
+
+          int tot = alcohol + 1;
+          Constants.prefs?.setString("alcohol", "$tot");
+        }
       }
     });
 
@@ -143,7 +152,15 @@ class _CartpageState extends State<Cartpage> {
           });
 
           if (cartCount == 0) {
-            setItemValue(type: itemType, valueTureFalse: false);
+            // setItemValue(type: itemType, valueTureFalse: false);
+          }
+
+          if (itemType == 1) {
+            var alco = Constants.prefs?.getString('alcohol');
+            int alcohol = alco == null ? 0 : int.parse("$alco");
+
+            int tot = alcohol - 1;
+            Constants.prefs?.setString("alcohol", "$tot");
           }
           totalCount2(value: false);
         }
@@ -166,9 +183,9 @@ class _CartpageState extends State<Cartpage> {
 
   setItemValue({int? type, bool? valueTureFalse}) {
     setState(() {
-      if (type == 1) {
-        Constants.prefs?.setString("alcohol", "${valueTureFalse! ? type : ''}");
-      }
+      // if (type == 1) {
+      //   Constants.prefs?.setString("alcohol", "${valueTureFalse! ? type : ''}");
+      // }
 
       if (type == 2) {
         Constants.prefs?.setString("mix", "${valueTureFalse! ? type : ''}");
@@ -184,7 +201,7 @@ class _CartpageState extends State<Cartpage> {
 
   ticketremoveFromList(
       {String? id, String? count = "0", int? index, String? type}) async {
-    print("look here remove id: $id  $count index: $index $type");
+    print("look here remove id: $id  count: $count index: $index $type");
 
     String totnum = Constants.prefs?.getString("cartTot") == null ||
             Constants.prefs?.getString("cartTot") == ""
@@ -217,21 +234,32 @@ class _CartpageState extends State<Cartpage> {
           // myCartModel?.data?.cartItems?.removeAt(index!);
           if (type == "alcohol") {
             UserData.preFiestasAlcoholCart = "";
+            int alcohol = Constants.prefs?.getString('alcohol') == null
+                ? 0
+                : int.parse("${Constants.prefs?.getString('alcohol')}");
+
+            int tot = alcohol - int.parse("$count");
+
+            Constants.prefs?.setString("alcohol", "$tot");
+
             print(type);
-            clearCart();
+            // clearCart();
             getMyCart();
           }
 
           if (type == "mix") {
             Constants.prefs?.setString("cartTot", "$totalCount");
             UserData.preFiestasMixesTicketCart.clear();
+
             UserData.myCartModel?.data?.cart?.cartItems?.removeAt(index!);
+            getMyCart();
           }
 
           if (type == "extras") {
             Constants.prefs?.setString("cartTot", "$totalCount");
             UserData.preFiestasExtrasTicketCart.clear();
             UserData.myCartModel?.data?.cart?.cartItems?.removeAt(index!);
+            getMyCart();
           }
         });
       }
@@ -559,6 +587,7 @@ class _CartpageState extends State<Cartpage> {
                                   index: index,
                                   itemCount: count ?? 0,
                                   id: pid,
+                                  type: itemTypes,
                                   cart: cart);
                             },
                             child: Container(
@@ -593,10 +622,10 @@ class _CartpageState extends State<Cartpage> {
   void initState() {
     super.initState();
 
-    StripePayment.setOptions(StripeOptions(
-        publishableKey: Strings.publishKey,
-        merchantId: Strings.merChantId,
-        androidPayMode: Strings.androidPayMode));
+    // StripePayment.setOptions(StripeOptions(
+    //     publishableKey: Strings.publishKey,
+    //     merchantId: Strings.merChantId,
+    //     androidPayMode: Strings.androidPayMode));
 
     setState(() {
       UserData.preFiestasAlcoholCartMap.clear();
@@ -674,7 +703,7 @@ class _CartpageState extends State<Cartpage> {
         child: Scaffold(
             // floatingActionButton: FloatingActionButton(
             //     onPressed: () {
-            //       paymentRun();
+            //       print(Constants.prefs?.getString("alcohol"));
             //     },
             //     child: Icon(Icons.local_activity)),
             backgroundColor: HexColor("#191512"),
@@ -1063,14 +1092,29 @@ class _CartpageState extends State<Cartpage> {
                                     SizedBox(height: size.height * 0.03),
 
                                     // button
-                                    UserData.myCartModel!.data!.cart!.cartItems!
-                                                .length >
-                                            0
+                                    UserData.myCartModel!
+                                                    .data!.cart!.cartItems!.length >
+                                                0 &&
+                                            (Constants.prefs?.getString(
+                                                        "alcohol") !=
+                                                    null &&
+                                                Constants.prefs?.getString(
+                                                        "alcohol") !=
+                                                    "" &&
+                                                Constants.prefs?.getString(
+                                                        "alcohol") !=
+                                                    "0")
                                         ? GestureDetector(
                                             onTap: () {
                                               // makeOrder();
-                                              navigatorPushFun(context,
-                                                  PrefiestasCardDetail());
+                                              Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              PrefiestasCardDetail()))
+                                                  .then((value) {
+                                                initState();
+                                              });
                                             },
                                             child: roundedBoxR(
                                               width: size.width,

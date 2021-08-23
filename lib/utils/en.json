@@ -200,5 +200,6 @@
   "close": "CLOSED",
   "Doyouwanttodeletethecard": "Do you want to delete the card ?",
   "successfullyRated": "Successfully rated",
-  "outofStock": "Out of Stock"
+  "outofStock": "Out of Stock",
+  "yourPaymentisfailed": "Your Payment is failed"
 }

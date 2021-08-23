@@ -359,15 +359,21 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
             //     :
 
             Container(
-          width: size.width * 0.25,
-          child: insdecButton(
-              itemType: type,
-              add: addFunc,
-              remove: removeFunc,
-              index: index,
-              count: count,
-              cart: cart,
-              pid: data[index].id.toString()),
+          // color: Colors.blue,
+          width: size.width * 0.3,
+          child: Row(
+            children: [
+              Spacer(),
+              insdecButton(
+                  itemType: type,
+                  add: addFunc,
+                  remove: removeFunc,
+                  index: index,
+                  count: count,
+                  cart: cart,
+                  pid: data[index].id.toString()),
+            ],
+          ),
         ));
   }
 
@@ -443,11 +449,27 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
       String returnRes = await addToCart(id: id, cont: cartCount.toString());
 
       if (returnRes == "true") {
+        print("here is type : $itemType");
         setState(() {
           cart[index] = {
             "id": id,
             "preticketCount": cartCount,
           };
+
+          if (itemType == 1) {
+            var alco = Constants.prefs?.getString('alcohol');
+
+            int alcohol = alco == null || alco == "" ? 0 : int.parse("$alco");
+
+            print("here is alcohol : $alcohol");
+
+            int tot = alcohol + 1;
+
+            print("tot : $tot");
+            Constants.prefs?.setString("alcohol", "$tot");
+
+            print("here is num : ${Constants.prefs?.getString('alcohol')}");
+          }
         });
 
         setItemValue(type: itemType, valueTureFalse: true);
@@ -541,11 +563,19 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
               "preticketCount": cartCount,
             };
             if (cartCount == 0) {
-              setItemValue(type: itemType, valueTureFalse: false);
+              // setItemValue(type: itemType, valueTureFalse: false);
               // alcohol clear cart
               if (itemType == 1) {
-                clearCart();
+                // clearCart();
               }
+            }
+
+            if (itemType == 1) {
+              var alco = Constants.prefs?.getString('alcohol');
+              int alcohol = alco == null ? 0 : int.parse("$alco");
+
+              int tot = alcohol - 1;
+              Constants.prefs?.setString("alcohol", "$tot");
             }
             totalCount(
               value: false,
@@ -672,9 +702,9 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
 
   setItemValue({int? type, bool? valueTureFalse}) {
     setState(() {
-      if (type == 1) {
-        Constants.prefs?.setString("alcohol", "${valueTureFalse! ? type : ''}");
-      }
+      // if (type == 1) {
+      //   Constants.prefs?.setString("alcohol", "${valueTureFalse! ? type : ''}");
+      // }
 
       if (type == 2) {
         Constants.prefs?.setString("mix", "${valueTureFalse! ? type : ''}");
@@ -919,7 +949,6 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
           //   },
           //   child: Icon(Icons.add),
           // ),
-
           appBar: AppBar(
             backgroundColor: AppColors.blackBackground,
             title: Text("Pre-Fiestas"),
@@ -942,7 +971,8 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
           backgroundColor: AppColors.homeBackground,
           bottomSheet: _loadingBack == false &&
                   (Constants.prefs?.getString("alcohol") != null &&
-                      Constants.prefs?.getString("alcohol") != "")
+                      Constants.prefs?.getString("alcohol") != "" &&
+                      Constants.prefs?.getString("alcohol") != "0")
               ? bottomSheet()
               : SizedBox(),
           body: _loadingBack == true

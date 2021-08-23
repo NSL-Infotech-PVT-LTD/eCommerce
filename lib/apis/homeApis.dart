@@ -100,7 +100,7 @@ Future fiestasAddfavouriteApi({
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
   };
-  Map body = {"club_id": id};
+  Map body = {"fiesta_id": id};
 
   var res = await http.post(Uri.parse(Urls.fiestasAddfavoriteUrl),
       body: body, headers: headers);

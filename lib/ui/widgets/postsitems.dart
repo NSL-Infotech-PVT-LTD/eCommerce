@@ -94,18 +94,23 @@ Widget fiestasItem({context, Datum? postModeldata}) {
                     vertical: size.height * 0.01),
                 height: size.height * 0.15,
                 decoration: BoxDecoration(
-                    color:
-                        available ? Colors.grey[700] : AppColors.homeBackground,
+                    color: AppColors.homeBackground,
                     border: Border(
                       left: BorderSide(
                           width: size.height * 0.001,
-                          color: AppColors.tagBorder),
+                          color: available == false
+                              ? AppColors.tagBorder
+                              : AppColors.blackBackground),
                       right: BorderSide(
                           width: size.height * 0.001,
-                          color: AppColors.tagBorder),
+                          color: available == false
+                              ? AppColors.tagBorder
+                              : AppColors.blackBackground),
                       bottom: BorderSide(
                           width: size.height * 0.001,
-                          color: AppColors.tagBorder),
+                          color: available == false
+                              ? AppColors.tagBorder
+                              : AppColors.blackBackground),
                     )),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -203,7 +208,7 @@ Widget fiestasItem({context, Datum? postModeldata}) {
                                   // Strings.booknow,
 
                                   available
-                                      ? "${getTranslated(context, "full")}"
+                                      ? "${getTranslated(context, "outofStock")}"
                                       : "${getTranslated(context, "booknow")}",
 
                                   textAlign: TextAlign.center,
@@ -226,10 +231,14 @@ Widget fiestasItem({context, Datum? postModeldata}) {
 
         // up
 
-        Container(
-            margin: EdgeInsets.only(top: size.width * 0.04),
-            width: size.width,
-            height: size.height * 0.28)
+        available
+            ? Container(
+                margin: EdgeInsets.only(top: size.width * 0.04),
+                width: size.width,
+                height: size.height * 0.28,
+                color: Colors.black.withOpacity(0.4),
+              )
+            : SizedBox()
       ],
     ),
   );

@@ -6,6 +6,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/ui/screens/splash.dart';
+import 'package:funfy/ui/screens/testingUi.dart';
 import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/localizing.dart';
@@ -209,36 +210,34 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "funfy",
-      theme: ThemeData(
-        primarySwatch: Colors.red,
-      ),
-      locale: _locale,
-      localizationsDelegates: const [
-        MyLocalization.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: [
-        const Locale('en', 'US'), // English, no country code
-        const Locale('es', 'ES'), // Arabic, no country code
-      ],
-      localeResolutionCallback: (locale, supportedLocales) {
-        for (var supportedLocale in supportedLocales) {
-          if (supportedLocale.languageCode == locale!.languageCode &&
-              supportedLocale.countryCode == locale.countryCode) {
-            return supportedLocale;
+        debugShowCheckedModeBanner: false,
+        title: "funfy",
+        theme: ThemeData(
+          primarySwatch: Colors.red,
+        ),
+        locale: _locale,
+        localizationsDelegates: const [
+          MyLocalization.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: [
+          const Locale('en', 'US'), // English, no country code
+          const Locale('es', 'ES'), // Arabic, no country code
+        ],
+        localeResolutionCallback: (locale, supportedLocales) {
+          for (var supportedLocale in supportedLocales) {
+            if (supportedLocale.languageCode == locale!.languageCode &&
+                supportedLocale.countryCode == locale.countryCode) {
+              return supportedLocale;
+            }
           }
-        }
-        print("hello + ${supportedLocales.first}");
-        return supportedLocales.first;
-      },
-      darkTheme: ThemeData.dark(), //
-      home: Splash(),
-      // home: TestingW()
-      // home: MyHomePage(),
-    );
+          print("hello + ${supportedLocales.first}");
+          return supportedLocales.first;
+        },
+        darkTheme: ThemeData.dark(), //
+        home: Splash());
+    // home: Testing());
   }
 }

@@ -30,12 +30,13 @@ class _FavouriteState extends State<Favourite> {
   bool _loading = false;
   bool prifestasLoading = false;
 
-  FiestasFavouriteModel? fiestasFavModel = FiestasFavouriteModel();
-  PrefiestasFavouriteModel? preFiestasFavModel = PrefiestasFavouriteModel();
+  FiestasFavouriteModel? fiestasFavModel;
+  PrefiestasFavouriteModel? preFiestasFavModel;
 
   @override
   void initState() {
     super.initState();
+    prifiestaFavList();
 
     getFavouriteList();
   }
@@ -50,8 +51,6 @@ class _FavouriteState extends State<Favourite> {
         _loading = true;
       });
 
-      prifiestaFavList();
-
       try {
         fiestasFavouriteListApi().then((res) {
           setState(() {
@@ -64,7 +63,7 @@ class _FavouriteState extends State<Favourite> {
           _loading = false;
         });
 
-        print(e);
+        print("error in fiestas - $e");
       }
     }
   }
@@ -85,7 +84,7 @@ class _FavouriteState extends State<Favourite> {
         prifestasLoading = false;
       });
 
-      print(e);
+      print("error in prefiestas - $e");
     }
   }
 

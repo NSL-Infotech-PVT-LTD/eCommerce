@@ -322,9 +322,9 @@ class _CartDetailState extends State<CartDetail> {
             payLoading = false;
           });
 
-          print("here is ${res?.toJson()}");
+          // print("here is ${res?.toJson()}");
 
-          if (res?.status == true && res?.code == 201) {
+          if (res["status"] == true && res["code"] == 201) {
             setState(() {
               UserData.ticketcartMap.clear();
               UserData.totalTicketNum = 0;
@@ -332,8 +332,22 @@ class _CartDetailState extends State<CartDetail> {
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
-                    builder: (BuildContext context) => BookingSuccess()),
+                    builder: (BuildContext context) => BookingSuccess(
+                          orderidFiestas: [res["data"]["booking"]["id"], 0],
+                        )),
                 (route) => false);
+          } else {
+            setState(() {
+              payLoading = false;
+              swipebuttonShowBool = true;
+            });
+            Dialogs.simpleOkAlertDialog(
+                context: context,
+                title: "${getTranslated(context, "alert!")}",
+                content: "${getTranslated(context, "yourPaymentisfailed")}",
+                func: () {
+                  navigatePopFun(context);
+                });
           }
         });
       }

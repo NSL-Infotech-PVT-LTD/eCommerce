@@ -16,7 +16,8 @@ import 'package:funfy/utils/urls.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
-Future<FistaBooking?> fiestasBooking(
+// <FistaBooking?>
+Future fiestasBooking(
     {String? id,
     context,
     String? ticketcount,
@@ -42,12 +43,14 @@ Future<FistaBooking?> fiestasBooking(
 
   final jsonRes = json.decode(res.body);
 
-  var response = Map<String, dynamic>.from(jsonRes);
+  // var response = Map<String, dynamic>.from(jsonRes);
 
-  print("here is res $response");
+  // print("here is res $response");
 
   if (res.statusCode == 201) {
-    return FistaBooking.fromJson(response);
+    return jsonRes;
+
+    // FistaBooking.fromJson(response);
   } else {
     Dialogs.simpleOkAlertDialog(
         context: context,

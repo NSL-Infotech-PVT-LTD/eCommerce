@@ -5,7 +5,6 @@ import 'package:funfy/apis/bookingApi.dart';
 import 'package:funfy/components/dialogs.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/models/fiestasBookingDetailModel.dart';
-import 'package:funfy/models/fiestasBookingListModel.dart';
 import 'package:funfy/ui/screens/bookNowBeta.dart';
 import 'package:funfy/ui/screens/qrCodeZoomin.dart';
 import 'package:funfy/ui/widgets/rating.dart';
@@ -20,7 +19,6 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:flash/flash.dart';
 
 class FiestasMoreOrderDetail extends StatefulWidget {
   final fiestaBookingId;
@@ -58,7 +56,9 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
       Internetcheck.showdialog(context: context);
     } else {
       try {
-        await fiestaBookingOrderDetailApi(fiestasId: "3").then((value) {
+        await fiestaBookingOrderDetailApi(
+                fiestasId: widget.fiestaBookingId.toString())
+            .then((value) {
           // print("here is model : ${value?.toJson()}");
           setState(() {
             fiestasBookingDetailModel = value;
