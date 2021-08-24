@@ -201,5 +201,6 @@
   "Doyouwanttodeletethecard": "Do you want to delete the card ?",
   "successfullyRated": "Successfully rated",
   "outofStock": "Out of Stock",
-  "yourPaymentisfailed": "Your Payment is failed"
+  "yourPaymentisfailed": "Your Payment is failed",
+  "till": "Till"
 }

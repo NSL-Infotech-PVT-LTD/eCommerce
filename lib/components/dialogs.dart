@@ -92,14 +92,15 @@ class Dialogs {
       {context,
       Duration? duration,
       flashStyle = FlashBehavior.floating,
-      String? content}) {
+      String? content,
+      Color? color}) {
     showFlash(
       context: context,
       duration: duration,
       builder: (context, controller) {
         return Flash(
           controller: controller,
-          backgroundColor: AppColors.blackBackground,
+          backgroundColor: color == null ? AppColors.blackBackground : color,
           behavior: flashStyle,
           position: FlashPosition.bottom,
           boxShadows: kElevationToShadow[4],

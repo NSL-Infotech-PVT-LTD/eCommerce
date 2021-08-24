@@ -369,7 +369,10 @@ Widget preFiestasOrderItemsNew(
               height: 20,
               width: 20,
               child: Image.asset(
-                "assets/pngicons/activeBook.png",
+                data?.orderStatus == "completed" ||
+                        data?.orderStatus == "reviewed"
+                    ? "assets/pngicons/activeBook.png"
+                    : "assets/pngicons/pendingBook.png",
                 fit: BoxFit.cover,
               ),
             ),

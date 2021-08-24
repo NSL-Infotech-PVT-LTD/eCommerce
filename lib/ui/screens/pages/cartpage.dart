@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:funfy/apis/bookingApi.dart';
 import 'package:funfy/apis/introApi.dart';
 import 'package:funfy/apis/userdataM.dart';
+import 'package:funfy/components/dialogs.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/models/preFiestasCartModel.dart';
 import 'package:funfy/ui/screens/bookingSuccess.dart';
@@ -1092,51 +1093,51 @@ class _CartpageState extends State<Cartpage> {
                                     SizedBox(height: size.height * 0.03),
 
                                     // button
-                                    UserData.myCartModel!
-                                                    .data!.cart!.cartItems!.length >
-                                                0 &&
-                                            (Constants.prefs?.getString(
-                                                        "alcohol") !=
-                                                    null &&
-                                                Constants.prefs?.getString(
-                                                        "alcohol") !=
-                                                    "" &&
-                                                Constants.prefs?.getString(
-                                                        "alcohol") !=
-                                                    "0")
-                                        ? GestureDetector(
-                                            onTap: () {
-                                              // makeOrder();
-                                              Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              PrefiestasCardDetail()))
-                                                  .then((value) {
+                                    GestureDetector(
+                                      onTap: () {
+                                        UserData.myCartModel!.data!.cart!.cartItems!.length > 0 &&
+                                                (Constants.prefs?.getString("alcohol") !=
+                                                        null &&
+                                                    Constants.prefs?.getString("alcohol") !=
+                                                        "" &&
+                                                    Constants.prefs?.getString("alcohol") !=
+                                                        "0")
+                                            ?
+                                            // makeOrder();
+                                            Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            PrefiestasCardDetail()))
+                                                .then((value) {
                                                 initState();
-                                              });
-                                            },
-                                            child: roundedBoxR(
-                                              width: size.width,
-                                              height: size.height * 0.07,
-                                              radius: size.width * 0.02,
-                                              backgroundColor:
-                                                  AppColors.siginbackgrond,
-                                              child: Center(
-                                                child: Text(
-                                                  "${getTranslated(context, "proceedtopay")}",
-                                                  //   Strings.proceedtopay,
-                                                  style: TextStyle(
-                                                      color: AppColors.white,
-                                                      fontFamily:
-                                                          Fonts.dmSansBold,
-                                                      fontSize:
-                                                          size.width * 0.045),
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                        : SizedBox()
+                                              })
+                                            : Dialogs.showBasicsFlash(
+                                                context: context,
+                                                color: AppColors.siginbackgrond,
+                                                duration: Duration(seconds: 3),
+                                                content: getTranslated(
+                                                    context, "pleaseSelectAlcohol"));
+                                      },
+                                      child: roundedBoxR(
+                                        width: size.width,
+                                        height: size.height * 0.07,
+                                        radius: size.width * 0.02,
+                                        backgroundColor:
+                                            AppColors.siginbackgrond,
+                                        child: Center(
+                                          child: Text(
+                                            "${getTranslated(context, "proceedtopay")}",
+                                            //   Strings.proceedtopay,
+                                            style: TextStyle(
+                                                color: AppColors.white,
+                                                fontFamily: Fonts.dmSansBold,
+                                                fontSize: size.width * 0.045),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                    // : SizedBox()
 
                                     //  SizedBox(height: size.height * 0.05),
                                   ],

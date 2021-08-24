@@ -13,6 +13,7 @@ import 'package:funfy/utils/strings.dart';
 import 'package:funfy/utils/urls.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
+import 'dart:io' show Platform;
 
 GoogleSignIn _googleSignIn = GoogleSignIn(
   scopes: [
@@ -174,4 +175,52 @@ logout(context) {
             MaterialPageRoute(builder: (BuildContext context) => Signin()),
             (route) => false);
       });
+}
+
+// logout api
+
+Future<bool?> logoutApi() async {
+  var dToken = Constants.prefs?.getString("fToken");
+
+  print("here is device token : $dToken");
+
+  var headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+  };
+  var body = {
+    "device_token": "$dToken",
+    "device_type": Platform.isAndroid ? 'android' : 'ios'
+  };
+
+  var res =
+      await http.post(Uri.parse(Urls.logoutUrl), body: body, headers: headers);
+  var jsondata = json.decode(res.body);
+
+  if (res.statusCode == 200) {
+    // token
+    Constants.prefs?.setString("token", "");
+    // name name
+    Constants.prefs?.setString("name", "");
+    // name email
+    Constants.prefs?.setString("email", "");
+    // lacation
+    Constants.prefs?.setString("addres", "");
+
+    //  dob
+    Constants.prefs?.setString("dob", "");
+
+    //  gender
+    Constants.prefs?.setString("gender", "");
+
+    //  social
+    Constants.prefs?.setString("social", "false");
+
+    // profileImage
+    Constants.prefs?.setString("profileImage", "");
+
+    _googleSignIn.signOut();
+    return true;
+  } else {
+    print(jsondata);
+  }
 }

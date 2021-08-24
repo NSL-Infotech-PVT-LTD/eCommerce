@@ -748,7 +748,7 @@ class _FiestasPageState extends State<FiestasPage> {
                   ? Expanded(
                       child: Container(
                           padding: EdgeInsets.symmetric(
-                              vertical: size.height * 0.01,
+                              // vertical: size.height * 0.01,
                               horizontal: size.width * 0.04),
                           // height: size.height,
                           width: size.width,
@@ -883,7 +883,7 @@ Widget preFiestas(context, PrefiestasModel? prefiestasdata, _postLoading) {
               height: size.height * 0.01,
             ),
             Container(
-                height: size.height * 0.35,
+                height: size.height * 0.375,
                 child: prefiestasdata?.data?.data?.length != 0 &&
                         _postLoading == false
                     ? ListView.builder(

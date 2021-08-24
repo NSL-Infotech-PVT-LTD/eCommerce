@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:funfy/apis/homeApis.dart';
 import 'package:funfy/apis/signinApi.dart';
+import 'package:funfy/components/dialogs.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/ui/screens/aboutScreen.dart';
+import 'package:funfy/ui/screens/auth/signin.dart';
 import 'package:funfy/ui/screens/favourite.dart';
 import 'package:funfy/ui/screens/helpScreen.dart';
 import 'package:funfy/ui/screens/languageScreen.dart';
@@ -28,6 +30,7 @@ class Profilepage extends StatefulWidget {
 class _ProfilepageState extends State<Profilepage> {
   bool toggleBool = false;
   bool notiLoading = false;
+  bool _loading = false;
   static GlobalKey<ScaffoldState> _keyScaffold = GlobalKey();
   void showNotificationBottomSheet() {
     var size = MediaQuery.of(context).size;
@@ -177,6 +180,42 @@ class _ProfilepageState extends State<Profilepage> {
         });
   }
 
+  logoutCall() async {
+    Dialogs.simpleAlertDialog(
+        context: context,
+        title: "${getTranslated(context, "alert")}", // Strings.alert,
+        content:
+            "${getTranslated(context, "areYousureWantToLogout")}", //Strings.areYousureWantToLogout,
+        func: () async {
+          navigatePopFun(context);
+          setState(() {
+            _loading = true;
+          });
+
+          try {
+            await logoutApi().then((value) {
+              setState(() {
+                _loading = false;
+              });
+              if (value!) {
+                // logout(context);
+
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => Signin()),
+                    (route) => false);
+              }
+            });
+          } catch (e) {
+            setState(() {
+              _loading = false;
+            });
+            print("error $e");
+          }
+        });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -192,194 +231,198 @@ class _ProfilepageState extends State<Profilepage> {
       backgroundColor: AppColors.profileBackground,
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Column(
+          child: Stack(
+            alignment: Alignment.center,
             children: [
-              // top content
-              Container(
-                padding: EdgeInsets.symmetric(
-                    horizontal: size.width * 0.05,
-                    vertical: size.height * 0.035),
-                width: size.width,
-                color: AppColors.siginbackgrond,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // image
-                    CircleAvatar(
-                      radius: size.width * 0.085,
-                      backgroundImage: NetworkImage(
-                          "${Constants.prefs?.getString('profileImage')}"),
-                      backgroundColor: Colors.white,
-                    ),
+              Column(
+                children: [
+                  // top content
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: size.width * 0.05,
+                        vertical: size.height * 0.035),
+                    width: size.width,
+                    color: AppColors.siginbackgrond,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // image
+                        CircleAvatar(
+                          radius: size.width * 0.085,
+                          backgroundImage: NetworkImage(
+                              "${Constants.prefs?.getString('profileImage')}"),
+                          backgroundColor: Colors.white,
+                        ),
 
-                    SizedBox(
-                      width: size.width * 0.02,
-                    ),
+                        SizedBox(
+                          width: size.width * 0.02,
+                        ),
 
-                    // name email
-                    Expanded(
-                      flex: 8,
-                      child: Container(
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "${Constants.prefs?.getString('name')}",
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    fontFamily: Fonts.dmSansBold,
-                                    color: AppColors.white,
-                                    fontSize: size.width * 0.058),
-                              ),
-                              Text(
-                                "${Constants.prefs?.getString('email')}",
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    fontFamily: Fonts.dmSansRegular,
-                                    color: AppColors.white,
-                                    fontSize: size.width * 0.046),
-                              ),
-                            ]),
-                      ),
-                    ),
-
-                    Expanded(
-                        child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => EditProfile()))
-                            .then((value) {
-                          setState(() {});
-                        });
-                      },
-                      child: Container(
-                          height: size.height * 0.03,
-                          child: Image.asset(Images.editpen)),
-                    ))
-                  ],
-                  // edit
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(
-                    horizontal: size.width * 0.05,
-                    vertical: size.height * 0.035),
-                child: Column(
-                  children: [
-                    SizedBox(height: size.height * 0.01),
-
-                    // centerlistItem(
-                    //     context: context,
-                    //     title: "${getTranslated(context, "orders")}",
-                    //     //Strings.orders,
-                    //     leftIconImage: Images.orderIIconpng,
-                    //     onTapfunc: () {}),
-
-                    centerlistItem(
-                        context: context,
-                        title: "${getTranslated(context, "deliveryAddress")}",
-                        //  Strings.deliveryAddress,
-                        leftIconImage: Images.locationspng,
-                        onTapfunc: () {}),
-
-                    centerlistItem(
-                        context: context,
-                        title: "${getTranslated(context, "favourite")}",
-                        //  Strings.deliveryAddress,
-                        leftIconImage: "assets/pngicons/hearticonbig.png",
-                        onTapfunc: () {
-                          navigatorPushFun(context, Favourite());
-                        }),
-
-                    centerlistItem(
-                        context: context,
-                        title: "${getTranslated(context, "language")}",
-                        //  Strings.deliveryAddress,
-                        leftIconImage: Images.locationspng,
-                        onTapfunc: () {
-                          navigatorPushFun(
-                              context, TranslationPage(fromSplash: false));
-                        }),
-
-                    // centerlistItem(
-                    //     context: context,
-                    //     title: "${getTranslated(context, "paymentMethods")}",
-                    //     //    Strings.paymentMethods,
-                    //     leftIconImage: Images.paymentIconpng,
-                    //     onTapfunc: () {}),
-
-                    centerlistItem(
-                        context: context,
-                        title: "${getTranslated(context, "notification")}",
-                        // Strings.notification,
-                        leftIconImage: Images.notificationspng,
-                        onTapfunc: () {
-                          showNotificationBottomSheet();
-                        }),
-
-                    centerlistItem(
-                        context: context,
-                        title: "${getTranslated(context, "help")}",
-                        //  Strings.help,
-                        leftIconImage: Images.helppng,
-                        onTapfunc: () {
-                          navigatorPushFun(context, HelpScreen());
-                        }),
-
-                    centerlistItem(
-                        context: context,
-                        title: "${getTranslated(context, "about")}",
-                        //Strings.about,
-                        leftIconImage: Images.aboutpng,
-                        onTapfunc: () {
-                          navigatorPushFun(context, AboutScreen());
-                        }),
-
-                    SizedBox(
-                      height: size.height * 0.04,
-                    ),
-
-                    // logout
-
-                    GestureDetector(
-                      onTap: () {
-                        logout(context);
-                      },
-                      child: roundedBox(
-                          height: size.height * 0.065,
-                          width: size.width * 0.6,
-                          backgroundColor: AppColors.logoutBackground,
-                          child: Align(
-                              alignment: Alignment.center,
-                              child: Row(
+                        // name email
+                        Expanded(
+                          flex: 8,
+                          child: Container(
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SizedBox(width: size.width * 0.045),
-                                  Container(
-                                      // color: Colors.green,
-                                      height: size.height * 0.031,
-                                      width: size.width * 0.06,
-                                      child: Image.asset(Images.logout)),
-                                  SizedBox(
-                                    width: size.width * 0.12,
+                                  Text(
+                                    "${Constants.prefs?.getString('name')}",
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        fontFamily: Fonts.dmSansBold,
+                                        color: AppColors.white,
+                                        fontSize: size.width * 0.058),
                                   ),
                                   Text(
-                                    "${getTranslated(context, "logout")}",
-                                    //   Strings.logout,
+                                    "${Constants.prefs?.getString('email')}",
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
+                                        fontFamily: Fonts.dmSansRegular,
                                         color: AppColors.white,
-                                        fontFamily: Fonts.dmSansBold,
-                                        fontSize: size.width * 0.045),
+                                        fontSize: size.width * 0.046),
                                   ),
-                                ],
-                              ))),
-                    )
-                  ],
-                ),
+                                ]),
+                          ),
+                        ),
+
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => EditProfile()))
+                                .then((value) {
+                              setState(() {});
+                            });
+                          },
+                          child: Container(
+                              height: size.height * 0.03,
+                              child: Image.asset(Images.editpen)),
+                        )
+                      ],
+                      // edit
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(
+                        horizontal: size.width * 0.05,
+                        vertical: size.height * 0.035),
+                    child: Column(
+                      children: [
+                        SizedBox(height: size.height * 0.01),
+
+                        // centerlistItem(
+                        //     context: context,
+                        //     title: "${getTranslated(context, "orders")}",
+                        //     //Strings.orders,
+                        //     leftIconImage: Images.orderIIconpng,
+                        //     onTapfunc: () {}),
+
+                        // centerlistItem(
+                        //     context: context,
+                        //     title: "${getTranslated(context, "favourite")}",
+                        //     //  Strings.deliveryAddress,
+                        //     leftIconImage: "assets/pngicons/hearticonbig.png",
+                        //     onTapfunc: () {
+                        //       navigatorPushFun(context, Favourite());
+                        //     }),
+
+                        centerlistItem(
+                            context: context,
+                            title: "${getTranslated(context, "language")}",
+                            //  Strings.deliveryAddress,
+                            leftIconImage: Images.locationspng,
+                            onTapfunc: () {
+                              navigatorPushFun(
+                                  context, TranslationPage(fromSplash: false));
+                            }),
+
+                        // centerlistItem(
+                        //     context: context,
+                        //     title: "${getTranslated(context, "paymentMethods")}",
+                        //     //    Strings.paymentMethods,
+                        //     leftIconImage: Images.paymentIconpng,
+                        //     onTapfunc: () {}),
+
+                        centerlistItem(
+                            context: context,
+                            title: "${getTranslated(context, "notification")}",
+                            // Strings.notification,
+                            leftIconImage: Images.notificationspng,
+                            onTapfunc: () {
+                              showNotificationBottomSheet();
+                            }),
+
+                        centerlistItem(
+                            context: context,
+                            title: "${getTranslated(context, "help")}",
+                            //  Strings.help,
+                            leftIconImage: Images.helppng,
+                            onTapfunc: () {
+                              navigatorPushFun(context, HelpScreen());
+                            }),
+
+                        centerlistItem(
+                            context: context,
+                            title: "${getTranslated(context, "about")}",
+                            //Strings.about,
+                            leftIconImage: Images.aboutpng,
+                            onTapfunc: () {
+                              navigatorPushFun(context, AboutScreen());
+                            }),
+
+                        SizedBox(
+                          height: size.height * 0.04,
+                        ),
+
+                        // logout
+
+                        GestureDetector(
+                          onTap: () {
+                            logoutCall();
+                          },
+                          child: roundedBox(
+                              height: size.height * 0.065,
+                              width: size.width * 0.6,
+                              backgroundColor: AppColors.logoutBackground,
+                              child: Align(
+                                  alignment: Alignment.center,
+                                  child: Row(
+                                    children: [
+                                      SizedBox(width: size.width * 0.045),
+                                      Container(
+                                          // color: Colors.green,
+                                          height: size.height * 0.031,
+                                          width: size.width * 0.06,
+                                          child: Image.asset(Images.logout)),
+                                      SizedBox(
+                                        width: size.width * 0.12,
+                                      ),
+                                      Text(
+                                        "${getTranslated(context, "logout")}",
+                                        //   Strings.logout,
+                                        style: TextStyle(
+                                            color: AppColors.white,
+                                            fontFamily: Fonts.dmSansBold,
+                                            fontSize: size.width * 0.045),
+                                      ),
+                                    ],
+                                  ))),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
               ),
+              _loading
+                  ? Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.white,
+                      ),
+                    )
+                  : SizedBox()
             ],
           ),
         ),

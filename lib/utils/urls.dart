@@ -50,4 +50,5 @@ class Urls {
   static String notificationUrl = baseUrl + "notification/list";
   static String fiestasRatingUrl = baseUrl + "customer/booking/rate";
   static String prefiestasRatingUrl = baseUrl + "customer/rate/order";
+  static String logoutUrl = baseUrl + "logout";
 }

@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -82,7 +83,7 @@ class _MyAppState extends State<MyApp> {
   getToken() async {
     var token = await firebaseMessaging.getToken();
 
-    // print('here is F token $token');
+    print('here is F token $token');
 
     UserData.deviceToken = "$token";
 
@@ -122,14 +123,12 @@ class _MyAppState extends State<MyApp> {
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification? notification = message.notification;
-
-      AndroidNotification? android = message.notification?.android;
-      if (notification != null && android != null) {
+      Map<String, dynamic> notification = message.data;
+      if (notification.isNotEmpty) {
         flutterLocalNotificationsPlugin.show(
           notification.hashCode,
-          notification.title,
-          notification.body,
+          notification['title'],
+          notification['body'],
           NotificationDetails(
             android: AndroidNotificationDetails(
               channel.id,
@@ -237,7 +236,7 @@ class _MyAppState extends State<MyApp> {
           return supportedLocales.first;
         },
         darkTheme: ThemeData.dark(), //
-        home: Splash());
-    // home: Testing());
+        // home: Splash());
+        home: Testing());
   }
 }

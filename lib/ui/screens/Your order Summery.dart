@@ -2,6 +2,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:funfy/apis/bookingApi.dart';
@@ -16,6 +17,7 @@ import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
+import 'package:intl/intl.dart';
 
 class YourOrderSum extends StatefulWidget {
   final orderID;
@@ -33,6 +35,9 @@ class _YourOrderSumState extends State<YourOrderSum> {
   bool _loading = false;
 
   double count = 0.0;
+
+  String? deliverydate;
+  String? deliveryTime;
 
   getPrefiestasorderItemData() async {
     var net = await Internetcheck.check();
@@ -54,6 +59,22 @@ class _YourOrderSumState extends State<YourOrderSum> {
             print("here is lis");
 
             print(prefiestasOrderDetailModel?.data?.orderDetail![0].toJson());
+
+            // Delivery date time
+            DateTime deliverydate1 = DateTime.parse(
+                "${prefiestasOrderDetailModel?.data?.orderDetail![0].date}");
+
+            var time = prefiestasOrderDetailModel?.data?.orderDetail![0].time;
+
+            var time2 =
+                DateFormat.jm().format(DateFormat("hh:mm:ss").parse("$time"));
+
+            var date2 = DateFormat('d MMMM').format(deliverydate1);
+
+            setState(() {
+              deliverydate = "$date2";
+              deliveryTime = "${getTranslated(context, "till")} $time2";
+            });
 
             if (prefiestasOrderDetailModel?.data?.orderDetail![0].orderStatus ==
                 "completed") {
@@ -188,6 +209,10 @@ class _YourOrderSumState extends State<YourOrderSum> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {},
+        //   child: Icon(Icons.add),
+        // ),
         backgroundColor: AppColors.homeBackgroundLite,
         appBar: AppBar(
           backgroundColor: AppColors.homeBackgroundLite,
@@ -493,14 +518,16 @@ class _YourOrderSumState extends State<YourOrderSum> {
                                     SizedBox(
                                         height: SizeConfig.screenHeight * 0.02),
                                     Text(
-                                      "25 JUNE, Today",
+                                      // "25 JUNE, Today",
+
+                                      "$deliverydate",
                                       style: TextStyle(
                                           color: AppColors.itemDescription,
                                           fontSize: size.width * 0.04,
                                           fontFamily: Fonts.dmSansMedium),
                                     ),
                                     Text(
-                                      "Till 04:00 PM",
+                                      "$deliveryTime",
                                       style: TextStyle(
                                           color: AppColors.itemDescription,
                                           fontSize: size.width * 0.04,
