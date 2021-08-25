@@ -7,9 +7,11 @@ import 'package:funfy/ui/screens/pages/bookingpage.dart';
 import 'package:funfy/ui/screens/pages/cartpage.dart';
 import 'package:funfy/ui/screens/pages/fiestaspage.dart';
 import 'package:funfy/ui/screens/pages/profilepage.dart';
+import 'package:funfy/ui/screens/testingUi.dart';
 import 'package:funfy/ui/widgets/dateButton.dart';
 import 'package:funfy/ui/widgets/rating.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
+import 'package:funfy/ui/widgets/scrollTohideWidget.dart';
 import 'package:funfy/ui/widgets/tagsButton.dart';
 import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/colors.dart';
@@ -36,6 +38,7 @@ class _HomeState extends State<Home> {
 
   List<Widget> tabpages = [
     FiestasPage(),
+    // Testing(),
     Cartpage(),
     BookingPage(),
     Profilepage()
@@ -115,7 +118,12 @@ class _HomeState extends State<Home> {
           children: tabpages,
           onPageChanged: onpageChange,
         ),
-        bottomNavigationBar: BottomNavigationBar(
+        bottomNavigationBar:
+            // ScrollTohideWidget(
+            // controller: UserData.sControlller!,
+            // child:
+
+            BottomNavigationBar(
           unselectedItemColor: AppColors.white,
           selectedItemColor: AppColors.white,
           type: BottomNavigationBarType.fixed,
@@ -167,6 +175,7 @@ class _HomeState extends State<Home> {
             ),
           ],
         ),
+        // ),
       ),
     );
   }

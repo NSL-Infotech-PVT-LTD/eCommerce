@@ -236,33 +236,6 @@ class _FiestasPageState extends State<FiestasPage> {
 
   int number = 0;
 
-  // void _scrollListener() {
-  //   var size = MediaQuery.of(context).size;
-  //   print("Scroling here");
-
-  //   // double maxScroll = _scrollController.position.maxScrollExtent;
-  //   // double currentScroll = _scrollController.position.pixels;
-  //   // double delta = MediaQuery.of(context).size.height * 0.28;
-  //   // print("delta : $delta");
-  //   // print("currentScroll : $currentScroll");
-
-  //   // print("maxScroll : $maxScroll");
-  //   // if (maxScroll - currentScroll <= delta) {
-  //   //   print("delta : $delta");
-  //   // }
-
-  //   // if (number > 100) {
-  //   //   number = 0;
-  //   //   navigatorPushFun(context, FiestasAll());
-  //   // }
-
-  //   // print(number);
-
-  //   // setState(() {
-  //   //   // var index = (_scrollController.offset / itemSize).round() + 1;
-  //   // });
-  // }
-
   @override
   Widget build(BuildContext context) {
     daysInMonth(nowdate);
@@ -325,7 +298,7 @@ class _FiestasPageState extends State<FiestasPage> {
                           height: size.height * 0.01,
                         ),
 
-                        // location choose
+                        // location choose ----------------
 
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -364,11 +337,11 @@ class _FiestasPageState extends State<FiestasPage> {
                             SizedBox(
                               width: size.width * 0.01,
                             ),
-                            Icon(
-                              Icons.expand_more,
-                              size: size.width * 0.042,
-                              color: AppColors.white,
-                            ),
+                            // Icon(
+                            //   Icons.expand_more,
+                            //   size: size.width * 0.042,
+                            //   color: AppColors.white,
+                            // ),
                           ],
                         ),
                       ],
@@ -593,20 +566,20 @@ class _FiestasPageState extends State<FiestasPage> {
                                   width: size.width * 0.02,
                                 ),
 
-                                // right button
-                                Container(
-                                    margin: EdgeInsets.only(
-                                        right: size.width * 0.01),
-                                    alignment: Alignment.centerRight,
-                                    child:
-                                        // SvgPicture.asset(Images.filterSvg)
+                                // right filter button
+                                // Container(
+                                //     margin: EdgeInsets.only(
+                                //         right: size.width * 0.01),
+                                //     alignment: Alignment.centerRight,
+                                //     child:
+                                //         // SvgPicture.asset(Images.filterSvg)
 
-                                        Image.asset(Images.filterPng)
-                                    //     Icon(
-                                    //   Icons.grid_view,
-                                    //   color: Colors.white,
-                                    // ),
-                                    )
+                                //         Image.asset(Images.filterPng)
+                                //     //     Icon(
+                                //     //   Icons.grid_view,
+                                //     //   color: Colors.white,
+                                //     // ),
+                                //     )
                               ]),
                         ),
                         SizedBox(
@@ -813,6 +786,8 @@ class _FiestasPageState extends State<FiestasPage> {
                                               controller:
                                                   _fiestaSscrollController,
                                               physics: BouncingScrollPhysics(),
+                                              // physics:
+                                              // NeverScrollableScrollPhysics(),
                                               itemCount: UserData.fiestasdata
                                                       ?.data?.data?.length ??
                                                   0,
@@ -888,7 +863,7 @@ Widget preFiestas(context, PrefiestasModel? prefiestasdata, _postLoading) {
                         _postLoading == false
                     ? ListView.builder(
                         physics: BouncingScrollPhysics(),
-                        itemCount: prefiestasdata?.data?.data?.length,
+                        itemCount: prefiestasdata?.data?.data?.length ?? 0,
                         itemBuilder: (context, index) {
                           return preFiestasItem(
                               context: context,

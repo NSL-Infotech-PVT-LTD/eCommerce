@@ -855,11 +855,11 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
 
         if (res?.status == true && res?.code == 201) {
           clearCart();
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) => BookingSuccess()),
-              (route) => false);
+          // Navigator.pushAndRemoveUntil(
+          //     context,
+          //     MaterialPageRoute(
+          //         builder: (BuildContext context) => BookingSuccess()),
+          //     (route) => false);
         }
       });
     } catch (e) {

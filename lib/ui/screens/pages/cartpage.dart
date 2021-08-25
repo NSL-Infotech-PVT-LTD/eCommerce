@@ -662,11 +662,11 @@ class _CartpageState extends State<Cartpage> {
         if (res?.status == true && res?.code == 201) {
           print("we are here -------------------");
 
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) => BookingSuccess()),
-              (route) => false);
+          // Navigator.pushAndRemoveUntil(
+          //     context,
+          //     MaterialPageRoute(
+          //         builder: (BuildContext context) => BookingSuccess()),
+          //     (route) => false);
         }
       });
     } catch (e) {

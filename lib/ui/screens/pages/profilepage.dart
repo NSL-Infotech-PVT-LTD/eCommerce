@@ -299,7 +299,14 @@ class _ProfilepageState extends State<Profilepage> {
                           },
                           child: Container(
                               height: size.height * 0.03,
-                              child: Image.asset(Images.editpen)),
+                              child: Icon(
+                                Icons.edit,
+                                color: AppColors.white,
+                              )
+
+                              //  Image.asset(Images.editpen)
+
+                              ),
                         )
                       ],
                       // edit
@@ -334,6 +341,7 @@ class _ProfilepageState extends State<Profilepage> {
                             title: "${getTranslated(context, "language")}",
                             //  Strings.deliveryAddress,
                             leftIconImage: Images.locationspng,
+                            icon: true,
                             onTapfunc: () {
                               navigatorPushFun(
                                   context, TranslationPage(fromSplash: false));
@@ -436,6 +444,7 @@ Widget centerlistItem(
     String? leftIconImage,
     String? title,
     String? rightIconImage,
+    bool? icon,
     onTapfunc}) {
   var size = MediaQuery.of(context).size;
 
@@ -456,7 +465,13 @@ Widget centerlistItem(
                   Container(
                       alignment: Alignment.center,
                       width: size.width * 0.045,
-                      child: Image.asset("$leftIconImage")),
+                      child: icon != null
+                          ? Icon(
+                              Icons.translate,
+                              color: AppColors.white,
+                              size: size.width * 0.055,
+                            )
+                          : Image.asset("$leftIconImage")),
                   SizedBox(
                     width: size.width * 0.03,
                   ),

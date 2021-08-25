@@ -449,6 +449,18 @@ Widget fiestasOrdersItem(
     List? model}) {
   var size = MediaQuery.of(context).size;
 
+  double ratingF = 0.0;
+
+  var ratM = model![index]['fiesta_detail']['club_rating'];
+
+  print(ratM);
+
+  if (ratM == null || ratM == 0.0) {
+    ratingF = 0.0;
+  } else {
+    ratingF = double.parse("$ratM");
+  }
+
   // var data = model?.data?.data?.elementAt(index);
 
   // print("here is name - ${data!.fiestaDetail!.clubDetail!.name!}");
@@ -494,7 +506,7 @@ Widget fiestasOrdersItem(
         ),
         Text(
           // data!.fiestaDetail!.clubDetail!.name!.toString(),
-          "${model![index]['fiesta_detail']['club_detail']['name']}",
+          "${model[index]['fiesta_detail']['club_detail']['name']}",
           style: TextStyle(
               fontFamily: Fonts.dmSansBold,
               color: AppColors.white,
@@ -507,7 +519,7 @@ Widget fiestasOrdersItem(
             size: size.width * 0.052,
             ittempading: size.width * 0.001,
             color: AppColors.tagBorder,
-            rating: 3.5),
+            rating: ratingF),
         SizedBox(
           height: size.height * 0.02,
         ),
@@ -532,7 +544,7 @@ Widget fiestasOrdersItem(
                       fontSize: size.width * 0.05),
                 ),
                 Text(
-                  "${getTranslated(context, "qty")} :2",
+                  "${getTranslated(context, "qty")} : ${model[index]['total_tickets']}",
                   //   Strings.qty + ":2",
                   style: TextStyle(
                       fontFamily: Fonts.dmSansBold,

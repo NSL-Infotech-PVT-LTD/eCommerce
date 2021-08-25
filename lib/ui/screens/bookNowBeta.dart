@@ -36,6 +36,8 @@ class _BookNowBetaState extends State<BookNowBeta> {
   CarouselController _carouselController = CarouselController();
   List<Widget> cardList = [];
 
+  double rating = 0.0;
+
   bool _fiestasfavoriteBool = false;
 
   bool _loadingMainCenter = false;
@@ -283,6 +285,13 @@ class _BookNowBetaState extends State<BookNowBeta> {
                 cardList.add(SlidingBannerProviderDetails(
                     image: "${fiestasDetailModel?.data!.clubDetail?.image}"));
               }
+            }
+
+            if (fiestasDetailModel?.data?.clubRating == null ||
+                fiestasDetailModel?.data?.clubRating == 0) {
+              rating = 0.0;
+            } else {
+              rating = double.parse("${fiestasDetailModel?.data?.clubRating}");
             }
 
             // print(cardList);
@@ -601,7 +610,7 @@ class _BookNowBetaState extends State<BookNowBeta> {
                                                 size: size.width * 0.06,
                                                 ittempading: size.width * 0.005,
                                                 color: AppColors.tagBorder,
-                                                rating: 3.0)
+                                                rating: rating)
                                           ],
                                         ),
                                         Spacer(),

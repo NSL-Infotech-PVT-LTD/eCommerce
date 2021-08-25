@@ -6,8 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:funfy/apis/userdataM.dart';
+import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/screens/splash.dart';
 import 'package:funfy/ui/screens/testingUi.dart';
+import 'package:funfy/ui/screens/translateTesting.dart';
 import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/localizing.dart';
@@ -236,7 +238,10 @@ class _MyAppState extends State<MyApp> {
           return supportedLocales.first;
         },
         darkTheme: ThemeData.dark(), //
-        // home: Splash());
-        home: Testing());
+        home: TranslateTest());
+    // home: Testing());
+    // home: Home(
+    //   pageIndexNum: 0,
+    // ));
   }
 }

@@ -164,11 +164,11 @@ class _BuyNowState extends State<BuyNow> {
               UserData.ticketcartMap.clear();
               UserData.totalTicketNum = 0;
             });
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) => BookingSuccess()),
-                (route) => false);
+            // Navigator.pushAndRemoveUntil(
+            //     context,
+            //     MaterialPageRoute(
+            //         builder: (BuildContext context) => BookingSuccess()),
+            //     (route) => false);
           }
         });
       }

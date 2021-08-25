@@ -31,10 +31,18 @@ Widget fiestasItem({context, Datum? postModeldata}) {
 
   String price = k_m_b_generator(int.parse("${postModeldata?.ticketPrice}"));
 
+  double rating = 0.0;
+
   if (postModeldata?.leftNormalTicket.toString() == "0" &&
       postModeldata?.leftStandardTicket.toString() == "0" &&
       postModeldata?.leftVipTicket.toString() == "0") {
     available = true;
+  }
+
+  if (postModeldata?.clubRating == null || postModeldata?.clubRating == 0) {
+    rating = 0.0;
+  } else {
+    rating = double.parse("${postModeldata?.clubRating}");
   }
 
   return InkWell(
@@ -144,7 +152,7 @@ Widget fiestasItem({context, Datum? postModeldata}) {
                                 size: size.width * 0.05,
                                 ittempading: size.width * 0.0001,
                                 color: AppColors.tagBorder,
-                                rating: 4))
+                                rating: rating))
                       ],
                     ),
                     Column(

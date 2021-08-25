@@ -44,7 +44,9 @@ class _SigninState extends State<TranslationPage> {
               builder: (context) =>
                   Constants.prefs?.getString("token") != null &&
                           Constants.prefs?.getString("token") != ""
-                      ? Home()
+                      ? Home(
+                          pageIndexNum: 0,
+                        )
                       : Intro()));
         } else {
           print("no intro data");
@@ -53,7 +55,9 @@ class _SigninState extends State<TranslationPage> {
               builder: (context) =>
                   Constants.prefs?.getString("token") != null &&
                           Constants.prefs?.getString("token") != ""
-                      ? Home()
+                      ? Home(
+                          pageIndexNum: 0,
+                        )
                       : Signin()));
         }
       });

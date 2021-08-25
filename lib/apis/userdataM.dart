@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:funfy/models/cardListmodel.dart';
 import 'package:funfy/models/fiestasmodel.dart';
 import 'package:funfy/models/preFiestasCartModel.dart';
@@ -54,4 +55,8 @@ class UserData {
       "tickets": 0,
     }
   ];
+
+  //test
+
+  static ScrollController? sControlller;
 }

@@ -9,6 +9,7 @@ import 'package:funfy/ui/screens/auth/signin.dart';
 import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/screens/intro.dart';
 import 'package:funfy/ui/screens/languageScreen.dart';
+import 'package:funfy/ui/screens/testingUi.dart';
 import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/imagesIcons.dart';
@@ -59,6 +60,7 @@ class _SplashState extends State<Splash> {
                   Constants.prefs?.getString("token") != null &&
                           Constants.prefs?.getString("token") != ""
                       ? Home(pageIndexNum: 0)
+                      // ? Testing()
                       // : Intro()
                       : Signin()));
         } else {
@@ -69,6 +71,7 @@ class _SplashState extends State<Splash> {
                   Constants.prefs?.getString("token") != null &&
                           Constants.prefs?.getString("token") != ""
                       ? Home(pageIndexNum: 0)
+                      // ? Testing()
                       : Signin()));
         }
       }

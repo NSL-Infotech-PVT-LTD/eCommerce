@@ -39,6 +39,8 @@ class _YourOrderSumState extends State<YourOrderSum> {
   String? deliverydate;
   String? deliveryTime;
 
+  String grandTotal = "0.0";
+
   getPrefiestasorderItemData() async {
     var net = await Internetcheck.check();
 
@@ -71,10 +73,22 @@ class _YourOrderSumState extends State<YourOrderSum> {
 
             var date2 = DateFormat('d MMMM').format(deliverydate1);
 
-            setState(() {
-              deliverydate = "$date2";
-              deliveryTime = "${getTranslated(context, "till")} $time2";
-            });
+            deliverydate = "$date2";
+            deliveryTime = "${getTranslated(context, "till")} $time2";
+
+            if (prefiestasOrderDetailModel
+                    ?.data?.orderDetail![0].transferCharge !=
+                null) {
+              var transferCharger = prefiestasOrderDetailModel
+                  ?.data?.orderDetail![0].transferCharge;
+              var totPrice =
+                  prefiestasOrderDetailModel?.data?.orderDetail![0].totalPrice;
+
+              grandTotal = (transferCharger + totPrice).toString();
+            } else {
+              grandTotal =
+                  "${prefiestasOrderDetailModel?.data?.orderDetail![0].totalPrice}";
+            }
 
             if (prefiestasOrderDetailModel?.data?.orderDetail![0].orderStatus ==
                 "completed") {
@@ -377,9 +391,11 @@ class _YourOrderSumState extends State<YourOrderSum> {
                                           ),
                                           sameItem3(
                                               size: size,
-                                              topTile: "Alcohol",
+                                              topTile:
+                                                  "${i.preFiesta?.categories}",
                                               title: "${i.preFiesta?.name}",
-                                              decription: "70 CL",
+                                              decription:
+                                                  "${i.preFiesta?.quantity} CL",
                                               price: "${i.price}"),
                                         ],
                                       )
@@ -433,7 +449,7 @@ class _YourOrderSumState extends State<YourOrderSum> {
                                   child: Row(
                                     children: [
                                       Text(
-                                        "${getTranslated(context, "OtherTaxes")}",
+                                        "${getTranslated(context, "transferCharges")}",
                                         //   "Other Taxes",
                                         style: TextStyle(
                                             color: AppColors.white,
@@ -442,7 +458,7 @@ class _YourOrderSumState extends State<YourOrderSum> {
                                       ),
                                       Spacer(),
                                       Text(
-                                        "€ 24.99",
+                                        "${Strings.euro} ${prefiestasOrderDetailModel?.data?.orderDetail?[0].transferCharge ?? 0.0}",
                                         style: TextStyle(
                                             color: AppColors.white,
                                             fontSize: size.width * 0.05,
@@ -468,7 +484,7 @@ class _YourOrderSumState extends State<YourOrderSum> {
                                       ),
                                       Spacer(),
                                       Text(
-                                        Strings.euro + " " + "96.00",
+                                        Strings.euro + " " + grandTotal,
                                         style: TextStyle(
                                             color: AppColors.white,
                                             fontSize: size.width * 0.065,

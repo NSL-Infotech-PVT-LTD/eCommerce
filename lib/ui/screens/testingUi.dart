@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:funfy/apis/homeApis.dart';
 import 'package:funfy/apis/userdataM.dart';
@@ -7,11 +9,12 @@ import 'package:funfy/components/navigation.dart';
 import 'package:funfy/components/zeroadd.dart';
 import 'package:funfy/models/fiestasmodel.dart';
 import 'package:funfy/models/preFiestasModel.dart';
-import 'package:funfy/ui/screens/fiestasAll.dart';
+import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/screens/notifications.dart';
 import 'package:funfy/ui/widgets/dateButton.dart';
 import 'package:funfy/ui/widgets/postsitems.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
+import 'package:funfy/ui/widgets/scrollTohideWidget.dart';
 import 'package:funfy/ui/widgets/tagsButton.dart';
 import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/InternetCheck.dart';
@@ -22,15 +25,13 @@ import 'package:funfy/utils/langauge_constant.dart';
 import 'package:intl/intl.dart';
 
 class Testing extends StatefulWidget {
-  const Testing({Key? key}) : super(key: key);
-
   @override
   _TestingState createState() => _TestingState();
 }
 
 class _TestingState extends State<Testing> {
   TabController? controller;
-  bool fiestasButton = false;
+  bool fiestasButton = true;
 
   PrefiestasModel? prefiestasdata;
   // FiestasModel? fiestasdata;
@@ -191,9 +192,17 @@ class _TestingState extends State<Testing> {
     }
   }
 
+  // ------ //
+
+  // ScrollController? _controller;
+
   @override
   void initState() {
     // _fiestaSscrollController.addListener(_scrollListener);
+    setState(() {
+      UserData.sControlller = ScrollController();
+    });
+
     super.initState();
     fiestasgetPosts(date: filterDate);
     preFiestasPostget();
@@ -201,16 +210,44 @@ class _TestingState extends State<Testing> {
     // print(UserData.userToken);
   }
 
-  int number = 0;
+  @override
+  void dispose() {
+    UserData.sControlller!.dispose();
+    super.dispose();
+  }
+
+  // int number = 0;
+
+  // bottom bar ---------- //
 
   @override
   Widget build(BuildContext context) {
     daysInMonth(nowdate);
     var size = MediaQuery.of(context).size;
+
+    // Navigator.of(context).pushReplacement(
+    //     MaterialPageRoute(builder: (context) => Home(pageIndexNum: 0)));
+
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle.light.copyWith(
+        // systemNavigationBarIconBrightness: Brightness.dark,
+        // systemNavigationBarColor: Colors.blue,
+        // statusBarIconBrightness: Brightness.dark,
+        statusBarColor: Colors.black, // Note RED here
+      ),
+    );
+
     return SafeArea(
       child: Scaffold(
+          // bottomNavigationBar: ScrollTohideWidget(
+          //     child: Container(
+          //       color: Colors.blue,
+          //       height: size.height * 0.07,
+          //     ),
+          //     controller: UserData.sControlller!),
           backgroundColor: AppColors.blackBackground,
           body: CustomScrollView(
+            controller: UserData.sControlller,
             slivers: [
               SliverAppBar(
                 toolbarHeight: size.height * 0.15,
@@ -297,11 +334,11 @@ class _TestingState extends State<Testing> {
                                 SizedBox(
                                   width: size.width * 0.01,
                                 ),
-                                Icon(
-                                  Icons.expand_more,
-                                  size: size.width * 0.042,
-                                  color: AppColors.white,
-                                ),
+                                // Icon(
+                                //   Icons.expand_more,
+                                //   size: size.width * 0.042,
+                                //   color: AppColors.white,
+                                // ),
                               ],
                             ),
                           ],
@@ -326,7 +363,15 @@ class _TestingState extends State<Testing> {
                   )
                 ],
               ),
+
               SliverAppBar(
+                floating: true,
+                backgroundColor: AppColors.blackBackground,
+                toolbarHeight: size.height * 0.01,
+              ),
+              SliverAppBar(
+                forceElevated: true,
+                floating: true,
                 // pinned: true,
                 // backgroundColor: Colors.brown,
                 toolbarHeight: size.height * 0.085,
@@ -387,7 +432,6 @@ class _TestingState extends State<Testing> {
                                   onTap: () {
                                     setState(() {
                                       fiestasButton = false;
-                                      // changeLanguage();
                                     });
                                   },
                                   child: roundedBox(
@@ -417,369 +461,458 @@ class _TestingState extends State<Testing> {
 
               // Fiestas filter ------------ //
 
-              SliverToBoxAdapter(
-                child: Column(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                          vertical: size.height * 0.01,
-                          horizontal: size.width * 0.04),
-                      width: size.width,
-                      height: size.height * 0.055,
-                      child:
-                          // tags
-                          Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                            // Expanded(
-                            //     child: ListView.builder(
-                            //         scrollDirection: Axis.horizontal,
-                            //         itemBuilder: (context, index) {
-                            //           return tagbutton(
-                            //               context: context,
-                            //               text:
-                            //                   "${getTranslated(context, "club")}", //Strings.club,
-                            //               borderColor: AppColors.white,
-                            //               borderwidth: size.width * 0.001);
-                            //         })),
-
-                            Expanded(
-                                child: Container(
-                              // color: Colors.blue,
-                              child: Row(
-                                children: [
-                                  // club
-
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        tagType = "club";
-                                      });
-                                      fiestasgetPosts(date: filterDate);
-                                    },
-                                    child: tagbutton2(
-                                        context: context,
-                                        text:
-                                            "${getTranslated(context, "club")}", //Strings.club,
-                                        borderColor: tagType == "club"
-                                            ? AppColors.tagBorder
-                                            : AppColors.white,
-                                        textColor: tagType == "club"
-                                            ? AppColors.tagBorder
-                                            : AppColors.white,
-                                        borderwidth: tagType == "club"
-                                            ? size.width * 0.003
-                                            : size.width * 0.002),
-                                  ),
-
-                                  SizedBox(
-                                    width: size.width * 0.02,
-                                  ),
-
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        tagType = "open";
-                                      });
-                                      fiestasgetPosts(date: filterDate);
-                                    },
-                                    child: tagbutton2(
-                                        context: context,
-                                        text:
-                                            "${getTranslated(context, "openS")}", //Strings.club,
-                                        borderColor: tagType == "open"
-                                            ? AppColors.tagBorder
-                                            : AppColors.white,
-                                        textColor: tagType == "open"
-                                            ? AppColors.tagBorder
-                                            : AppColors.white,
-                                        borderwidth: tagType == "open"
-                                            ? size.width * 0.003
-                                            : size.width * 0.002),
-                                  ),
-
-                                  SizedBox(
-                                    width: size.width * 0.02,
-                                  ),
-
-                                  GestureDetector(
-                                    onTap: () {
-                                      clearFilter();
-                                      fiestasgetPosts(date: filterDate);
-                                    },
-                                    child: tagbutton2(
-                                        context: context,
-                                        text:
-                                            "${getTranslated(context, "clearfilter")}", //Strings.club,
-                                        borderColor: AppColors.white,
-                                        textColor: AppColors.white,
-                                        borderwidth: size.width * 0.002),
-                                  ),
-                                ],
-                              ),
-                            )),
-
-                            SizedBox(
-                              width: size.width * 0.02,
-                            ),
-
-                            // right button
-                            Container(
-                                margin:
-                                    EdgeInsets.only(right: size.width * 0.01),
-                                alignment: Alignment.centerRight,
-                                child:
-                                    // SvgPicture.asset(Images.filterSvg)
-
-                                    Image.asset(Images.filterPng)
-                                //     Icon(
-                                //   Icons.grid_view,
-                                //   color: Colors.white,
-                                // ),
-                                )
-                          ]),
-                    ),
-                    SizedBox(
-                      height: size.height * 0.015,
-                    ),
-
-                    // pick fiesta's day
-
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: size.height * 0.01,
-                              horizontal: size.width * 0.04),
-                          width: size.width,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "${getTranslated(context, "pickfiestasday")}",
-                                // Strings.pickfiestasday,
-                                style: TextStyle(
-                                    fontSize: size.width * 0.04,
-                                    fontFamily: Fonts.dmSansMedium,
-                                    color: AppColors.white),
-                              ),
-                              SizedBox(
-                                height: size.height * 0.015,
-                              ),
-                              Container(
-                                  width: size.width,
-                                  height: size.height * 0.06,
-                                  child: Row(
+              fiestasButton == false
+                  ? SliverToBoxAdapter(
+                      child: SizedBox(),
+                    )
+                  : SliverToBoxAdapter(
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                                vertical: size.height * 0.01,
+                                horizontal: size.width * 0.04),
+                            width: size.width,
+                            height: size.height * 0.055,
+                            child:
+                                // tags
+                                Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Expanded(
-                                        flex: 12,
-                                        child: ListView.builder(
-                                            controller: _scrollController,
-                                            itemCount: dates.length,
-                                            scrollDirection: Axis.horizontal,
-                                            itemBuilder: (context, index) {
-                                              return GestureDetector(
-                                                onTap: () async {
-                                                  String pic = dates[index]
-                                                          ["fulldate"]
-                                                      .toString();
-                                                  DateTime picked =
-                                                      DateTime.parse(pic);
+                                  Expanded(
+                                      child: Container(
+                                    // color: Colors.blue,
+                                    child: Row(
+                                      children: [
+                                        // club
 
-                                                  // print(picked);
-
-                                                  setState(() {
-                                                    nowdate = picked;
-                                                    daysInMonth(picked);
-                                                  });
-
-                                                  // get fiestast post
-
-                                                  String? fomatDate =
-                                                      await dateFormat(
-                                                          date: picked);
-
-                                                  setState(() {
-                                                    filterDate = fomatDate;
-                                                  });
-
-                                                  fiestasgetPosts(
-                                                      date: fomatDate);
-                                                },
-                                                child: Container(
-                                                  margin: EdgeInsets.only(
-                                                      left: size.width * 0.01),
-                                                  child: dateButton(
-                                                      context: context,
-                                                      text: dates[index]["date"]
-                                                          .toString(),
-                                                      textColor: dates[index]
-                                                                  ["active"] ==
-                                                              true
-                                                          ? AppColors
-                                                              .homeBackground
-                                                          : AppColors.white,
-                                                      month: dates[index]
-                                                              ["month"]
-                                                          .toString(),
-                                                      borderColor:
-                                                          AppColors.white,
-                                                      borderwidth:
-                                                          size.width * 0.003,
-                                                      backgroundColor: dates[
-                                                                      index]
-                                                                  ["active"] ==
-                                                              true
-                                                          ? AppColors.tagBorder
-                                                          : AppColors
-                                                              .homeBackground),
-                                                ),
-                                              );
-                                            }),
-                                      ),
-                                      SizedBox(
-                                        width: size.width * 0.01,
-                                      ),
-                                      Expanded(
-                                        flex: 2,
-                                        child: GestureDetector(
+                                        GestureDetector(
                                           onTap: () {
-                                            selectDate(context);
+                                            setState(() {
+                                              tagType = "club";
+                                            });
+                                            fiestasgetPosts(date: filterDate);
                                           },
-                                          child: SvgPicture.asset(
-                                            Images.calenderSvg,
-                                            height: size.height * 0.1,
-                                          ),
+                                          child: tagbutton2(
+                                              context: context,
+                                              text:
+                                                  "${getTranslated(context, "club")}", //Strings.club,
+                                              borderColor: tagType == "club"
+                                                  ? AppColors.tagBorder
+                                                  : AppColors.white,
+                                              textColor: tagType == "club"
+                                                  ? AppColors.tagBorder
+                                                  : AppColors.white,
+                                              borderwidth: tagType == "club"
+                                                  ? size.width * 0.003
+                                                  : size.width * 0.002),
                                         ),
-                                      )
-                                    ],
-                                  ))
+
+                                        SizedBox(
+                                          width: size.width * 0.02,
+                                        ),
+
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              tagType = "open";
+                                            });
+                                            fiestasgetPosts(date: filterDate);
+                                          },
+                                          child: tagbutton2(
+                                              context: context,
+                                              text:
+                                                  "${getTranslated(context, "openS")}", //Strings.club,
+                                              borderColor: tagType == "open"
+                                                  ? AppColors.tagBorder
+                                                  : AppColors.white,
+                                              textColor: tagType == "open"
+                                                  ? AppColors.tagBorder
+                                                  : AppColors.white,
+                                              borderwidth: tagType == "open"
+                                                  ? size.width * 0.003
+                                                  : size.width * 0.002),
+                                        ),
+
+                                        SizedBox(
+                                          width: size.width * 0.02,
+                                        ),
+
+                                        GestureDetector(
+                                          onTap: () {
+                                            clearFilter();
+                                            fiestasgetPosts(date: filterDate);
+                                          },
+                                          child: tagbutton2(
+                                              context: context,
+                                              text:
+                                                  "${getTranslated(context, "clearfilter")}", //Strings.club,
+                                              borderColor: AppColors.white,
+                                              textColor: AppColors.white,
+                                              borderwidth: size.width * 0.002),
+                                        ),
+                                      ],
+                                    ),
+                                  )),
+
+                                  SizedBox(
+                                    width: size.width * 0.02,
+                                  ),
+
+                                  // right button -------------- //
+                                  // Container(
+                                  //     margin: EdgeInsets.only(
+                                  //         right: size.width * 0.01),
+                                  //     alignment: Alignment.centerRight,
+                                  //     child: Image.asset(Images.filterPng))
+                                ]),
+                          ),
+                          SizedBox(
+                            height: size.height * 0.015,
+                          ),
+
+                          // pick fiesta's day
+
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: size.height * 0.01,
+                                    horizontal: size.width * 0.04),
+                                width: size.width,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "${getTranslated(context, "pickfiestasday")}",
+                                      // Strings.pickfiestasday,
+                                      style: TextStyle(
+                                          fontSize: size.width * 0.04,
+                                          fontFamily: Fonts.dmSansMedium,
+                                          color: AppColors.white),
+                                    ),
+                                    SizedBox(
+                                      height: size.height * 0.015,
+                                    ),
+                                    Container(
+                                        width: size.width,
+                                        height: size.height * 0.06,
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              flex: 12,
+                                              child: ListView.builder(
+                                                  controller: _scrollController,
+                                                  itemCount: dates.length,
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    return GestureDetector(
+                                                      onTap: () async {
+                                                        String pic =
+                                                            dates[index]
+                                                                    ["fulldate"]
+                                                                .toString();
+                                                        DateTime picked =
+                                                            DateTime.parse(pic);
+
+                                                        // print(picked);
+
+                                                        setState(() {
+                                                          nowdate = picked;
+                                                          daysInMonth(picked);
+                                                        });
+
+                                                        // get fiestast post
+
+                                                        String? fomatDate =
+                                                            await dateFormat(
+                                                                date: picked);
+
+                                                        setState(() {
+                                                          filterDate =
+                                                              fomatDate;
+                                                        });
+
+                                                        fiestasgetPosts(
+                                                            date: fomatDate);
+                                                      },
+                                                      child: Container(
+                                                        margin: EdgeInsets.only(
+                                                            left: size.width *
+                                                                0.01),
+                                                        child: dateButton(
+                                                            context: context,
+                                                            text: dates[index]
+                                                                    ["date"]
+                                                                .toString(),
+                                                            textColor:
+                                                                dates[index]["active"] ==
+                                                                        true
+                                                                    ? AppColors
+                                                                        .homeBackground
+                                                                    : AppColors
+                                                                        .white,
+                                                            month: dates[index]
+                                                                    ["month"]
+                                                                .toString(),
+                                                            borderColor:
+                                                                AppColors.white,
+                                                            borderwidth:
+                                                                size.width *
+                                                                    0.003,
+                                                            backgroundColor:
+                                                                dates[index]["active"] ==
+                                                                        true
+                                                                    ? AppColors
+                                                                        .tagBorder
+                                                                    : AppColors
+                                                                        .homeBackground),
+                                                      ),
+                                                    );
+                                                  }),
+                                            ),
+                                            SizedBox(
+                                              width: size.width * 0.01,
+                                            ),
+                                            Expanded(
+                                              flex: 2,
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  selectDate(context);
+                                                },
+                                                child: SvgPicture.asset(
+                                                  Images.calenderSvg,
+                                                  height: size.height * 0.1,
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ))
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
-                        ),
-                      ],
-                    ),
 
-                    SizedBox(
-                      height: size.height * 0.04,
+                          SizedBox(
+                            height: size.height * 0.04,
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
-                ),
-              ),
 
               // fiestasPost List
 
-              _fiestasPostLoading == true
-                  ? SliverToBoxAdapter(
-                      child: Center(
-                          child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                  AppColors.white))),
-                    )
-                  : UserData.fiestasdata?.data?.data?.length == 0 &&
-                          _postLoading == false
+              fiestasButton
+                  ? _fiestasPostLoading == true
                       ? SliverToBoxAdapter(
-                          child: Center(
-                            child: Text(
-                              "${getTranslated(context, "PostsEmpty")}",
-                              //     Strings.PostsEmpty,
-                              style: TextStyle(
-                                  color: AppColors.white,
-                                  fontSize: size.width * 0.04),
-                            ),
+                          child: Container(
+                            margin: EdgeInsets.only(top: size.height * 0.16),
+                            child: Center(
+                                child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        AppColors.white))),
                           ),
                         )
-                      : SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                            return Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: size.width * 0.04),
-                              child: fiestasItem(
-                                  context: context,
-                                  postModeldata: UserData
-                                      .fiestasdata?.data?.data
-                                      ?.elementAt(index)),
-                            );
-                          },
-                          childCount:
-                              UserData.fiestasdata?.data?.data?.length ?? 0,
-                        ))
+                      : UserData.fiestasdata?.data?.data?.length == 0 &&
+                              _postLoading == false
+                          ? SliverToBoxAdapter(
+                              child: Container(
+                                margin:
+                                    EdgeInsets.only(top: size.height * 0.16),
+                                child: Center(
+                                  child: Text(
+                                    "${getTranslated(context, "PostsEmpty")}",
+                                    //     Strings.PostsEmpty,
+                                    style: TextStyle(
+                                        color: AppColors.white,
+                                        fontSize: size.width * 0.04),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : SliverList(
+                              delegate: SliverChildBuilderDelegate(
+                              (context, index) {
+                                return Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: size.width * 0.04),
+                                  child: fiestasItem(
+                                      context: context,
+                                      postModeldata: UserData
+                                          .fiestasdata?.data?.data
+                                          ?.elementAt(index)),
+                                );
+                              },
+                              childCount:
+                                  UserData.fiestasdata?.data?.data?.length ?? 0,
+                            ))
+                  : SliverToBoxAdapter(
+                      child: SizedBox(),
+                    ),
+
+              // Prefiestas -------------------- //
+
+              fiestasButton == false
+                  ? SliverToBoxAdapter(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: size.width * 0.03,
+                                  vertical: size.height * 0.01),
+                              width: size.width,
+                              height: size.height * 0.17,
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      // image: NetworkImage(bannerImage),
+                                      image: AssetImage(
+                                          "assets/images/prefiestasBanner.png"),
+                                      fit: BoxFit.cover))),
+                          SizedBox(
+                            height: size.height * 0.03,
+                          ),
+                          Container(
+                            margin: EdgeInsets.symmetric(
+                              horizontal: size.width * 0.05,
+                            ),
+                            child: Text(
+                              "${getTranslated(context, "preFiestasOffers")}",
+                              //  Strings.preFiestasOffers,
+                              style: TextStyle(
+                                  fontSize: size.width * 0.043,
+                                  fontFamily: Fonts.dmSansBold,
+                                  color: AppColors.white),
+                            ),
+                          ),
+                          SizedBox(
+                            height: size.height * 0.01,
+                          ),
+                        ],
+                      ),
+                    )
+                  : SliverToBoxAdapter(
+                      child: SizedBox(),
+                    ),
+
+              fiestasButton == false
+                  ? _postLoading == true
+                      ? SliverToBoxAdapter(
+                          child: Container(
+                            margin: EdgeInsets.only(top: size.height * 0.16),
+                            child: Center(
+                                child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        AppColors.white))),
+                          ),
+                        )
+                      : UserData.fiestasdata?.data?.data?.length == 0 &&
+                              _postLoading == false
+                          ? SliverToBoxAdapter(
+                              child: Container(
+                                margin:
+                                    EdgeInsets.only(top: size.height * 0.16),
+                                child: Center(
+                                  child: Text(
+                                    "${getTranslated(context, "PostsEmpty")}",
+                                    //     Strings.PostsEmpty,
+                                    style: TextStyle(
+                                        color: AppColors.white,
+                                        fontSize: size.width * 0.04),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : SliverList(
+                              delegate: SliverChildBuilderDelegate(
+                              (context, index) {
+                                return Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: size.width * 0.04),
+                                  child: preFiestasItem(
+                                      context: context,
+                                      prefiestasdata:
+                                          prefiestasdata?.data?.data?[index]),
+                                );
+                              },
+                              childCount:
+                                  prefiestasdata?.data?.data?.length ?? 0,
+                            ))
+                  : SliverToBoxAdapter(
+                      child: SizedBox(),
+                    ),
             ],
           )),
     );
-
-    //  Scaffold(
-    //   body: CustomScrollView(
-    //     slivers: <Widget>[
-    //       SliverAppBar(
-    //         snap: false,
-    //         pinned: false,
-    //         floating: false,
-    //         // flexibleSpace: FlexibleSpaceBar(
-    //         //     centerTitle: true,
-    //         //     title: Text("$title",
-    //         //         style: TextStyle(
-    //         //           color: Colors.white,
-    //         //           fontSize: 16.0,
-    //         //         ) //TextStyle
-    //         //         ), //Text
-    //         //     background: Image.network(
-    //         //       "https://i.ibb.co/QpWGK5j/Geeksfor-Geeks.png",
-    //         //       fit: BoxFit.cover,
-    //         //     ) //Images.network
-    //         //     ), //FlexibleSpaceBar
-    //         expandedHeight: 150,
-    //         backgroundColor: Colors.greenAccent[400],
-    //         leading: IconButton(
-    //           icon: Icon(Icons.menu),
-    //           tooltip: 'Menu',
-    //           onPressed: () {},
-    //         ), //IconButton
-    //         actions: <Widget>[
-    //           IconButton(
-    //             icon: Icon(Icons.comment),
-    //             tooltip: 'Comment Icon',
-    //             onPressed: () {},
-    //           ), //IconButton
-    //           IconButton(
-    //             icon: Icon(Icons.settings),
-    //             tooltip: 'Setting Icon',
-    //             onPressed: () {},
-    //           ), //IconButton
-    //         ], //<Widget>[]
-    //       ), //SliverAppBar
-
-    //       SliverAppBar(
-    //         backgroundColor: Colors.green,
-    //         title: Text('Have a nice day'),
-    //         floating: true,
-    //       ),
-    //       SliverList(
-    //         delegate: SliverChildBuilderDelegate(
-    //           (context, index) => ListTile(
-    //             tileColor: (index % 2 == 0) ? Colors.white : Colors.green[50],
-    //             title: Center(
-    //               child: Text('$index',
-    //                   style: TextStyle(
-    //                       fontWeight: FontWeight.normal,
-    //                       fontSize: 50,
-    //                       color: Colors.greenAccent[400]) //TextStyle
-    //                   ), //Text
-    //             ), //Center
-    //           ), //ListTile
-    //           childCount: 51,
-    //         ), //SliverChildBuildDelegate
-    //       ) //SliverList
-    //     ], //<Widget>[]
-    //     //CustonScrollView
-    //   ), //Scaffold
-
-    //   // Remove debug banner for proper
-    //   // view of setting icon
-    // );
   }
 }
 
 ///
+
+// class ScrollTohideWidget extends StatefulWidget {
+//   final Widget child;
+//   final ScrollController controller;
+//   final Duration duration;
+
+//   const ScrollTohideWidget({
+//     Key? key,
+//     required this.child,
+//     required this.controller,
+//     this.duration = const Duration(milliseconds: 200),
+//   }) : super(key: key);
+
+//   @override
+//   _ScrollTohideWidgetState createState() => _ScrollTohideWidgetState();
+// }
+
+// class _ScrollTohideWidgetState extends State<ScrollTohideWidget> {
+//   bool isVisible = true;
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     widget.controller.addListener(listen);
+//   }
+
+//   @override
+//   void dispose() {
+//     widget.controller.removeListener(listen);
+//     super.dispose();
+//   }
+
+//   void listen() {
+//     final direction = widget.controller.position.userScrollDirection;
+//     if (direction == ScrollDirection.forward) {
+//       print("Show ---------- ");
+//       show();
+//     }
+
+//     if (direction == ScrollDirection.reverse) {
+//       print("hide ---------- ");
+//       hide();
+//     }
+//   }
+
+//   void show() {
+//     if (isVisible == false) setState(() => isVisible = true);
+//   }
+
+//   void hide() {
+//     if (isVisible) setState(() => isVisible = false);
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     var size = MediaQuery.of(context).size;
+//     return AnimatedContainer(
+//       duration: widget.duration,
+//       height: isVisible ? size.height * 0.07 : 0,
+//       child: widget.child,
+//     );
+//   }
+// }

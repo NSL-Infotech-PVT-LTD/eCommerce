@@ -45,6 +45,8 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
 
   String? time;
 
+  double ratingF = 0.0;
+
   getFiestasBookingDetail() async {
     var net = await Internetcheck.check();
 
@@ -74,6 +76,15 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
             if (fiestasBookingDetailModel?.data![0].bookingStatus ==
                 "completed") {
               showRatingBottomSheet();
+            }
+
+            var ratM =
+                fiestasBookingDetailModel?.data![0].fiestaDetail?.clubRating;
+
+            if (ratM == null || ratM == 0) {
+              ratingF = 0.0;
+            } else {
+              ratingF = double.parse("$ratM");
             }
           });
         });
@@ -427,7 +438,7 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                                       size: size.width * 0.042,
                                       ittempading: size.width * 0.001,
                                       color: HexColor("#ffc607"),
-                                      rating: 3.0),
+                                      rating: ratingF),
 
                                   SizedBox(
                                     height: size.height * 0.015,
@@ -471,14 +482,16 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                                         children: [
                                           content(
                                               size: size,
-                                              title: Strings.date,
+                                              title: getTranslated(
+                                                  context, "date"),
                                               description: "$date"),
                                           SizedBox(
                                             height: size.height * 0.025,
                                           ),
                                           content(
                                               size: size,
-                                              title: Strings.checkinType,
+                                              title: getTranslated(
+                                                  context, "checkinType"),
                                               description: Strings.ticket),
                                         ],
                                       ),
@@ -491,14 +504,16 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                                         children: [
                                           content(
                                               size: size,
-                                              title: Strings.time,
+                                              title: getTranslated(
+                                                  context, "time"),
                                               description: "$time"),
                                           SizedBox(
                                             height: size.height * 0.025,
                                           ),
                                           content(
                                               size: size,
-                                              title: Strings.orderId,
+                                              title: getTranslated(
+                                                  context, "orderId"),
                                               description:
                                                   "${fiestasBookingDetailModel?.data![0].id}")
                                         ],
@@ -512,8 +527,9 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
 
                                   content(
                                       size: size,
-                                      title: Strings.location,
-                                      description: Strings.lorem)
+                                      title: getTranslated(context, "location"),
+                                      description:
+                                          "8496 East Thompson Street Birmingham, AL 35209")
                                 ],
                               ),
                             )
