@@ -327,14 +327,14 @@ class _ProfilepageState extends State<Profilepage> {
                         //     leftIconImage: Images.orderIIconpng,
                         //     onTapfunc: () {}),
 
-                        // centerlistItem(
-                        //     context: context,
-                        //     title: "${getTranslated(context, "favourite")}",
-                        //     //  Strings.deliveryAddress,
-                        //     leftIconImage: "assets/pngicons/hearticonbig.png",
-                        //     onTapfunc: () {
-                        //       navigatorPushFun(context, Favourite());
-                        //     }),
+                        centerlistItem(
+                            context: context,
+                            title: "${getTranslated(context, "favourite")}",
+                            //  Strings.deliveryAddress,
+                            leftIconImage: "assets/pngicons/hearticonbig.png",
+                            onTapfunc: () {
+                              navigatorPushFun(context, Favourite());
+                            }),
 
                         centerlistItem(
                             context: context,

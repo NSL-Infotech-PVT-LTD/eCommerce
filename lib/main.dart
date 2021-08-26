@@ -238,8 +238,8 @@ class _MyAppState extends State<MyApp> {
           return supportedLocales.first;
         },
         darkTheme: ThemeData.dark(), //
-        home: TranslateTest());
-    // home: Testing());
+        // home: TranslateTest());
+        home: Splash());
     // home: Home(
     //   pageIndexNum: 0,
     // ));

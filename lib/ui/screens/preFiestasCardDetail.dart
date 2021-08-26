@@ -324,15 +324,17 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
           addressId: "2",
           cardID: "$cardid",
         ).then((res) {
+          print(UserData.myCartModel?.data?.cart?.id.toString());
+          print("cart id $cardid");
           setState(() {
             payLoading = false;
           });
-
           print("here is $res");
 
           // print("here is ${res?.toJson()}");
 
-          if (res["status"] == true && res["code"] == 201) {
+          if (res["status"] == true &&
+              (res["code"] == 201 || res["code"] == 200)) {
             clearCart();
             Navigator.pushAndRemoveUntil(
                 context,
@@ -357,6 +359,7 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
       }
     } catch (e) {
       setState(() {
+        print("kdhkhgf $e");
         payLoading = false;
 
         swipebuttonShowBool = true;
@@ -882,33 +885,37 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
                                       ),
 
                                       // view card button
-
-                                      InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            cardFormShow = false;
-                                          });
-                                        },
-                                        child: roundedBoxR(
-                                          radius: size.width * 0.02,
-                                          width: size.width,
-                                          height: size.height * 0.07,
-                                          backgroundColor: HexColor("#6b604d"),
-                                          child: Center(
-                                            child: _loading
-                                                ? CircularProgressIndicator()
-                                                : Text(
-                                                    "${getTranslated(context, "viewYourCard")}",
-                                                    style: TextStyle(
-                                                        fontSize:
-                                                            size.width * 0.045,
-                                                        fontFamily:
-                                                            Fonts.dmSansMedium,
-                                                        color: AppColors.white),
-                                                  ),
-                                          ),
-                                        ),
-                                      )
+                                      cardList != null
+                                          ? InkWell(
+                                              onTap: () {
+                                                setState(() {
+                                                  cardFormShow = false;
+                                                });
+                                              },
+                                              child: roundedBoxR(
+                                                radius: size.width * 0.02,
+                                                width: size.width,
+                                                height: size.height * 0.07,
+                                                backgroundColor:
+                                                    HexColor("#6b604d"),
+                                                child: Center(
+                                                  child: _loading
+                                                      ? CircularProgressIndicator()
+                                                      : Text(
+                                                          "${getTranslated(context, "viewYourCard")}",
+                                                          style: TextStyle(
+                                                              fontSize:
+                                                                  size.width *
+                                                                      0.045,
+                                                              fontFamily: Fonts
+                                                                  .dmSansMedium,
+                                                              color: AppColors
+                                                                  .white),
+                                                        ),
+                                                ),
+                                              ),
+                                            )
+                                          : SizedBox()
                                     ],
                                   ),
                       ],

@@ -536,7 +536,7 @@ class _CartpageState extends State<Cartpage> {
                   : Container(
                       child: Row(
                         children: [
-                          GestureDetector(
+                          InkWell(
                             onTap: () {
                               ticketRemove(
                                   index: index,
@@ -582,7 +582,7 @@ class _CartpageState extends State<Cartpage> {
                           SizedBox(
                             width: SizeConfig.screenWidth * 0.03,
                           ),
-                          GestureDetector(
+                          InkWell(
                             onTap: () {
                               addTicket(
                                   index: index,
@@ -869,7 +869,6 @@ class _CartpageState extends State<Cartpage> {
                                                           "${UserData.myCartModel?.data?.parentDetail?.image}"))
                                                 ],
                                               ),
-
                                               Column(
                                                 children: [
                                                   for (int i = 0;
@@ -962,122 +961,24 @@ class _CartpageState extends State<Cartpage> {
                                                                     ? 2
                                                                     : 3),
                                                       ],
-                                                    )
+                                                    ),
+
+                                                  // Total Price
+
+                                                  SizedBox(
+                                                    height: size.height * 0.03,
+                                                  ),
+                                                  Text(
+                                                    "${getTranslated(context, 'totalPrice')}  ${Strings.euro} 100",
+                                                    style: TextStyle(
+                                                        color: AppColors.white,
+                                                        fontFamily:
+                                                            Fonts.dmSansBold,
+                                                        fontSize:
+                                                            size.width * 0.06),
+                                                  )
                                                 ],
                                               )
-                                              // Container(
-                                              //   height: size.height * count,
-                                              //   child: ListView.builder(
-                                              //       itemCount: UserData
-                                              //           .myCartModel
-                                              //           ?.data
-                                              //           ?.cart
-                                              //           ?.cartItems
-                                              //           ?.length,
-                                              //       itemBuilder:
-                                              //           (context, index) {
-                                              //         var type = UserData
-                                              //             .myCartModel
-                                              //             ?.data
-                                              //             ?.cart
-                                              //             ?.cartItems![index]
-                                              //             .preFiesta;
-                                              //         return Column(
-                                              //           children: [
-                                              //             SizedBox(
-                                              //               height:
-                                              //                   size.height *
-                                              //                       0.03,
-                                              //             ),
-                                              //             listItem(
-                                              //                 index: index,
-                                              //                 pid: UserData
-                                              //                     .myCartModel
-                                              //                     ?.data
-                                              //                     ?.cart
-                                              //                     ?.cartItems![
-                                              //                         index]
-                                              //                     .preFiesta
-                                              //                     ?.id
-                                              //                     .toString(),
-                                              //                 topTile: type
-                                              //                     ?.categories,
-                                              //                 title: UserData
-                                              //                     .myCartModel
-                                              //                     ?.data
-                                              //                     ?.cart
-                                              //                     ?.cartItems![
-                                              //                         index]
-                                              //                     .preFiesta!
-                                              //                     .name,
-                                              //                 price: UserData
-                                              //                     .myCartModel
-                                              //                     ?.data
-                                              //                     ?.cart
-                                              //                     ?.cartItems![
-                                              //                         index]
-                                              //                     .price
-                                              //                     .toString(),
-                                              //                 quantity: UserData
-                                              //                     .myCartModel
-                                              //                     ?.data
-                                              //                     ?.cart
-                                              //                     ?.cartItems![
-                                              //                         index]
-                                              //                     .quantity
-                                              //                     .toString(),
-                                              //                 size: size,
-                                              //                 type: type
-                                              //                     ?.categories,
-                                              //                 // boolCount:
-                                              //                 //     type?.categories ==
-                                              //                 //             "alcohol"
-                                              //                 //         ? null
-                                              //                 //         : true,
-
-                                              //                 boolCount: true,
-                                              //                 context: context,
-                                              //                 count: UserData
-                                              //                     .myCartModel
-                                              //                     ?.data
-                                              //                     ?.cart
-                                              //                     ?.cartItems![
-                                              //                         index]
-                                              //                     .quantity,
-                                              //                 cart: type?.categories == "mix"
-                                              //                     ? UserData.preFiestasMixesTicketCart
-                                              //                     : type?.categories == "extras"
-                                              //                         ? UserData.preFiestasExtrasTicketCart
-                                              //                         : UserData.preFiestasAlcoholCartMap,
-                                              //                 itemTypes: type?.categories == "alcohol"
-                                              //                     ? 1
-                                              //                     : type?.categories == "extras"
-                                              //                         ? 2
-                                              //                         : 3),
-                                              //           ],
-                                              //         );
-                                              //       }),
-                                              // ),
-
-                                              // items
-                                              // SizedBox(
-                                              //   height: size.height * 0.035,
-                                              // ),
-                                              // listItem(size: size, context: context),
-                                              // SizedBox(
-                                              //   height: size.height * 0.03,
-                                              // ),
-                                              // listItem(
-                                              //     size: size,
-                                              //     boolCount: true,
-                                              //     context: context),
-                                              // SizedBox(
-                                              //   height: size.height * 0.03,
-                                              // ),
-                                              // listItem(
-                                              //     size: size,
-                                              //     boolCount: true,
-                                              //     context: context),
                                             ],
                                           ),
                                         )),

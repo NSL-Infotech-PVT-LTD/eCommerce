@@ -11,9 +11,9 @@
   "password": "Password",
   "passwordhint": "Enter your Password",
   "forgotPassword": "Forgot Password?",
-  "donthaveAccount": "Don't have account?",
+  "donthaveAccount": "Don't have an account?",
   "signupUp": "SIGN UP",
-  "alreadyhaveaccount": "Already have account?",
+  "alreadyhaveaccount": "Already have an account?",
   "backtoSignin": "BACK TO SIGN IN",
   "signup": "Sign Up",
   "quicklyOnboardto": "Quickly onboard to",
@@ -25,7 +25,7 @@
   "gender": "Gender",
   "genderHint": "Choose your gender",
   "byContinuingYouAgreetoOur": "By continuing you agree to our",
-  "termsOfService": "Terms of Service",
+  "termsOfService": "Terms of Services",
   "and": "and",
   "privacypolicy": "Privacy Policy.",
   "forgotpassword": "Forgot Password",
@@ -203,5 +203,8 @@
   "outofStock": "Out of Stock",
   "yourPaymentisfailed": "Your Payment is failed",
   "till": "Till",
-  "transferCharges": "Transfer charges"
+  "transferCharges": "Transfer charges",
+  "listisEmpty": "List is Empty",
+  "youcantselectpastdate": "You can't select past date",
+  "totalPrice": "Total Price"
 }

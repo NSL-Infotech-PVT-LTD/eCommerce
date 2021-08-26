@@ -6,6 +6,8 @@ import 'package:funfy/components/dialogs.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/models/fiestasBookingDetailModel.dart';
 import 'package:funfy/ui/screens/bookNowBeta.dart';
+import 'package:funfy/ui/screens/home.dart';
+import 'package:funfy/ui/screens/pages/bookingpage.dart';
 import 'package:funfy/ui/screens/qrCodeZoomin.dart';
 import 'package:funfy/ui/widgets/rating.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
@@ -22,8 +24,10 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 class FiestasMoreOrderDetail extends StatefulWidget {
   final fiestaBookingId;
+  final nav;
 
-  const FiestasMoreOrderDetail({Key? key, this.fiestaBookingId})
+  const FiestasMoreOrderDetail(
+      {Key? key, @required this.fiestaBookingId, this.nav})
       : super(key: key);
 
   @override
@@ -244,6 +248,22 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
         });
   }
 
+  Future<bool> backCall() async {
+    if (widget.nav == 1) {
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) => Home(
+                    pageIndexNum: 0,
+                  )),
+          (route) => false);
+    } else {
+      Navigator.of(context).pop();
+    }
+
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -252,328 +272,340 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
 
     var data = fiestasBookingDetailModel?.data![0].fiestaDetail;
 
-    return Scaffold(
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     showRatingBottomSheet();
-      //   },
-      //   child: Icon(Icons.add),
-      // ),
-      backgroundColor: AppColors.siginbackgrond,
-      appBar: AppBar(
-        key: _keyScaffold,
-        backgroundColor: Colors.transparent,
-        centerTitle: true,
-        elevation: 0,
-        title: Text(
-          "${getTranslated(context, "youreTicket")}",
-          //   Strings.youreTicket,
-          style: TextStyle(
-              fontFamily: Fonts.dmSansMedium, fontSize: size.width * 0.05),
+    return WillPopScope(
+      onWillPop: backCall,
+      child: Scaffold(
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {
+        //     showRatingBottomSheet();
+        //   },
+        //   child: Icon(Icons.add),
+        // ),
+        backgroundColor: AppColors.siginbackgrond,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          leading: IconButton(
+            onPressed: backCall,
+            icon: Icon(Icons.arrow_back),
+          ),
+          key: _keyScaffold,
+          backgroundColor: Colors.transparent,
+          centerTitle: true,
+          elevation: 0,
+          title: Text(
+            "${getTranslated(context, "youreTicket")}",
+            //   Strings.youreTicket,
+            style: TextStyle(
+                fontFamily: Fonts.dmSansMedium, fontSize: size.width * 0.05),
+          ),
         ),
-      ),
-      body: _loading
-          ? Center(
-              child: CircularProgressIndicator(
-                color: AppColors.white,
-              ),
-            )
-          : SingleChildScrollView(
-              child: Stack(children: [
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: size.width * 0.05),
-                  // padding: EdgeInsets.symmetric(
-                  //     vertical: size.height * 0.02, horizontal: size.width * 0.034),
-                  alignment: Alignment.topCenter,
-                  width: size.width,
-                  height: size.height * 0.79,
-                  decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius:
-                          BorderRadius.all(Radius.circular(size.width * 0.02))),
-
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: size.height * 0.24,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            height: size.height * 0.06,
-                            width: size.width * 0.06,
-                            decoration: BoxDecoration(
-                                color: AppColors.siginbackgrond,
-                                borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(size.width * 0.1),
-                                    bottomRight:
-                                        Radius.circular(size.width * 0.1))),
-                          ),
-                          Container(
-                            alignment: Alignment.center,
-                            width: size.width * 0.6,
-                            height: 50,
-                            child: Text(
-                              "${getTranslated(context, "hyphens")}",
-
-                              //Strings.hyphens,
-                              maxLines: 1,
-                              overflow: TextOverflow.clip,
-                              style: TextStyle(
-                                  fontSize: size.width * 0.045,
-                                  color: AppColors.inputTitle),
-                            ),
-                          ),
-                          Container(
-                            height: size.height * 0.06,
-                            width: size.width * 0.06,
-                            decoration: BoxDecoration(
-                                color: AppColors.siginbackgrond,
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(size.width * 0.1),
-                                    bottomLeft:
-                                        Radius.circular(size.width * 0.1))),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
+        body: _loading
+            ? Center(
+                child: CircularProgressIndicator(
+                  color: AppColors.white,
                 ),
-                Container(
-                  child: Column(
-                    children: [
-                      // center box
-                      Container(
-                        margin:
-                            EdgeInsets.symmetric(horizontal: size.width * 0.05),
-                        padding: EdgeInsets.symmetric(
-                            vertical: size.height * 0.025,
-                            horizontal: size.width * 0.034),
-                        width: size.width,
-                        height: size.height * 0.79,
-                        decoration: BoxDecoration(
-                            // color: AppColors.white,
-                            color: Colors.transparent,
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(size.width * 0.02))),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
+              )
+            : SingleChildScrollView(
+                child: Stack(children: [
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: size.width * 0.05),
+                    // padding: EdgeInsets.symmetric(
+                    //     vertical: size.height * 0.02, horizontal: size.width * 0.034),
+                    alignment: Alignment.topCenter,
+                    width: size.width,
+                    height: size.height * 0.79,
+                    decoration: BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(size.width * 0.02))),
+
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: size.height * 0.24,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Row(
-                              children: [
-                                Spacer(),
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        PageTransition(
-                                            duration:
-                                                Duration(milliseconds: 500),
-                                            type:
-                                                PageTransitionType.topToBottom,
-                                            child: QrCodeZoomIn(
-                                              qrId: fiestasBookingDetailModel
-                                                  ?.data![0].fiestaId,
-                                            )));
-
-                                    // navigatorPushFun(context, QrCodeZoomIn());
-                                  },
-                                  child: Container(
-                                    alignment: Alignment.topRight,
-                                    width: size.width * 0.06,
-                                    height: size.height * 0.03,
-                                    child: SvgPicture.asset(
-                                      Images.qrZoomIn,
-                                      width: size.width * 0.055,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            SizedBox(
-                              height: size.height * 0.01,
-                            ),
-
-                            // qr code
-
                             Container(
-                              alignment: Alignment.topRight,
-                              width: size.width * 0.32,
-                              height: size.height * 0.16,
-                              // color: Colors.yellow,
-                              child: QrImage(
-                                data:
-                                    "${fiestasBookingDetailModel?.data![0].fiestaId}",
-                                version: QrVersions.auto,
-                                size: size.width * 0.5,
+                              height: size.height * 0.06,
+                              width: size.width * 0.06,
+                              decoration: BoxDecoration(
+                                  color: AppColors.siginbackgrond,
+                                  borderRadius: BorderRadius.only(
+                                      topRight:
+                                          Radius.circular(size.width * 0.1),
+                                      bottomRight:
+                                          Radius.circular(size.width * 0.1))),
+                            ),
+                            Container(
+                              alignment: Alignment.center,
+                              width: size.width * 0.6,
+                              height: 50,
+                              child: Text(
+                                "${getTranslated(context, "hyphens")}",
+
+                                //Strings.hyphens,
+                                maxLines: 1,
+                                overflow: TextOverflow.clip,
+                                style: TextStyle(
+                                    fontSize: size.width * 0.045,
+                                    color: AppColors.inputTitle),
                               ),
                             ),
-
-                            SizedBox(
-                              height: size.height * 0.1,
-                            ),
-
-                            // content
-
                             Container(
-                              margin: EdgeInsets.symmetric(
-                                  horizontal: size.width * 0.05),
-                              alignment: Alignment.topLeft,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // title
-                                  Text(
-                                    "${data?.name}",
-                                    style: TextStyle(
-                                        fontFamily: Fonts.dmSansBold,
-                                        fontSize: size.width * 0.07,
-                                        color: AppColors.blackBackground),
-                                  ),
-                                  //rating
-
-                                  ratingstars(
-                                      size: size.width * 0.042,
-                                      ittempading: size.width * 0.001,
-                                      color: HexColor("#ffc607"),
-                                      rating: ratingF),
-
-                                  SizedBox(
-                                    height: size.height * 0.015,
-                                  ),
-
-                                  // price
-
-                                  Row(
-                                    children: [
-                                      Container(
-                                        width: size.width * 0.072,
-                                        // height: size.height * 0.025,
-                                        child: SvgPicture.asset(
-                                            Images.ticketWhiteImageSvg),
-                                      ),
-                                      SizedBox(width: size.width * 0.025),
-                                      Text(
-                                        Strings.euro +
-                                            " " +
-                                            "${fiestasBookingDetailModel?.data![0].totalPrice}",
-                                        style: TextStyle(
-                                            fontFamily: Fonts.dmSansMedium,
-                                            fontSize: size.width * 0.055,
-                                            color: AppColors.priceColor),
-                                      ),
-                                    ],
-                                  ),
-
-                                  SizedBox(
-                                    height: size.height * 0.01,
-                                  ),
-
-                                  // date time
-
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          content(
-                                              size: size,
-                                              title: getTranslated(
-                                                  context, "date"),
-                                              description: "$date"),
-                                          SizedBox(
-                                            height: size.height * 0.025,
-                                          ),
-                                          content(
-                                              size: size,
-                                              title: getTranslated(
-                                                  context, "checkinType"),
-                                              description: Strings.ticket),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        width: size.width * 0.1,
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          content(
-                                              size: size,
-                                              title: getTranslated(
-                                                  context, "time"),
-                                              description: "$time"),
-                                          SizedBox(
-                                            height: size.height * 0.025,
-                                          ),
-                                          content(
-                                              size: size,
-                                              title: getTranslated(
-                                                  context, "orderId"),
-                                              description:
-                                                  "${fiestasBookingDetailModel?.data![0].id}")
-                                        ],
-                                      )
-                                    ],
-                                  ),
-
-                                  SizedBox(
-                                    height: size.height * 0.025,
-                                  ),
-
-                                  content(
-                                      size: size,
-                                      title: getTranslated(context, "location"),
-                                      description:
-                                          "8496 East Thompson Street Birmingham, AL 35209")
-                                ],
-                              ),
+                              height: size.height * 0.06,
+                              width: size.width * 0.06,
+                              decoration: BoxDecoration(
+                                  color: AppColors.siginbackgrond,
+                                  borderRadius: BorderRadius.only(
+                                      topLeft:
+                                          Radius.circular(size.width * 0.1),
+                                      bottomLeft:
+                                          Radius.circular(size.width * 0.1))),
                             )
                           ],
                         ),
-                      ),
-
-                      SizedBox(
-                        height: size.height * 0.04,
-                      ),
-
-                      InkWell(
-                        onTap: () {
-                          navigatorPushFun(
-                              context,
-                              BookNowBeta(
-                                fiestasID: fiestasBookingDetailModel
-                                    ?.data![0].fiestaId,
-                              ));
-                        },
-                        child: roundedBoxR(
-                            height: size.height * 0.065,
-                            width: size.width * 0.7,
-                            backgroundColor: AppColors.blackBackground,
-                            radius: size.width * 0.02,
-                            child: Center(
-                                child: Text(
-                              "${getTranslated(context, "seeClubProfile")}",
-                              // Strings.seeClubProfile,
-                              style: TextStyle(
-                                  color: AppColors.white,
-                                  fontFamily: Fonts.dmSansBold,
-                                  fontSize: size.width * 0.045),
-                            ))),
-                      ),
-
-                      SizedBox(
-                        height: size.height * 0.04,
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ]),
-            ),
+                  Container(
+                    child: Column(
+                      children: [
+                        // center box
+                        Container(
+                          margin: EdgeInsets.symmetric(
+                              horizontal: size.width * 0.05),
+                          padding: EdgeInsets.symmetric(
+                              vertical: size.height * 0.025,
+                              horizontal: size.width * 0.034),
+                          width: size.width,
+                          height: size.height * 0.79,
+                          decoration: BoxDecoration(
+                              // color: AppColors.white,
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(size.width * 0.02))),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Row(
+                                children: [
+                                  Spacer(),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          PageTransition(
+                                              duration:
+                                                  Duration(milliseconds: 500),
+                                              type: PageTransitionType
+                                                  .topToBottom,
+                                              child: QrCodeZoomIn(
+                                                qrId: fiestasBookingDetailModel
+                                                    ?.data![0].fiestaId,
+                                              )));
+
+                                      // navigatorPushFun(context, QrCodeZoomIn());
+                                    },
+                                    child: Container(
+                                      alignment: Alignment.topRight,
+                                      width: size.width * 0.06,
+                                      height: size.height * 0.03,
+                                      child: SvgPicture.asset(
+                                        Images.qrZoomIn,
+                                        width: size.width * 0.055,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+
+                              SizedBox(
+                                height: size.height * 0.01,
+                              ),
+
+                              // qr code
+
+                              Container(
+                                alignment: Alignment.topRight,
+                                width: size.width * 0.32,
+                                height: size.height * 0.16,
+                                // color: Colors.yellow,
+                                child: QrImage(
+                                  data:
+                                      "${fiestasBookingDetailModel?.data![0].fiestaId}",
+                                  version: QrVersions.auto,
+                                  size: size.width * 0.5,
+                                ),
+                              ),
+
+                              SizedBox(
+                                height: size.height * 0.1,
+                              ),
+
+                              // content
+
+                              Container(
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: size.width * 0.04),
+                                alignment: Alignment.topLeft,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // title
+                                    Text(
+                                      "${data?.name}",
+                                      style: TextStyle(
+                                          fontFamily: Fonts.dmSansBold,
+                                          fontSize: size.width * 0.07,
+                                          color: AppColors.blackBackground),
+                                    ),
+                                    //rating
+
+                                    ratingstars(
+                                        size: size.width * 0.042,
+                                        ittempading: size.width * 0.001,
+                                        color: HexColor("#ffc607"),
+                                        rating: ratingF),
+
+                                    SizedBox(
+                                      height: size.height * 0.015,
+                                    ),
+
+                                    // price
+
+                                    Row(
+                                      children: [
+                                        Container(
+                                          width: size.width * 0.072,
+                                          // height: size.height * 0.025,
+                                          child: SvgPicture.asset(
+                                              Images.ticketWhiteImageSvg),
+                                        ),
+                                        SizedBox(width: size.width * 0.025),
+                                        Text(
+                                          Strings.euro +
+                                              " " +
+                                              "${fiestasBookingDetailModel?.data![0].totalPrice}",
+                                          style: TextStyle(
+                                              fontFamily: Fonts.dmSansMedium,
+                                              fontSize: size.width * 0.055,
+                                              color: AppColors.priceColor),
+                                        ),
+                                      ],
+                                    ),
+
+                                    SizedBox(
+                                      height: size.height * 0.01,
+                                    ),
+
+                                    // date time
+
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            content(
+                                                size: size,
+                                                title: getTranslated(
+                                                    context, "date"),
+                                                description: "$date"),
+                                            SizedBox(
+                                              height: size.height * 0.025,
+                                            ),
+                                            content(
+                                                size: size,
+                                                title: getTranslated(
+                                                    context, "checkinType"),
+                                                description: Strings.ticket),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          width: size.width * 0.1,
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            content(
+                                                size: size,
+                                                title: getTranslated(
+                                                    context, "time"),
+                                                description: "$time"),
+                                            SizedBox(
+                                              height: size.height * 0.025,
+                                            ),
+                                            content(
+                                                size: size,
+                                                title: getTranslated(
+                                                    context, "orderId"),
+                                                description:
+                                                    "${fiestasBookingDetailModel?.data![0].id}")
+                                          ],
+                                        )
+                                      ],
+                                    ),
+
+                                    SizedBox(
+                                      height: size.height * 0.025,
+                                    ),
+
+                                    content(
+                                        size: size,
+                                        title:
+                                            getTranslated(context, "location"),
+                                        description:
+                                            "8496 East Thompson Street Birmingham, AL 35209")
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+
+                        SizedBox(
+                          height: size.height * 0.04,
+                        ),
+
+                        InkWell(
+                          onTap: () {
+                            navigatorPushFun(
+                                context,
+                                BookNowBeta(
+                                  fiestasID: fiestasBookingDetailModel
+                                      ?.data![0].fiestaId,
+                                ));
+                          },
+                          child: roundedBoxR(
+                              height: size.height * 0.065,
+                              width: size.width * 0.7,
+                              backgroundColor: AppColors.blackBackground,
+                              radius: size.width * 0.02,
+                              child: Center(
+                                  child: Text(
+                                "${getTranslated(context, "seeClubProfile")}",
+                                // Strings.seeClubProfile,
+                                style: TextStyle(
+                                    color: AppColors.white,
+                                    fontFamily: Fonts.dmSansBold,
+                                    fontSize: size.width * 0.045),
+                              ))),
+                        ),
+
+                        SizedBox(
+                          height: size.height * 0.04,
+                        ),
+                      ],
+                    ),
+                  ),
+                ]),
+              ),
+      ),
     );
   }
 }

@@ -15,6 +15,7 @@ import 'package:http/http.dart' as http;
 Future<FiestasModel?> fiestasPostGet({String? type, String? dateFilter}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
+    'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   var body = {
@@ -40,6 +41,7 @@ Future<FiestasModel?> fiestasPostGet({String? type, String? dateFilter}) async {
 Future<PrefiestasModel?> prefiestasPostGet() async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
+    'X-localization': '${Constants.prefs?.getString("language")}'
   };
   var res =
       await http.post(Uri.parse(Urls.preFiestasPostsUrl), headers: headers);
@@ -58,6 +60,7 @@ Future<PrefiestasDetailModel?> prefiestasDetailApi({
 }) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
+    'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   Map body = {"id": id, "categories": "0"};
@@ -77,6 +80,7 @@ Future<PrefiestasAlMxExModel?> prefiestasAlMxExApi(
     {String? id, String? categoriesName}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
+    'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   Map body = {"id": id, "categories": categoriesName};
@@ -137,6 +141,7 @@ Future prefiestasAddfavouriteApi({
 Future<FiestasFavouriteModel?> fiestasFavouriteListApi() async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
+    'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   var res =
@@ -158,6 +163,7 @@ Future<FiestasFavouriteModel?> fiestasFavouriteListApi() async {
 Future<PrefiestasFavouriteModel?> prefiestasFavouriteListApi() async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
+    'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   var res = await http.post(Uri.parse(Urls.preFiestasfavoriteListUrl),
@@ -182,6 +188,7 @@ Future<PrefiestasFavouriteModel?> prefiestasFavouriteListApi() async {
 Future<String?> helpApi() async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
+    'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   var res = await http.get(
@@ -206,6 +213,7 @@ Future<String?> helpApi() async {
 Future<String?> aboutApi() async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
+    'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   var res = await http.get(
@@ -262,6 +270,7 @@ Future<bool?> notificationOffApi({int? notificationNum}) async {
 Future<NotificationListModel?> notificatiListApi({int? notificationNum}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
+    'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   var res = await http.post(

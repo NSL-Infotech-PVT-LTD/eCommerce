@@ -111,7 +111,11 @@ class _NotificationsState extends State<Notifications> {
             )
           : _loading == false && notificationListModel?.data?.data?.length == 0
               ? Center(
-                  child: Text("${getTranslated(context, "nodataFound")}"),
+                  child: Text(
+                    "${getTranslated(context, "listisEmpty")}",
+                    style: TextStyle(
+                        color: AppColors.white, fontSize: size.width * 0.045),
+                  ),
                 )
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

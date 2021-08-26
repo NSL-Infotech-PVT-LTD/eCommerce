@@ -57,21 +57,24 @@ class _BookingSuccessState extends State<BookingSuccess> {
               GestureDetector(
                 onTap: () {
                   if (widget.orderidFiestas[1] == 1) {
-                    Navigator.push(
+                    Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
                             builder: (BuildContext context) => YourOrderSum(
                                   orderID: widget.orderidFiestas[0],
-                                )));
+                                  nav: 1,
+                                )),
+                        (route) => false);
                   } else {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              FiestasMoreOrderDetail(
-                                fiestaBookingId: widget.orderidFiestas[0],
-                              )),
-                    );
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                FiestasMoreOrderDetail(
+                                  fiestaBookingId: widget.orderidFiestas[0],
+                                  nav: 1,
+                                )),
+                        (route) => false);
                   }
                 },
                 child: roundedBoxR(

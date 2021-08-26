@@ -24,6 +24,7 @@ class UserData {
   static bool returnV = false;
   static PrefiestasCartModel? myCartModel;
   static String deviceToken = '';
+  static String language = "${Constants.prefs?.getString("language")}";
 
   // static CardListModel? cardList;
 
@@ -59,4 +60,5 @@ class UserData {
   //test
 
   static ScrollController? sControlller;
+  static bool homeTrueOneTime = true;
 }

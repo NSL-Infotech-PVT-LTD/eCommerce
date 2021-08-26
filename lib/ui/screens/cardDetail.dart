@@ -254,8 +254,8 @@ class _CartDetailState extends State<CartDetail> {
           // cardId = cardList?.data?.data?.id!;
         });
 
-        print("here is value");
-        print(value?.toJson());
+        // print("here is value");
+        // print(value?.toJson());
       });
     } catch (e) {
       setState(() {
@@ -858,32 +858,38 @@ class _CartDetailState extends State<CartDetail> {
 
                                       // view card button
 
-                                      InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            cardFormShow = false;
-                                          });
-                                        },
-                                        child: roundedBoxR(
-                                          radius: size.width * 0.02,
-                                          width: size.width,
-                                          height: size.height * 0.07,
-                                          backgroundColor: HexColor("#6b604d"),
-                                          child: Center(
-                                            child: _loading
-                                                ? CircularProgressIndicator()
-                                                : Text(
-                                                    "${getTranslated(context, "viewYourCard")}",
-                                                    style: TextStyle(
-                                                        fontSize:
-                                                            size.width * 0.045,
-                                                        fontFamily:
-                                                            Fonts.dmSansMedium,
-                                                        color: AppColors.white),
-                                                  ),
-                                          ),
-                                        ),
-                                      )
+                                      cardList != null
+                                          ? InkWell(
+                                              onTap: () {
+                                                print(cardList?.toJson());
+                                                // setState(() {
+                                                //   cardFormShow = false;
+                                                // });
+                                              },
+                                              child: roundedBoxR(
+                                                radius: size.width * 0.02,
+                                                width: size.width,
+                                                height: size.height * 0.07,
+                                                backgroundColor:
+                                                    HexColor("#6b604d"),
+                                                child: Center(
+                                                  child: _loading
+                                                      ? CircularProgressIndicator()
+                                                      : Text(
+                                                          "${getTranslated(context, "viewYourCard")}",
+                                                          style: TextStyle(
+                                                              fontSize:
+                                                                  size.width *
+                                                                      0.045,
+                                                              fontFamily: Fonts
+                                                                  .dmSansMedium,
+                                                              color: AppColors
+                                                                  .white),
+                                                        ),
+                                                ),
+                                              ),
+                                            )
+                                          : SizedBox()
                                     ],
                                   ),
                       ],
