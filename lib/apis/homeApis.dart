@@ -1,9 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
+
 import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/models/favourite/fiestasFavouriteModel.dart';
 import 'package:funfy/models/favourite/preFiestasFavModel.dart';
 import 'package:funfy/models/fiestasmodel.dart';
+import 'package:funfy/models/notificationListModel.dart';
 import 'package:funfy/models/preFiestasModel.dart';
 import 'package:funfy/models/prefiestasDetailModel.dart';
 import 'package:funfy/models/prifiestasAlMxEx.dart';
@@ -14,6 +15,7 @@ import 'package:http/http.dart' as http;
 Future<FiestasModel?> fiestasPostGet({String? type, String? dateFilter}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
+    //  'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   var body = {
@@ -21,7 +23,7 @@ Future<FiestasModel?> fiestasPostGet({String? type, String? dateFilter}) async {
     dateFilter == null || dateFilter == "" ? "" : "filter": "$dateFilter"
   };
 
-  print("here is body : $body");
+  // print("here is body : $body");
 
   // print("Token" + "${UserData.userToken}");
   var res = await http.post(Uri.parse(Urls.fiestasPostUrl),
@@ -39,6 +41,7 @@ Future<FiestasModel?> fiestasPostGet({String? type, String? dateFilter}) async {
 Future<PrefiestasModel?> prefiestasPostGet() async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
+    //  'X-localization': '${Constants.prefs?.getString("language")}'
   };
   var res =
       await http.post(Uri.parse(Urls.preFiestasPostsUrl), headers: headers);
@@ -49,6 +52,8 @@ Future<PrefiestasModel?> prefiestasPostGet() async {
     return prefiestasModelFromJson(res.body);
   } else if (res.statusCode == 422) {
     print("ERRRO IN THE API in prefiestas");
+  } else {
+    print("error in api -------------------");
   }
 }
 
@@ -57,6 +62,7 @@ Future<PrefiestasDetailModel?> prefiestasDetailApi({
 }) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
+    //  'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   Map body = {"id": id, "categories": "0"};
@@ -76,6 +82,7 @@ Future<PrefiestasAlMxExModel?> prefiestasAlMxExApi(
     {String? id, String? categoriesName}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
+    //  'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   Map body = {"id": id, "categories": categoriesName};
@@ -99,7 +106,7 @@ Future fiestasAddfavouriteApi({
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
   };
-  Map body = {"club_id": id};
+  Map body = {"fiesta_id": id};
 
   var res = await http.post(Uri.parse(Urls.fiestasAddfavoriteUrl),
       body: body, headers: headers);
@@ -136,6 +143,7 @@ Future prefiestasAddfavouriteApi({
 Future<FiestasFavouriteModel?> fiestasFavouriteListApi() async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
+    //  'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   var res =
@@ -157,6 +165,7 @@ Future<FiestasFavouriteModel?> fiestasFavouriteListApi() async {
 Future<PrefiestasFavouriteModel?> prefiestasFavouriteListApi() async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
+    //  'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   var res = await http.post(Uri.parse(Urls.preFiestasfavoriteListUrl),
@@ -181,6 +190,7 @@ Future<PrefiestasFavouriteModel?> prefiestasFavouriteListApi() async {
 Future<String?> helpApi() async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
+    //  'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   var res = await http.get(
@@ -205,6 +215,7 @@ Future<String?> helpApi() async {
 Future<String?> aboutApi() async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
+    // 'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   var res = await http.get(
@@ -251,6 +262,29 @@ Future<bool?> notificationOffApi({int? notificationNum}) async {
 
   if (res.statusCode == 201) {
     return notif;
+  } else {
+    print(res.body);
+  }
+}
+
+// notification List api
+
+Future<NotificationListModel?> notificatiListApi({int? notificationNum}) async {
+  var headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+    //  'X-localization': '${Constants.prefs?.getString("language")}'
+  };
+
+  var res = await http.post(
+      Uri.parse(
+        Urls.notificationUrl,
+      ),
+      headers: headers);
+
+  print(res.body);
+
+  if (res.statusCode == 200) {
+    return notificationListModelFromJson(res.body);
   } else {
     print(res.body);
   }

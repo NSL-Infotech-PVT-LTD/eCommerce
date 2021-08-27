@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:funfy/models/cardListmodel.dart';
 import 'package:funfy/models/fiestasmodel.dart';
 import 'package:funfy/models/preFiestasCartModel.dart';
@@ -22,6 +23,9 @@ class UserData {
   static String preFiestasCartid = "";
   static bool returnV = false;
   static PrefiestasCartModel? myCartModel;
+  static String deviceToken = '';
+  static String language = "${Constants.prefs?.getString("language")}";
+
   // static CardListModel? cardList;
 
   static FiestasModel? fiestasdata;
@@ -52,4 +56,9 @@ class UserData {
       "tickets": 0,
     }
   ];
+
+  //test
+
+  static ScrollController? sControlller;
+  static bool homeTrueOneTime = true;
 }

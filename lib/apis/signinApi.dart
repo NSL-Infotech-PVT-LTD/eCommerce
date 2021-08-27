@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/components/dialogs.dart';
 import 'package:funfy/models/facebookSigninModel.dart';
 import 'package:funfy/models/googleSigninModel.dart';
@@ -12,6 +13,7 @@ import 'package:funfy/utils/strings.dart';
 import 'package:funfy/utils/urls.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
+import 'dart:io' show Platform;
 
 GoogleSignIn _googleSignIn = GoogleSignIn(
   scopes: [
@@ -28,11 +30,11 @@ Future<UserModel?> signinUser(
     "email": email,
     "password": password,
     "device_type": devicetype,
-    "device_token": _token
+    "device_token": UserData.deviceToken
   };
-  var res = await http.post(Uri.parse(Urls.siginUrl), body: body);
 
-  // var response = json.decode(res.body);
+  print("here is device type : $devicetype");
+  var res = await http.post(Uri.parse(Urls.siginUrl), body: body);
 
   if (res.statusCode == 200) {
     return userModelFromJson(res.body);
@@ -53,7 +55,7 @@ Future<FacebookSigninModel?> facebookLogin(
     "email": email,
     "fb_id": fbId,
     "device_type": deviceType,
-    "device_token": deviceToken,
+    "device_token": UserData.deviceToken,
     "image": profileImage
   };
 
@@ -86,7 +88,7 @@ Future<GoogleSigninModel?> googleLogin(
     "email": email,
     "google_id": googleid,
     "device_type": deviceType,
-    "device_token": deviceToken,
+    "device_token": UserData.deviceToken,
     "image": profileImage
   };
   var res = await http.post(Uri.parse(Urls.googleSiginUrl), body: body);
@@ -138,7 +140,8 @@ logout(context) {
   Dialogs.simpleAlertDialog(
       context: context,
       title: "${getTranslated(context, "alert")}", // Strings.alert,
-      content: "${getTranslated(context, "areYousureWantToLogout")}",//Strings.areYousureWantToLogout,
+      content:
+          "${getTranslated(context, "areYousureWantToLogout")}", //Strings.areYousureWantToLogout,
       func: () {
         // token
         Constants.prefs?.setString("token", "");
@@ -172,4 +175,52 @@ logout(context) {
             MaterialPageRoute(builder: (BuildContext context) => Signin()),
             (route) => false);
       });
+}
+
+// logout api
+
+Future<bool?> logoutApi() async {
+  var dToken = Constants.prefs?.getString("fToken");
+
+  print("here is device token : $dToken");
+
+  var headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+  };
+  var body = {
+    "device_token": "$dToken",
+    "device_type": Platform.isAndroid ? 'android' : 'ios'
+  };
+
+  var res =
+      await http.post(Uri.parse(Urls.logoutUrl), body: body, headers: headers);
+  var jsondata = json.decode(res.body);
+
+  if (res.statusCode == 200) {
+    // token
+    Constants.prefs?.setString("token", "");
+    // name name
+    Constants.prefs?.setString("name", "");
+    // name email
+    Constants.prefs?.setString("email", "");
+    // lacation
+    Constants.prefs?.setString("addres", "");
+
+    //  dob
+    Constants.prefs?.setString("dob", "");
+
+    //  gender
+    Constants.prefs?.setString("gender", "");
+
+    //  social
+    Constants.prefs?.setString("social", "false");
+
+    // profileImage
+    Constants.prefs?.setString("profileImage", "");
+
+    _googleSignIn.signOut();
+    return true;
+  } else {
+    print(jsondata);
+  }
 }

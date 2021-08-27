@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:funfy/apis/bookingApi.dart';
 import 'package:funfy/apis/introApi.dart';
 import 'package:funfy/apis/userdataM.dart';
+import 'package:funfy/components/dialogs.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/models/preFiestasCartModel.dart';
 import 'package:funfy/ui/screens/bookingSuccess.dart';
@@ -75,7 +76,8 @@ class _CartpageState extends State<Cartpage> {
 
   // - + funtion
 
-  addTicket({int? index, int itemCount = 0, String? id, var cart}) async {
+  addTicket(
+      {int? index, int? type, int itemCount = 0, String? id, var cart}) async {
     // clear
 
     print("add button press  index: $index  id: $id");
@@ -103,6 +105,14 @@ class _CartpageState extends State<Cartpage> {
         });
 
         totalCount2(value: true);
+
+        if (type == 1) {
+          var alco = Constants.prefs?.getString('alcohol');
+          int alcohol = alco == null ? 0 : int.parse("$alco");
+
+          int tot = alcohol + 1;
+          Constants.prefs?.setString("alcohol", "$tot");
+        }
       }
     });
 
@@ -143,7 +153,15 @@ class _CartpageState extends State<Cartpage> {
           });
 
           if (cartCount == 0) {
-            setItemValue(type: itemType, valueTureFalse: false);
+            // setItemValue(type: itemType, valueTureFalse: false);
+          }
+
+          if (itemType == 1) {
+            var alco = Constants.prefs?.getString('alcohol');
+            int alcohol = alco == null ? 0 : int.parse("$alco");
+
+            int tot = alcohol - 1;
+            Constants.prefs?.setString("alcohol", "$tot");
           }
           totalCount2(value: false);
         }
@@ -166,9 +184,9 @@ class _CartpageState extends State<Cartpage> {
 
   setItemValue({int? type, bool? valueTureFalse}) {
     setState(() {
-      if (type == 1) {
-        Constants.prefs?.setString("alcohol", "${valueTureFalse! ? type : ''}");
-      }
+      // if (type == 1) {
+      //   Constants.prefs?.setString("alcohol", "${valueTureFalse! ? type : ''}");
+      // }
 
       if (type == 2) {
         Constants.prefs?.setString("mix", "${valueTureFalse! ? type : ''}");
@@ -184,7 +202,7 @@ class _CartpageState extends State<Cartpage> {
 
   ticketremoveFromList(
       {String? id, String? count = "0", int? index, String? type}) async {
-    print("look here remove id: $id  $count index: $index $type");
+    print("look here remove id: $id  count: $count index: $index $type");
 
     String totnum = Constants.prefs?.getString("cartTot") == null ||
             Constants.prefs?.getString("cartTot") == ""
@@ -217,21 +235,32 @@ class _CartpageState extends State<Cartpage> {
           // myCartModel?.data?.cartItems?.removeAt(index!);
           if (type == "alcohol") {
             UserData.preFiestasAlcoholCart = "";
+            int alcohol = Constants.prefs?.getString('alcohol') == null
+                ? 0
+                : int.parse("${Constants.prefs?.getString('alcohol')}");
+
+            int tot = alcohol - int.parse("$count");
+
+            Constants.prefs?.setString("alcohol", "$tot");
+
             print(type);
-            clearCart();
+            // clearCart();
             getMyCart();
           }
 
           if (type == "mix") {
             Constants.prefs?.setString("cartTot", "$totalCount");
             UserData.preFiestasMixesTicketCart.clear();
+
             UserData.myCartModel?.data?.cart?.cartItems?.removeAt(index!);
+            getMyCart();
           }
 
           if (type == "extras") {
             Constants.prefs?.setString("cartTot", "$totalCount");
             UserData.preFiestasExtrasTicketCart.clear();
             UserData.myCartModel?.data?.cart?.cartItems?.removeAt(index!);
+            getMyCart();
           }
         });
       }
@@ -507,7 +536,7 @@ class _CartpageState extends State<Cartpage> {
                   : Container(
                       child: Row(
                         children: [
-                          GestureDetector(
+                          InkWell(
                             onTap: () {
                               ticketRemove(
                                   index: index,
@@ -553,12 +582,13 @@ class _CartpageState extends State<Cartpage> {
                           SizedBox(
                             width: SizeConfig.screenWidth * 0.03,
                           ),
-                          GestureDetector(
+                          InkWell(
                             onTap: () {
                               addTicket(
                                   index: index,
                                   itemCount: count ?? 0,
                                   id: pid,
+                                  type: itemTypes,
                                   cart: cart);
                             },
                             child: Container(
@@ -593,10 +623,10 @@ class _CartpageState extends State<Cartpage> {
   void initState() {
     super.initState();
 
-    StripePayment.setOptions(StripeOptions(
-        publishableKey: Strings.publishKey,
-        merchantId: Strings.merChantId,
-        androidPayMode: Strings.androidPayMode));
+    // StripePayment.setOptions(StripeOptions(
+    //     publishableKey: Strings.publishKey,
+    //     merchantId: Strings.merChantId,
+    //     androidPayMode: Strings.androidPayMode));
 
     setState(() {
       UserData.preFiestasAlcoholCartMap.clear();
@@ -632,11 +662,11 @@ class _CartpageState extends State<Cartpage> {
         if (res?.status == true && res?.code == 201) {
           print("we are here -------------------");
 
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) => BookingSuccess()),
-              (route) => false);
+          // Navigator.pushAndRemoveUntil(
+          //     context,
+          //     MaterialPageRoute(
+          //         builder: (BuildContext context) => BookingSuccess()),
+          //     (route) => false);
         }
       });
     } catch (e) {
@@ -674,7 +704,7 @@ class _CartpageState extends State<Cartpage> {
         child: Scaffold(
             // floatingActionButton: FloatingActionButton(
             //     onPressed: () {
-            //       paymentRun();
+            //       print(Constants.prefs?.getString("alcohol"));
             //     },
             //     child: Icon(Icons.local_activity)),
             backgroundColor: HexColor("#191512"),
@@ -839,7 +869,6 @@ class _CartpageState extends State<Cartpage> {
                                                           "${UserData.myCartModel?.data?.parentDetail?.image}"))
                                                 ],
                                               ),
-
                                               Column(
                                                 children: [
                                                   for (int i = 0;
@@ -932,122 +961,54 @@ class _CartpageState extends State<Cartpage> {
                                                                     ? 2
                                                                     : 3),
                                                       ],
-                                                    )
+                                                    ),
+
+                                                  // Total Price
+
+                                                  SizedBox(
+                                                    height: size.height * 0.03,
+                                                  ),
+                                                  Container(
+                                                    width: size.width,
+                                                    alignment: Alignment.center,
+                                                    child: Text.rich(TextSpan(
+                                                        text:
+                                                            "${getTranslated(context, 'totalPrice')} :", // Strings.byContinuingYouAgreetoOur,
+                                                        style: TextStyle(
+                                                            fontFamily: Fonts
+                                                                .dmSansMedium,
+                                                            color:
+                                                                AppColors.white,
+                                                            fontSize:
+                                                                size.width *
+                                                                    0.06),
+                                                        children: <InlineSpan>[
+                                                          TextSpan(
+                                                            text:
+                                                                " ${Strings.euro} ${UserData.myCartModel?.data?.cart?.totalPrice}", //"${Strings.termsOfService}",
+                                                            style: TextStyle(
+                                                                fontFamily: Fonts
+                                                                    .dmSansBold,
+                                                                color: AppColors
+                                                                    .white,
+                                                                fontSize:
+                                                                    size.width *
+                                                                        0.06),
+                                                          ),
+                                                        ])),
+                                                    // child: Text(
+                                                    //   "${getTranslated(context, 'totalPrice')} : ${Strings.euro} 100",
+                                                    //   style: TextStyle(
+                                                    //       color:
+                                                    //           AppColors.white,
+                                                    //       fontFamily:
+                                                    //           Fonts.dmSansBold,
+                                                    //       fontSize: size.width *
+                                                    //           0.06),
+                                                    // ),
+                                                  )
                                                 ],
                                               )
-                                              // Container(
-                                              //   height: size.height * count,
-                                              //   child: ListView.builder(
-                                              //       itemCount: UserData
-                                              //           .myCartModel
-                                              //           ?.data
-                                              //           ?.cart
-                                              //           ?.cartItems
-                                              //           ?.length,
-                                              //       itemBuilder:
-                                              //           (context, index) {
-                                              //         var type = UserData
-                                              //             .myCartModel
-                                              //             ?.data
-                                              //             ?.cart
-                                              //             ?.cartItems![index]
-                                              //             .preFiesta;
-                                              //         return Column(
-                                              //           children: [
-                                              //             SizedBox(
-                                              //               height:
-                                              //                   size.height *
-                                              //                       0.03,
-                                              //             ),
-                                              //             listItem(
-                                              //                 index: index,
-                                              //                 pid: UserData
-                                              //                     .myCartModel
-                                              //                     ?.data
-                                              //                     ?.cart
-                                              //                     ?.cartItems![
-                                              //                         index]
-                                              //                     .preFiesta
-                                              //                     ?.id
-                                              //                     .toString(),
-                                              //                 topTile: type
-                                              //                     ?.categories,
-                                              //                 title: UserData
-                                              //                     .myCartModel
-                                              //                     ?.data
-                                              //                     ?.cart
-                                              //                     ?.cartItems![
-                                              //                         index]
-                                              //                     .preFiesta!
-                                              //                     .name,
-                                              //                 price: UserData
-                                              //                     .myCartModel
-                                              //                     ?.data
-                                              //                     ?.cart
-                                              //                     ?.cartItems![
-                                              //                         index]
-                                              //                     .price
-                                              //                     .toString(),
-                                              //                 quantity: UserData
-                                              //                     .myCartModel
-                                              //                     ?.data
-                                              //                     ?.cart
-                                              //                     ?.cartItems![
-                                              //                         index]
-                                              //                     .quantity
-                                              //                     .toString(),
-                                              //                 size: size,
-                                              //                 type: type
-                                              //                     ?.categories,
-                                              //                 // boolCount:
-                                              //                 //     type?.categories ==
-                                              //                 //             "alcohol"
-                                              //                 //         ? null
-                                              //                 //         : true,
-
-                                              //                 boolCount: true,
-                                              //                 context: context,
-                                              //                 count: UserData
-                                              //                     .myCartModel
-                                              //                     ?.data
-                                              //                     ?.cart
-                                              //                     ?.cartItems![
-                                              //                         index]
-                                              //                     .quantity,
-                                              //                 cart: type?.categories == "mix"
-                                              //                     ? UserData.preFiestasMixesTicketCart
-                                              //                     : type?.categories == "extras"
-                                              //                         ? UserData.preFiestasExtrasTicketCart
-                                              //                         : UserData.preFiestasAlcoholCartMap,
-                                              //                 itemTypes: type?.categories == "alcohol"
-                                              //                     ? 1
-                                              //                     : type?.categories == "extras"
-                                              //                         ? 2
-                                              //                         : 3),
-                                              //           ],
-                                              //         );
-                                              //       }),
-                                              // ),
-
-                                              // items
-                                              // SizedBox(
-                                              //   height: size.height * 0.035,
-                                              // ),
-                                              // listItem(size: size, context: context),
-                                              // SizedBox(
-                                              //   height: size.height * 0.03,
-                                              // ),
-                                              // listItem(
-                                              //     size: size,
-                                              //     boolCount: true,
-                                              //     context: context),
-                                              // SizedBox(
-                                              //   height: size.height * 0.03,
-                                              // ),
-                                              // listItem(
-                                              //     size: size,
-                                              //     boolCount: true,
-                                              //     context: context),
                                             ],
                                           ),
                                         )),
@@ -1063,36 +1024,51 @@ class _CartpageState extends State<Cartpage> {
                                     SizedBox(height: size.height * 0.03),
 
                                     // button
-                                    UserData.myCartModel!.data!.cart!.cartItems!
-                                                .length >
-                                            0
-                                        ? GestureDetector(
-                                            onTap: () {
-                                              // makeOrder();
-                                              navigatorPushFun(context,
-                                                  PrefiestasCardDetail());
-                                            },
-                                            child: roundedBoxR(
-                                              width: size.width,
-                                              height: size.height * 0.07,
-                                              radius: size.width * 0.02,
-                                              backgroundColor:
-                                                  AppColors.siginbackgrond,
-                                              child: Center(
-                                                child: Text(
-                                                  "${getTranslated(context, "proceedtopay")}",
-                                                  //   Strings.proceedtopay,
-                                                  style: TextStyle(
-                                                      color: AppColors.white,
-                                                      fontFamily:
-                                                          Fonts.dmSansBold,
-                                                      fontSize:
-                                                          size.width * 0.045),
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                        : SizedBox()
+                                    GestureDetector(
+                                      onTap: () {
+                                        UserData.myCartModel!.data!.cart!.cartItems!.length > 0 &&
+                                                (Constants.prefs?.getString("alcohol") !=
+                                                        null &&
+                                                    Constants.prefs?.getString("alcohol") !=
+                                                        "" &&
+                                                    Constants.prefs?.getString("alcohol") !=
+                                                        "0")
+                                            ?
+                                            // makeOrder();
+                                            Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            PrefiestasCardDetail()))
+                                                .then((value) {
+                                                initState();
+                                              })
+                                            : Dialogs.showBasicsFlash(
+                                                context: context,
+                                                color: AppColors.siginbackgrond,
+                                                duration: Duration(seconds: 3),
+                                                content: getTranslated(
+                                                    context, "pleaseSelectAlcohol"));
+                                      },
+                                      child: roundedBoxR(
+                                        width: size.width,
+                                        height: size.height * 0.07,
+                                        radius: size.width * 0.02,
+                                        backgroundColor:
+                                            AppColors.siginbackgrond,
+                                        child: Center(
+                                          child: Text(
+                                            "${getTranslated(context, "proceedtopay")}",
+                                            //   Strings.proceedtopay,
+                                            style: TextStyle(
+                                                color: AppColors.white,
+                                                fontFamily: Fonts.dmSansBold,
+                                                fontSize: size.width * 0.045),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                    // : SizedBox()
 
                                     //  SizedBox(height: size.height * 0.05),
                                   ],

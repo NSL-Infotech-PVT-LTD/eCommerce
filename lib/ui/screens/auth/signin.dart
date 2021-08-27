@@ -81,7 +81,7 @@ class _SigninState extends State<Signin> {
         await signinUser(
                 email: _emailController.text,
                 password: _passwordController.text,
-                devicetype: devicetype)
+                devicetype: Platform.isAndroid ? "android" : "ios")
             .then((response) {
           if (response?.status == true) {
             saveDataInshareP(

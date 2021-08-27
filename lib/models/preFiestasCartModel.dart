@@ -60,18 +60,21 @@ class Cart {
     this.id,
     this.userId,
     this.totalPrice,
+    this.quantityInCart,
     this.cartItems,
   });
 
   int? id;
   int? userId;
   String? totalPrice;
+  int? quantityInCart;
   List<CartItem>? cartItems;
 
   factory Cart.fromJson(Map<String, dynamic> json) => Cart(
         id: json["id"],
         userId: json["user_id"],
         totalPrice: json["total_price"],
+        quantityInCart: json["quantity_in_cart"],
         cartItems: List<CartItem>.from(
             json["cart_items"].map((x) => CartItem.fromJson(x))),
       );
@@ -80,6 +83,7 @@ class Cart {
         "id": id,
         "user_id": userId,
         "total_price": totalPrice,
+        "quantity_in_cart": quantityInCart,
         "cart_items": List<dynamic>.from(cartItems!.map((x) => x.toJson())),
       };
 }
@@ -152,7 +156,7 @@ class ParentDetail {
         name: json["name"],
         parentId: json["parent_id"],
         image: json["image"],
-        price: json["price"] == null ? null : json["price"],
+        price: json["price"],
         categories: json["categories"] == null ? null : json["categories"],
         description: json["description"],
         isInMyCart: json["is_in_my_cart"],
@@ -166,7 +170,7 @@ class ParentDetail {
         "name": name,
         "parent_id": parentId,
         "image": image,
-        "price": price == null ? null : price,
+        "price": price,
         "categories": categories == null ? null : categories,
         "description": description,
         "is_in_my_cart": isInMyCart,

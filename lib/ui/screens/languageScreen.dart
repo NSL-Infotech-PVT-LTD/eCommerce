@@ -44,16 +44,20 @@ class _SigninState extends State<TranslationPage> {
               builder: (context) =>
                   Constants.prefs?.getString("token") != null &&
                           Constants.prefs?.getString("token") != ""
-                      ? Home()
+                      ? Home(
+                          pageIndexNum: 0,
+                        )
                       : Intro()));
         } else {
-          print("no intro data");
+          // print("no intro data");
 
           Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (context) =>
                   Constants.prefs?.getString("token") != null &&
                           Constants.prefs?.getString("token") != ""
-                      ? Home()
+                      ? Home(
+                          pageIndexNum: 0,
+                        )
                       : Signin()));
         }
       });
@@ -89,9 +93,9 @@ class _SigninState extends State<TranslationPage> {
 
   @override
   void initState() {
-    print("radio value - ${Strings.radioValue}");
+    // print("radio value - ${Strings.radioValue}");
     var radioini = Constants.prefs!.getString(Strings.radioValue);
-    print("first language " + radioini.toString());
+    // print("first language " + radioini.toString());
 
     _character = radioini == null
         ? SingingCharacter.English
@@ -209,11 +213,11 @@ class _SigninState extends State<TranslationPage> {
                             if (value == SingingCharacter.English) {
                               newValue = "en";
                               changeLanguage(newValue);
-                              print(newValue);
+                              // print(newValue);
                             } else {
                               newValue = "es";
                               changeLanguage(newValue);
-                              print(newValue);
+                              // print(newValue);
                             }
                           });
                         },
@@ -244,11 +248,11 @@ class _SigninState extends State<TranslationPage> {
                             if (value == SingingCharacter.English) {
                               newValue = "en";
                               changeLanguage(newValue);
-                              print(newValue);
+                              // print(newValue);
                             } else {
                               newValue = "es";
                               changeLanguage(newValue);
-                              print(newValue);
+                              // print(newValue);
                             }
                           });
                         },
@@ -263,13 +267,16 @@ class _SigninState extends State<TranslationPage> {
                   Center(
                     child: GestureDetector(
                       onTap: () {
-                        print(_character);
+                        // print(_character);
 
                         if (_character == SingingCharacter.English) {
                           Constants.prefs?.setString(Strings.radioValue, "en");
+                          Constants.prefs?.setString("language", "en");
                         } else if (_character == SingingCharacter.Spanish) {
                           Constants.prefs?.setString(Strings.radioValue, "es");
+                          Constants.prefs?.setString("language", "es");
                         }
+
                         // Constants.prefs
                         //     ?.setString(Strings.radioValue, newValue ?? "es");
                         if (widget.fromSplash) {

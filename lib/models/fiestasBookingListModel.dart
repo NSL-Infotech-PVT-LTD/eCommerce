@@ -52,12 +52,12 @@ class Data {
   });
 
   int? currentPage;
-  List<DataListFiesta>? data;
+  List<Datum>? data;
   String? firstPageUrl;
   int? from;
   int? lastPage;
   String? lastPageUrl;
-  dynamic nextPageUrl;
+  String? nextPageUrl;
   String? path;
   int? perPage;
   dynamic prevPageUrl;
@@ -66,8 +66,7 @@ class Data {
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
         currentPage: json["current_page"],
-        data: List<DataListFiesta>.from(
-            json["data"].map((x) => DataListFiesta.fromJson(x))),
+        data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
         firstPageUrl: json["first_page_url"],
         from: json["from"],
         lastPage: json["last_page"],
@@ -96,12 +95,13 @@ class Data {
       };
 }
 
-class DataListFiesta {
-  DataListFiesta({
+class Datum {
+  Datum({
     this.id,
     this.userId,
     this.fiestaId,
     this.totalPrice,
+    this.transferCharge,
     this.paymentParams,
     this.paymentMode,
     this.bookingStatus,
@@ -110,6 +110,7 @@ class DataListFiesta {
     this.createdAt,
     this.updatedAt,
     this.deletedAt,
+    this.totalTickets,
     this.fiestaDetail,
   });
 
@@ -117,31 +118,37 @@ class DataListFiesta {
   int? userId;
   int? fiestaId;
   String? totalPrice;
+  dynamic transferCharge;
   PaymentParams? paymentParams;
-  String? paymentMode;
+  PaymentMode? paymentMode;
   BookingStatus? bookingStatus;
   dynamic params;
   String? status;
   DateTime? createdAt;
   DateTime? updatedAt;
   dynamic deletedAt;
+  int? totalTickets;
   FiestaDetail? fiestaDetail;
 
-  factory DataListFiesta.fromJson(Map<String, dynamic> json) => DataListFiesta(
+  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
         id: json["id"],
         userId: json["user_id"],
         fiestaId: json["fiesta_id"],
         totalPrice: json["total_price"],
+        transferCharge: json["transfer_charge"],
         paymentParams: json["payment_params"] == null
             ? null
             : PaymentParams.fromJson(json["payment_params"]),
-        paymentMode: json["payment_mode"] == null ? null : json["payment_mode"],
+        paymentMode: json["payment_mode"] == null
+            ? null
+            : paymentModeValues.map[json["payment_mode"]],
         bookingStatus: bookingStatusValues.map[json["booking_status"]],
         params: json["params"],
         status: json["status"],
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
         deletedAt: json["deleted_at"],
+        totalTickets: json["total_tickets"],
         fiestaDetail: FiestaDetail.fromJson(json["fiesta_detail"]),
       );
 
@@ -150,23 +157,29 @@ class DataListFiesta {
         "user_id": userId,
         "fiesta_id": fiestaId,
         "total_price": totalPrice,
+        "transfer_charge": transferCharge,
         "payment_params":
             paymentParams == null ? null : paymentParams?.toJson(),
-        "payment_mode": paymentMode == null ? null : paymentMode,
+        "payment_mode":
+            paymentMode == null ? null : paymentModeValues.reverse[paymentMode],
         "booking_status": bookingStatusValues.reverse[bookingStatus],
         "params": params,
         "status": status,
         "created_at": createdAt?.toIso8601String(),
         "updated_at": updatedAt?.toIso8601String(),
         "deleted_at": deletedAt,
+        "total_tickets": totalTickets,
         "fiesta_detail": fiestaDetail?.toJson(),
       };
 }
 
-enum BookingStatus { PENDING, BOOKED }
+enum BookingStatus { BOOKED, REVIEWED, PENDING }
 
-final bookingStatusValues = EnumValues(
-    {"booked": BookingStatus.BOOKED, "pending": BookingStatus.PENDING});
+final bookingStatusValues = EnumValues({
+  "booked": BookingStatus.BOOKED,
+  "pending": BookingStatus.PENDING,
+  "reviewed": BookingStatus.REVIEWED
+});
 
 class FiestaDetail {
   FiestaDetail({
@@ -198,15 +211,15 @@ class FiestaDetail {
   String? ticketPriceStandard;
   String? ticketPriceVip;
   String? totalMembers;
-  String? dressCode;
+  DressCode? dressCode;
   PartyMusic? partyMusic;
   DistanceKm? distanceKm;
   DistanceMiles? distanceMiles;
   bool? isFavourite;
-  int? leftStandardTicket;
+  dynamic leftStandardTicket;
   dynamic leftVipTicket;
-  int? leftNormalTicket;
-  dynamic clubRating;
+  dynamic leftNormalTicket;
+  int? clubRating;
   ClubDetail? clubDetail;
 
   factory FiestaDetail.fromJson(Map<String, dynamic> json) => FiestaDetail(
@@ -218,7 +231,7 @@ class FiestaDetail {
         ticketPriceStandard: json["ticket_price_standard"],
         ticketPriceVip: json["ticket_price_vip"],
         totalMembers: json["total_members"],
-        dressCode: json["dress_code"],
+        dressCode: dressCodeValues.map[json["dress_code"]],
         partyMusic: partyMusicValues.map[json["party_music"]],
         distanceKm: distanceKmValues.map[json["distance_km"]],
         distanceMiles: distanceMilesValues.map[json["distance_miles"]],
@@ -239,7 +252,7 @@ class FiestaDetail {
         "ticket_price_standard": ticketPriceStandard,
         "ticket_price_vip": ticketPriceVip,
         "total_members": totalMembers,
-        "dress_code": dressCode,
+        "dress_code": dressCodeValues.reverse[dressCode],
         "party_music": partyMusicValues.reverse[partyMusic],
         "distance_km": distanceKmValues.reverse[distanceKm],
         "distance_miles": distanceMilesValues.reverse[distanceMiles],
@@ -296,29 +309,24 @@ class ClubDetail {
       };
 }
 
-enum Description {
-  OFFICIIS_FACERE_NOSTRUM_NIHIL_MINIMA_IURE_APERIAM_IURE_QUO,
-  TEST
-}
+enum Description { OFFICIIS_FACERE_NOSTRUM_NIHIL_MINIMA_IURE_APERIAM_IURE_QUO }
 
 final descriptionValues = EnumValues({
   "Officiis facere nostrum nihil minima iure aperiam iure quo.":
-      Description.OFFICIIS_FACERE_NOSTRUM_NIHIL_MINIMA_IURE_APERIAM_IURE_QUO,
-  "test": Description.TEST
+      Description.OFFICIIS_FACERE_NOSTRUM_NIHIL_MINIMA_IURE_APERIAM_IURE_QUO
 });
 
-enum Location { PERFERENDIS_SAPIENTE_CORPORIS_MOLESTIAS_ENIM_IPSA, TEST }
+enum Location { PERFERENDIS_SAPIENTE_CORPORIS_MOLESTIAS_ENIM_IPSA }
 
 final locationValues = EnumValues({
   "Perferendis sapiente corporis molestias enim ipsa.":
-      Location.PERFERENDIS_SAPIENTE_CORPORIS_MOLESTIAS_ENIM_IPSA,
-  "test": Location.TEST
+      Location.PERFERENDIS_SAPIENTE_CORPORIS_MOLESTIAS_ENIM_IPSA
 });
 
-enum ClubDetailName { ALIZE_EBERT, TEST }
+enum ClubDetailName { ALIZE_EBERT }
 
-final clubDetailNameValues = EnumValues(
-    {"Alize Ebert": ClubDetailName.ALIZE_EBERT, "test": ClubDetailName.TEST});
+final clubDetailNameValues =
+    EnumValues({"Alize Ebert": ClubDetailName.ALIZE_EBERT});
 
 enum DistanceKm { THE_01_KM }
 
@@ -329,19 +337,30 @@ enum DistanceMiles { THE_01_MILES }
 final distanceMilesValues =
     EnumValues({"0.1 miles": DistanceMiles.THE_01_MILES});
 
-enum FiestaDetailName { OPEN_FIESTAS, FIESTA_AWESOME, OPEN_2, ZEEM_OPEN }
+enum DressCode { BLACK }
+
+final dressCodeValues = EnumValues({"black": DressCode.BLACK});
+
+enum FiestaDetailName {
+  RAKHI_CELEBRATION,
+  FIESTA_AVAILABLE_THIRD_ZERO,
+  FIESTA_AVAILABLE_ZERO
+}
 
 final fiestaDetailNameValues = EnumValues({
-  "Fiesta Awesome": FiestaDetailName.FIESTA_AWESOME,
-  "Open 2": FiestaDetailName.OPEN_2,
-  "open fiestas": FiestaDetailName.OPEN_FIESTAS,
-  "Zeem Open": FiestaDetailName.ZEEM_OPEN
+  "Fiesta available third zero": FiestaDetailName.FIESTA_AVAILABLE_THIRD_ZERO,
+  "Fiesta available Zero": FiestaDetailName.FIESTA_AVAILABLE_ZERO,
+  "Rakhi celebration": FiestaDetailName.RAKHI_CELEBRATION
 });
 
-enum PartyMusic { MUSIC, POP }
+enum PartyMusic { POP, POPUP }
 
 final partyMusicValues =
-    EnumValues({"Music": PartyMusic.MUSIC, "pop": PartyMusic.POP});
+    EnumValues({"pop": PartyMusic.POP, "popup": PartyMusic.POPUP});
+
+enum PaymentMode { CARD }
+
+final paymentModeValues = EnumValues({"card": PaymentMode.CARD});
 
 class PaymentParams {
   PaymentParams({
@@ -394,7 +413,7 @@ class PaymentParams {
   });
 
   String? id;
-  String? object;
+  PaymentParamsObject? object;
   int? amount;
   int? amountCaptured;
   int? amountRefunded;
@@ -403,11 +422,11 @@ class PaymentParams {
   dynamic applicationFeeAmount;
   String? balanceTransaction;
   BillingDetails? billingDetails;
-  String? calculatedStatementDescriptor;
+  CalculatedStatementDescriptor? calculatedStatementDescriptor;
   bool? captured;
   int? created;
-  String? currency;
-  String? customer;
+  Currency? currency;
+  Customer? customer;
   dynamic description;
   dynamic destination;
   dynamic dispute;
@@ -423,7 +442,7 @@ class PaymentParams {
   Outcome? outcome;
   bool? paid;
   dynamic paymentIntent;
-  String? paymentMethod;
+  PaymentMethod? paymentMethod;
   PaymentMethodDetails? paymentMethodDetails;
   dynamic receiptEmail;
   dynamic receiptNumber;
@@ -436,13 +455,13 @@ class PaymentParams {
   dynamic sourceTransfer;
   dynamic statementDescriptor;
   dynamic statementDescriptorSuffix;
-  String? status;
+  Status? status;
   dynamic transferData;
   dynamic transferGroup;
 
   factory PaymentParams.fromJson(Map<String, dynamic> json) => PaymentParams(
         id: json["id"],
-        object: json["object"],
+        object: paymentParamsObjectValues.map[json["object"]],
         amount: json["amount"],
         amountCaptured: json["amount_captured"],
         amountRefunded: json["amount_refunded"],
@@ -451,11 +470,12 @@ class PaymentParams {
         applicationFeeAmount: json["application_fee_amount"],
         balanceTransaction: json["balance_transaction"],
         billingDetails: BillingDetails.fromJson(json["billing_details"]),
-        calculatedStatementDescriptor: json["calculated_statement_descriptor"],
+        calculatedStatementDescriptor: calculatedStatementDescriptorValues
+            .map[json["calculated_statement_descriptor"]],
         captured: json["captured"],
         created: json["created"],
-        currency: json["currency"],
-        customer: json["customer"],
+        currency: currencyValues.map[json["currency"]],
+        customer: customerValues.map[json["customer"]],
         description: json["description"],
         destination: json["destination"],
         dispute: json["dispute"],
@@ -471,7 +491,7 @@ class PaymentParams {
         outcome: Outcome.fromJson(json["outcome"]),
         paid: json["paid"],
         paymentIntent: json["payment_intent"],
-        paymentMethod: json["payment_method"],
+        paymentMethod: paymentMethodValues.map[json["payment_method"]],
         paymentMethodDetails:
             PaymentMethodDetails.fromJson(json["payment_method_details"]),
         receiptEmail: json["receipt_email"],
@@ -485,14 +505,14 @@ class PaymentParams {
         sourceTransfer: json["source_transfer"],
         statementDescriptor: json["statement_descriptor"],
         statementDescriptorSuffix: json["statement_descriptor_suffix"],
-        status: json["status"],
+        status: statusValues.map[json["status"]],
         transferData: json["transfer_data"],
         transferGroup: json["transfer_group"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "object": object,
+        "object": paymentParamsObjectValues.reverse[object],
         "amount": amount,
         "amount_captured": amountCaptured,
         "amount_refunded": amountRefunded,
@@ -501,11 +521,12 @@ class PaymentParams {
         "application_fee_amount": applicationFeeAmount,
         "balance_transaction": balanceTransaction,
         "billing_details": billingDetails?.toJson(),
-        "calculated_statement_descriptor": calculatedStatementDescriptor,
+        "calculated_statement_descriptor": calculatedStatementDescriptorValues
+            .reverse[calculatedStatementDescriptor],
         "captured": captured,
         "created": created,
-        "currency": currency,
-        "customer": customer,
+        "currency": currencyValues.reverse[currency],
+        "customer": customerValues.reverse[customer],
         "description": description,
         "destination": destination,
         "dispute": dispute,
@@ -521,8 +542,8 @@ class PaymentParams {
         "outcome": outcome?.toJson(),
         "paid": paid,
         "payment_intent": paymentIntent,
-        "payment_method": paymentMethod,
-        "payment_method_details": paymentMethodDetails!.toJson(),
+        "payment_method": paymentMethodValues.reverse[paymentMethod],
+        "payment_method_details": paymentMethodDetails?.toJson(),
         "receipt_email": receiptEmail,
         "receipt_number": receiptNumber,
         "receipt_url": receiptUrl,
@@ -534,7 +555,7 @@ class PaymentParams {
         "source_transfer": sourceTransfer,
         "statement_descriptor": statementDescriptor,
         "statement_descriptor_suffix": statementDescriptorSuffix,
-        "status": status,
+        "status": statusValues.reverse[status],
         "transfer_data": transferData,
         "transfer_group": transferGroup,
       };
@@ -550,20 +571,22 @@ class BillingDetails {
 
   Address? address;
   dynamic email;
-  dynamic name;
+  BillingDetailsName? name;
   dynamic phone;
 
   factory BillingDetails.fromJson(Map<String, dynamic> json) => BillingDetails(
         address: Address.fromJson(json["address"]),
         email: json["email"],
-        name: json["name"],
+        name: json["name"] == null
+            ? null
+            : billingDetailsNameValues.map[json["name"]],
         phone: json["phone"],
       );
 
   Map<String, dynamic> toJson() => {
         "address": address?.toJson(),
         "email": email,
-        "name": name,
+        "name": name == null ? null : billingDetailsNameValues.reverse[name],
         "phone": phone,
       };
 }
@@ -582,7 +605,7 @@ class Address {
   dynamic country;
   dynamic line1;
   dynamic line2;
-  dynamic postalCode;
+  String? postalCode;
   dynamic state;
 
   factory Address.fromJson(Map<String, dynamic> json) => Address(
@@ -590,7 +613,7 @@ class Address {
         country: json["country"],
         line1: json["line1"],
         line2: json["line2"],
-        postalCode: json["postal_code"],
+        postalCode: json["postal_code"] == null ? null : json["postal_code"],
         state: json["state"],
       );
 
@@ -599,10 +622,33 @@ class Address {
         "country": country,
         "line1": line1,
         "line2": line2,
-        "postal_code": postalCode,
+        "postal_code": postalCode == null ? null : postalCode,
         "state": state,
       };
 }
+
+enum BillingDetailsName { DEEM }
+
+final billingDetailsNameValues = EnumValues({"Deem": BillingDetailsName.DEEM});
+
+enum CalculatedStatementDescriptor { FUNFY_COM }
+
+final calculatedStatementDescriptorValues =
+    EnumValues({"FUNFY.COM": CalculatedStatementDescriptor.FUNFY_COM});
+
+enum Currency { EUR }
+
+final currencyValues = EnumValues({"eur": Currency.EUR});
+
+enum Customer { CUS_K1_DMR_LKW_ES_EZ_G4 }
+
+final customerValues =
+    EnumValues({"cus_K1DmrLkwEsEzG4": Customer.CUS_K1_DMR_LKW_ES_EZ_G4});
+
+enum PaymentParamsObject { CHARGE }
+
+final paymentParamsObjectValues =
+    EnumValues({"charge": PaymentParamsObject.CHARGE});
 
 class Outcome {
   Outcome({
@@ -614,31 +660,61 @@ class Outcome {
     this.type,
   });
 
-  String? networkStatus;
+  NetworkStatus? networkStatus;
   dynamic reason;
-  String? riskLevel;
+  RiskLevel? riskLevel;
   int? riskScore;
-  String? sellerMessage;
-  String? type;
+  SellerMessage? sellerMessage;
+  Type? type;
 
   factory Outcome.fromJson(Map<String, dynamic> json) => Outcome(
-        networkStatus: json["network_status"],
+        networkStatus: networkStatusValues.map[json["network_status"]],
         reason: json["reason"],
-        riskLevel: json["risk_level"],
+        riskLevel: riskLevelValues.map[json["risk_level"]],
         riskScore: json["risk_score"],
-        sellerMessage: json["seller_message"],
-        type: json["type"],
+        sellerMessage: sellerMessageValues.map[json["seller_message"]],
+        type: typeValues.map[json["type"]],
       );
 
   Map<String, dynamic> toJson() => {
-        "network_status": networkStatus,
+        "network_status": networkStatusValues.reverse[networkStatus],
         "reason": reason,
-        "risk_level": riskLevel,
+        "risk_level": riskLevelValues.reverse[riskLevel],
         "risk_score": riskScore,
-        "seller_message": sellerMessage,
-        "type": type,
+        "seller_message": sellerMessageValues.reverse[sellerMessage],
+        "type": typeValues.reverse[type],
       };
 }
+
+enum NetworkStatus { APPROVED_BY_NETWORK }
+
+final networkStatusValues =
+    EnumValues({"approved_by_network": NetworkStatus.APPROVED_BY_NETWORK});
+
+enum RiskLevel { NORMAL }
+
+final riskLevelValues = EnumValues({"normal": RiskLevel.NORMAL});
+
+enum SellerMessage { PAYMENT_COMPLETE }
+
+final sellerMessageValues =
+    EnumValues({"Payment complete.": SellerMessage.PAYMENT_COMPLETE});
+
+enum Type { AUTHORIZED }
+
+final typeValues = EnumValues({"authorized": Type.AUTHORIZED});
+
+enum PaymentMethod {
+  CARD_1_J_PL_FS_DC_OTDO7_K_ZUK_QL_J43_V_Y,
+  CARD_1_J_RVYK_DC_OTDO7_K_Z_UM_FOK_JV1_L
+}
+
+final paymentMethodValues = EnumValues({
+  "card_1JPlFSDcOtdo7kZUKQlJ43vY":
+      PaymentMethod.CARD_1_J_PL_FS_DC_OTDO7_K_ZUK_QL_J43_V_Y,
+  "card_1JRvykDcOtdo7kZUmFokJV1l":
+      PaymentMethod.CARD_1_J_RVYK_DC_OTDO7_K_Z_UM_FOK_JV1_L
+});
 
 class PaymentMethodDetails {
   PaymentMethodDetails({
@@ -647,17 +723,17 @@ class PaymentMethodDetails {
   });
 
   Card? card;
-  String? type;
+  PaymentMode? type;
 
   factory PaymentMethodDetails.fromJson(Map<String, dynamic> json) =>
       PaymentMethodDetails(
         card: Card.fromJson(json["card"]),
-        type: json["type"],
+        type: paymentModeValues.map[json["type"]],
       );
 
   Map<String, dynamic> toJson() => {
         "card": card?.toJson(),
-        "type": type,
+        "type": paymentModeValues.reverse[type],
       };
 }
 
@@ -677,49 +753,53 @@ class Card {
     this.wallet,
   });
 
-  String? brand;
+  NetworkEnum? brand;
   Checks? checks;
-  String? country;
+  Country? country;
   int? expMonth;
   int? expYear;
-  String? fingerprint;
-  String? funding;
+  Fingerprint? fingerprint;
+  Funding? funding;
   dynamic installments;
   String? last4;
-  String? network;
+  NetworkEnum? network;
   dynamic threeDSecure;
   dynamic wallet;
 
   factory Card.fromJson(Map<String, dynamic> json) => Card(
-        brand: json["brand"],
+        brand: networkEnumValues.map[json["brand"]],
         checks: Checks.fromJson(json["checks"]),
-        country: json["country"],
+        country: countryValues.map[json["country"]],
         expMonth: json["exp_month"],
         expYear: json["exp_year"],
-        fingerprint: json["fingerprint"],
-        funding: json["funding"],
+        fingerprint: fingerprintValues.map[json["fingerprint"]],
+        funding: fundingValues.map[json["funding"]],
         installments: json["installments"],
         last4: json["last4"],
-        network: json["network"],
+        network: networkEnumValues.map[json["network"]],
         threeDSecure: json["three_d_secure"],
         wallet: json["wallet"],
       );
 
   Map<String, dynamic> toJson() => {
-        "brand": brand,
+        "brand": networkEnumValues.reverse[brand],
         "checks": checks?.toJson(),
-        "country": country,
+        "country": countryValues.reverse[country],
         "exp_month": expMonth,
         "exp_year": expYear,
-        "fingerprint": fingerprint,
-        "funding": funding,
+        "fingerprint": fingerprintValues.reverse[fingerprint],
+        "funding": fundingValues.reverse[funding],
         "installments": installments,
         "last4": last4,
-        "network": network,
+        "network": networkEnumValues.reverse[network],
         "three_d_secure": threeDSecure,
         "wallet": wallet,
       };
 }
+
+enum NetworkEnum { VISA }
+
+final networkEnumValues = EnumValues({"visa": NetworkEnum.VISA});
 
 class Checks {
   Checks({
@@ -729,21 +809,39 @@ class Checks {
   });
 
   dynamic addressLine1Check;
-  dynamic addressPostalCodeCheck;
-  dynamic cvcCheck;
+  String? addressPostalCodeCheck;
+  String? cvcCheck;
 
   factory Checks.fromJson(Map<String, dynamic> json) => Checks(
         addressLine1Check: json["address_line1_check"],
-        addressPostalCodeCheck: json["address_postal_code_check"],
-        cvcCheck: json["cvc_check"],
+        addressPostalCodeCheck: json["address_postal_code_check"] == null
+            ? null
+            : json["address_postal_code_check"],
+        cvcCheck: json["cvc_check"] == null ? null : json["cvc_check"],
       );
 
   Map<String, dynamic> toJson() => {
         "address_line1_check": addressLine1Check,
-        "address_postal_code_check": addressPostalCodeCheck,
-        "cvc_check": cvcCheck,
+        "address_postal_code_check":
+            addressPostalCodeCheck == null ? null : addressPostalCodeCheck,
+        "cvc_check": cvcCheck == null ? null : cvcCheck,
       };
 }
+
+enum Country { US }
+
+final countryValues = EnumValues({"US": Country.US});
+
+enum Fingerprint { F_QGIC_LU8_GFPFTF9_Q, HZ_Q0_C_CQ2_LXJR_A7_PY }
+
+final fingerprintValues = EnumValues({
+  "FQgicLU8GFPFTF9Q": Fingerprint.F_QGIC_LU8_GFPFTF9_Q,
+  "HzQ0CCq2lxjrA7py": Fingerprint.HZ_Q0_C_CQ2_LXJR_A7_PY
+});
+
+enum Funding { CREDIT }
+
+final fundingValues = EnumValues({"credit": Funding.CREDIT});
 
 class Refunds {
   Refunds({
@@ -754,14 +852,14 @@ class Refunds {
     this.url,
   });
 
-  String? object;
+  RefundsObject? object;
   List<dynamic>? data;
   bool? hasMore;
   int? totalCount;
   String? url;
 
   factory Refunds.fromJson(Map<String, dynamic> json) => Refunds(
-        object: json["object"],
+        object: refundsObjectValues.map[json["object"]],
         data: List<dynamic>.from(json["data"].map((x) => x)),
         hasMore: json["has_more"],
         totalCount: json["total_count"],
@@ -769,13 +867,17 @@ class Refunds {
       );
 
   Map<String, dynamic> toJson() => {
-        "object": object,
+        "object": refundsObjectValues.reverse[object],
         "data": List<dynamic>.from(data!.map((x) => x)),
         "has_more": hasMore,
         "total_count": totalCount,
         "url": url,
       };
 }
+
+enum RefundsObject { LIST }
+
+final refundsObjectValues = EnumValues({"list": RefundsObject.LIST});
 
 class Source {
   Source({
@@ -804,82 +906,94 @@ class Source {
     this.tokenizationMethod,
   });
 
-  String? id;
-  String? object;
+  PaymentMethod? id;
+  PaymentMode? object;
   dynamic addressCity;
   dynamic addressCountry;
   dynamic addressLine1;
   dynamic addressLine1Check;
   dynamic addressLine2;
   dynamic addressState;
-  dynamic addressZip;
-  dynamic addressZipCheck;
-  String? brand;
-  String? country;
-  String? customer;
-  dynamic cvcCheck;
+  String? addressZip;
+  String? addressZipCheck;
+  SourceBrand? brand;
+  Country? country;
+  Customer? customer;
+  String? cvcCheck;
   dynamic dynamicLast4;
   int? expMonth;
   int? expYear;
-  String? fingerprint;
-  String? funding;
+  Fingerprint? fingerprint;
+  Funding? funding;
   String? last4;
   List<dynamic>? metadata;
-  dynamic name;
+  BillingDetailsName? name;
   dynamic tokenizationMethod;
 
   factory Source.fromJson(Map<String, dynamic> json) => Source(
-        id: json["id"],
-        object: json["object"],
+        id: paymentMethodValues.map[json["id"]],
+        object: paymentModeValues.map[json["object"]],
         addressCity: json["address_city"],
         addressCountry: json["address_country"],
         addressLine1: json["address_line1"],
         addressLine1Check: json["address_line1_check"],
         addressLine2: json["address_line2"],
         addressState: json["address_state"],
-        addressZip: json["address_zip"],
-        addressZipCheck: json["address_zip_check"],
-        brand: json["brand"],
-        country: json["country"],
-        customer: json["customer"],
-        cvcCheck: json["cvc_check"],
+        addressZip: json["address_zip"] == null ? null : json["address_zip"],
+        addressZipCheck: json["address_zip_check"] == null
+            ? null
+            : json["address_zip_check"],
+        brand: sourceBrandValues.map[json["brand"]],
+        country: countryValues.map[json["country"]],
+        customer: customerValues.map[json["customer"]],
+        cvcCheck: json["cvc_check"] == null ? null : json["cvc_check"],
         dynamicLast4: json["dynamic_last4"],
         expMonth: json["exp_month"],
         expYear: json["exp_year"],
-        fingerprint: json["fingerprint"],
-        funding: json["funding"],
+        fingerprint: fingerprintValues.map[json["fingerprint"]],
+        funding: fundingValues.map[json["funding"]],
         last4: json["last4"],
         metadata: List<dynamic>.from(json["metadata"].map((x) => x)),
-        name: json["name"],
+        name: json["name"] == null
+            ? null
+            : billingDetailsNameValues.map[json["name"]],
         tokenizationMethod: json["tokenization_method"],
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "object": object,
+        "id": paymentMethodValues.reverse[id],
+        "object": paymentModeValues.reverse[object],
         "address_city": addressCity,
         "address_country": addressCountry,
         "address_line1": addressLine1,
         "address_line1_check": addressLine1Check,
         "address_line2": addressLine2,
         "address_state": addressState,
-        "address_zip": addressZip,
-        "address_zip_check": addressZipCheck,
-        "brand": brand,
-        "country": country,
-        "customer": customer,
-        "cvc_check": cvcCheck,
+        "address_zip": addressZip == null ? null : addressZip,
+        "address_zip_check": addressZipCheck == null ? null : addressZipCheck,
+        "brand": sourceBrandValues.reverse[brand],
+        "country": countryValues.reverse[country],
+        "customer": customerValues.reverse[customer],
+        "cvc_check": cvcCheck == null ? null : cvcCheck,
         "dynamic_last4": dynamicLast4,
         "exp_month": expMonth,
         "exp_year": expYear,
-        "fingerprint": fingerprint,
-        "funding": funding,
+        "fingerprint": fingerprintValues.reverse[fingerprint],
+        "funding": fundingValues.reverse[funding],
         "last4": last4,
         "metadata": List<dynamic>.from(metadata!.map((x) => x)),
-        "name": name,
+        "name": name == null ? null : billingDetailsNameValues.reverse[name],
         "tokenization_method": tokenizationMethod,
       };
 }
+
+enum SourceBrand { VISA }
+
+final sourceBrandValues = EnumValues({"Visa": SourceBrand.VISA});
+
+enum Status { SUCCEEDED }
+
+final statusValues = EnumValues({"succeeded": Status.SUCCEEDED});
 
 class EnumValues<T> {
   Map<String, T> map;

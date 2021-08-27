@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:funfy/ui/screens/Your%20order%20Summery.dart';
+import 'package:funfy/ui/screens/fiestasMoreOrderDetails.dart';
 import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/colors.dart';
@@ -9,7 +11,10 @@ import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 
 class BookingSuccess extends StatefulWidget {
-  BookingSuccess({Key? key}) : super(key: key);
+  final orderidFiestas;
+
+  const BookingSuccess({Key? key, @required this.orderidFiestas})
+      : super(key: key);
 
   @override
   _BookingSuccessState createState() => _BookingSuccessState();
@@ -51,13 +56,26 @@ class _BookingSuccessState extends State<BookingSuccess> {
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) => Home(
-                                pageIndexNum: 0,
-                              )),
-                      (route) => false);
+                  if (widget.orderidFiestas[1] == 1) {
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => YourOrderSum(
+                                  orderID: widget.orderidFiestas[0],
+                                  nav: 1,
+                                )),
+                        (route) => false);
+                  } else {
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                FiestasMoreOrderDetail(
+                                  fiestaBookingId: widget.orderidFiestas[0],
+                                  nav: 1,
+                                )),
+                        (route) => false);
+                  }
                 },
                 child: roundedBoxR(
                     backgroundColor: AppColors.siginbackgrond,

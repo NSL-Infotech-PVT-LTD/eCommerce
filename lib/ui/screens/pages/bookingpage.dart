@@ -124,201 +124,322 @@ class _BookingPageState extends State<BookingPage> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return Scaffold(
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: () {},
-        //   child: Icon(Icons.add),
-        // ),
-        backgroundColor: AppColors.homeBackground,
-        body: Container(
-            child: Column(
-          children: [
-            SafeArea(
-              child: Container(
+    return Container(
+      color: AppColors.blackBackground,
+      child: SafeArea(
+        child: Scaffold(
+            // floatingActionButton: FloatingActionButton(
+            //   onPressed: () {},
+            //   child: Icon(Icons.add),
+            // ),
+            backgroundColor: AppColors.homeBackground,
+            body: Container(
+                child: Column(
+              children: [
+                Container(
+                    padding: EdgeInsets.symmetric(
+                        vertical: size.height * 0.023,
+                        horizontal: size.width * 0.045),
+                    width: size.width,
+                    height: size.height * 0.155,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage(Images.homeTopBannerPng),
+                            fit: BoxFit.cover)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "${getTranslated(context, "mybookings")}",
+                          // Strings.mybookings,
+                          style: TextStyle(
+                              fontFamily: Fonts.dmSansBold,
+                              color: AppColors.white,
+                              fontSize: size.width * 0.065),
+                        ),
+                        SizedBox(
+                          height: size.height * 0.01,
+                        ),
+                        Text(
+                          "${getTranslated(context, "checkyourticketsyouboughtforFiestas")}",
+                          // Strings.checkyourticketsyouboughtforFiestas,
+                          style: TextStyle(
+                              fontFamily: Fonts.dmSansRegular,
+                              color: AppColors.white,
+                              fontSize: size.width * 0.038),
+                        )
+                      ],
+                    )),
+
+                SizedBox(
+                  height: size.height * 0.025,
+                ),
+
+                // fiestas && pre-fiestas button
+
+                Container(
                   padding: EdgeInsets.symmetric(
-                      vertical: size.height * 0.023,
-                      horizontal: size.width * 0.045),
+                      vertical: size.height * 0.01,
+                      horizontal: size.width * 0.04),
+                  // color: Colors.blue,
                   width: size.width,
-                  height: size.height * 0.155,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage(Images.homeTopBannerPng),
-                          fit: BoxFit.cover)),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "${getTranslated(context, "mybookings")}",
-                        // Strings.mybookings,
+                  height: size.height * 0.08,
+                  child: roundedBox(
+                      width: size.width * 0.8,
+                      height: size.height * 0.06,
+                      backgroundColor: AppColors.homeTopbuttonbackground,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                            vertical: size.height * 0.01,
+                            horizontal: size.width * 0.022),
+                        child: Row(
+                          children: [
+                            // fiestas button
+
+                            Expanded(
+                              flex: 1,
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    fiestasButton = true;
+                                  });
+                                },
+                                child: roundedBox(
+                                    backgroundColor: fiestasButton
+                                        ? AppColors.siginbackgrond
+                                        : AppColors.homeTopbuttonbackground,
+                                    child: Align(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        "${getTranslated(context, "fiestas")}",
+                                        //Strings.fiestas,
+                                        style: TextStyle(
+                                            fontSize: size.width * 0.035,
+                                            fontFamily: Fonts.dmSansMedium,
+                                            color: AppColors.white),
+                                      ),
+                                    )),
+                              ),
+                            ),
+
+                            SizedBox(
+                              width: size.width * 0.01,
+                            ),
+
+                            Expanded(
+                              flex: 1,
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    fiestasButton = false;
+                                  });
+                                },
+                                child: roundedBox(
+                                    // width: size.width * 0.44,
+                                    backgroundColor: fiestasButton
+                                        ? AppColors.homeTopbuttonbackground
+                                        : AppColors.siginbackgrond,
+                                    child: Align(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        "${getTranslated(context, "preFiestas")}",
+                                        //  Strings.preFiestas,
+                                        style: TextStyle(
+                                            fontSize: size.width * 0.035,
+                                            fontFamily: Fonts.dmSansMedium,
+                                            color: AppColors.white),
+                                      ),
+                                    )),
+                              ),
+                            )
+                          ],
+                        ),
+                      )),
+                ),
+
+                // fiestas orders list
+
+                fiestasButton
+                    ? Expanded(
+                        child: Stack(
+                        children: [
+                          // loading
+                          _loading
+                              ? Center(child: CircularProgressIndicator())
+                              : _loading == false &&
+                                      // fiestasBookingListModel?.data?.data?.length ==
+                                      fiestasBookingListRes.length == 0
+                                  ? Center(
+                                      child: Text(
+                                      "${Strings.listEmpty}",
+                                      style: TextStyle(
+                                          color: AppColors.white,
+                                          fontSize: size.width * 0.05),
+                                    ))
+                                  : ListView.builder(
+                                      // itemCount: fiestasBookingListModel
+                                      //         ?.data?.data?.length ??
+                                      // 0,
+
+                                      itemCount: fiestasBookingListRes.length,
+                                      itemBuilder: (context, index) {
+                                        return fiestasOrdersItem(
+                                            context: context,
+                                            index: index,
+                                            model: fiestasBookingListRes);
+                                      }),
+                        ],
+                      ))
+                    : Expanded(
+                        child: Stack(
+                        children: [
+                          // loading
+                          _preFiestasLoading
+                              ? Center(child: CircularProgressIndicator())
+                              : _preFiestasLoading == false &&
+                                      preFiestasBookingList
+                                              ?.data?.data?.length ==
+                                          0
+                                  ? Center(
+                                      child: Text(
+                                      "${Strings.listEmpty}",
+                                      style: TextStyle(
+                                          color: AppColors.white,
+                                          fontSize: size.width * 0.05),
+                                    ))
+                                  : ListView.builder(
+                                      // itemCount: preFiestasBookingList
+                                      //         ?.data?.data?.length ??
+                                      //     0,
+                                      itemCount: preFiestasBookingList
+                                              ?.data?.data?.length ??
+                                          0,
+                                      itemBuilder: (context, index) {
+                                        return preFiestasOrderItemsNew(
+                                            context: context,
+                                            index: index,
+                                            model: preFiestasBookingList);
+
+                                        // preFiestasOrderItem(
+                                        //     context: context,
+                                        //     index: index,
+                                        //     model: preFiestasBookingList);
+                                      }),
+                        ],
+                      ))
+              ],
+            ))),
+      ),
+    );
+  }
+}
+
+Widget preFiestasOrderItemsNew(
+    {context, PreFiestasBookingListModel? model, index}) {
+  var size = MediaQuery.of(context).size;
+
+  var data = model?.data?.data?.elementAt(index!);
+  return InkWell(
+    onTap: () {
+      navigatorPushFun(
+          context,
+          YourOrderSum(
+              orderID: model?.data?.data?.elementAt(index!).id.toString()));
+    },
+    child: Container(
+        margin: EdgeInsets.only(top: size.height * 0.017),
+        // color: AppColors.green,
+        padding: EdgeInsets.symmetric(
+            // vertical: size.height * 0.01,
+
+            horizontal: size.width * 0.04),
+        height: size.height * 0.12,
+        width: size.width,
+        decoration: BoxDecoration(
+            border: Border(
+          bottom: BorderSide(
+              width: size.height * 0.001, color: AppColors.tagBorder),
+        )),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              // color: Colors.green,
+              height: 20,
+              width: 20,
+              child: Image.asset(
+                data?.orderStatus == "completed" ||
+                        data?.orderStatus == "reviewed"
+                    ? "assets/pngicons/activeBook.png"
+                    : "assets/pngicons/pendingBook.png",
+                fit: BoxFit.cover,
+              ),
+            ),
+            SizedBox(width: size.width * 0.03),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "${data?.categoryDetail?.name}",
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: TextStyle(
+                        // fontFamily: Fonts.dmSansBold,
+                        fontWeight: FontWeight.w900,
+                        color: AppColors.white,
+                        fontSize: size.width * 0.05),
+                  ),
+                  SizedBox(
+                    height: size.height * 0.008,
+                  ),
+                  Text(
+                    "${data?.categoryDetail?.description}",
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    style: TextStyle(
+                        fontFamily: Fonts.dmSansMedium,
+                        // fontWeight: FontWeight.w900,
+                        color: AppColors.itemDescription,
+                        fontSize: size.width * 0.044),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              width: size.width * 0.002,
+            ),
+            Column(
+              children: [
+                Spacer(),
+                roundedBoxBorder(
+                    context: context,
+                    width: size.width * 0.32,
+                    // height: size.height * 0.04,
+                    radius: size.width * 0.005,
+                    borderSize: size.width * 0.003,
+                    borderColor: AppColors.siginbackgrond,
+                    backgroundColor: AppColors.blackBackground,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: size.width * 0.02,
+                          vertical: size.height * 0.007),
+                      child: Text(
+                        "${getTranslated(context, "orderDetails")}",
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                             fontFamily: Fonts.dmSansBold,
                             color: AppColors.white,
-                            fontSize: size.width * 0.065),
+                            fontSize: size.width * 0.04),
                       ),
-                      SizedBox(
-                        height: size.height * 0.01,
-                      ),
-                      Text(
-                        "${getTranslated(context, "checkyourticketsyouboughtforFiestas")}",
-                        // Strings.checkyourticketsyouboughtforFiestas,
-                        style: TextStyle(
-                            fontFamily: Fonts.dmSansRegular,
-                            color: AppColors.white,
-                            fontSize: size.width * 0.038),
-                      )
-                    ],
-                  )),
-            ),
-
-            SizedBox(
-              height: size.height * 0.025,
-            ),
-
-            // fiestas && pre-fiestas button
-
-            Container(
-              padding: EdgeInsets.symmetric(
-                  vertical: size.height * 0.01, horizontal: size.width * 0.04),
-              // color: Colors.blue,
-              width: size.width,
-              height: size.height * 0.08,
-              child: roundedBox(
-                  width: size.width * 0.8,
-                  height: size.height * 0.06,
-                  backgroundColor: AppColors.homeTopbuttonbackground,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                        vertical: size.height * 0.01,
-                        horizontal: size.width * 0.022),
-                    child: Row(
-                      children: [
-                        // fiestas button
-
-                        Expanded(
-                          flex: 1,
-                          child: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                fiestasButton = true;
-                              });
-                            },
-                            child: roundedBox(
-                                backgroundColor: fiestasButton
-                                    ? AppColors.siginbackgrond
-                                    : AppColors.homeTopbuttonbackground,
-                                child: Align(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    "${getTranslated(context, "fiestas")}",
-                                    //Strings.fiestas,
-                                    style: TextStyle(
-                                        fontSize: size.width * 0.035,
-                                        fontFamily: Fonts.dmSansMedium,
-                                        color: AppColors.white),
-                                  ),
-                                )),
-                          ),
-                        ),
-
-                        SizedBox(
-                          width: size.width * 0.01,
-                        ),
-
-                        Expanded(
-                          flex: 1,
-                          child: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                fiestasButton = false;
-                              });
-                            },
-                            child: roundedBox(
-                                // width: size.width * 0.44,
-                                backgroundColor: fiestasButton
-                                    ? AppColors.homeTopbuttonbackground
-                                    : AppColors.siginbackgrond,
-                                child: Align(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    "${getTranslated(context, "preFiestas")}",
-                                    //  Strings.preFiestas,
-                                    style: TextStyle(
-                                        fontSize: size.width * 0.035,
-                                        fontFamily: Fonts.dmSansMedium,
-                                        color: AppColors.white),
-                                  ),
-                                )),
-                          ),
-                        )
-                      ],
-                    ),
-                  )),
-            ),
-
-            // fiestas orders list
-
-            fiestasButton
-                ? Expanded(
-                    child: Stack(
-                    children: [
-                      // loading
-                      _loading
-                          ? Center(child: CircularProgressIndicator())
-                          : _loading == false &&
-                                  // fiestasBookingListModel?.data?.data?.length ==
-                                  fiestasBookingListRes.length == 0
-                              ? Center(
-                                  child: Text(
-                                  "${Strings.listEmpty}",
-                                  style: TextStyle(
-                                      color: AppColors.white,
-                                      fontSize: size.width * 0.05),
-                                ))
-                              : ListView.builder(
-                                  // itemCount: fiestasBookingListModel
-                                  //         ?.data?.data?.length ??
-                                  // 0,
-
-                                  itemCount: fiestasBookingListRes.length,
-                                  itemBuilder: (context, index) {
-                                    return fiestasOrdersItem(
-                                        context: context,
-                                        index: index,
-                                        model: fiestasBookingListRes);
-                                  }),
-                    ],
-                  ))
-                : Expanded(
-                    child: Stack(
-                    children: [
-                      // loading
-                      _preFiestasLoading
-                          ? Center(child: CircularProgressIndicator())
-                          : _preFiestasLoading == false &&
-                                  preFiestasBookingList?.data?.data?.length == 0
-                              ? Center(
-                                  child: Text(
-                                  "${Strings.listEmpty}",
-                                  style: TextStyle(
-                                      color: AppColors.white,
-                                      fontSize: size.width * 0.05),
-                                ))
-                              : ListView.builder(
-                                  itemCount: preFiestasBookingList
-                                          ?.data?.data?.length ??
-                                      0,
-                                  itemBuilder: (context, index) {
-                                    return preFiestasOrderItem(
-                                        context: context,
-                                        index: index,
-                                        model: preFiestasBookingList);
-                                  }),
-                    ],
-                  ))
+                    )),
+                Spacer(),
+              ],
+            )
           ],
-        )));
-  }
+        )),
+  );
 }
 
 Widget fiestasOrdersItem(
@@ -327,6 +448,18 @@ Widget fiestasOrdersItem(
 // FiestasBookingList?
     List? model}) {
   var size = MediaQuery.of(context).size;
+
+  double ratingF = 0.0;
+
+  var ratM = model![index]['fiesta_detail']['club_rating'];
+
+  print(ratM);
+
+  if (ratM == null || ratM == 0.0) {
+    ratingF = 0.0;
+  } else {
+    ratingF = double.parse("$ratM");
+  }
 
   // var data = model?.data?.data?.elementAt(index);
 
@@ -373,7 +506,7 @@ Widget fiestasOrdersItem(
         ),
         Text(
           // data!.fiestaDetail!.clubDetail!.name!.toString(),
-          "${model![index]['fiesta_detail']['club_detail']['name']}",
+          "${model[index]['fiesta_detail']['club_detail']['name']}",
           style: TextStyle(
               fontFamily: Fonts.dmSansBold,
               color: AppColors.white,
@@ -386,7 +519,7 @@ Widget fiestasOrdersItem(
             size: size.width * 0.052,
             ittempading: size.width * 0.001,
             color: AppColors.tagBorder,
-            rating: 3.5),
+            rating: ratingF),
         SizedBox(
           height: size.height * 0.02,
         ),
@@ -411,7 +544,7 @@ Widget fiestasOrdersItem(
                       fontSize: size.width * 0.05),
                 ),
                 Text(
-                  "${getTranslated(context, "qty")} :2",
+                  "${getTranslated(context, "qty")} : ${model[index]['total_tickets']}",
                   //   Strings.qty + ":2",
                   style: TextStyle(
                       fontFamily: Fonts.dmSansBold,

@@ -47,4 +47,12 @@ class Urls {
   static String aboutUsUrl = baseUrl + "config/about_us";
   static String helpUrl = baseUrl + "config/help_and_contact_us";
   static String notificationonOffUrl = baseUrl + "notification/status";
+  static String notificationUrl = baseUrl + "notification/list";
+  static String fiestasRatingUrl = baseUrl + "customer/booking/rate";
+  static String prefiestasRatingUrl = baseUrl + "customer/rate/order";
+  static String addresscreateUrl = baseUrl + "customer/address/store";
+  static String addressUpadteUrl = baseUrl + "customer/address/update";
+  static String addressListUrl = baseUrl + "customer/address/list";
+  static String addressDeleteUrl = baseUrl + "customer/address/delete";
+  static String logoutUrl = baseUrl + "logout";
 }

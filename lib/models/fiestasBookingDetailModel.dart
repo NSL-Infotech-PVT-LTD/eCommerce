@@ -102,9 +102,9 @@ class FiestaDetail {
   String? distanceKm;
   String? distanceMiles;
   bool? isFavourite;
-  int? leftStandardTicket;
-  int? leftVipTicket;
-  int? leftNormalTicket;
+  var leftStandardTicket;
+  var leftVipTicket;
+  var leftNormalTicket;
   dynamic clubRating;
   ClubDetail? clubDetail;
 

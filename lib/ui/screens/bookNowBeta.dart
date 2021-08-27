@@ -36,6 +36,8 @@ class _BookNowBetaState extends State<BookNowBeta> {
   CarouselController _carouselController = CarouselController();
   List<Widget> cardList = [];
 
+  double rating = 0.0;
+
   bool _fiestasfavoriteBool = false;
 
   bool _loadingMainCenter = false;
@@ -285,6 +287,13 @@ class _BookNowBetaState extends State<BookNowBeta> {
               }
             }
 
+            if (fiestasDetailModel?.data?.clubRating == null ||
+                fiestasDetailModel?.data?.clubRating == 0) {
+              rating = 0.0;
+            } else {
+              rating = double.parse("${fiestasDetailModel?.data?.clubRating}");
+            }
+
             // print(cardList);
 
             _loading = false;
@@ -314,6 +323,20 @@ class _BookNowBetaState extends State<BookNowBeta> {
           //       print(ticket);
           //     },
           //     child: Icon(Icons.add)),
+          appBar: AppBar(
+            backgroundColor: AppColors.blackBackground,
+            title: Text("Fiestas"),
+            centerTitle: true,
+            actions: [
+              IconButton(
+                onPressed: addFavorite,
+                icon: Container(
+                  child: SvgPicture.asset("assets/svgicons/hearticon.svg",
+                      color: _fiestasfavoriteBool ? Colors.red : Colors.white),
+                ),
+              )
+            ],
+          ),
           backgroundColor: AppColors.homeBackground,
           body: _loading
               ? Center(child: CircularProgressIndicator())
@@ -326,24 +349,25 @@ class _BookNowBetaState extends State<BookNowBeta> {
                             (BuildContext context, bool innerBoxIsScrolled) {
                           return [
                             SliverAppBar(
+                              automaticallyImplyLeading: false,
                               collapsedHeight: 150.0,
                               expandedHeight: 200.0,
                               floating: true,
                               pinned: true,
                               snap: true,
                               actions: [
-                                GestureDetector(
-                                  onTap: () {
-                                    addFavorite();
-                                  },
-                                  child: Container(
-                                    child: SvgPicture.asset(
-                                        "assets/svgicons/hearticon.svg",
-                                        color: _fiestasfavoriteBool
-                                            ? Colors.red
-                                            : Colors.white),
-                                  ),
-                                )
+                                // GestureDetector(
+                                //   onTap: () {
+                                //     addFavorite();
+                                //   },
+                                //   child: Container(
+                                //     child: SvgPicture.asset(
+                                //         "assets/svgicons/hearticon.svg",
+                                //         color: _fiestasfavoriteBool
+                                //             ? Colors.red
+                                //             : Colors.white),
+                                //   ),
+                                // )
                               ],
                               actionsIconTheme: IconThemeData(opacity: 0.0),
                               flexibleSpace: Stack(
@@ -398,21 +422,11 @@ class _BookNowBetaState extends State<BookNowBeta> {
                                                 Container(
                                                   decoration: BoxDecoration(
                                                     //
-                                                    color: fiestasDetailModel
-                                                                ?.data!.type ==
-                                                            "open"
-                                                        ? AppColors.green
-                                                        : AppColors
-                                                            .blackBackground,
+                                                    color: AppColors.green,
 
                                                     border: Border.all(
-                                                        color: fiestasDetailModel
-                                                                    ?.data!
-                                                                    .type ==
-                                                                "open"
-                                                            ? AppColors
-                                                                .blackBackground
-                                                            : AppColors.white),
+                                                        color: AppColors
+                                                            .blackBackground),
                                                     borderRadius:
                                                         BorderRadius.all(
                                                             Radius.circular(6)),
@@ -434,55 +448,131 @@ class _BookNowBetaState extends State<BookNowBeta> {
                                                           size.width * 0.045,
                                                     ),
                                                   )),
-                                                ),
-                                                SizedBox(
-                                                    width:
-                                                        SizeConfig.screenWidth *
-                                                            0.03),
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                    //
-                                                    color: fiestasDetailModel
-                                                                ?.data!.type ==
-                                                            "club"
-                                                        ? AppColors.green
-                                                        : AppColors
-                                                            .blackBackground,
+                                                )
+                                                // fiestasDetailModel
+                                                //             ?.data!.type ==
+                                                //         "open"
+                                                //     ? Container(
+                                                //         decoration:
+                                                //             BoxDecoration(
+                                                //           //
+                                                //           color:
+                                                //               AppColors.green,
 
-                                                    border: Border.all(
-                                                        color: fiestasDetailModel
-                                                                    ?.data!
-                                                                    .type ==
-                                                                "club"
-                                                            ? AppColors
-                                                                .blackBackground
-                                                            : AppColors.white),
-                                                    // color: AppColors.homeBackground,
-                                                    // border: Border.all(
-                                                    //     color: AppColors.white),
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(6)),
-                                                  ),
-                                                  height:
-                                                      SizeConfig.screenHeight *
-                                                          0.03,
-                                                  width:
-                                                      SizeConfig.screenWidth *
-                                                          0.15,
-                                                  child: Center(
-                                                      child: Text(
-                                                    "${getTranslated(context, "club")}",
-                                                    // Strings.club,
-                                                    style: TextStyle(
-                                                      color: AppColors.white,
-                                                      fontFamily:
-                                                          "DM Sans Medium",
-                                                      fontSize:
-                                                          size.width * 0.035,
-                                                    ),
-                                                  )),
-                                                ),
+                                                //           border: Border.all(
+                                                //               color: AppColors
+                                                //                   .blackBackground),
+                                                //           borderRadius:
+                                                //               BorderRadius.all(
+                                                //                   Radius
+                                                //                       .circular(
+                                                //                           6)),
+                                                //         ),
+                                                //         height: SizeConfig
+                                                //                 .screenHeight *
+                                                //             0.03,
+                                                //         width: SizeConfig
+                                                //                 .screenWidth *
+                                                //             0.15,
+                                                //         child: Center(
+                                                //             child: Text(
+                                                //           "${getTranslated(context, "open")}",
+                                                //           // Strings.open,
+                                                //           style: TextStyle(
+                                                //             color:
+                                                //                 AppColors.white,
+                                                //             fontFamily:
+                                                //                 "BabasNeue",
+                                                //             fontSize:
+                                                //                 size.width *
+                                                //                     0.045,
+                                                //           ),
+                                                //         )),
+                                                //       )
+                                                //     : Container(
+                                                //         decoration:
+                                                //             BoxDecoration(
+                                                //           //
+                                                //           color: Colors.red,
+
+                                                //           border: Border.all(
+                                                //               color: AppColors
+                                                //                   .blackBackground),
+                                                //           borderRadius:
+                                                //               BorderRadius.all(
+                                                //                   Radius
+                                                //                       .circular(
+                                                //                           6)),
+                                                //         ),
+                                                //         height: SizeConfig
+                                                //                 .screenHeight *
+                                                //             0.03,
+                                                //         width: SizeConfig
+                                                //                 .screenWidth *
+                                                //             0.15,
+                                                //         child: Center(
+                                                //             child: Text(
+                                                //           "${getTranslated(context, "close")}",
+                                                //           // Strings.open,
+                                                //           style: TextStyle(
+                                                //             color:
+                                                //                 AppColors.white,
+                                                //             fontFamily:
+                                                //                 "BabasNeue",
+                                                //             fontSize:
+                                                //                 size.width *
+                                                //                     0.045,
+                                                //           ),
+                                                //         )),
+                                                //       ),
+                                                // SizedBox(
+                                                //     width:
+                                                //         SizeConfig.screenWidth *
+                                                //             0.03),
+                                                // Container(
+                                                //   decoration: BoxDecoration(
+                                                //     //
+                                                //     color: fiestasDetailModel
+                                                //                 ?.data!.type ==
+                                                //             "club"
+                                                //         ? AppColors.green
+                                                //         : AppColors
+                                                //             .blackBackground,
+
+                                                //     border: Border.all(
+                                                //         color: fiestasDetailModel
+                                                //                     ?.data!
+                                                //                     .type ==
+                                                //                 "club"
+                                                //             ? AppColors
+                                                //                 .blackBackground
+                                                //             : AppColors.white),
+                                                //     // color: AppColors.homeBackground,
+                                                //     // border: Border.all(
+                                                //     //     color: AppColors.white),
+                                                //     borderRadius:
+                                                //         BorderRadius.all(
+                                                //             Radius.circular(6)),
+                                                //   ),
+                                                //   height:
+                                                //       SizeConfig.screenHeight *
+                                                //           0.03,
+                                                //   width:
+                                                //       SizeConfig.screenWidth *
+                                                //           0.15,
+                                                //   child: Center(
+                                                //       child: Text(
+                                                //     "${getTranslated(context, "club")}",
+                                                //     // Strings.club,
+                                                //     style: TextStyle(
+                                                //       color: AppColors.white,
+                                                //       fontFamily:
+                                                //           "DM Sans Medium",
+                                                //       fontSize:
+                                                //           size.width * 0.035,
+                                                //     ),
+                                                //   )),
+                                                // ),
                                               ],
                                             ),
                                             Container(
@@ -520,56 +610,58 @@ class _BookNowBetaState extends State<BookNowBeta> {
                                                 size: size.width * 0.06,
                                                 ittempading: size.width * 0.005,
                                                 color: AppColors.tagBorder,
-                                                rating: 3.0)
+                                                rating: rating)
                                           ],
                                         ),
                                         Spacer(),
 
-                                        roundedBoxR(
-                                            height: size.height * 0.1,
-                                            // width: size.width * 0.3,
-                                            radius: size.width * 0.02,
-                                            backgroundColor:
-                                                AppColors.brownLite,
-                                            child: Container(
-                                              // color: Colors.blue,
-                                              alignment: Alignment.center,
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal:
-                                                      size.width * 0.025,
-                                                  vertical: size.height * 0.01),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Text(
-                                                    Strings.startingfrom,
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        color:
-                                                            AppColors.brownlite,
-                                                        fontSize:
-                                                            size.width * 0.026),
-                                                  ),
-                                                  Text(
-                                                    "${Strings.euro} " +
-                                                        "$price",
-                                                    style: TextStyle(
-                                                        color: AppColors.white,
-                                                        fontFamily:
-                                                            Fonts.dmSansBold,
-                                                        fontSize:
-                                                            price!.length > 3
-                                                                ? size.width *
-                                                                    0.04
-                                                                : size.width *
-                                                                    0.06),
-                                                  )
-                                                ],
-                                              ),
-                                            ))
+                                        // Rate box
+
+                                        // roundedBoxR(
+                                        //     height: size.height * 0.1,
+                                        //     // width: size.width * 0.3,
+                                        //     radius: size.width * 0.02,
+                                        //     backgroundColor:
+                                        //         AppColors.brownLite,
+                                        //     child: Container(
+                                        //       // color: Colors.blue,
+                                        //       alignment: Alignment.center,
+                                        //       padding: EdgeInsets.symmetric(
+                                        //           horizontal:
+                                        //               size.width * 0.025,
+                                        //           vertical: size.height * 0.01),
+                                        //       child: Column(
+                                        //         crossAxisAlignment:
+                                        //             CrossAxisAlignment.center,
+                                        //         mainAxisAlignment:
+                                        //             MainAxisAlignment.center,
+                                        //         children: [
+                                        //           Text(
+                                        //             Strings.startingfrom,
+                                        //             textAlign: TextAlign.center,
+                                        //             style: TextStyle(
+                                        //                 color:
+                                        //                     AppColors.brownlite,
+                                        //                 fontSize:
+                                        //                     size.width * 0.026),
+                                        //           ),
+                                        //           Text(
+                                        //             "${Strings.euro} " +
+                                        //                 "$price",
+                                        //             style: TextStyle(
+                                        //                 color: AppColors.white,
+                                        //                 fontFamily:
+                                        //                     Fonts.dmSansBold,
+                                        //                 fontSize:
+                                        //                     price!.length > 3
+                                        //                         ? size.width *
+                                        //                             0.04
+                                        //                         : size.width *
+                                        //                             0.06),
+                                        //           )
+                                        //         ],
+                                        //       ),
+                                        //     ))
 
                                         // Container(
                                         //   child: Stack(children: [

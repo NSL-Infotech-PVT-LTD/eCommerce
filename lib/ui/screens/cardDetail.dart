@@ -254,8 +254,8 @@ class _CartDetailState extends State<CartDetail> {
           // cardId = cardList?.data?.data?.id!;
         });
 
-        print("here is value");
-        print(value?.toJson());
+        // print("here is value");
+        // print(value?.toJson());
       });
     } catch (e) {
       setState(() {
@@ -322,9 +322,9 @@ class _CartDetailState extends State<CartDetail> {
             payLoading = false;
           });
 
-          print("here is ${res?.toJson()}");
+          // print("here is ${res?.toJson()}");
 
-          if (res?.status == true && res?.code == 201) {
+          if (res["status"] == true && res["code"] == 201) {
             setState(() {
               UserData.ticketcartMap.clear();
               UserData.totalTicketNum = 0;
@@ -332,8 +332,22 @@ class _CartDetailState extends State<CartDetail> {
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
-                    builder: (BuildContext context) => BookingSuccess()),
+                    builder: (BuildContext context) => BookingSuccess(
+                          orderidFiestas: [res["data"]["booking"]["id"], 0],
+                        )),
                 (route) => false);
+          } else {
+            setState(() {
+              payLoading = false;
+              swipebuttonShowBool = true;
+            });
+            Dialogs.simpleOkAlertDialog(
+                context: context,
+                title: "${getTranslated(context, "alert!")}",
+                content: "${getTranslated(context, "yourPaymentisfailed")}",
+                func: () {
+                  navigatePopFun(context);
+                });
           }
         });
       }
@@ -845,32 +859,38 @@ class _CartDetailState extends State<CartDetail> {
 
                                       // view card button
 
-                                      InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            cardFormShow = false;
-                                          });
-                                        },
-                                        child: roundedBoxR(
-                                          radius: size.width * 0.02,
-                                          width: size.width,
-                                          height: size.height * 0.07,
-                                          backgroundColor: HexColor("#6b604d"),
-                                          child: Center(
-                                            child: _loading
-                                                ? CircularProgressIndicator()
-                                                : Text(
-                                                    "${getTranslated(context, "viewYourCard")}",
-                                                    style: TextStyle(
-                                                        fontSize:
-                                                            size.width * 0.045,
-                                                        fontFamily:
-                                                            Fonts.dmSansMedium,
-                                                        color: AppColors.white),
-                                                  ),
-                                          ),
-                                        ),
-                                      )
+                                      cardList != null
+                                          ? InkWell(
+                                              onTap: () {
+                                                print(cardList?.toJson());
+                                                // setState(() {
+                                                //   cardFormShow = false;
+                                                // });
+                                              },
+                                              child: roundedBoxR(
+                                                radius: size.width * 0.02,
+                                                width: size.width,
+                                                height: size.height * 0.07,
+                                                backgroundColor:
+                                                    HexColor("#6b604d"),
+                                                child: Center(
+                                                  child: _loading
+                                                      ? CircularProgressIndicator()
+                                                      : Text(
+                                                          "${getTranslated(context, "viewYourCard")}",
+                                                          style: TextStyle(
+                                                              fontSize:
+                                                                  size.width *
+                                                                      0.045,
+                                                              fontFamily: Fonts
+                                                                  .dmSansMedium,
+                                                              color: AppColors
+                                                                  .white),
+                                                        ),
+                                                ),
+                                              ),
+                                            )
+                                          : SizedBox()
                                     ],
                                   ),
                       ],
@@ -1131,7 +1151,7 @@ class _CartDetailState extends State<CartDetail> {
                                     title:
                                         "${getTranslated(context, "delete")}",
                                     content:
-                                        "${getTranslated(context, "dowanttoDeleteCard")}",
+                                        "${getTranslated(context, "Doyouwanttodeletethecard")}",
                                     func: () {
                                       navigatePopFun(context);
                                       deleteCardApi(cardIdd: model?.id ?? "");

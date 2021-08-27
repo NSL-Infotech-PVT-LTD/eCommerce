@@ -1,4 +1,6 @@
+import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
+import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
@@ -81,6 +83,34 @@ class Dialogs {
               },
             ),
           ],
+        );
+      },
+    );
+  }
+
+  static showBasicsFlash(
+      {context,
+      Duration? duration,
+      flashStyle = FlashBehavior.floating,
+      String? content,
+      Color? color}) {
+    showFlash(
+      context: context,
+      duration: duration,
+      builder: (context, controller) {
+        return Flash(
+          controller: controller,
+          backgroundColor: color == null ? AppColors.blackBackground : color,
+          behavior: flashStyle,
+          position: FlashPosition.bottom,
+          boxShadows: kElevationToShadow[4],
+          horizontalDismissDirection: HorizontalDismissDirection.horizontal,
+          child: FlashBar(
+            content: Text(
+              '$content',
+              style: TextStyle(color: AppColors.white),
+            ),
+          ),
         );
       },
     );
