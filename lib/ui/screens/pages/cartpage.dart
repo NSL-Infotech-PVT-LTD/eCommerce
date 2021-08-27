@@ -968,14 +968,44 @@ class _CartpageState extends State<Cartpage> {
                                                   SizedBox(
                                                     height: size.height * 0.03,
                                                   ),
-                                                  Text(
-                                                    "${getTranslated(context, 'totalPrice')}  ${Strings.euro} 100",
-                                                    style: TextStyle(
-                                                        color: AppColors.white,
-                                                        fontFamily:
-                                                            Fonts.dmSansBold,
-                                                        fontSize:
-                                                            size.width * 0.06),
+                                                  Container(
+                                                    width: size.width,
+                                                    alignment: Alignment.center,
+                                                    child: Text.rich(TextSpan(
+                                                        text:
+                                                            "${getTranslated(context, 'totalPrice')} :", // Strings.byContinuingYouAgreetoOur,
+                                                        style: TextStyle(
+                                                            fontFamily: Fonts
+                                                                .dmSansMedium,
+                                                            color:
+                                                                AppColors.white,
+                                                            fontSize:
+                                                                size.width *
+                                                                    0.06),
+                                                        children: <InlineSpan>[
+                                                          TextSpan(
+                                                            text:
+                                                                " ${Strings.euro} ${UserData.myCartModel?.data?.cart?.totalPrice}", //"${Strings.termsOfService}",
+                                                            style: TextStyle(
+                                                                fontFamily: Fonts
+                                                                    .dmSansBold,
+                                                                color: AppColors
+                                                                    .white,
+                                                                fontSize:
+                                                                    size.width *
+                                                                        0.06),
+                                                          ),
+                                                        ])),
+                                                    // child: Text(
+                                                    //   "${getTranslated(context, 'totalPrice')} : ${Strings.euro} 100",
+                                                    //   style: TextStyle(
+                                                    //       color:
+                                                    //           AppColors.white,
+                                                    //       fontFamily:
+                                                    //           Fonts.dmSansBold,
+                                                    //       fontSize: size.width *
+                                                    //           0.06),
+                                                    // ),
                                                   )
                                                 ],
                                               )

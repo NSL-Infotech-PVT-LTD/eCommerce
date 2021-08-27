@@ -169,9 +169,9 @@ class _TestingState extends State<Testing> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: nowdate,
-      firstDate: DateTime(1950, 12),
+      firstDate: DateTime.now(),
       currentDate: selectedDate,
-      lastDate: DateTime(2022, 12),
+      lastDate: DateTime(2050, 12),
     );
 
     if (picked != null && picked != selectedDate) {
@@ -641,25 +641,23 @@ class _TestingState extends State<Testing> {
                                                         DateTime.parse(
                                                             "${dates[index]['fulldate']}");
 
-                                                    // print(
-                                                    //     "here is date => ${mapDate.day}");
+                                                    // date work only future date show
 
-                                                    int nowDate = int.parse(
-                                                        "${date.day}");
-
-                                                    int dateList = int.parse(
-                                                        "${dates[index]['date']}");
-
-                                                    // date work
-                                                    if (int.parse("${mapDate.day}") >= int.parse("${date.day}") &&
-                                                        int.parse(
-                                                                "${mapDate.month}") >=
+                                                    if ((int.parse(
+                                                                "${mapDate.day}") >=
                                                             int.parse(
-                                                                "${date.month}") &&
-                                                        int.parse(
-                                                                "${mapDate.year}") >=
+                                                                "${date.day}")) ||
+                                                        (int.parse("${mapDate.month}") >
+                                                                int.parse(
+                                                                    "${date.month}") &&
                                                             int.parse(
-                                                                "${date.year}")) {
+                                                                    "${mapDate.year}") ==
+                                                                int.parse(
+                                                                    "${date.year}")) ||
+                                                        (int.parse(
+                                                                "${mapDate.year}") >
+                                                            int.parse(
+                                                                "${date.year}"))) {
                                                       return GestureDetector(
                                                         onTap: () async {
                                                           String pic = dates[

@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:funfy/apis/homeApis.dart';
 import 'package:funfy/apis/userdataM.dart';
+import 'package:funfy/components/dialogs.dart';
 import 'package:funfy/components/locationget.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/components/zeroadd.dart';
 import 'package:funfy/main.dart';
 import 'package:funfy/models/fiestasmodel.dart';
 import 'package:funfy/models/preFiestasModel.dart';
+import 'package:funfy/ui/screens/address/addressList.dart';
 import 'package:funfy/ui/screens/fiestasAll.dart';
 import 'package:funfy/ui/screens/notifications.dart';
 import 'package:funfy/ui/widgets/dateButton.dart';
@@ -200,7 +202,7 @@ class _FiestasPageState extends State<FiestasPage> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: nowdate,
-      firstDate: DateTime(1950, 12),
+      firstDate: DateTime.now(),
       currentDate: selectedDate,
       lastDate: DateTime(2022, 12),
     );
@@ -300,49 +302,54 @@ class _FiestasPageState extends State<FiestasPage> {
 
                         // location choose ----------------
 
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            // Icon(
-                            //   // Icons.fmd_good,
-                            //   Icons.error,
-                            //   size: size.width * 0.04,
-                            //   color: AppColors.white,
-                            // ),
+                        InkWell(
+                          onTap: () {
+                            // navigatorPushFun(context, AddressList());
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              // Icon(
+                              //   // Icons.fmd_good,
+                              //   Icons.error,
+                              //   size: size.width * 0.04,
+                              //   color: AppColors.white,
+                              // ),
 
-                            Container(
-                              width: size.width * 0.03,
-                              child: Image.asset(Images.locationspng),
-                            ),
-                            SizedBox(
-                              width: size.width * 0.01,
-                            ),
-                            Container(
-                              constraints: BoxConstraints(
-                                maxWidth: size.width * 0.2,
+                              Container(
+                                width: size.width * 0.03,
+                                child: Image.asset(Images.locationspng),
                               ),
-                              child: Text(
-                                Constants.prefs?.getString("addres") != null
-                                    ? "${Constants.prefs?.getString("addres")}"
-                                    : "${getTranslated(context, "location")}", // Strings.location,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                                style: TextStyle(
-                                    fontSize: size.width * 0.034,
-                                    fontFamily: Fonts.dmSansMedium,
-                                    color: AppColors.white),
+                              SizedBox(
+                                width: size.width * 0.01,
                               ),
-                            ),
-                            SizedBox(
-                              width: size.width * 0.01,
-                            ),
-                            // Icon(
-                            //   Icons.expand_more,
-                            //   size: size.width * 0.042,
-                            //   color: AppColors.white,
-                            // ),
-                          ],
+                              Container(
+                                constraints: BoxConstraints(
+                                  maxWidth: size.width * 0.2,
+                                ),
+                                child: Text(
+                                  Constants.prefs?.getString("addres") != null
+                                      ? "${Constants.prefs?.getString("addres")}"
+                                      : "${getTranslated(context, "location")}", // Strings.location,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                      fontSize: size.width * 0.034,
+                                      fontFamily: Fonts.dmSansMedium,
+                                      color: AppColors.white),
+                                ),
+                              ),
+                              SizedBox(
+                                width: size.width * 0.01,
+                              ),
+                              // Icon(
+                              //   Icons.expand_more,
+                              //   size: size.width * 0.042,
+                              //   color: AppColors.white,
+                              // ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -623,33 +630,121 @@ class _FiestasPageState extends State<FiestasPage> {
                                                 scrollDirection:
                                                     Axis.horizontal,
                                                 itemBuilder: (context, index) {
+                                                  DateTime date =
+                                                      DateTime.now();
+
+                                                  DateTime mapDate = DateTime.parse(
+                                                      "${dates[index]['fulldate']}");
+
+                                                  // date work only future date show
+
+                                                  if ((int.parse(
+                                                              "${mapDate.day}") >=
+                                                          int.parse(
+                                                              "${date.day}")) ||
+                                                      (int.parse("${mapDate.month}") >
+                                                              int.parse(
+                                                                  "${date.month}") &&
+                                                          int.parse(
+                                                                  "${mapDate.year}") ==
+                                                              int.parse(
+                                                                  "${date.year}")) ||
+                                                      (int.parse(
+                                                              "${mapDate.year}") >
+                                                          int.parse(
+                                                              "${date.year}"))) {
+                                                    return GestureDetector(
+                                                      onTap: () async {
+                                                        String pic =
+                                                            dates[index]
+                                                                    ["fulldate"]
+                                                                .toString();
+                                                        DateTime picked =
+                                                            DateTime.parse(pic);
+                                                        DateTime currentDate =
+                                                            DateTime.now();
+
+                                                        if (currentDate.isAfter(
+                                                                picked) ||
+                                                            currentDate
+                                                                .isAtSameMomentAs(
+                                                                    picked)) {
+                                                          print("$currentDate");
+                                                          print(
+                                                              "$picked on Momemt");
+                                                        } else {
+                                                          print(
+                                                              "date is before today");
+                                                        }
+                                                        print(picked);
+
+                                                        setState(() {
+                                                          nowdate = picked;
+                                                          daysInMonth(picked);
+                                                        });
+
+                                                        // get fiestast post
+
+                                                        String? fomatDate =
+                                                            await dateFormat(
+                                                                date: picked);
+
+                                                        setState(() {
+                                                          filterDate =
+                                                              fomatDate;
+                                                        });
+
+                                                        fiestasgetPosts(
+                                                            date: fomatDate);
+                                                      },
+                                                      child: Container(
+                                                        margin: EdgeInsets.only(
+                                                            left: size.width *
+                                                                0.01),
+                                                        child: dateButton(
+                                                            context: context,
+                                                            text: dates[index]
+                                                                    ["date"]
+                                                                .toString(),
+                                                            textColor:
+                                                                dates[index]["active"] ==
+                                                                        true
+                                                                    ? AppColors
+                                                                        .homeBackground
+                                                                    : AppColors
+                                                                        .white,
+                                                            month: dates[index]
+                                                                    ["month"]
+                                                                .toString(),
+                                                            borderColor:
+                                                                AppColors.white,
+                                                            borderwidth:
+                                                                size.width *
+                                                                    0.003,
+                                                            backgroundColor:
+                                                                dates[index]["active"] ==
+                                                                        true
+                                                                    ? AppColors
+                                                                        .tagBorder
+                                                                    : AppColors
+                                                                        .homeBackground),
+                                                      ),
+                                                    );
+                                                  }
+
+                                                  // hide date
+
                                                   return GestureDetector(
                                                     onTap: () async {
-                                                      String pic = dates[index]
-                                                              ["fulldate"]
-                                                          .toString();
-                                                      DateTime picked =
-                                                          DateTime.parse(pic);
-
-                                                      // print(picked);
-
-                                                      setState(() {
-                                                        nowdate = picked;
-                                                        daysInMonth(picked);
-                                                      });
-
-                                                      // get fiestast post
-
-                                                      String? fomatDate =
-                                                          await dateFormat(
-                                                              date: picked);
-
-                                                      setState(() {
-                                                        filterDate = fomatDate;
-                                                      });
-
-                                                      fiestasgetPosts(
-                                                          date: fomatDate);
+                                                      Dialogs.showBasicsFlash(
+                                                          context: context,
+                                                          duration: Duration(
+                                                              seconds: 1),
+                                                          color: AppColors
+                                                              .siginbackgrond,
+                                                          content: getTranslated(
+                                                              context,
+                                                              "youcantselectpastdate"));
                                                     },
                                                     child: Container(
                                                       margin: EdgeInsets.only(
@@ -660,29 +755,87 @@ class _FiestasPageState extends State<FiestasPage> {
                                                           text: dates[index]
                                                                   ["date"]
                                                               .toString(),
-                                                          textColor: dates[index]
-                                                                      [
-                                                                      "active"] ==
-                                                                  true
-                                                              ? AppColors
-                                                                  .homeBackground
-                                                              : AppColors.white,
+                                                          textColor:
+                                                              Colors.grey,
                                                           month: dates[index]
                                                                   ["month"]
                                                               .toString(),
                                                           borderColor:
-                                                              AppColors.white,
-                                                          borderwidth: size.width *
-                                                              0.003,
-                                                          backgroundColor:
-                                                              dates[index]["active"] ==
-                                                                      true
-                                                                  ? AppColors
-                                                                      .tagBorder
-                                                                  : AppColors
-                                                                      .homeBackground),
+                                                              Colors.grey,
+                                                          borderwidth:
+                                                              size.width *
+                                                                  0.003,
+                                                          backgroundColor: dates[
+                                                                          index]
+                                                                      [
+                                                                      "active"] ==
+                                                                  true
+                                                              ? AppColors
+                                                                  .tagBorder
+                                                              : AppColors
+                                                                  .homeBackground),
                                                     ),
                                                   );
+                                                  // return GestureDetector(
+                                                  //   onTap: () async {
+                                                  //     String pic = dates[index]
+                                                  //             ["fulldate"]
+                                                  //         .toString();
+                                                  //     DateTime picked =
+                                                  //         DateTime.parse(pic);
+
+                                                  //     // print(picked);
+
+                                                  //     setState(() {
+                                                  //       nowdate = picked;
+                                                  //       daysInMonth(picked);
+                                                  //     });
+
+                                                  //     // get fiestast post
+
+                                                  //     String? fomatDate =
+                                                  //         await dateFormat(
+                                                  //             date: picked);
+
+                                                  //     setState(() {
+                                                  //       filterDate = fomatDate;
+                                                  //     });
+
+                                                  //     fiestasgetPosts(
+                                                  //         date: fomatDate);
+                                                  //   },
+                                                  //   child: Container(
+                                                  //     margin: EdgeInsets.only(
+                                                  //         left: size.width *
+                                                  //             0.01),
+                                                  //     child: dateButton(
+                                                  //         context: context,
+                                                  //         text: dates[index]
+                                                  //                 ["date"]
+                                                  //             .toString(),
+                                                  //         textColor: dates[index]
+                                                  //                     [
+                                                  //                     "active"] ==
+                                                  //                 true
+                                                  //             ? AppColors
+                                                  //                 .homeBackground
+                                                  //             : AppColors.white,
+                                                  //         month: dates[index]
+                                                  //                 ["month"]
+                                                  //             .toString(),
+                                                  //         borderColor:
+                                                  //             AppColors.white,
+                                                  //         borderwidth: size.width *
+                                                  //             0.003,
+                                                  //         backgroundColor:
+                                                  //             dates[index]["active"] ==
+                                                  //                     true
+                                                  //                 ? AppColors
+                                                  //                     .tagBorder
+                                                  //                 : AppColors
+                                                  //                     .homeBackground),
+                                                  //   ),
+                                                  // );
                                                 }),
                                           ),
                                           SizedBox(

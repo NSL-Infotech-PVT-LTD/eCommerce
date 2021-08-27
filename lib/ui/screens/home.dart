@@ -38,8 +38,8 @@ class _HomeState extends State<Home> {
   PageController? pageController;
 
   List<Widget> tabpages = [
-    // FiestasPage(),
-    Testing(),
+    FiestasPage(),
+    // Testing(),
     Cartpage(),
     BookingPage(),
     Profilepage()
