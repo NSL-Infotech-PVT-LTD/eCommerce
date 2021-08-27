@@ -104,7 +104,7 @@ class _ProfilepageState extends State<Profilepage> {
                           Spacer(),
                           notiLoading
                               ? Container(
-                            margin: EdgeInsets.only(top: size.height * 0.02),
+                            margin: EdgeInsets.only(top: size.height * 0.02  ),
                                 child: Row(
                                     children: [
                                       Container(
