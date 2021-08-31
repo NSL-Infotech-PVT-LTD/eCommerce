@@ -255,7 +255,7 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
 
           cardList = value;
 
-          if (value != null) {
+          if (value != null && value.data?.data?.length != 0) {
             cardFormShow = false;
           }
 
@@ -885,7 +885,8 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
                                       ),
 
                                       // view card button
-                                      cardList != null
+                                      cardList != null &&
+                                              cardList?.data?.data?.length != 0
                                           ? InkWell(
                                               onTap: () {
                                                 setState(() {
@@ -922,6 +923,9 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
                     ),
                   ),
                 ),
+                // SizedBox(
+                //   height: size.height * 0.01,
+                // )
               ],
             ),
           ),

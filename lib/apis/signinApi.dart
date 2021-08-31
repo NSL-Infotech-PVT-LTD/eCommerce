@@ -224,3 +224,43 @@ Future<bool?> logoutApi() async {
     print(jsondata);
   }
 }
+
+// 401
+
+userSessionExpired(context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: new Text("${getTranslated(context, 'alert!')}"),
+        content: new Text("${getTranslated(context, 'theSessionhasexpired')}"),
+      );
+    },
+  );
+
+  Future.delayed(Duration(seconds: 3), () {
+    // token
+    Constants.prefs?.setString("token", "");
+    // name name
+    Constants.prefs?.setString("name", "");
+    // name email
+    Constants.prefs?.setString("email", "");
+    // lacation
+    Constants.prefs?.setString("addres", "");
+
+    //  dob
+    Constants.prefs?.setString("dob", "");
+
+    //  gender
+    Constants.prefs?.setString("gender", "");
+
+    //  social
+    Constants.prefs?.setString("social", "false");
+
+    // profileImage
+    Constants.prefs?.setString("profileImage", "");
+
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => Signin()), (route) => false);
+  });
+}

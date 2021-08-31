@@ -1,12 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:funfy/apis/bookingApi.dart';
-import 'package:funfy/apis/introApi.dart';
 import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/components/dialogs.dart';
-import 'package:funfy/components/navigation.dart';
-import 'package:funfy/models/preFiestasCartModel.dart';
-import 'package:funfy/ui/screens/bookingSuccess.dart';
+import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/screens/preFiestasCardDetail.dart';
 import 'package:funfy/ui/screens/preFistaOrderMix.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
@@ -19,7 +16,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:funfy/components/sizeclass/SizeConfig.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:stripe_payment/stripe_payment.dart';
 import '../../../utils/strings.dart';
 
 class Cartpage extends StatefulWidget {
@@ -35,7 +31,7 @@ class _CartpageState extends State<Cartpage> {
   bool _loading = false;
   bool _centerLoading = false;
 
-  double count = 0.0;
+  // double count = 0.0;
 
   getMyCart() async {
     var net = await Internetcheck.check();
@@ -55,12 +51,12 @@ class _CartpageState extends State<Cartpage> {
             UserData.myCartModel = res;
             // print("error $myCartModel");
 
-            print(res?.toJson());
+            // print(res?.toJson());
 
-            count = double.parse(
-                        "${UserData.myCartModel?.data?.cart?.cartItems?.length}") /
-                    10 +
-                0.15;
+            // count = double.parse(
+            //             "${UserData.myCartModel?.data?.cart?.cartItems?.length}") /
+            //         10 +
+            //     0.15;
           });
         });
       } catch (e) {
@@ -92,7 +88,7 @@ class _CartpageState extends State<Cartpage> {
       cartCount = cartCount + 1;
     });
 
-    print("Cart Count: ${cartCount}");
+    print("Cart Count: $cartCount");
 
     await addToCart(id: id, cont: cartCount.toString()).then((value) {
       print("this is value $value");
@@ -229,7 +225,8 @@ class _CartpageState extends State<Cartpage> {
 
         print("here is num here  $totalCount");
 
-        Constants.prefs?.setString("cartTot", "$totalCount");
+        Constants.prefs
+            ?.setString("cartTot", "${totalCount < 0 ? 0 : totalCount}");
 
         setState(() {
           // myCartModel?.data?.cartItems?.removeAt(index!);
@@ -241,9 +238,12 @@ class _CartpageState extends State<Cartpage> {
 
             int tot = alcohol - int.parse("$count");
 
-            Constants.prefs?.setString("alcohol", "$tot");
+            // tot
 
-            print(type);
+            Constants.prefs?.setString("alcohol", "0");
+            UserData.preFiestasAlcoholCartMap.clear();
+
+            // print(type);
             // clearCart();
             getMyCart();
           }
@@ -252,14 +252,14 @@ class _CartpageState extends State<Cartpage> {
             Constants.prefs?.setString("cartTot", "$totalCount");
             UserData.preFiestasMixesTicketCart.clear();
 
-            UserData.myCartModel?.data?.cart?.cartItems?.removeAt(index!);
+            // UserData.myCartModel?.data?.cart?.cartItems?.removeAt(index!);
             getMyCart();
           }
 
           if (type == "extras") {
             Constants.prefs?.setString("cartTot", "$totalCount");
             UserData.preFiestasExtrasTicketCart.clear();
-            UserData.myCartModel?.data?.cart?.cartItems?.removeAt(index!);
+            // UserData.myCartModel?.data?.cart?.cartItems?.removeAt(index!);
             getMyCart();
           }
         });
@@ -274,6 +274,7 @@ class _CartpageState extends State<Cartpage> {
   // total count
   totalCount() {
     print("total Count run");
+    print(Constants.prefs?.getString("cartTot"));
 
     setState(() {
       num tot = 0;
@@ -342,7 +343,8 @@ class _CartpageState extends State<Cartpage> {
 
         print("here is num $totalCount");
 
-        Constants.prefs?.setString("cartTot", "$totalCount");
+        Constants.prefs
+            ?.setString("cartTot", "${totalCount < 0 ? 0 : totalCount}");
       });
     }
   }
@@ -419,6 +421,7 @@ class _CartpageState extends State<Cartpage> {
     String? pid,
     int? index,
     int? count,
+    String? cl,
     Map? cart,
     String? type,
     int? itemTypes,
@@ -432,7 +435,7 @@ class _CartpageState extends State<Cartpage> {
           Text(
             //"(${Strings.alcohol})",
             // "${getTranslated(context, "alcohol")}",
-            "($topTile)",
+            "($topTile) ",
             style: TextStyle(
                 color: AppColors.itemDescription,
                 fontFamily: Fonts.dmSansRegular,
@@ -508,7 +511,7 @@ class _CartpageState extends State<Cartpage> {
             height: size.height * 0.005,
           ),
           Text(
-            "70 CL",
+            "$cl CL",
             style: TextStyle(
                 color: AppColors.itemDescription,
                 fontFamily: Fonts.dmSansRegular,
@@ -623,11 +626,6 @@ class _CartpageState extends State<Cartpage> {
   void initState() {
     super.initState();
 
-    // StripePayment.setOptions(StripeOptions(
-    //     publishableKey: Strings.publishKey,
-    //     merchantId: Strings.merChantId,
-    //     androidPayMode: Strings.androidPayMode));
-
     setState(() {
       UserData.preFiestasAlcoholCartMap.clear();
       UserData.preFiestasExtrasTicketCart.clear();
@@ -677,24 +675,6 @@ class _CartpageState extends State<Cartpage> {
     }
   }
 
-  // set item value in share preference
-
-  Value({int? type, bool? valueTureFalse}) {
-    setState(() {
-      if (type == 1) {
-        Constants.prefs?.setString("alcohol", "${valueTureFalse! ? type : ''}");
-      }
-
-      if (type == 2) {
-        Constants.prefs?.setString("mix", "${valueTureFalse! ? type : ''}");
-      }
-
-      if (type == 3) {
-        Constants.prefs?.setString("extras", "${valueTureFalse! ? type : ''}");
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -708,384 +688,408 @@ class _CartpageState extends State<Cartpage> {
             //     },
             //     child: Icon(Icons.local_activity)),
             backgroundColor: HexColor("#191512"),
-            body: SingleChildScrollView(
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Column(children: [
-                    // top bar
-                    Container(
-                        padding: EdgeInsets.symmetric(
-                            vertical: size.height * 0.023,
-                            horizontal: size.width * 0.06),
-                        width: size.width,
-                        height: size.height * 0.155,
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                                image: AssetImage(Images.homeTopBannerPng),
-                                fit: BoxFit.cover)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "${getTranslated(context, "mycart")}",
-                                  //Strings.mycart,
-                                  style: TextStyle(
-                                      fontFamily: Fonts.dmSansBold,
-                                      color: AppColors.white,
-                                      fontSize: size.width * 0.065),
-                                ),
-                                ConstrainedBox(
-                                  constraints: BoxConstraints(
-                                    maxWidth: size.width * 0.70,
+            body: _loading == false &&
+                    (UserData.myCartModel?.data?.cart?.cartItems == [] ||
+                        UserData.myCartModel == null)
+                ? ordernow(context)
+                : SingleChildScrollView(
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Column(children: [
+                          // top bar
+                          Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: size.height * 0.023,
+                                  horizontal: size.width * 0.06),
+                              width: size.width,
+                              height: size.height * 0.155,
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image:
+                                          AssetImage(Images.homeTopBannerPng),
+                                      fit: BoxFit.cover)),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "${getTranslated(context, "mycart")}",
+                                        //Strings.mycart,
+                                        style: TextStyle(
+                                            fontFamily: Fonts.dmSansBold,
+                                            color: AppColors.white,
+                                            fontSize: size.width * 0.065),
+                                      ),
+                                      ConstrainedBox(
+                                        constraints: BoxConstraints(
+                                          maxWidth: size.width * 0.70,
+                                        ),
+                                        child: Text(
+                                          "${getTranslated(context, "checkyourdeliverableordersstatus")}",
+                                          //Strings.checkyourdeliverableordersstatus,
+                                          style: TextStyle(
+                                              fontFamily: Fonts.dmSansRegular,
+                                              color: AppColors.white,
+                                              fontSize: size.width * 0.036),
+                                        ),
+                                      )
+                                    ],
                                   ),
-                                  child: Text(
-                                    "${getTranslated(context, "checkyourdeliverableordersstatus")}",
-                                    //Strings.checkyourdeliverableordersstatus,
-                                    style: TextStyle(
-                                        fontFamily: Fonts.dmSansRegular,
-                                        color: AppColors.white,
-                                        fontSize: size.width * 0.036),
+                                  SvgPicture.asset(
+                                    "assets/svgicons/cartsvg.svg",
+                                    width: size.width * 0.07,
+                                  ),
+                                ],
+                              )),
+                          SizedBox(
+                            height: size.height * 0.03,
+                          ),
+
+                          // Expanded(
+                          //     child: Container(
+                          //   color: AppColors.ratingYellow,
+                          // )),
+                          // center content
+
+                          _loading == true
+                              ? Container(
+                                  margin:
+                                      EdgeInsets.only(top: size.height * 0.33),
+                                  child: Center(
+                                    child: CircularProgressIndicator(),
                                   ),
                                 )
-                              ],
-                            ),
-                            SvgPicture.asset(
-                              "assets/svgicons/cartsvg.svg",
-                              width: size.width * 0.07,
-                            ),
-                          ],
-                        )),
-                    SizedBox(
-                      height: size.height * 0.03,
-                    ),
-
-                    // Expanded(
-                    //     child: Container(
-                    //   color: AppColors.ratingYellow,
-                    // )),
-                    // center content
-
-                    _loading == true
-                        ? Container(
-                            margin: EdgeInsets.only(top: size.height * 0.33),
-                            child: Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                          )
-                        : _loading == false &&
-                                (UserData.myCartModel?.data?.cart?.cartItems ==
-                                        [] ||
-                                    UserData.myCartModel == null)
-                            ? Container(
-                                margin:
-                                    EdgeInsets.only(top: size.height * 0.33),
-                                child: Center(
-                                  child: Text(
-                                    "${getTranslated(context, "nodataFound")}",
-                                    // Strings.nodataFound,
-                                    style: TextStyle(
-                                        color: AppColors.descriptionfirst,
-                                        fontFamily: Fonts.dmSansBold,
-                                        fontSize: size.width * 0.045),
-                                  ),
-                                ))
-                            : Container(
-                                margin: EdgeInsets.symmetric(
-                                    horizontal: size.width * 0.03),
-                                width: size.width,
-                                child: Column(
-                                  children: [
-                                    roundedBoxBorder(
-                                        context: context,
-                                        width: size.width,
-                                        // height: size.height * 0.58,
-                                        borderColor: AppColors.tagBorder,
-                                        backgroundColor:
-                                            AppColors.homeBackgroundLite,
-                                        borderSize: size.width * 0.002,
-                                        child: Container(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: size.width * 0.04,
-                                              vertical: size.height * 0.015),
-                                          child: Column(
-                                            children: [
-                                              Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Container(
-                                                    width: size.width * 0.6,
-                                                    child: Column(
+                              : _loading == false &&
+                                      (UserData.myCartModel?.data?.cart
+                                                  ?.cartItems ==
+                                              [] ||
+                                          UserData.myCartModel == null)
+                                  ? Container(
+                                      margin: EdgeInsets.only(
+                                          top: size.height * 0.33),
+                                      child: Center(
+                                        child: Text(
+                                          "${getTranslated(context, "nodataFound")}",
+                                          // Strings.nodataFound,
+                                          style: TextStyle(
+                                              color: AppColors.descriptionfirst,
+                                              fontFamily: Fonts.dmSansBold,
+                                              fontSize: size.width * 0.045),
+                                        ),
+                                      ))
+                                  : Container(
+                                      margin: EdgeInsets.symmetric(
+                                          horizontal: size.width * 0.03),
+                                      width: size.width,
+                                      child: Column(
+                                        children: [
+                                          roundedBoxBorder(
+                                              context: context,
+                                              width: size.width,
+                                              // height: size.height * 0.58,
+                                              borderColor: AppColors.tagBorder,
+                                              backgroundColor:
+                                                  AppColors.homeBackgroundLite,
+                                              borderSize: size.width * 0.002,
+                                              child: Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal:
+                                                        size.width * 0.04,
+                                                    vertical:
+                                                        size.height * 0.015),
+                                                child: Column(
+                                                  children: [
+                                                    Row(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
                                                               .start,
                                                       children: [
-                                                        Text(
-                                                          "${UserData.myCartModel?.data?.parentDetail?.name}",
-                                                          // "Pack 'La havanna",
-                                                          style: TextStyle(
-                                                              color: AppColors
-                                                                  .white,
-                                                              fontFamily: Fonts
-                                                                  .dmSansBold,
-                                                              fontSize:
-                                                                  size.width *
-                                                                      0.055),
+                                                        Container(
+                                                          width:
+                                                              size.width * 0.6,
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text(
+                                                                "${UserData.myCartModel?.data?.parentDetail?.name}",
+                                                                // "Pack 'La havanna",
+                                                                style: TextStyle(
+                                                                    color: AppColors
+                                                                        .white,
+                                                                    fontFamily:
+                                                                        Fonts
+                                                                            .dmSansBold,
+                                                                    fontSize: size
+                                                                            .width *
+                                                                        0.055),
+                                                              ),
+                                                              SizedBox(
+                                                                height:
+                                                                    size.height *
+                                                                        0.008,
+                                                              ),
+                                                              Text(
+                                                                "${UserData.myCartModel?.data?.parentDetail?.description}",
+                                                                // "${getTranslated(context, "lorem")}",
+                                                                //Strings.lorem,
+                                                                maxLines: 2,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                style: TextStyle(
+                                                                    color: AppColors
+                                                                        .white,
+                                                                    fontFamily:
+                                                                        Fonts
+                                                                            .dmSansRegular,
+                                                                    fontSize: size
+                                                                            .width *
+                                                                        0.035),
+                                                              ),
+                                                            ],
+                                                          ),
                                                         ),
-                                                        SizedBox(
-                                                          height: size.height *
-                                                              0.008,
-                                                        ),
-                                                        Text(
-                                                          "${UserData.myCartModel?.data?.parentDetail?.description}",
-                                                          // "${getTranslated(context, "lorem")}",
-                                                          //Strings.lorem,
-                                                          maxLines: 2,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          style: TextStyle(
-                                                              color: AppColors
-                                                                  .white,
-                                                              fontFamily: Fonts
-                                                                  .dmSansRegular,
-                                                              fontSize:
-                                                                  size.width *
-                                                                      0.035),
-                                                        ),
+                                                        Spacer(),
+                                                        Container(
+                                                            height:
+                                                                size.height *
+                                                                    0.09,
+                                                            width: size.width *
+                                                                0.2,
+                                                            child: Image.network(
+                                                                "${UserData.myCartModel?.data?.parentDetail?.image}"))
                                                       ],
                                                     ),
-                                                  ),
-                                                  Spacer(),
-                                                  Container(
-                                                      height:
-                                                          size.height * 0.09,
-                                                      width: size.width * 0.2,
-                                                      child: Image.network(
-                                                          "${UserData.myCartModel?.data?.parentDetail?.image}"))
-                                                ],
-                                              ),
-                                              Column(
-                                                children: [
-                                                  for (int i = 0;
-                                                      i <
-                                                          int.parse(
-                                                              "${UserData.myCartModel?.data?.cart?.cartItems?.length}");
-                                                      i++)
                                                     Column(
                                                       children: [
+                                                        for (int i = 0;
+                                                            i <
+                                                                int.parse(
+                                                                    "${UserData.myCartModel?.data?.cart?.cartItems?.length}");
+                                                            i++)
+                                                          Column(
+                                                            children: [
+                                                              SizedBox(
+                                                                height:
+                                                                    size.height *
+                                                                        0.03,
+                                                              ),
+                                                              listItem(
+                                                                  index: i,
+                                                                  pid: UserData
+                                                                      .myCartModel
+                                                                      ?.data
+                                                                      ?.cart
+                                                                      ?.cartItems![
+                                                                          i]
+                                                                      .preFiesta
+                                                                      ?.id
+                                                                      .toString(),
+                                                                  topTile: UserData
+                                                                      .myCartModel
+                                                                      ?.data
+                                                                      ?.cart
+                                                                      ?.cartItems![
+                                                                          i]
+                                                                      .preFiesta
+                                                                      ?.categories,
+                                                                  title: UserData
+                                                                      .myCartModel
+                                                                      ?.data
+                                                                      ?.cart
+                                                                      ?.cartItems![
+                                                                          i]
+                                                                      .preFiesta!
+                                                                      .name,
+                                                                  price: UserData.myCartModel?.data?.cart?.cartItems![i].price
+                                                                      .toString(),
+                                                                  quantity: UserData.myCartModel?.data?.cart?.cartItems![i].quantity
+                                                                      .toString(),
+                                                                  cl: UserData
+                                                                      .myCartModel
+                                                                      ?.data
+                                                                      ?.cart
+                                                                      ?.cartItems![
+                                                                          i]
+                                                                      .preFiesta
+                                                                      ?.quantityInCl
+                                                                      .toString(),
+                                                                  size: size,
+                                                                  type: UserData
+                                                                      .myCartModel
+                                                                      ?.data
+                                                                      ?.cart
+                                                                      ?.cartItems![i]
+                                                                      .preFiesta
+                                                                      ?.categories,
+                                                                  // boolCount:
+                                                                  //     type?.categories ==
+                                                                  //             "alcohol"
+                                                                  //         ? null
+                                                                  //         : true,
+
+                                                                  boolCount: true,
+                                                                  context: context,
+                                                                  count: UserData.myCartModel?.data?.cart?.cartItems![i].quantity,
+                                                                  cart: UserData.myCartModel?.data?.cart?.cartItems![i].preFiesta?.categories == "mix"
+                                                                      ? UserData.preFiestasMixesTicketCart
+                                                                      : UserData.myCartModel?.data?.cart?.cartItems![i].preFiesta?.categories == "extras"
+                                                                          ? UserData.preFiestasExtrasTicketCart
+                                                                          : UserData.preFiestasAlcoholCartMap,
+                                                                  itemTypes: UserData.myCartModel?.data?.cart?.cartItems![i].preFiesta?.categories == "alcohol"
+                                                                      ? 1
+                                                                      : UserData.myCartModel?.data?.cart?.cartItems![i].preFiesta?.categories == "extras"
+                                                                          ? 2
+                                                                          : 3),
+                                                            ],
+                                                          ),
+
+                                                        // Total Price
+
                                                         SizedBox(
                                                           height: size.height *
                                                               0.03,
                                                         ),
-                                                        listItem(
-                                                            index: i,
-                                                            pid: UserData
-                                                                .myCartModel
-                                                                ?.data
-                                                                ?.cart
-                                                                ?.cartItems![i]
-                                                                .preFiesta
-                                                                ?.id
-                                                                .toString(),
-                                                            topTile: UserData
-                                                                .myCartModel
-                                                                ?.data
-                                                                ?.cart
-                                                                ?.cartItems![i]
-                                                                .preFiesta
-                                                                ?.categories,
-                                                            title: UserData
-                                                                .myCartModel
-                                                                ?.data
-                                                                ?.cart
-                                                                ?.cartItems![i]
-                                                                .preFiesta!
-                                                                .name,
-                                                            price: UserData
-                                                                .myCartModel
-                                                                ?.data
-                                                                ?.cart
-                                                                ?.cartItems![i]
-                                                                .price
-                                                                .toString(),
-                                                            quantity: UserData
-                                                                .myCartModel
-                                                                ?.data
-                                                                ?.cart
-                                                                ?.cartItems![i]
-                                                                .quantity
-                                                                .toString(),
-                                                            size: size,
-                                                            type: UserData
-                                                                .myCartModel
-                                                                ?.data
-                                                                ?.cart
-                                                                ?.cartItems![i]
-                                                                .preFiesta
-                                                                ?.categories,
-                                                            // boolCount:
-                                                            //     type?.categories ==
-                                                            //             "alcohol"
-                                                            //         ? null
-                                                            //         : true,
-
-                                                            boolCount: true,
-                                                            context: context,
-                                                            count: UserData
-                                                                .myCartModel
-                                                                ?.data
-                                                                ?.cart
-                                                                ?.cartItems![i]
-                                                                .quantity,
-                                                            cart: UserData
-                                                                        .myCartModel
-                                                                        ?.data
-                                                                        ?.cart
-                                                                        ?.cartItems![
-                                                                            i]
-                                                                        .preFiesta
-                                                                        ?.categories ==
-                                                                    "mix"
-                                                                ? UserData.preFiestasMixesTicketCart
-                                                                : UserData.myCartModel?.data?.cart?.cartItems![i].preFiesta?.categories == "extras"
-                                                                    ? UserData.preFiestasExtrasTicketCart
-                                                                    : UserData.preFiestasAlcoholCartMap,
-                                                            itemTypes: UserData.myCartModel?.data?.cart?.cartItems![i].preFiesta?.categories == "alcohol"
-                                                                ? 1
-                                                                : UserData.myCartModel?.data?.cart?.cartItems![i].preFiesta?.categories == "extras"
-                                                                    ? 2
-                                                                    : 3),
+                                                        Container(
+                                                          width: size.width,
+                                                          alignment:
+                                                              Alignment.center,
+                                                          child: Text.rich(
+                                                              TextSpan(
+                                                                  text:
+                                                                      "${getTranslated(context, 'totalPrice')} :", // Strings.byContinuingYouAgreetoOur,
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          Fonts
+                                                                              .dmSansMedium,
+                                                                      color: AppColors
+                                                                          .white,
+                                                                      fontSize:
+                                                                          size.width *
+                                                                              0.06),
+                                                                  children: <
+                                                                      InlineSpan>[
+                                                                TextSpan(
+                                                                  text:
+                                                                      " ${Strings.euro} ${UserData.myCartModel?.data?.cart?.totalPrice}", //"${Strings.termsOfService}",
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          Fonts
+                                                                              .dmSansBold,
+                                                                      color: AppColors
+                                                                          .white,
+                                                                      fontSize:
+                                                                          size.width *
+                                                                              0.06),
+                                                                ),
+                                                              ])),
+                                                          // child: Text(
+                                                          //   "${getTranslated(context, 'totalPrice')} : ${Strings.euro} 100",
+                                                          //   style: TextStyle(
+                                                          //       color:
+                                                          //           AppColors.white,
+                                                          //       fontFamily:
+                                                          //           Fonts.dmSansBold,
+                                                          //       fontSize: size.width *
+                                                          //           0.06),
+                                                          // ),
+                                                        )
                                                       ],
-                                                    ),
+                                                    )
+                                                  ],
+                                                ),
+                                              )),
+                                          SizedBox(height: size.height * 0.02),
+                                          Text(
+                                              "${getTranslated(context, "thisisFinalstepafteryouTouchingpaynowbuttonthepaymentwillbetransation")}",
+                                              // Strings.thisisFinalstepafteryouTouchingpaynowbuttonthepaymentwillbetransation,
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  color:
+                                                      AppColors.itemDescription,
+                                                  fontFamily:
+                                                      Fonts.dmSansRegular,
+                                                  fontSize: size.width * 0.03)),
+                                          SizedBox(height: size.height * 0.03),
 
-                                                  // Total Price
+                                          // button
+                                          GestureDetector(
+                                            onTap: () {
+                                              UserData
+                                                              .myCartModel!
+                                                              .data!
+                                                              .cart!
+                                                              .cartItems!
+                                                              .length >
+                                                          0 &&
+                                                      (Constants.prefs?.getString("alcohol") !=
+                                                              null &&
+                                                          Constants.prefs?.getString("alcohol") !=
+                                                              "" &&
+                                                          Constants.prefs?.getString("alcohol") !=
+                                                              "0")
+                                                  ?
+                                                  // makeOrder();
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              PrefiestasCardDetail())).then(
+                                                      (value) {
+                                                      initState();
+                                                    })
+                                                  : Dialogs.showBasicsFlash(
+                                                      context: context,
+                                                      color: AppColors.siginbackgrond,
+                                                      duration: Duration(seconds: 3),
+                                                      content: getTranslated(context, "pleaseSelectAlcohol"));
+                                            },
+                                            child: roundedBoxR(
+                                              width: size.width,
+                                              height: size.height * 0.07,
+                                              radius: size.width * 0.02,
+                                              backgroundColor:
+                                                  AppColors.siginbackgrond,
+                                              child: Center(
+                                                child: Text(
+                                                  "${getTranslated(context, "proceedtopay")}",
+                                                  //   Strings.proceedtopay,
+                                                  style: TextStyle(
+                                                      color: AppColors.white,
+                                                      fontFamily:
+                                                          Fonts.dmSansBold,
+                                                      fontSize:
+                                                          size.width * 0.045),
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                          // : SizedBox()
 
-                                                  SizedBox(
-                                                    height: size.height * 0.03,
-                                                  ),
-                                                  Container(
-                                                    width: size.width,
-                                                    alignment: Alignment.center,
-                                                    child: Text.rich(TextSpan(
-                                                        text:
-                                                            "${getTranslated(context, 'totalPrice')} :", // Strings.byContinuingYouAgreetoOur,
-                                                        style: TextStyle(
-                                                            fontFamily: Fonts
-                                                                .dmSansMedium,
-                                                            color:
-                                                                AppColors.white,
-                                                            fontSize:
-                                                                size.width *
-                                                                    0.06),
-                                                        children: <InlineSpan>[
-                                                          TextSpan(
-                                                            text:
-                                                                " ${Strings.euro} ${UserData.myCartModel?.data?.cart?.totalPrice}", //"${Strings.termsOfService}",
-                                                            style: TextStyle(
-                                                                fontFamily: Fonts
-                                                                    .dmSansBold,
-                                                                color: AppColors
-                                                                    .white,
-                                                                fontSize:
-                                                                    size.width *
-                                                                        0.06),
-                                                          ),
-                                                        ])),
-                                                    // child: Text(
-                                                    //   "${getTranslated(context, 'totalPrice')} : ${Strings.euro} 100",
-                                                    //   style: TextStyle(
-                                                    //       color:
-                                                    //           AppColors.white,
-                                                    //       fontFamily:
-                                                    //           Fonts.dmSansBold,
-                                                    //       fontSize: size.width *
-                                                    //           0.06),
-                                                    // ),
-                                                  )
-                                                ],
-                                              )
-                                            ],
-                                          ),
-                                        )),
-                                    SizedBox(height: size.height * 0.02),
-                                    Text(
-                                        "${getTranslated(context, "thisisFinalstepafteryouTouchingpaynowbuttonthepaymentwillbetransation")}",
-                                        // Strings.thisisFinalstepafteryouTouchingpaynowbuttonthepaymentwillbetransation,
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            color: AppColors.itemDescription,
-                                            fontFamily: Fonts.dmSansRegular,
-                                            fontSize: size.width * 0.03)),
-                                    SizedBox(height: size.height * 0.03),
-
-                                    // button
-                                    GestureDetector(
-                                      onTap: () {
-                                        UserData.myCartModel!.data!.cart!.cartItems!.length > 0 &&
-                                                (Constants.prefs?.getString("alcohol") !=
-                                                        null &&
-                                                    Constants.prefs?.getString("alcohol") !=
-                                                        "" &&
-                                                    Constants.prefs?.getString("alcohol") !=
-                                                        "0")
-                                            ?
-                                            // makeOrder();
-                                            Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            PrefiestasCardDetail()))
-                                                .then((value) {
-                                                initState();
-                                              })
-                                            : Dialogs.showBasicsFlash(
-                                                context: context,
-                                                color: AppColors.siginbackgrond,
-                                                duration: Duration(seconds: 3),
-                                                content: getTranslated(
-                                                    context, "pleaseSelectAlcohol"));
-                                      },
-                                      child: roundedBoxR(
-                                        width: size.width,
-                                        height: size.height * 0.07,
-                                        radius: size.width * 0.02,
-                                        backgroundColor:
-                                            AppColors.siginbackgrond,
-                                        child: Center(
-                                          child: Text(
-                                            "${getTranslated(context, "proceedtopay")}",
-                                            //   Strings.proceedtopay,
-                                            style: TextStyle(
-                                                color: AppColors.white,
-                                                fontFamily: Fonts.dmSansBold,
-                                                fontSize: size.width * 0.045),
-                                          ),
-                                        ),
+                                          //  SizedBox(height: size.height * 0.05),
+                                        ],
                                       ),
-                                    )
-                                    // : SizedBox()
-
-                                    //  SizedBox(height: size.height * 0.05),
-                                  ],
-                                ),
-                              ),
-                    SizedBox(
-                      height: 50,
+                                    ),
+                          SizedBox(
+                            height: 50,
+                          ),
+                        ]),
+                        _centerLoading
+                            ? Center(
+                                child: CircularProgressIndicator(),
+                              )
+                            : SizedBox()
+                      ],
                     ),
-                  ]),
-                  _centerLoading
-                      ? Center(
-                          child: CircularProgressIndicator(),
-                        )
-                      : SizedBox()
-                ],
-              ),
-            )),
+                  )),
       ),
     );
   }
@@ -1146,7 +1150,8 @@ Widget ordernow(context) {
                 children: [
                   Container(
                     width: size.width * 0.4,
-                    child: Image.asset(Images.appLogo),
+                    height: size.height * 0.18,
+                    child: SvgPicture.asset(Images.cartEmtySvg),
                   ),
                   SizedBox(
                     height: size.height * 0.025,
@@ -1185,24 +1190,32 @@ Widget ordernow(context) {
               height: size.height * 0.02,
             ),
 
-            roundedBoxBorder(
-                context: context,
-                backgroundColor: HexColor("#191512"),
-                width: size.width * 0.5,
-                height: size.height * 0.05,
-                borderColor: HexColor("#fdedba"),
-                borderSize: size.width * 0.002,
-                child: Align(
-                  child: Text(
-                    "${getTranslated(context, "orderNow")}",
-                    //  Strings.orderNow,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontFamily: Fonts.dmSansBold,
-                        color: HexColor("#fdedba"),
-                        fontSize: size.width * 0.04),
-                  ),
-                )),
+            InkWell(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => Home(
+                          pageIndexNum: 0,
+                        )));
+              },
+              child: roundedBoxBorder(
+                  context: context,
+                  backgroundColor: HexColor("#191512"),
+                  width: size.width * 0.5,
+                  height: size.height * 0.05,
+                  borderColor: HexColor("#fdedba"),
+                  borderSize: size.width * 0.002,
+                  child: Align(
+                    child: Text(
+                      "${getTranslated(context, "orderNow")}",
+                      //  Strings.orderNow,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontFamily: Fonts.dmSansBold,
+                          color: HexColor("#fdedba"),
+                          fontSize: size.width * 0.04),
+                    ),
+                  )),
+            ),
 
             SizedBox(
               height: size.height * 0.04,

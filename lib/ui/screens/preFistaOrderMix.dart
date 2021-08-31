@@ -53,6 +53,8 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
 
   int alcoholCountNum = 0;
 
+  int cartTotalCount = 0;
+
   PrefiestasDetailModel? prefiestasDetailModel = PrefiestasDetailModel();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   bool _loading = false;
@@ -337,7 +339,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                 color: AppColors.white,
                 fontFamily: Fonts.dmSansBold,
                 fontSize: SizeConfig.screenWidth * 0.045)),
-        subtitle: Text("70 CL",
+        subtitle: Text("${data![index].quantityInCl} CL",
             style: TextStyle(
                 color: AppColors.grayFont,
                 fontFamily: Fonts.dmSansBold,
@@ -430,7 +432,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
       String? id,
       var cart,
       int? itemType}) async {
-    // print("add button press  index: $index  id: $id");
+    // print("add button press  itemCount: $itemCount index: $index  id: $id");
 
     if (_loadingCenter == false) {
       int cartCount;
@@ -754,7 +756,8 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
         print("here is num $totalCount");
 
         if (totalCount > 0) {
-          Constants.prefs?.setString("cartTot", "$totalCount");
+          Constants.prefs
+              ?.setString("cartTot", "${totalCount < 0 ? 0 : totalCount}");
         }
       });
     }

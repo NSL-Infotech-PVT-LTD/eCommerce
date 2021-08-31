@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:funfy/apis/userdataM.dart';
+import 'package:funfy/ui/screens/address/addressList.dart';
 import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/screens/splash.dart';
 import 'package:funfy/ui/screens/testingUi.dart';
@@ -240,6 +241,7 @@ class _MyAppState extends State<MyApp> {
         darkTheme: ThemeData.dark(), //
         // home: TranslateTest());
         home: Splash());
+    // home: AddressList());
     // home: Home(
     //   pageIndexNum: 0,
     // ));

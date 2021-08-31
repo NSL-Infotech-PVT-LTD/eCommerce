@@ -234,5 +234,14 @@
   "zipcode": "Zip code",
   "pleaseenterzipcode": "Please Enter zip code",
   "enterZipCode": "Enter Zip Code",
-  "Doyouwanttodeletetheaddress": "Do you want to delete the address ?"
+  "chooseaplace": "Choose a place",
+  "currentLocation": "Current Location",
+  "edit": "Edit",
+  "addAddress": "Add Address",
+  "others": "Others",
+  "recent": "Recent",
+  "Doyouwanttodeletetheaddress": "Do you want to delete the address ?",
+  "myOrders": "My Orders",
+  "CheckyourordersyouboughtforPrefiestas": "Check your orders you bought for Pre-fiestas",
+  "theSessionhasexpired": "The Session has expired, Please Signin Again !"
 }

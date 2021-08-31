@@ -151,7 +151,9 @@ class _BookingPageState extends State<BookingPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "${getTranslated(context, "mybookings")}",
+                          fiestasButton
+                              ? "${getTranslated(context, "mybookings")}"
+                              : "${getTranslated(context, "myOrders")}",
                           // Strings.mybookings,
                           style: TextStyle(
                               fontFamily: Fonts.dmSansBold,
@@ -162,7 +164,9 @@ class _BookingPageState extends State<BookingPage> {
                           height: size.height * 0.01,
                         ),
                         Text(
-                          "${getTranslated(context, "checkyourticketsyouboughtforFiestas")}",
+                          fiestasButton
+                              ? "${getTranslated(context, "checkyourticketsyouboughtforFiestas")}"
+                              : "${getTranslated(context, "CheckyourordersyouboughtforPrefiestas")}",
                           // Strings.checkyourticketsyouboughtforFiestas,
                           style: TextStyle(
                               fontFamily: Fonts.dmSansRegular,

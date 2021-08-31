@@ -108,6 +108,7 @@ class ProductInfo {
     this.isInMyCart,
     this.isInMyCartQuantity,
     this.isFavourite,
+    this.quantityInCl,
   });
 
   int? id;
@@ -120,6 +121,7 @@ class ProductInfo {
   bool? isInMyCart;
   int? isInMyCartQuantity;
   bool? isFavourite;
+  dynamic quantityInCl;
 
   factory ProductInfo.fromJson(Map<String, dynamic> json) => ProductInfo(
         id: json["id"],
@@ -132,6 +134,7 @@ class ProductInfo {
         isInMyCart: json["is_in_my_cart"],
         isInMyCartQuantity: json["is_in_my_cart_quantity"],
         isFavourite: json["is_favourite"],
+        quantityInCl: json["quantity_in_cl"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -145,5 +148,6 @@ class ProductInfo {
         "is_in_my_cart": isInMyCart,
         "is_in_my_cart_quantity": isInMyCartQuantity,
         "is_favourite": isFavourite,
+        "quantity_in_cl": quantityInCl,
       };
 }

@@ -29,7 +29,8 @@ Widget fiestasItem({context, Datum? postModeldata}) {
 
   String month = DateFormat('MMM').format(date);
 
-  String price = k_m_b_generator(int.parse("${postModeldata?.ticketPrice}"));
+  String price =
+      k_m_b_generator(int.parse("${postModeldata?.ticketPriceNormal}"));
 
   double rating = 0.0;
 
@@ -311,7 +312,7 @@ Widget preFiestasItem({context, ProductInfo? prefiestasdata}) {
                                       fontWeight: FontWeight.w600),
                                 ),
                                 Text(
-                                  "${prefiestasdata?.price?.substring(0, 2) ?? 29}",
+                                  "${prefiestasdata?.price != null && prefiestasdata?.price != '' ? prefiestasdata?.price?.substring(0, 2) : 29}",
                                   // overflow: TextOverflow.visible,
                                   style: TextStyle(
                                       fontSize: size.width * 0.06,

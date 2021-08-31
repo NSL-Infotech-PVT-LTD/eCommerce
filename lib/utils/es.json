@@ -231,8 +231,17 @@
   "country": "País",
   "save": "Ahorrar",
   "errortoloading": "Error al cargar",
+  "chooseaplace": "Elegir un lugar",
   "zipcode": "Código postal",
   "pleaseenterzipcode": "Ingrese el código postal",
   "enterZipCode": "Introduzca código postal",
-  "Doyouwanttodeletetheaddress": "¿Quieres borrar la dirección?"
+  "currentLocation": "Ubicación actual",
+  "addAddress": "Añadir dirección",
+  "Doyouwanttodeletetheaddress": "¿Quieres borrar la dirección?",
+  "myOrders": "Mis ordenes",
+  "edit": "Editar",
+  "others": "Otros",
+  "recent": "Reciente",
+  "CheckyourordersyouboughtforPrefiestas": "Consulta los pedidos que compraste para las Prefiestas",
+  "theSessionhasexpired": "La sesión ha expirado. ¡Vuelve a iniciar sesión!"
 }

@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
+
 import 'package:funfy/apis/addressApi.dart';
 import 'package:funfy/components/dialogs.dart';
 import 'package:funfy/components/navigation.dart';
-import 'package:funfy/components/sizeclass/SizeConfig.dart';
+
 import 'package:funfy/models/addressLsitModel.dart';
-import 'package:funfy/ui/screens/address/addressAdd.dart';
-import 'package:funfy/ui/screens/address/addressEdit.dart';
+
+import 'package:funfy/ui/screens/address/googleMapAdd.dart';
+import 'package:funfy/ui/widgets/roundContainer.dart';
+import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/colors.dart';
+import 'package:funfy/utils/fontsname.dart';
+import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/langauge_constant.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_place_picker/google_maps_place_picker.dart';
+
 import 'package:hexcolor/hexcolor.dart';
 
 class AddressList extends StatefulWidget {
@@ -26,13 +34,15 @@ class _AddressListState extends State<AddressList> {
 
   bool _loading = false;
 
+  bool _edit = false;
+
   AddressListModel? addressListModel;
 
-  _handleRadioValueChange(int? value) {
-    setState(() {
-      groupValue = value;
-    });
-  }
+  // _handleRadioValueChange(int? value) {
+  //   setState(() {
+  //     groupValue = value;
+  //   });
+  // }
 
   getAddresApiCall() async {
     var net = await Internetcheck.check();
@@ -87,182 +97,371 @@ class _AddressListState extends State<AddressList> {
         statusBarColor: Colors.black,
       ),
     );
+
     return SafeArea(
-      child: Scaffold(
-        backgroundColor: HexColor("#3d322a"),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: AppColors.siginbackgrond,
-          onPressed: () {
-            navigatorPushFun(context, AddressAdd());
-          },
-          child: Icon(Icons.add),
-        ),
-        appBar: AppBar(
-          elevation: 1,
-          shadowColor: AppColors.white,
-          backgroundColor: AppColors.blackBackground,
-          centerTitle: true,
-          title: Text("${getTranslated(context, 'address')}"),
-        ),
-        body: Column(
-          children: [
-            _loading
-                ? Expanded(
-                    child: Center(
-                        child: CircularProgressIndicator(
-                    color: AppColors.white,
-                  )))
-                : _loading == false &&
-                        (addressListModel == null ||
-                            addressListModel?.data?.length == 0)
-                    ? Expanded(
-                        child: Center(
-                            child: Text(
-                        "${getTranslated(context, 'listisEmpty')}",
-                        style: TextStyle(
-                            color: AppColors.white,
-                            fontSize: size.width * 0.045),
-                      )))
-                    : Expanded(
-                        child: ListView.builder(
-                            itemCount: addressListModel?.data?.length ?? 0,
-                            itemBuilder: (context, index) {
-                              return ticket(
-                                  context: context,
-                                  index: index,
-                                  addressModel: addressListModel);
-                            }))
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget ticket({context, int? index, AddressListModel? addressModel}) {
-    var size = MediaQuery.of(context).size;
-
-    var data = addressModel?.data![index!];
-
-    return InkWell(
-      onTap: () {
-        Navigator.of(context)
-            .push(MaterialPageRoute(
-                builder: (context) => AddressEdit(addressmodel: data)))
-            .then((value) {
-          getAddresApiCall();
-        });
-      },
-      child: Container(
-        width: SizeConfig.screenWidth,
-        margin: EdgeInsets.symmetric(
-            vertical: size.height * 0.01, horizontal: size.width * 0.02),
-        child: Column(
-          children: [
-            //  SizedBox(height: SizeConfig.screenHeight * 0.02,),
-            Stack(
+        child: Scaffold(
+            backgroundColor: AppColors.blackBackground,
+            body: Column(
               children: [
-                SizedBox(
-                    width: SizeConfig.screenWidth,
-                    child: SvgPicture.asset(
-                      "assets/images/Rectangle84.svg",
-                      fit: BoxFit.fill,
-                    )),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10.0),
-                  child: Container(
-                    height: SizeConfig.screenHeight * 0.13,
-                    child: Padding(
-                      // padding: const EdgeInsets.all(8.0),
-                      padding: EdgeInsets.symmetric(
-                          horizontal: size.width * 0.02,
-                          vertical: size.height * 0.001),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            width: size.width * 0.02,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: SizeConfig.screenWidth * 0.40,
-                                child: Text(
-                                  "${data?.name}",
-                                  style: TextStyle(
-                                    color: AppColors.white,
-                                    fontSize: 14,
-                                    fontFamily: "DM Sans Bold",
-                                  ),
-                                  textAlign: TextAlign.start,
-                                  maxLines: 1,
-                                  softWrap: true,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              SizedBox(
-                                height: size.height * 0.01,
-                              ),
-                              Container(
-                                width: SizeConfig.screenWidth * 0.60,
-                                child: Text(
-                                  "${data?.streetAddress}, ${data?.city}, ${data?.state}, ${data?.country}, ${data?.zip}",
-                                  textAlign: TextAlign.start,
-                                  maxLines: 2,
-                                  softWrap: true,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                      color: AppColors.brownlite, fontSize: 14),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Spacer(),
-                          Row(
-                            children: [
-                              Theme(
-                                data: Theme.of(context).copyWith(
-                                  unselectedWidgetColor: AppColors.white,
-                                ),
-                                child: Radio<int?>(
-                                    value: index,
-                                    groupValue: groupValue,
-                                    //count == 1 && groupValue != -1 ? count : groupValue,
-                                    onChanged: (_v) {
-                                      _handleRadioValueChange(index);
-                                    }),
-                              ),
-                              IconButton(
-                                onPressed: () {
-                                  Dialogs.simpleAlertDialog(
-                                      context: context,
-                                      title:
-                                          "${getTranslated(context, "delete")}",
-                                      content:
-                                          "${getTranslated(context, "Doyouwanttodeletetheaddress")}",
-                                      func: () {
-                                        navigatePopFun(context);
-                                        print("${data?.id.toString()}");
-                                        deleteAddressFun(
-                                            id: data?.id.toString());
-                                      });
-                                },
-                                icon: Icon(
-                                  Icons.delete,
-                                  color: Colors.red,
-                                ),
-                              )
-                            ],
-                          )
-                        ],
+                // appBar
+                Container(
+                  width: size.width,
+                  height: size.height * 0.08,
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage(Images.homeTopBannerPng),
+                          fit: BoxFit.cover)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                          onPressed: () {
+                            navigatePopFun(context);
+                          },
+                          icon: Icon(
+                            Icons.arrow_back,
+                            color: AppColors.white,
+                          )),
+                      Text(
+                        "${getTranslated(context, 'chooseaplace')}",
+                        style: TextStyle(
+                            fontFamily: Fonts.dmSansBold,
+                            color: AppColors.white,
+                            fontSize: size.width * 0.05),
                       ),
-                    ),
+                      _edit == false
+                          ? InkWell(
+                              onTap: () {
+                                setState(() {
+                                  _edit = true;
+                                });
+                              },
+                              child: Row(
+                                children: [
+                                  roundedBoxBorder(
+                                      context: context,
+                                      radius: size.width * 0.025,
+                                      backgroundColor: Colors.transparent,
+                                      borderColor: AppColors.white,
+                                      borderSize: size.width * 0.004,
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: size.width * 0.008,
+                                            horizontal: size.height * 0.012),
+                                        child: Text(
+                                          "${getTranslated(context, 'edit')}",
+                                          style: TextStyle(
+                                              fontFamily: Fonts.dmSansBold,
+                                              color: AppColors.white,
+                                              fontSize: size.width * 0.04),
+                                        ),
+                                      )),
+                                  SizedBox(
+                                    width: size.width * 0.04,
+                                  )
+                                ],
+                              ),
+                            )
+                          : SizedBox(
+                              width: size.width * 0.17,
+                            )
+                    ],
                   ),
                 ),
+
+                SizedBox(
+                  height: size.height * 0.025,
+                ),
+
+                // recent
+
+                Container(
+                  alignment: Alignment.centerLeft,
+                  margin: EdgeInsets.symmetric(horizontal: size.width * 0.05),
+                  child: Text(
+                    "${getTranslated(context, 'recent')?.toUpperCase()}",
+                    style: TextStyle(
+                        fontFamily: Fonts.dmSansMedium,
+                        color: AppColors.descriptionfirst,
+                        fontSize: size.width * 0.04),
+                  ),
+                ),
+                SizedBox(
+                  height: size.height * 0.025,
+                ),
+
+                // current loaction
+                Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.symmetric(
+                      horizontal: size.width * 0.04,
+                      vertical: size.height * 0.02),
+                  width: size.width,
+                  height: size.height * 0.2,
+                  color: HexColor("#24211E"),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          // Navigator.of(context).push(MaterialPageRoute(
+                          //     builder: (context) => AddressAdd()));
+                        },
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: size.width * 0.04,
+                              height: size.width * 0.04,
+                              color: Colors.red,
+                            ),
+                            SizedBox(
+                              width: size.width * 0.05,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "${getTranslated(context, 'currentLocation')}",
+                                  style: TextStyle(
+                                      fontFamily: Fonts.dmSansBold,
+                                      color: AppColors.siginbackgrond,
+                                      fontSize: size.width * 0.048),
+                                ),
+                                Container(
+                                  width: size.width * 0.8,
+                                  child: Text(
+                                    Constants.prefs?.getString("addres") != null
+                                        ? "${Constants.prefs?.getString("addres")}"
+                                        : "${getTranslated(context, "location")}",
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        fontFamily: Fonts.dmSansMedium,
+                                        color: AppColors.descriptionfirst,
+                                        fontSize: size.width * 0.038),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: size.height * 0.01,
+                      ),
+
+                      // divider
+
+                      Divider(
+                        color: AppColors.blackBackground,
+                        thickness: size.height * 0.001,
+                      ),
+
+                      SizedBox(
+                        height: size.height * 0.01,
+                      ),
+
+                      InkWell(
+                        onTap: () {
+                          // Navigator.of(context)
+                          //     .push(MaterialPageRoute(
+                          //         builder: (context) => GoogleLocationAdd()))
+                          //     .then((value) {
+                          //   getAddresApiCall();
+                          // });
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            return PlacePicker(
+                              apiKey: "AIzaSyClclCEKHSt57KvUbgxcjZCwRqrbhpZq5M",
+                              initialPosition: LatLng(31.326015, 75.576180),
+                              useCurrentLocation: true,
+                              selectInitialPosition: true,
+
+                              //usePlaceDetailSearch: true,
+                              onPlacePicked: (result) {
+                                print("here is $result");
+                                Navigator.of(context).pop();
+                                setState(() {});
+                              },
+                              //forceSearchOnZoomChanged: true,
+                              //automaticallyImplyAppBarLeading: false,
+                              //autocompleteLanguage: "ko",
+                              //region: 'au',
+                              //selectInitialPosition: true,
+                              // selectedPlaceWidgetBuilder: (_, selectedPlace, state, isSearchBarFocused) {
+                              //   print("state: $state, isSearchBarFocused: $isSearchBarFocused");
+                              //   return isSearchBarFocused
+                              //       ? Container()
+                              //       : FloatingCard(
+                              //           bottomPosition: 0.0, // MediaQuery.of(context) will cause rebuild. See MediaQuery document for the information.
+                              //           leftPosition: 0.0,
+                              //           rightPosition: 0.0,
+                              //           width: 500,
+                              //           borderRadius: BorderRadius.circular(12.0),
+                              //           child: state == SearchingState.Searching
+                              //               ? Center(child: CircularProgressIndicator())
+                              //               : RaisedButton(
+                              //                   child: Text("Pick Here"),
+                              //                   onPressed: () {
+                              //                     // IMPORTANT: You MUST manage selectedPlace data yourself as using this build will not invoke onPlacePicker as
+                              //                     //            this will override default 'Select here' Button.
+                              //                     print("do something with [selectedPlace] data");
+                              //                     Navigator.of(context).pop();
+                              //                   },
+                              //                 ),
+                              //         );
+                              // },
+                              // pinBuilder: (context, state) {
+                              //   if (state == PinState.Idle) {
+                              //     return Icon(Icons.favorite_border);
+                              //   } else {
+                              //     return Icon(Icons.favorite);
+                              //   }
+                              // },
+                            );
+                          }));
+                        },
+                        child: Row(
+                          children: [
+                            roundedBoxBorder(
+                                context: context,
+                                radius: size.width * 0.015,
+                                backgroundColor: Colors.transparent,
+                                borderColor: AppColors.white,
+                                borderSize: size.width * 0.002,
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: size.width * 0.008,
+                                      horizontal: size.height * 0.012),
+                                  child: Text(
+                                    "+",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.white,
+                                        fontSize: size.width * 0.04),
+                                  ),
+                                )),
+                            SizedBox(width: size.width * 0.03),
+                            Text(
+                              "${getTranslated(context, 'addAddress')}",
+                              style: TextStyle(
+                                  fontFamily: Fonts.dmSansBold,
+                                  color: AppColors.white,
+                                  fontSize: size.width * 0.048),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+
+                // others
+
+                SizedBox(
+                  height: size.height * 0.025,
+                ),
+
+                // recent
+
+                Container(
+                  alignment: Alignment.centerLeft,
+                  margin: EdgeInsets.symmetric(horizontal: size.width * 0.05),
+                  child: Text(
+                    "${getTranslated(context, 'others')?.toUpperCase()}",
+                    style: TextStyle(
+                        fontFamily: Fonts.dmSansMedium,
+                        color: AppColors.descriptionfirst,
+                        fontSize: size.width * 0.04),
+                  ),
+                ),
+                SizedBox(
+                  height: size.height * 0.025,
+                ),
+
+                Expanded(
+                    child: _loading
+                        ? Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : addressListModel?.data?.length == 0 &&
+                                    _loading == false ||
+                                addressListModel == null
+                            ? Center(
+                                child: Text(
+                                  "${getTranslated(context, "listisEmpty")}",
+                                  //     Strings.PostsEmpty,
+                                  style: TextStyle(
+                                      color: AppColors.white,
+                                      fontSize: size.width * 0.04),
+                                ),
+                              )
+                            : ListView.builder(
+                                itemCount: addressListModel?.data?.length ?? 0,
+                                itemBuilder: (context, index) {
+                                  var address = addressListModel?.data![index];
+                                  return addressIitem(
+                                      size: size,
+                                      address:
+                                          "${address?.streetAddress}, ${address?.city}, ${address?.state}, ${address?.country}, ${address?.zip}");
+                                }))
               ],
+            )));
+  }
+
+  Widget addressIitem({size, String? address}) {
+    return Container(
+      margin: EdgeInsets.only(top: size.height * 0.0025),
+      padding: EdgeInsets.symmetric(horizontal: size.width * 0.06),
+      width: size.width,
+      height: size.height * 0.09,
+      color: HexColor("#24211E"),
+      child: Row(
+        children: [
+          // icon
+          _edit
+              ? Container(
+                  width: size.width * 0.05,
+                  height: size.height * 0.03,
+                  color: Colors.red,
+                )
+              : Container(
+                  width: size.width * 0.05,
+                  height: size.height * 0.03,
+                  color: Colors.yellow,
+                ),
+
+          SizedBox(
+            width: size.width * 0.03,
+          ),
+
+          Expanded(
+            child: Text(
+              "$address",
+              maxLines: 1,
+              overflow: TextOverflow.clip,
+              style: TextStyle(
+                  fontFamily: Fonts.dmSansMedium,
+                  color: AppColors.white,
+                  fontSize: size.width * 0.048),
             ),
-          ],
-        ),
+          ),
+
+          SizedBox(
+            width: size.width * 0.08,
+          ),
+
+          Container(
+            width: size.width * 0.05,
+            height: size.height * 0.03,
+            child: Icon(
+              Icons.chevron_right,
+              color: AppColors.white,
+              size: size.width * 0.07,
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:funfy/apis/signinApi.dart';
 import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/models/favourite/fiestasFavouriteModel.dart';
 import 'package:funfy/models/favourite/preFiestasFavModel.dart';
@@ -12,7 +13,8 @@ import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/urls.dart';
 import 'package:http/http.dart' as http;
 
-Future<FiestasModel?> fiestasPostGet({String? type, String? dateFilter}) async {
+Future<FiestasModel?> fiestasPostGet(
+    {context, String? type, String? dateFilter}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
     //  'X-localization': '${Constants.prefs?.getString("language")}'
@@ -31,6 +33,10 @@ Future<FiestasModel?> fiestasPostGet({String? type, String? dateFilter}) async {
 
   // print(res.body);
 
+  if (res.statusCode == 401) {
+    userSessionExpired(context);
+  }
+
   if (res.statusCode == 200) {
     return fiestasModelFromJson(res.body);
   } else if (res.statusCode == 422) {
@@ -38,7 +44,7 @@ Future<FiestasModel?> fiestasPostGet({String? type, String? dateFilter}) async {
   }
 }
 
-Future<PrefiestasModel?> prefiestasPostGet() async {
+Future<PrefiestasModel?> prefiestasPostGet({context}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
     //  'X-localization': '${Constants.prefs?.getString("language")}'
@@ -47,6 +53,10 @@ Future<PrefiestasModel?> prefiestasPostGet() async {
       await http.post(Uri.parse(Urls.preFiestasPostsUrl), headers: headers);
 
   // print(res.body);
+
+  if (res.statusCode == 401) {
+    userSessionExpired(context);
+  }
 
   if (res.statusCode == 200) {
     return prefiestasModelFromJson(res.body);

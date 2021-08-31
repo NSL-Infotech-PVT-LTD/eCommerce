@@ -149,8 +149,8 @@ class _CartDetailState extends State<CartDetail> {
     int tot = 0;
 
     for (var i in UserData.ticketcartMap.values) {
-      int price =
-          int.parse("${i['ticketCount']}") * int.parse("${i['ticketPrice']}");
+      int price = int.parse("${i['ticketPrice']}");
+      // int.parse("${i['ticketCount']}") * int.parse("${i['ticketPrice']}");
 
       print(i);
 
@@ -178,7 +178,17 @@ class _CartDetailState extends State<CartDetail> {
         setState(() {
           addCardLoading = false;
 
+          // print(value["data"]["data"]["id"]);
+
+          // if (value == null || value.data?.data?.length == 0) {
+          //   cardFormShow = false;
+
+          //   fiestasBookingApi(cardid: value["data"]["data"]["id"]);
+          // }
+
           getCardListApi();
+
+          // fiestasBookingApi(cardid:)
 
           // cardId = value["data"]["data"]["id"];
 
@@ -247,7 +257,7 @@ class _CartDetailState extends State<CartDetail> {
 
           cardList = value;
 
-          if (value != null) {
+          if (value != null && value.data?.data?.length != 0) {
             cardFormShow = false;
           }
 
@@ -595,65 +605,6 @@ class _CartDetailState extends State<CartDetail> {
                                     ],
                                   )
 
-                                // Column(
-                                //     children: [
-                                //       Container(
-                                //         height: size.height * 0.2,
-                                //         child: Expanded(
-                                //           child: ListView.builder(
-                                //               itemCount: cardList
-                                //                       ?.data?.data?.length ??
-                                //                   0,
-                                //               itemBuilder: (context, index) {
-                                //                 return ticket(
-                                //                     context: context,
-                                //                     model: cardList
-                                //                         ?.data?.data![index]);
-                                //               }),
-                                //         ),
-                                //       ),
-
-                                //       SizedBox(
-                                //         height: size.height * 0.03,
-                                //       ),
-
-                                //       // swipe to pay with card list
-
-                                //       groupValue != -1
-                                //           ? InkWell(
-                                //               onTap: () {
-                                //                 fiestasBookingApi(
-                                //                     cardid: cardId);
-                                //               },
-                                //               child: roundedBoxR(
-                                //                 radius: size.width * 0.02,
-                                //                 width: size.width,
-                                //                 height: size.height * 0.07,
-                                //                 backgroundColor:
-                                //                     AppColors.siginbackgrond,
-                                //                 child: Center(
-                                //                   child: _loading
-                                //                       ? CircularProgressIndicator(
-                                //                           color:
-                                //                               AppColors.white)
-                                //                       : Text(
-                                //                           "${getTranslated(context, "swipetopay")}",
-                                //                           style: TextStyle(
-                                //                               fontSize:
-                                //                                   size.width *
-                                //                                       0.045,
-                                //                               fontFamily: Fonts
-                                //                                   .dmSansMedium,
-                                //                               color: AppColors
-                                //                                   .white),
-                                //                         ),
-                                //                 ),
-                                //               ),
-                                //             )
-                                //           : SizedBox()
-                                //     ],
-                                //   )
-
                                 // card form
                                 : Column(
                                     crossAxisAlignment:
@@ -858,13 +809,13 @@ class _CartDetailState extends State<CartDetail> {
 
                                       // view card button
 
-                                      cardList != null
+                                      cardList != null &&
+                                              cardList?.data?.data?.length != 0
                                           ? InkWell(
                                               onTap: () {
-                                                print(cardList?.toJson());
-                                                // setState(() {
-                                                //   cardFormShow = false;
-                                                // });
+                                                setState(() {
+                                                  cardFormShow = false;
+                                                });
                                               },
                                               child: roundedBoxR(
                                                 radius: size.width * 0.02,

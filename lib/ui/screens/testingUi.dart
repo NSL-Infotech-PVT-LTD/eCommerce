@@ -11,6 +11,7 @@ import 'package:funfy/components/navigation.dart';
 import 'package:funfy/components/zeroadd.dart';
 import 'package:funfy/models/fiestasmodel.dart';
 import 'package:funfy/models/preFiestasModel.dart';
+import 'package:funfy/ui/screens/address/addressList.dart';
 import 'package:funfy/ui/screens/fiestasAll.dart';
 import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/screens/notifications.dart';
@@ -59,7 +60,8 @@ class _TestingState extends State<Testing> {
       setState(() {
         _fiestasPostLoading = true;
       });
-      await fiestasPostGet(type: tagType, dateFilter: date.toString())
+      await fiestasPostGet(
+              context: context, type: tagType, dateFilter: date.toString())
           .then((FiestasModel? posts) {
         setState(() {
           UserData.fiestasdata = posts;
@@ -78,7 +80,8 @@ class _TestingState extends State<Testing> {
       setState(() {
         _prefiestasPostLoading = true;
       });
-      await prefiestasPostGet().then((posts) {
+      await prefiestasPostGet(context: context).then((posts) {
+        // print(posts?.toJson());
         setState(() {
           prefiestasdata = posts;
           _prefiestasPostLoading = false;
@@ -321,49 +324,55 @@ class _TestingState extends State<Testing> {
 
                             // location choose
 
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                // Icon(
-                                //   // Icons.fmd_good,
-                                //   Icons.error,
-                                //   size: size.width * 0.04,
-                                //   color: AppColors.white,
-                                // ),
+                            InkWell(
+                              onTap: () {
+                                navigatorPushFun(context, AddressList());
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  // Icon(
+                                  //   // Icons.fmd_good,
+                                  //   Icons.error,
+                                  //   size: size.width * 0.04,
+                                  //   color: AppColors.white,
+                                  // ),
 
-                                Container(
-                                  width: size.width * 0.03,
-                                  child: Image.asset(Images.locationspng),
-                                ),
-                                SizedBox(
-                                  width: size.width * 0.01,
-                                ),
-                                Container(
-                                  constraints: BoxConstraints(
-                                    maxWidth: size.width * 0.2,
+                                  Container(
+                                    width: size.width * 0.03,
+                                    child: Image.asset(Images.locationspng),
                                   ),
-                                  child: Text(
-                                    Constants.prefs?.getString("addres") != null
-                                        ? "${Constants.prefs?.getString("addres")}"
-                                        : "${getTranslated(context, "location")}", // Strings.location,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                        fontSize: size.width * 0.034,
-                                        fontFamily: Fonts.dmSansMedium,
-                                        color: AppColors.white),
+                                  SizedBox(
+                                    width: size.width * 0.01,
                                   ),
-                                ),
-                                SizedBox(
-                                  width: size.width * 0.01,
-                                ),
-                                // Icon(
-                                //   Icons.expand_more,
-                                //   size: size.width * 0.042,
-                                //   color: AppColors.white,
-                                // ),
-                              ],
+                                  Container(
+                                    constraints: BoxConstraints(
+                                      maxWidth: size.width * 0.2,
+                                    ),
+                                    child: Text(
+                                      Constants.prefs?.getString("addres") !=
+                                              null
+                                          ? "${Constants.prefs?.getString("addres")}"
+                                          : "${getTranslated(context, "location")}", // Strings.location,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      style: TextStyle(
+                                          fontSize: size.width * 0.034,
+                                          fontFamily: Fonts.dmSansMedium,
+                                          color: AppColors.white),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: size.width * 0.01,
+                                  ),
+                                  Icon(
+                                    Icons.expand_more,
+                                    size: size.width * 0.042,
+                                    color: AppColors.white,
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -833,22 +842,28 @@ class _TestingState extends State<Testing> {
                                       fontFamily: Fonts.dmSansBold,
                                       color: AppColors.white),
                                 ),
-                                GestureDetector(
-                                  onTap: () {
-                                    navigatorPushFun(context, FiestasAll());
-                                  },
-                                  child: Container(
-                                    // color: Colors.blue,
-                                    child: Text(
-                                      "${getTranslated(context, "seeall")}",
-                                      //   Strings.seeall,
-                                      style: TextStyle(
-                                          fontSize: size.width * 0.04,
-                                          fontFamily: Fonts.dmSansBold,
-                                          color: AppColors.siginbackgrond),
-                                    ),
-                                  ),
-                                ),
+                                (UserData.fiestasdata?.data?.data?.length ==
+                                            0 &&
+                                        _postLoading == false)
+                                    ? SizedBox()
+                                    : GestureDetector(
+                                        onTap: () {
+                                          navigatorPushFun(
+                                              context, FiestasAll());
+                                        },
+                                        child: Container(
+                                          // color: Colors.blue,
+                                          child: Text(
+                                            "${getTranslated(context, "seeall")}",
+                                            //   Strings.seeall,
+                                            style: TextStyle(
+                                                fontSize: size.width * 0.04,
+                                                fontFamily: Fonts.dmSansBold,
+                                                color:
+                                                    AppColors.siginbackgrond),
+                                          ),
+                                        ),
+                                      )
                               ],
                             ),
                             SizedBox(
@@ -876,7 +891,8 @@ class _TestingState extends State<Testing> {
                           ),
                         )
                       : UserData.fiestasdata?.data?.data?.length == 0 &&
-                              _postLoading == false
+                                  _postLoading == false ||
+                              UserData.fiestasdata == null
                           ? SliverToBoxAdapter(
                               child: Container(
                                 margin:
@@ -968,8 +984,9 @@ class _TestingState extends State<Testing> {
                                         AppColors.white))),
                           ),
                         )
-                      : UserData.fiestasdata?.data?.data?.length == 0 &&
-                              _prefiestasPostLoading == false
+                      : prefiestasdata?.data?.data?.length == 0 &&
+                                  _prefiestasPostLoading == false ||
+                              prefiestasdata == null
                           ? SliverToBoxAdapter(
                               child: Container(
                                 margin:
@@ -988,6 +1005,7 @@ class _TestingState extends State<Testing> {
                           : SliverList(
                               delegate: SliverChildBuilderDelegate(
                               (context, index) {
+                                print(prefiestasdata?.toJson());
                                 return Padding(
                                   padding: EdgeInsets.symmetric(
                                       horizontal: size.width * 0.04),

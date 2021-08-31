@@ -271,11 +271,11 @@ Future storePaymentCard({String? cardToken}) async {
       body: body, headers: headers);
 
   if (res.statusCode == 201) {
+    return json.decode(res.body);
     // print("here is fiestas detail - ${res.body}");
 
-    print("Card added  ${res.body}");
   } else {
-    print("here is error ${res.body}");
+    // print("here is error ${res.body}");
   }
 }
 
