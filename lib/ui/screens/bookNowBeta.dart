@@ -204,7 +204,7 @@ class _BookNowBetaState extends State<BookNowBeta> {
   setPriceToList() {
     setState(() {
       UserData.tiketList[0]["price"] =
-          int.parse('${fiestasDetailModel?.data!.ticketPrice}');
+          int.parse('${fiestasDetailModel?.data!.ticketPriceNormal}');
 
       UserData.tiketList[0]["max"] =
           int.parse('${fiestasDetailModel?.data!.leftNormalTicket}');
@@ -258,7 +258,7 @@ class _BookNowBetaState extends State<BookNowBeta> {
             setFavoriteBool();
 
             price = k_m_b_generator(
-                int.parse("${fiestasDetailModel?.data!.ticketPrice}"));
+                int.parse("${fiestasDetailModel?.data!.ticketPriceNormal}"));
 
             dateTime = DateTime.parse("${fiestasDetailModel?.data!.timestamp}");
 

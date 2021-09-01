@@ -43,6 +43,7 @@ class _CartDetailState extends State<CartDetail> {
   CardListModel? cardList;
 
   bool _loading = false;
+  bool _swipeTrue = false;
 
   int? groupValue = -1;
   int? initvalue = 0;
@@ -332,7 +333,7 @@ class _CartDetailState extends State<CartDetail> {
             payLoading = false;
           });
 
-          // print("here is ${res?.toJson()}");
+          print("here is ${res?.toJson()}");
 
           if (res["status"] == true && res["code"] == 201) {
             setState(() {
@@ -354,7 +355,7 @@ class _CartDetailState extends State<CartDetail> {
             Dialogs.simpleOkAlertDialog(
                 context: context,
                 title: "${getTranslated(context, "alert!")}",
-                content: "${getTranslated(context, "yourPaymentisfailed")}",
+                content: "${res['error']}",
                 func: () {
                   navigatePopFun(context);
                 });
@@ -887,7 +888,7 @@ class _CartDetailState extends State<CartDetail> {
       keyboardType: TextInputType.number,
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
-        new LengthLimitingTextInputFormatter(19),
+        new LengthLimitingTextInputFormatter(16),
         new CardNumberInputFormatter()
       ],
       onSaved: (String? value) {

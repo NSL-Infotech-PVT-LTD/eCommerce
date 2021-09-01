@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/scheduler.dart';
+
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:funfy/apis/homeApis.dart';
@@ -10,10 +10,11 @@ import 'package:funfy/components/locationget.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/components/zeroadd.dart';
 import 'package:funfy/models/fiestasmodel.dart';
+import 'package:funfy/models/filterModel.dart';
 import 'package:funfy/models/preFiestasModel.dart';
 import 'package:funfy/ui/screens/address/addressList.dart';
 import 'package:funfy/ui/screens/fiestasAll.dart';
-import 'package:funfy/ui/screens/home.dart';
+
 import 'package:funfy/ui/screens/notifications.dart';
 import 'package:funfy/ui/widgets/dateButton.dart';
 import 'package:funfy/ui/widgets/postsitems.dart';
@@ -33,10 +34,12 @@ class Testing extends StatefulWidget {
 }
 
 class _TestingState extends State<Testing> {
+  static GlobalKey<ScaffoldState> _keyScaffold = GlobalKey();
   TabController? controller;
   bool fiestasButton = true;
 
   PrefiestasModel? prefiestasdata;
+  FliterListModel? filterModel;
   // FiestasModel? fiestasdata;
 
   bool _postLoading = false;
@@ -51,23 +54,65 @@ class _TestingState extends State<Testing> {
   DateTime nowdate = DateTime.now();
   String? filterDate = "";
 
+  Map<String, int> groupvalue = {};
+
+  Map<String, String> filterData = {
+    "local": "",
+    "environment": "",
+    "schedule": "",
+    "music": "",
+    "clothing": "",
+    "ageGroup": ""
+  };
+
+  _handleRadioValueChange(int? value, String key) {
+    setState(() {
+      groupvalue["$key"] = value!;
+    });
+  }
+
+  getFilterData() async {
+    print("Run");
+    await filterList().then((value) {
+      // print(value?.toJson());
+
+      for (var i in value!.data!.toJson().keys.toList()) {
+        // print(i);
+
+        groupvalue["$i"] = -1;
+        filterData["$i"] = "";
+      }
+
+      setState(() {
+        filterModel = value;
+      });
+    });
+  }
+
   fiestasgetPosts({String? date}) async {
     var net = await Internetcheck.check();
     if (net == false) {
       Internetcheck.showdialog(context: context);
     }
     {
-      setState(() {
-        _fiestasPostLoading = true;
-      });
-      await fiestasPostGet(
-              context: context, type: tagType, dateFilter: date.toString())
-          .then((FiestasModel? posts) {
+      try {
         setState(() {
-          UserData.fiestasdata = posts;
-          _fiestasPostLoading = false;
+          _fiestasPostLoading = true;
         });
-      });
+        await fiestasPostGet(
+                context: context,
+                type: tagType,
+                dateFilter: date.toString(),
+                filterDataF: filterData)
+            .then((FiestasModel? posts) {
+          setState(() {
+            UserData.fiestasdata = posts;
+            _fiestasPostLoading = false;
+          });
+        });
+      } catch (e) {
+        print("fiestas Error $e");
+      }
     }
   }
 
@@ -87,6 +132,28 @@ class _TestingState extends State<Testing> {
           _prefiestasPostLoading = false;
         });
       });
+    }
+  }
+
+  fiestasFilterListGet() async {
+    var net = await Internetcheck.check();
+    if (net == false) {
+      Internetcheck.showdialog(context: context);
+    }
+    {
+      try {
+        setState(() {
+          _fiestasPostLoading = true;
+        });
+        await filterList().then((res) {
+          setState(() {
+            filterModel = res;
+            _fiestasPostLoading = false;
+          });
+        });
+      } catch (e) {
+        print("fiestas Error $e");
+      }
     }
   }
 
@@ -202,9 +269,6 @@ class _TestingState extends State<Testing> {
 
   @override
   void initState() {
-    // _controller = ScrollController();
-    // _fiestaSscrollController.addListener(_scrollListener);
-
     setState(() {
       UserData.sControlller = ScrollController();
     });
@@ -213,6 +277,7 @@ class _TestingState extends State<Testing> {
     fiestasgetPosts(date: filterDate);
     preFiestasPostget();
     determinePosition();
+    getFilterData();
     // print(UserData.userToken);
 
     // if (UserData.homeTrueOneTime) {
@@ -516,77 +581,85 @@ class _TestingState extends State<Testing> {
                                   Expanded(
                                       child: Container(
                                     // color: Colors.blue,
-                                    child: Row(
-                                      children: [
-                                        // club
-
-                                        GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              tagType = "club";
-                                            });
-                                            fiestasgetPosts(date: filterDate);
-                                          },
-                                          child: tagbutton2(
-                                              context: context,
-                                              text:
-                                                  "${getTranslated(context, "club")}", //Strings.club,
-                                              borderColor: tagType == "club"
-                                                  ? AppColors.tagBorder
-                                                  : AppColors.white,
-                                              textColor: tagType == "club"
-                                                  ? AppColors.tagBorder
-                                                  : AppColors.white,
-                                              borderwidth: tagType == "club"
-                                                  ? size.width * 0.003
-                                                  : size.width * 0.002),
-                                        ),
-
-                                        SizedBox(
-                                          width: size.width * 0.02,
-                                        ),
-
-                                        GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              tagType = "open";
-                                            });
-                                            fiestasgetPosts(date: filterDate);
-                                          },
-                                          child: tagbutton2(
-                                              context: context,
-                                              text:
-                                                  "${getTranslated(context, "openS")}", //Strings.club,
-                                              borderColor: tagType == "open"
-                                                  ? AppColors.tagBorder
-                                                  : AppColors.white,
-                                              textColor: tagType == "open"
-                                                  ? AppColors.tagBorder
-                                                  : AppColors.white,
-                                              borderwidth: tagType == "open"
-                                                  ? size.width * 0.003
-                                                  : size.width * 0.002),
-                                        ),
-
-                                        SizedBox(
-                                          width: size.width * 0.02,
-                                        ),
-
-                                        GestureDetector(
-                                          onTap: () {
-                                            clearFilter();
-                                            fiestasgetPosts(date: filterDate);
-                                          },
-                                          child: tagbutton2(
-                                              context: context,
-                                              text:
-                                                  "${getTranslated(context, "clearfilter")}", //Strings.club,
-                                              borderColor: AppColors.white,
-                                              textColor: AppColors.white,
-                                              borderwidth: size.width * 0.002),
-                                        ),
-                                      ],
+                                    child: Text(
+                                      "Filter",
+                                      style: TextStyle(
+                                          color: AppColors.white,
+                                          fontFamily: Fonts.dmSansBold,
+                                          fontSize: size.width * 0.055),
                                     ),
+                                    //p
+                                    // Row(
+                                    //   children: [
+                                    //     // club
+
+                                    //     GestureDetector(
+                                    //       onTap: () {
+                                    //         setState(() {
+                                    //           tagType = "club";
+                                    //         });
+                                    //         fiestasgetPosts(date: filterDate);
+                                    //       },
+                                    //       child: tagbutton2(
+                                    //           context: context,
+                                    //           text:
+                                    //               "${getTranslated(context, "club")}", //Strings.club,
+                                    //           borderColor: tagType == "club"
+                                    //               ? AppColors.tagBorder
+                                    //               : AppColors.white,
+                                    //           textColor: tagType == "club"
+                                    //               ? AppColors.tagBorder
+                                    //               : AppColors.white,
+                                    //           borderwidth: tagType == "club"
+                                    //               ? size.width * 0.003
+                                    //               : size.width * 0.002),
+                                    //     ),
+
+                                    //     SizedBox(
+                                    //       width: size.width * 0.02,
+                                    //     ),
+
+                                    //     GestureDetector(
+                                    //       onTap: () {
+                                    //         setState(() {
+                                    //           tagType = "open";
+                                    //         });
+                                    //         fiestasgetPosts(date: filterDate);
+                                    //       },
+                                    //       child: tagbutton2(
+                                    //           context: context,
+                                    //           text:
+                                    //               "${getTranslated(context, "openS")}", //Strings.club,
+                                    //           borderColor: tagType == "open"
+                                    //               ? AppColors.tagBorder
+                                    //               : AppColors.white,
+                                    //           textColor: tagType == "open"
+                                    //               ? AppColors.tagBorder
+                                    //               : AppColors.white,
+                                    //           borderwidth: tagType == "open"
+                                    //               ? size.width * 0.003
+                                    //               : size.width * 0.002),
+                                    //     ),
+
+                                    //     SizedBox(
+                                    //       width: size.width * 0.02,
+                                    //     ),
+
+                                    //     GestureDetector(
+                                    //       onTap: () {
+                                    //         clearFilter();
+                                    //         fiestasgetPosts(date: filterDate);
+                                    //       },
+                                    //       child: tagbutton2(
+                                    //           context: context,
+                                    //           text:
+                                    //               "${getTranslated(context, "clearfilter")}", //Strings.club,
+                                    //           borderColor: AppColors.white,
+                                    //           textColor: AppColors.white,
+                                    //           borderwidth: size.width * 0.002),
+                                    //     ),
+                                    //   ],
+                                    // ),
                                   )),
 
                                   SizedBox(
@@ -594,11 +667,16 @@ class _TestingState extends State<Testing> {
                                   ),
 
                                   // right button -------------- //
-                                  // Container(
-                                  //     margin: EdgeInsets.only(
-                                  //         right: size.width * 0.01),
-                                  //     alignment: Alignment.centerRight,
-                                  //     child: Image.asset(Images.filterPng))
+                                  InkWell(
+                                    onTap: () {
+                                      filterBottomSheet();
+                                    },
+                                    child: Container(
+                                        margin: EdgeInsets.only(
+                                            right: size.width * 0.01),
+                                        alignment: Alignment.centerRight,
+                                        child: Image.asset(Images.filterPng)),
+                                  )
                                 ]),
                           ),
                           SizedBox(
@@ -1023,6 +1101,189 @@ class _TestingState extends State<Testing> {
                     ),
             ],
           )),
+    );
+  }
+
+  // filter box
+
+  filterBottomSheet() {
+    var size = MediaQuery.of(context).size;
+    return showModalBottomSheet(
+        isDismissible: false,
+        enableDrag: false,
+        isScrollControlled: true,
+        backgroundColor: AppColors.blackBackground,
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+              key: _keyScaffold,
+              builder: (context, setstate) {
+                return Container(
+                  // margin: EdgeInsets.only(top: size.height * 0.04),
+                  height: size.height * 0.98,
+                  padding: EdgeInsets.symmetric(
+                      horizontal: size.width * 0.04,
+                      vertical: size.height * 0.034),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              navigatePopFun(context);
+                              fiestasgetPosts(date: filterDate);
+                            },
+                            child: Container(
+                              child: Icon(
+                                Icons.clear,
+                                color: AppColors.white,
+                              ),
+                            ),
+                          ),
+                          // Text(
+                          //   "${getTranslated(context, 'clear')}",
+                          //   style: TextStyle(
+                          //       fontSize: size.width * 0.05,
+                          //       fontFamily: Fonts.dmSansBold,
+                          //       color: AppColors.white),
+                          // ),
+
+                          SizedBox(
+                            width: size.width * 0.22,
+                            child: MaterialButton(
+                              onPressed: () {
+                                setstate(() {
+                                  for (var i in filterData.keys.toList()) {
+                                    groupvalue["$i"] = -1;
+                                  }
+
+                                  filterData = {
+                                    "local": "",
+                                    "environment": "",
+                                    "schedule": "",
+                                    "music": "",
+                                    "clothing": "",
+                                    "ageGroup": ""
+                                  };
+                                });
+
+                                Dialogs.showBasicsFlash(
+                                    duration: Duration(seconds: 1),
+                                    context: context,
+                                    content:
+                                        "${getTranslated(context, 'filterSuccessfullycleared')}",
+                                    color: Colors.green);
+
+                                fiestasgetPosts(date: filterDate);
+
+                                navigatePopFun(context);
+                              },
+                              child: Text(
+                                "${getTranslated(context, 'clear')}",
+                                style: TextStyle(
+                                    fontSize: size.width * 0.05,
+                                    fontFamily: Fonts.dmSansBold,
+                                    color: AppColors.white),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: size.height * 0.03,
+                      ),
+                      Expanded(
+                          child: Container(
+                        child: ListView.builder(
+                            itemCount: filterModel?.data?.toJson().length ?? 0,
+                            itemBuilder: (context, index) {
+                              return itemFilter(
+                                  context,
+                                  filterModel?.data
+                                      ?.toJson()
+                                      .keys
+                                      .toList()[index],
+                                  filterModel?.data
+                                      ?.toJson()
+                                      .values
+                                      .toList()[index],
+                                  setstate);
+                            }),
+                      )),
+                    ],
+                  ),
+                );
+              });
+        });
+  }
+
+  itemFilter(context, key, value, state) {
+    // print(value);
+    var size = MediaQuery.of(context).size;
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: size.height * 0.03,
+          ),
+          Text(
+            "${key.toUpperCase()}",
+            style: TextStyle(
+                fontSize: size.width * 0.06,
+                fontFamily: Fonts.dmSansBold,
+                color: AppColors.siginbackgrond),
+          ),
+          SizedBox(
+            height: size.height * 0.01,
+          ),
+          Column(
+            children: [
+              for (int i = 0; i < value.length; i++)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "${key == 'ageGroup' ? value[i] : value[i]['name']}",
+                      style: TextStyle(
+                          fontSize: size.width * 0.05,
+                          fontFamily: Fonts.dmSansMedium,
+                          color: AppColors.white),
+                    ),
+                    Theme(
+                      data: Theme.of(context).copyWith(
+                        unselectedWidgetColor: AppColors.white,
+                      ),
+                      child: Radio<int?>(
+                          value: i,
+                          groupValue: groupvalue["$key"],
+                          onChanged: (_v) {
+                            // print(filterData);
+                            // print("Here is  i ${value[i]['id']}  $key");
+                            // print(filterData['$key']);
+
+                            if (key == 'ageGroup') {
+                              filterData['$key'] = value[i].toString();
+                            } else {
+                              filterData['$key'] = value[i]['id'].toString();
+                            }
+
+                            _handleRadioValueChange(i, key);
+
+                            print(filterData);
+                            state(() {});
+
+                            // setState(() {});
+                          }),
+                    ),
+                  ],
+                )
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

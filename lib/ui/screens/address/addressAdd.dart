@@ -4,14 +4,21 @@ import 'package:funfy/apis/introApi.dart';
 import 'package:funfy/components/dialogs.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/ui/screens/address/addressEdit.dart';
+import 'package:funfy/ui/screens/address/addressList.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
+import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/langauge_constant.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 class AddressAdd extends StatefulWidget {
-  const AddressAdd({Key? key}) : super(key: key);
+  final double? lat;
+  final double? lng;
+
+  const AddressAdd({Key? key, @required this.lat, @required this.lng})
+      : super(key: key);
 
   @override
   _AddressAddState createState() => _AddressAddState();
@@ -78,6 +85,32 @@ class _AddressAddState extends State<AddressAdd> {
     });
   }
 
+  // set address in input fieds
+
+  setinputValues() async {
+    print("address ---------------");
+
+    print("lat ${widget.lat} lng ${widget.lng}");
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(widget.lat!, widget.lng!);
+    var placemark = placemarks[0];
+
+    print(placemark);
+
+    String address =
+        "${placemark.locality},${placemark.administrativeArea}, ${placemark.country}";
+
+    print(address);
+
+    setState(() {
+      streetController.text = placemark.street.toString();
+      cityController.text = placemark.locality.toString();
+      stateController.text = placemark.administrativeArea.toString();
+      zipController.text = placemark.postalCode.toString();
+      countryController.text = placemark.country.toString();
+    });
+  }
+
   addAddressApiCall() async {
     FocusScope.of(context).requestFocus(FocusNode());
     var net = await Internetcheck.check();
@@ -88,7 +121,6 @@ class _AddressAddState extends State<AddressAdd> {
         _loading = true;
       });
       try {
-        var introdata = await getIntrodata();
         await addAddressApi(
                 addresname: nameController.text.toString(),
                 street: streetController.text.toString(),
@@ -96,8 +128,8 @@ class _AddressAddState extends State<AddressAdd> {
                 state: stateController.text.toString(),
                 zip: zipController.text.toString(),
                 country: countryController.text.toString(),
-                latitude: "18.89",
-                longitude: "19.23")
+                latitude: widget.lat.toString(),
+                longitude: widget.lng.toString())
             .then((value) {
           setState(() {
             _loading = false;
@@ -111,8 +143,8 @@ class _AddressAddState extends State<AddressAdd> {
                 content:
                     "${getTranslated(context, 'addresssuccessfullycreated')}");
 
-            clearFeilds();
-            navigatePopFun(context);
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => AddressList()));
           } else {
             Dialogs.showBasicsFlash(
                 context: context,
@@ -141,6 +173,12 @@ class _AddressAddState extends State<AddressAdd> {
     cityController.clear();
     stateController.clear();
     countryController.clear();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setinputValues();
   }
 
   @override
@@ -203,12 +241,15 @@ class _AddressAddState extends State<AddressAdd> {
                             error: stateError,
                             title: "${getTranslated(context, 'country')}",
                             hint: "${getTranslated(context, 'enterCountry')}"),
+                        SizedBox(
+                          height: size.height * 0.03,
+                        ),
                         InkWell(
                           onTap: () {
                             formValid();
                           },
                           child: roundedBox(
-                              height: size.height * 0.08,
+                              height: size.height * 0.07,
                               backgroundColor: AppColors.siginbackgrond,
                               child: Align(
                                 alignment: Alignment.center,

@@ -61,6 +61,7 @@ dependencies:
   flash: ^2.0.1
   google_maps_flutter: ^2.0.6
   google_maps_place_picker: ^2.0.0-nullsafety.3
+  dropdown_search: ^1.0.0-beta2
   
 
 

@@ -34,8 +34,9 @@ Future fiestasBooking(
     "ticket_price_standard":
         standardticketcount != null ? "$standardticketcount" : "0",
     "ticket_price_vip": vipticketcount != null ? "$vipticketcount" : "0",
-    "ticket_price": ticketcount != null ? "$ticketcount" : "0",
+    "ticket_price_normal": ticketcount != null ? "$ticketcount" : "0",
     "payment_mode": "card",
+    "addressId": "${Constants.prefs?.getString("addressId")}",
     "card_id": cardId ?? ""
   };
 
@@ -46,17 +47,20 @@ Future fiestasBooking(
 
   // var response = Map<String, dynamic>.from(jsonRes);
 
-  // print("here is res $response");
+  print(res.body);
+
+  print(jsonRes['error']);
 
   if (res.statusCode == 201) {
     return jsonRes;
 
     // FistaBooking.fromJson(response);
   } else {
+    // return jsonRes;
     Dialogs.simpleOkAlertDialog(
         context: context,
         title: "${getTranslated(context, "alert!")}",
-        content: "${getTranslated(context, "sorryTicketsaresold")}",
+        content: "${jsonRes['error']}",
         func: () {
           navigatePopFun(context);
         });
@@ -189,6 +193,7 @@ Future makeOrderApi({String? cartId, String? addressId, String? cardID}) async {
     return resp;
   } else {
     print("here is error ${res.body}");
+    return resp;
   }
 }
 

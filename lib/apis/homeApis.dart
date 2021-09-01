@@ -5,6 +5,7 @@ import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/models/favourite/fiestasFavouriteModel.dart';
 import 'package:funfy/models/favourite/preFiestasFavModel.dart';
 import 'package:funfy/models/fiestasmodel.dart';
+import 'package:funfy/models/filterModel.dart';
 import 'package:funfy/models/notificationListModel.dart';
 import 'package:funfy/models/preFiestasModel.dart';
 import 'package:funfy/models/prefiestasDetailModel.dart';
@@ -14,7 +15,7 @@ import 'package:funfy/utils/urls.dart';
 import 'package:http/http.dart' as http;
 
 Future<FiestasModel?> fiestasPostGet(
-    {context, String? type, String? dateFilter}) async {
+    {context, String? type, String? dateFilter, filterDataF}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
     //  'X-localization': '${Constants.prefs?.getString("language")}'
@@ -22,16 +23,17 @@ Future<FiestasModel?> fiestasPostGet(
 
   var body = {
     type == null ? "" : "type": "$type",
-    dateFilter == null || dateFilter == "" ? "" : "filter": "$dateFilter"
+    dateFilter == null || dateFilter == "" ? "" : "filter": "$dateFilter",
+    "local": "${filterDataF['local']}",
+    "environment": "${filterDataF['environment']}",
+    "schedule": "${filterDataF['schedule']}",
+    "music": "${filterDataF['music']}",
+    "clothing": "${filterDataF['clothing']}",
+    "ageGroup": "${filterDataF['ageGroup']}",
   };
 
-  // print("here is body : $body");
-
-  // print("Token" + "${UserData.userToken}");
   var res = await http.post(Uri.parse(Urls.fiestasPostUrl),
       body: body, headers: headers);
-
-  // print(res.body);
 
   if (res.statusCode == 401) {
     userSessionExpired(context);
@@ -295,6 +297,29 @@ Future<NotificationListModel?> notificatiListApi({int? notificationNum}) async {
 
   if (res.statusCode == 200) {
     return notificationListModelFromJson(res.body);
+  } else {
+    print(res.body);
+  }
+}
+
+//fiestas filter List api
+
+Future<FliterListModel?> filterList() async {
+  var headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+    // 'X-localization': '${Constants.prefs?.getString("language")}'
+  };
+
+  var res = await http.get(
+      Uri.parse(
+        Urls.fiestasfilterUrl,
+      ),
+      headers: headers);
+
+  // print(res.body);
+
+  if (res.statusCode == 200) {
+    return fliterListModelFromJson(res.body);
   } else {
     print(res.body);
   }

@@ -55,4 +55,5 @@ class Urls {
   static String addressListUrl = baseUrl + "customer/address/list";
   static String addressDeleteUrl = baseUrl + "customer/address/delete";
   static String logoutUrl = baseUrl + "logout";
+  static String fiestasfilterUrl = baseUrl + "customer/fiesta/filters";
 }

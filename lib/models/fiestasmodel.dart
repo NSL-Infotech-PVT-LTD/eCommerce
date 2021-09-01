@@ -147,9 +147,9 @@ class Datum {
   String? totalStandardTickets;
   String? totalNormalTickets;
   dynamic clubRating;
-  String? leftNormalTicket;
-  String? leftStandardTicket;
-  String? leftVipTicket;
+  var leftNormalTicket;
+  var leftStandardTicket;
+  var leftVipTicket;
   bool? isFavourite;
   String? distanceKm;
   String? distanceMiles;

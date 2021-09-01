@@ -321,7 +321,7 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
       } else {
         await makeOrderApi(
           cartId: UserData.myCartModel?.data?.cart?.id.toString(),
-          addressId: "2",
+          addressId: "${Constants.prefs?.getString("addressId")}",
           cardID: "$cardid",
         ).then((res) {
           print(UserData.myCartModel?.data?.cart?.id.toString());
@@ -350,7 +350,7 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
             Dialogs.simpleOkAlertDialog(
                 context: context,
                 title: "${getTranslated(context, "alert!")}",
-                content: "${getTranslated(context, "yourPaymentisfailed")}",
+                content: "${res['error']}",
                 func: () {
                   navigatePopFun(context);
                 });
@@ -966,7 +966,7 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
       keyboardType: TextInputType.number,
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
-        new LengthLimitingTextInputFormatter(19),
+        new LengthLimitingTextInputFormatter(16),
         new CardNumberInputFormatter()
       ],
       onSaved: (String? value) {
