@@ -402,8 +402,8 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                                               type: PageTransitionType
                                                   .topToBottom,
                                               child: QrCodeZoomIn(
-                                                qrId: fiestasBookingDetailModel
-                                                    ?.data![0].fiestaId,
+                                                qrId: widget.fiestaBookingId
+                                                    .toString(),
                                               )));
 
                                       // navigatorPushFun(context, QrCodeZoomIn());
@@ -433,8 +433,7 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                                 height: size.height * 0.16,
                                 // color: Colors.yellow,
                                 child: QrImage(
-                                  data:
-                                      "${fiestasBookingDetailModel?.data![0].fiestaId}",
+                                  data: "${widget.fiestaBookingId}",
                                   version: QrVersions.auto,
                                   size: size.width * 0.5,
                                 ),

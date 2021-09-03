@@ -310,6 +310,7 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
   // booking api call
 
   prefiestasBookingApi({String? cardid}) async {
+    print("Here is Address - ${Constants.prefs?.getString("addressId")}");
     setState(() {
       payLoading = true;
       swipebuttonShowBool = false;
@@ -329,9 +330,6 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
           setState(() {
             payLoading = false;
           });
-          print("here is $res");
-
-          // print("here is ${res?.toJson()}");
 
           if (res["status"] == true &&
               (res["code"] == 201 || res["code"] == 200)) {

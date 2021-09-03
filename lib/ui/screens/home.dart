@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:funfy/apis/signinApi.dart';
 import 'package:funfy/apis/userdataM.dart';
+import 'package:funfy/ui/screens/pages/HomeFPPage.dart';
 
 import 'package:funfy/ui/screens/pages/bookingpage.dart';
 import 'package:funfy/ui/screens/pages/cartpage.dart';
 
 import 'package:funfy/ui/screens/pages/profilepage.dart';
-import 'package:funfy/ui/screens/testingUi.dart';
 
 import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/colors.dart';
@@ -35,7 +35,7 @@ class _HomeState extends State<Home> {
 
   List<Widget> tabpages = [
     // FiestasPage(),
-    Testing(),
+    HomeMPage(),
     Cartpage(),
     BookingPage(),
     Profilepage()

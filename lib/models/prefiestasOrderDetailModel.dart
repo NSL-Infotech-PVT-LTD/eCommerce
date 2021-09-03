@@ -69,6 +69,7 @@ class OrderDetail {
     this.paymentParams,
     this.paymentMode,
     this.categoryDetail,
+    this.grandTotal,
     this.orderItem,
   });
 
@@ -76,13 +77,14 @@ class OrderDetail {
   DateTime? date;
   String? time;
   int? orderBy;
-  dynamic transferCharge;
+  String? transferCharge;
   int? totalPrice;
   String? address;
   String? orderStatus;
   PaymentParams? paymentParams;
   String? paymentMode;
   Detail? categoryDetail;
+  double? grandTotal;
   List<OrderItem>? orderItem;
 
   factory OrderDetail.fromJson(Map<String, dynamic> json) => OrderDetail(
@@ -97,6 +99,7 @@ class OrderDetail {
         paymentParams: PaymentParams.fromJson(json["payment_params"]),
         paymentMode: json["payment_mode"],
         categoryDetail: Detail.fromJson(json["category_detail"]),
+        grandTotal: json["grand_total"].toDouble(),
         orderItem: List<OrderItem>.from(
             json["order_item"].map((x) => OrderItem.fromJson(x))),
       );
@@ -114,12 +117,14 @@ class OrderDetail {
         "payment_params": paymentParams?.toJson(),
         "payment_mode": paymentMode,
         "category_detail": categoryDetail?.toJson(),
+        "grand_total": grandTotal,
         "order_item": List<dynamic>.from(orderItem!.map((x) => x.toJson())),
       };
 }
 
 class Detail {
   Detail({
+    this.id,
     this.name,
     this.parentId,
     this.image,
@@ -127,10 +132,11 @@ class Detail {
     this.isInMyCart,
     this.isInMyCartQuantity,
     this.isFavourite,
-    this.id,
+    this.quantityInCl,
     this.status,
   });
 
+  int? id;
   String? name;
   int? parentId;
   String? image;
@@ -138,10 +144,11 @@ class Detail {
   bool? isInMyCart;
   int? isInMyCartQuantity;
   bool? isFavourite;
-  int? id;
+  dynamic quantityInCl;
   String? status;
 
   factory Detail.fromJson(Map<String, dynamic> json) => Detail(
+        id: json["id"],
         name: json["name"],
         parentId: json["parent_id"] == null ? null : json["parent_id"],
         image: json["image"],
@@ -149,11 +156,12 @@ class Detail {
         isInMyCart: json["is_in_my_cart"],
         isInMyCartQuantity: json["is_in_my_cart_quantity"],
         isFavourite: json["is_favourite"],
-        id: json["id"] == null ? null : json["id"],
+        quantityInCl: json["quantity_in_cl"],
         status: json["status"] == null ? null : json["status"],
       );
 
   Map<String, dynamic> toJson() => {
+        "id": id,
         "name": name,
         "parent_id": parentId == null ? null : parentId,
         "image": image,
@@ -161,7 +169,7 @@ class Detail {
         "is_in_my_cart": isInMyCart,
         "is_in_my_cart_quantity": isInMyCartQuantity,
         "is_favourite": isFavourite,
-        "id": id == null ? null : id,
+        "quantity_in_cl": quantityInCl,
         "status": status == null ? null : status,
       };
 }
@@ -210,6 +218,7 @@ class PreFiesta {
     this.isInMyCart,
     this.isInMyCartQuantity,
     this.isFavourite,
+    this.quantityInCl,
   });
 
   int? id;
@@ -222,6 +231,7 @@ class PreFiesta {
   bool? isInMyCart;
   int? isInMyCartQuantity;
   bool? isFavourite;
+  int? quantityInCl;
 
   factory PreFiesta.fromJson(Map<String, dynamic> json) => PreFiesta(
         id: json["id"],
@@ -234,6 +244,7 @@ class PreFiesta {
         isInMyCart: json["is_in_my_cart"],
         isInMyCartQuantity: json["is_in_my_cart_quantity"],
         isFavourite: json["is_favourite"],
+        quantityInCl: json["quantity_in_cl"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -247,6 +258,7 @@ class PreFiesta {
         "is_in_my_cart": isInMyCart,
         "is_in_my_cart_quantity": isInMyCartQuantity,
         "is_favourite": isFavourite,
+        "quantity_in_cl": quantityInCl,
       };
 }
 
@@ -315,7 +327,7 @@ class PaymentParams {
   int? created;
   String? currency;
   String? customer;
-  dynamic description;
+  String? description;
   dynamic destination;
   dynamic dispute;
   bool? disputed;
@@ -425,7 +437,7 @@ class PaymentParams {
         "metadata": List<dynamic>.from(metadata!.map((x) => x)),
         "on_behalf_of": onBehalfOf,
         "order": order,
-        "outcome": outcome!.toJson(),
+        "outcome": outcome?.toJson(),
         "paid": paid,
         "payment_intent": paymentIntent,
         "payment_method": paymentMethod,
@@ -637,7 +649,7 @@ class Checks {
 
   dynamic addressLine1Check;
   dynamic addressPostalCodeCheck;
-  dynamic cvcCheck;
+  String? cvcCheck;
 
   factory Checks.fromJson(Map<String, dynamic> json) => Checks(
         addressLine1Check: json["address_line1_check"],
@@ -724,7 +736,7 @@ class Source {
   String? brand;
   String? country;
   String? customer;
-  dynamic cvcCheck;
+  String? cvcCheck;
   dynamic dynamicLast4;
   int? expMonth;
   int? expYear;

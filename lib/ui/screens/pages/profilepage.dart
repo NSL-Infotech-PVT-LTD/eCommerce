@@ -19,6 +19,7 @@ import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class Profilepage extends StatefulWidget {
   Profilepage({Key? key}) : super(key: key);
@@ -247,15 +248,48 @@ class _ProfilepageState extends State<Profilepage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // image
-                        CircleAvatar(
-                          radius: size.width * 0.085,
-                          backgroundImage: NetworkImage(
-                              "${Constants.prefs?.getString('profileImage')}"),
-                          backgroundColor: Colors.white,
+                        // CircleAvatar(
+                        //   radius: size.width * 0.085,
+                        //   backgroundImage: NetworkImage(
+                        //       "${Constants.prefs?.getString('profileImage')}"),
+                        //   backgroundColor: Colors.white,
+                        // ),
+
+                        Container(
+                          decoration: BoxDecoration(shape: BoxShape.circle),
+                          width: size.width * 0.18,
+                          height: size.height * 0.085,
+                          child: CachedNetworkImage(
+                            imageUrl:
+                                "${Constants.prefs?.getString('profileImage')}",
+                            imageBuilder: (context, imageProvider) => Container(
+                              // width: size.width * 0.1,
+                              // height: 60.0,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                    image: imageProvider, fit: BoxFit.cover),
+                              ),
+                            ),
+                            placeholder: (context, url) => Container(
+                              decoration: BoxDecoration(shape: BoxShape.circle),
+                              width: size.width * 0.15,
+                              // height: size.height * 0.085,
+                              child: new CircularProgressIndicator(
+                                color: AppColors.white,
+                              ),
+                            ),
+                            errorWidget: (context, url, error) => new Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: AppColors.white,
+                              ),
+                            ),
+                          ),
                         ),
 
                         SizedBox(
-                          width: size.width * 0.02,
+                          width: size.width * 0.03,
                         ),
 
                         // name email

@@ -20,6 +20,7 @@ class Notifications extends StatefulWidget {
 
 class _NotificationsState extends State<Notifications> {
   NotificationListModel? notificationListModel;
+  var notificationData;
   bool _loading = false;
   int _today = -1;
   int _earlier = -1;
@@ -41,22 +42,24 @@ class _NotificationsState extends State<Notifications> {
         });
         notificatiListApi().then((value) {
           setState(() {
-            for (var i = 0;
-                i > int.parse("${value?.data?.data?.length}");
-                i++) {
-              DateTime dateCreated = DateTime.parse(
-                  "${notificationListModel?.data?.data?.elementAt(i).createdAt}");
+            // for (var i = 0;
+            //     i > int.parse("${value?.data?.data?.length}");
+            //     i++) {
+            //   DateTime dateCreated = DateTime.parse(
+            //       "${notificationListModel?.data?.data?.elementAt(i).createdAt}");
 
-              if (_today == -1 && dateCreated.day == dateTime.day) {
-                _today = i;
-              }
-              if (_earlier == -1 && dateCreated.day != dateTime.day) {
-                _earlier = i;
-                print("here is er $_earlier");
-              }
-            }
+            //   if (_today == -1 && dateCreated.day == dateTime.day) {
+            //     _today = i;
+            //   }
+            //   if (_earlier == -1 && dateCreated.day != dateTime.day) {
+            //     _earlier = i;
+            //     print("here is er $_earlier");
+            //   }
+            // }
 
-            notificationListModel = value;
+            // notificationListModel = value;
+            notificationData = value['data']['data'];
+
             _loading = false;
           });
         });
@@ -112,7 +115,7 @@ class _NotificationsState extends State<Notifications> {
           : _loading == false && notificationListModel?.data?.data?.length == 0
               ? Center(
                   child: Text(
-                    "${getTranslated(context, "listisEmpty")}",
+                    "${getTranslated(context, "noNotification")}",
                     style: TextStyle(
                         color: AppColors.white, fontSize: size.width * 0.045),
                   ),
@@ -137,11 +140,14 @@ class _NotificationsState extends State<Notifications> {
                     // ),
                     Expanded(
                       child: ListView.builder(
-                          itemCount:
-                              notificationListModel?.data?.data?.length ?? 0,
+                          itemCount: notificationData.length ?? 0,
+                          // notificationListModel?.data?.data?.length ?? 0,
                           itemBuilder: (context, index) {
                             DateTime dateCreated = DateTime.parse(
-                                "${notificationListModel?.data?.data?.elementAt(index).createdAt}");
+                                "${notificationData[index]['created_at']}"
+                                // "${notificationListModel?.data?.data?.elementAt(index).createdAt}"
+
+                                );
 
                             if (_today != -0 && index == _today) {
                               // _today = true;
@@ -181,46 +187,24 @@ class _NotificationsState extends State<Notifications> {
                             }
                             return notificationItem(
                                 context: context,
-                                imageUrl: notificationListModel?.data?.data
-                                        ?.elementAt(index)
-                                        .targetByDetail
-                                        ?.image ??
-                                    Images.beerNetwork,
+                                imageUrl:
+
+                                    //  notificationListModel?.data?.data
+                                    //         ?.elementAt(index)
+                                    //         .targetByDetail
+                                    //         ?.image ??
+
+                                    notificationData[index]['booking_detail']
+                                            ['image'] ??
+                                        Images.beerNetwork,
                                 title:
-                                    "${notificationListModel?.data?.data?.elementAt(index).body}",
+                                    notificationData[index]['body'].toString(),
+                                // "${notificationListModel?.data?.data?.elementAt(index).body}",
                                 time:
                                     "${DateFormat.yMd().add_jm().format(dateCreated)}",
                                 active: true);
                           }),
                     ),
-
-                    /// earlier
-                    // Container(
-                    //   margin: EdgeInsets.only(
-                    //       left: size.width * 0.05,
-                    //       top: size.height * 0.02,
-                    //       bottom: size.height * 0.01),
-                    //   child: Text(
-                    //     "${getTranslated(context, "earlier")}",
-                    //     // Strings.earlier,
-                    //     style: TextStyle(
-                    //         color: AppColors.white,
-                    //         fontFamily: Fonts.dmSansMedium,
-                    //         fontSize: size.width * 0.045),
-                    //   ),
-                    // ),
-                    // Expanded(
-                    //   child: ListView.builder(
-                    //       itemCount: 5,
-                    //       itemBuilder: (context, indxe) {
-                    //         return notificationItem(
-                    //             context: context,
-                    //             imageUrl: Images.beerNetwork,
-                    //             title: Strings.lorem,
-                    //             time: "30 Min",
-                    //             active: true);
-                    //       }),
-                    // )
                   ],
                 ),
     );

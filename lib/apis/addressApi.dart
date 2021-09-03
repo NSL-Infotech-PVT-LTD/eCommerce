@@ -106,7 +106,14 @@ Future<bool?> updateaddAddressApi(
 
   // print(res.body);
 
+  var jsonRes = json.decode(res.body);
+
   if (res.statusCode == 201) {
+    Constants.prefs?.setString("addres",
+        "${jsonRes['data']['address']['street_address']}, ${jsonRes['data']['address']['city']}, ${jsonRes['data']['address']['state']}, ${jsonRes['data']['address']['country']}");
+
+    Constants.prefs
+        ?.setString("addressId", "${jsonRes['data']['address']['id']}");
     return true;
   } else {
     return false;

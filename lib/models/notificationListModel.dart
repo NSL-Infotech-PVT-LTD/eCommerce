@@ -116,7 +116,7 @@ class Datum {
 
   int? id;
   Title? title;
-  String? body;
+  Body? body;
   String? message;
   int? createdBy;
   DateTime? createdAt;
@@ -129,31 +129,48 @@ class Datum {
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
         id: json["id"],
         title: titleValues.map[json["title"]],
-        body: json["body"],
+        body: bodyValues.map[json["body"]],
         message: json["message"],
-        createdBy: json["created_by"],
+        createdBy: json["created_by"] == null ? null : json["created_by"],
         createdAt: DateTime.parse(json["created_at"]),
         targetId: json["target_id"],
         isRead: json["is_read"],
         bookingDetail: BookingDetail.fromJson(json["booking_detail"]),
-        createdByDetail: ByDetail.fromJson(json["created_by_detail"]),
+        createdByDetail: json["created_by_detail"] == null
+            ? null
+            : ByDetail.fromJson(json["created_by_detail"]),
         targetByDetail: ByDetail.fromJson(json["target_by_detail"]),
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "title": titleValues.reverse[title],
-        "body": body,
+        "body": bodyValues.reverse[body],
         "message": message,
-        "created_by": createdBy,
+        "created_by": createdBy == null ? null : createdBy,
         "created_at": createdAt?.toIso8601String(),
         "target_id": targetId,
         "is_read": isRead,
         "booking_detail": bookingDetail?.toJson(),
-        "created_by_detail": createdByDetail?.toJson(),
+        "created_by_detail":
+            createdByDetail == null ? null : createdByDetail?.toJson(),
         "target_by_detail": targetByDetail?.toJson(),
       };
 }
+
+enum Body {
+  YOUR_ORDER_HAS_BEEN_PLACED_SUCCESSFULLY_TAP_TO_VIEW_DETAIL,
+  TAP_TO_VIEW_DETAILS,
+  YOUR_TICKET_HAS_BEEN_BOOKED_SUCCESSFULLY_TAP_TO_VIEW_DETAIL
+}
+
+final bodyValues = EnumValues({
+  "Tap to view details.": Body.TAP_TO_VIEW_DETAILS,
+  "Your Order has been placed successfully, tap to view Detail.":
+      Body.YOUR_ORDER_HAS_BEEN_PLACED_SUCCESSFULLY_TAP_TO_VIEW_DETAIL,
+  "Your ticket has been booked successfully, tap to view Detail.":
+      Body.YOUR_TICKET_HAS_BEEN_BOOKED_SUCCESSFULLY_TAP_TO_VIEW_DETAIL
+});
 
 class BookingDetail {
   BookingDetail({
@@ -162,7 +179,7 @@ class BookingDetail {
     this.dataType,
   });
 
-  int? targetId;
+  dynamic targetId;
   TargetModel? targetModel;
   DataType? dataType;
 
@@ -179,14 +196,21 @@ class BookingDetail {
       };
 }
 
-enum DataType { BOOKING }
+enum DataType { ORDER, DATA_TYPE_ORDER, BOOKING }
 
-final dataTypeValues = EnumValues({"Booking": DataType.BOOKING});
+final dataTypeValues = EnumValues({
+  "Booking": DataType.BOOKING,
+  "Order": DataType.DATA_TYPE_ORDER,
+  "order": DataType.ORDER
+});
 
-enum TargetModel { FIESTA_BOOKING }
+enum TargetModel { PRE_FIESTA_ORDER, ORDER, FIESTA_BOOKING }
 
-final targetModelValues =
-    EnumValues({"FiestaBooking": TargetModel.FIESTA_BOOKING});
+final targetModelValues = EnumValues({
+  "FiestaBooking": TargetModel.FIESTA_BOOKING,
+  "Order": TargetModel.ORDER,
+  "Pre-Fiesta Order": TargetModel.PRE_FIESTA_ORDER
+});
 
 class ByDetail {
   ByDetail({
@@ -197,29 +221,28 @@ class ByDetail {
   });
 
   int? id;
-  CreatedByDetailName? name;
-  String? image;
+  TargetByDetailName? name;
+  dynamic image;
   Role? role;
 
   factory ByDetail.fromJson(Map<String, dynamic> json) => ByDetail(
         id: json["id"],
-        name: createdByDetailNameValues.map[json["name"]],
+        name: targetByDetailNameValues.map[json["name"]],
         image: json["image"],
         role: Role.fromJson(json["role"]),
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "name": createdByDetailNameValues.reverse[name],
+        "name": targetByDetailNameValues.reverse[name],
         "image": image,
         "role": role?.toJson(),
       };
 }
 
-enum CreatedByDetailName { DHEERAJ }
+enum TargetByDetailName { ZEEM }
 
-final createdByDetailNameValues =
-    EnumValues({"dheeraj": CreatedByDetailName.DHEERAJ});
+final targetByDetailNameValues = EnumValues({"zeem": TargetByDetailName.ZEEM});
 
 class Role {
   Role({
@@ -249,10 +272,13 @@ enum RoleName { CUSTOMER }
 
 final roleNameValues = EnumValues({"customer": RoleName.CUSTOMER});
 
-enum Title { BOOKING_IS_PENDING }
+enum Title { ORDER_PLACED, ORDER_ACCEPTED, TICKETS_BOOKED }
 
-final titleValues =
-    EnumValues({"Booking is Pending": Title.BOOKING_IS_PENDING});
+final titleValues = EnumValues({
+  "Order accepted": Title.ORDER_ACCEPTED,
+  "Order Placed": Title.ORDER_PLACED,
+  "Tickets Booked": Title.TICKETS_BOOKED
+});
 
 class EnumValues<T> {
   Map<String, T> map;

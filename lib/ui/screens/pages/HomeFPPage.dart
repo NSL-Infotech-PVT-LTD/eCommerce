@@ -28,12 +28,12 @@ import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:intl/intl.dart';
 
-class Testing extends StatefulWidget {
+class HomeMPage extends StatefulWidget {
   @override
-  _TestingState createState() => _TestingState();
+  _HomeMPageState createState() => _HomeMPageState();
 }
 
-class _TestingState extends State<Testing> {
+class _HomeMPageState extends State<HomeMPage> {
   static GlobalKey<ScaffoldState> _keyScaffold = GlobalKey();
   TabController? controller;
   bool fiestasButton = true;
@@ -258,6 +258,7 @@ class _TestingState extends State<Testing> {
       setState(() {
         filterDate = fomatDate;
       });
+      print("Date :- $fomatDate");
 
       fiestasgetPosts(date: fomatDate);
     }
@@ -278,25 +279,6 @@ class _TestingState extends State<Testing> {
     preFiestasPostget();
     determinePosition();
     getFilterData();
-    // print(UserData.userToken);
-
-    // if (UserData.homeTrueOneTime) {
-    //   UserData.homeTrueOneTime = false;
-    //   Navigator.of(context).pushReplacement(MaterialPageRoute(
-    //       builder: (context) => Home(
-    //             pageIndexNum: 0,
-    //           )));
-    // }
-
-    // SchedulerBinding.instance?.addPostFrameCallback((_) {
-    //   if (UserData.homeTrueOneTime) {
-    //     UserData.homeTrueOneTime = false;
-    //     Navigator.of(context).pushReplacement(MaterialPageRoute(
-    //         builder: (context) => Home(
-    //               pageIndexNum: 0,
-    //             )));
-    //   }
-    // });
   }
 
   @override
@@ -345,118 +327,126 @@ class _TestingState extends State<Testing> {
                 toolbarHeight: size.height * 0.15,
                 backgroundColor: AppColors.blackBackground,
                 actions: [
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                        vertical: size.height * 0.023,
-                        horizontal: size.width * 0.045),
-                    width: size.width,
-                    height: size.height * 0.155,
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage(Images.homeTopBannerPng),
-                            fit: BoxFit.cover)),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "${getTranslated(context, "hello")}",
-                              //  Strings.hello,
-                              style: TextStyle(
-                                  fontSize: size.width * 0.038,
-                                  fontFamily: Fonts.dmSansRegular,
-                                  color: AppColors.white),
-                            ),
-                            Container(
-                              width: size.width * 0.6,
-                              child: Text(
-                                // Strings.garyadams,
-                                "${Constants.prefs?.getString("name")}",
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
+                  InkWell(
+                    onTap: () {
+                      navigatorPushFun(context, AddressList());
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                          vertical: size.height * 0.023,
+                          horizontal: size.width * 0.045),
+                      width: size.width,
+                      height: size.height * 0.155,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: AssetImage(Images.homeTopBannerPng),
+                              fit: BoxFit.cover)),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "${getTranslated(context, "hello")}",
+                                //  Strings.hello,
                                 style: TextStyle(
-                                    fontSize: size.width * 0.048,
-                                    fontFamily: Fonts.dmSansBold,
+                                    fontSize: size.width * 0.038,
+                                    fontFamily: Fonts.dmSansRegular,
                                     color: AppColors.white),
                               ),
-                            ),
-                            SizedBox(
-                              height: size.height * 0.01,
-                            ),
+                              Container(
+                                width: size.width * 0.6,
+                                child: Text(
+                                  // Strings.garyadams,
+                                  "${Constants.prefs?.getString("name")}",
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                      fontSize: size.width * 0.048,
+                                      fontFamily: Fonts.dmSansBold,
+                                      color: AppColors.white),
+                                ),
+                              ),
+                              SizedBox(
+                                height: size.height * 0.01,
+                              ),
 
-                            // location choose
+                              // location choose
 
-                            InkWell(
-                              onTap: () {
-                                navigatorPushFun(context, AddressList());
-                              },
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  // Icon(
-                                  //   // Icons.fmd_good,
-                                  //   Icons.error,
-                                  //   size: size.width * 0.04,
-                                  //   color: AppColors.white,
-                                  // ),
+                              InkWell(
+                                onTap: () {
+                                  navigatorPushFun(context, AddressList());
+                                },
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    // Icon(
+                                    //   // Icons.fmd_good,
+                                    //   Icons.error,
+                                    //   size: size.width * 0.04,
+                                    //   color: AppColors.white,
+                                    // ),
 
-                                  Container(
-                                    width: size.width * 0.03,
-                                    child: Image.asset(Images.locationspng),
-                                  ),
-                                  SizedBox(
-                                    width: size.width * 0.01,
-                                  ),
-                                  Container(
-                                    constraints: BoxConstraints(
-                                      maxWidth: size.width * 0.2,
+                                    Container(
+                                      width: size.width * 0.03,
+                                      child: Image.asset(Images.locationspng),
                                     ),
-                                    child: Text(
-                                      Constants.prefs?.getString("addres") !=
-                                              null
-                                          ? "${Constants.prefs?.getString("addres")}"
-                                          : "${getTranslated(context, "location")}", // Strings.location,
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                      style: TextStyle(
-                                          fontSize: size.width * 0.034,
-                                          fontFamily: Fonts.dmSansMedium,
-                                          color: AppColors.white),
+                                    SizedBox(
+                                      width: size.width * 0.01,
                                     ),
-                                  ),
-                                  SizedBox(
-                                    width: size.width * 0.01,
-                                  ),
-                                  Icon(
-                                    Icons.expand_more,
-                                    size: size.width * 0.042,
-                                    color: AppColors.white,
-                                  ),
-                                ],
+                                    Container(
+                                      constraints: BoxConstraints(
+                                        maxWidth: size.width * 0.3,
+                                      ),
+                                      child: Text(
+                                        Constants.prefs?.getString("addres") !=
+                                                    null &&
+                                                Constants.prefs
+                                                        ?.getString("addres") !=
+                                                    ''
+                                            ? "${Constants.prefs?.getString("addres")}"
+                                            : "${getTranslated(context, "addLoacation")}", // Strings.location,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        style: TextStyle(
+                                            fontSize: size.width * 0.034,
+                                            fontFamily: Fonts.dmSansMedium,
+                                            color: AppColors.white),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: size.width * 0.01,
+                                    ),
+                                    Icon(
+                                      Icons.expand_more,
+                                      size: size.width * 0.042,
+                                      color: AppColors.white,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          // notification icon
+                          GestureDetector(
+                            onTap: () {
+                              navigatorPushFun(context, Notifications());
+                            },
+                            child: Container(
+                              margin: EdgeInsets.only(right: size.width * 0.03),
+                              child: Icon(
+                                Icons.notifications,
+                                size: size.width * 0.08,
+                                color: AppColors.white,
                               ),
                             ),
-                          ],
-                        ),
-
-                        // notification icon
-                        GestureDetector(
-                          onTap: () {
-                            navigatorPushFun(context, Notifications());
-                          },
-                          child: Container(
-                            margin: EdgeInsets.only(right: size.width * 0.03),
-                            child: Icon(
-                              Icons.notifications,
-                              size: size.width * 0.08,
-                              color: AppColors.white,
-                            ),
-                          ),
-                        )
-                      ],
+                          )
+                        ],
+                      ),
                     ),
                   )
                 ],
@@ -588,78 +578,6 @@ class _TestingState extends State<Testing> {
                                           fontFamily: Fonts.dmSansBold,
                                           fontSize: size.width * 0.055),
                                     ),
-                                    //p
-                                    // Row(
-                                    //   children: [
-                                    //     // club
-
-                                    //     GestureDetector(
-                                    //       onTap: () {
-                                    //         setState(() {
-                                    //           tagType = "club";
-                                    //         });
-                                    //         fiestasgetPosts(date: filterDate);
-                                    //       },
-                                    //       child: tagbutton2(
-                                    //           context: context,
-                                    //           text:
-                                    //               "${getTranslated(context, "club")}", //Strings.club,
-                                    //           borderColor: tagType == "club"
-                                    //               ? AppColors.tagBorder
-                                    //               : AppColors.white,
-                                    //           textColor: tagType == "club"
-                                    //               ? AppColors.tagBorder
-                                    //               : AppColors.white,
-                                    //           borderwidth: tagType == "club"
-                                    //               ? size.width * 0.003
-                                    //               : size.width * 0.002),
-                                    //     ),
-
-                                    //     SizedBox(
-                                    //       width: size.width * 0.02,
-                                    //     ),
-
-                                    //     GestureDetector(
-                                    //       onTap: () {
-                                    //         setState(() {
-                                    //           tagType = "open";
-                                    //         });
-                                    //         fiestasgetPosts(date: filterDate);
-                                    //       },
-                                    //       child: tagbutton2(
-                                    //           context: context,
-                                    //           text:
-                                    //               "${getTranslated(context, "openS")}", //Strings.club,
-                                    //           borderColor: tagType == "open"
-                                    //               ? AppColors.tagBorder
-                                    //               : AppColors.white,
-                                    //           textColor: tagType == "open"
-                                    //               ? AppColors.tagBorder
-                                    //               : AppColors.white,
-                                    //           borderwidth: tagType == "open"
-                                    //               ? size.width * 0.003
-                                    //               : size.width * 0.002),
-                                    //     ),
-
-                                    //     SizedBox(
-                                    //       width: size.width * 0.02,
-                                    //     ),
-
-                                    //     GestureDetector(
-                                    //       onTap: () {
-                                    //         clearFilter();
-                                    //         fiestasgetPosts(date: filterDate);
-                                    //       },
-                                    //       child: tagbutton2(
-                                    //           context: context,
-                                    //           text:
-                                    //               "${getTranslated(context, "clearfilter")}", //Strings.club,
-                                    //           borderColor: AppColors.white,
-                                    //           textColor: AppColors.white,
-                                    //           borderwidth: size.width * 0.002),
-                                    //     ),
-                                    //   ],
-                                    // ),
                                   )),
 
                                   SizedBox(
@@ -757,22 +675,6 @@ class _TestingState extends State<Testing> {
                                                           DateTime currentDate =
                                                               DateTime.now();
 
-                                                          if (currentDate
-                                                                  .isAfter(
-                                                                      picked) ||
-                                                              currentDate
-                                                                  .isAtSameMomentAs(
-                                                                      picked)) {
-                                                            print(
-                                                                "$currentDate");
-                                                            print(
-                                                                "$picked on Momemt");
-                                                          } else {
-                                                            print(
-                                                                "date is before today");
-                                                          }
-                                                          print(picked);
-
                                                           setState(() {
                                                             nowdate = picked;
                                                             daysInMonth(picked);
@@ -791,6 +693,9 @@ class _TestingState extends State<Testing> {
 
                                                           fiestasgetPosts(
                                                               date: fomatDate);
+
+                                                          print(
+                                                              "date is here - $fomatDate");
                                                         },
                                                         child: Container(
                                                           margin: EdgeInsets.only(
@@ -1133,7 +1038,21 @@ class _TestingState extends State<Testing> {
                           InkWell(
                             onTap: () {
                               navigatePopFun(context);
-                              fiestasgetPosts(date: filterDate);
+
+                              setstate(() {
+                                for (var i in filterData.keys.toList()) {
+                                  groupvalue["$i"] = -1;
+                                }
+
+                                filterData = {
+                                  "local": "",
+                                  "environment": "",
+                                  "schedule": "",
+                                  "music": "",
+                                  "clothing": "",
+                                  "ageGroup": ""
+                                };
+                              });
                             },
                             child: Container(
                               child: Icon(
@@ -1151,7 +1070,7 @@ class _TestingState extends State<Testing> {
                           // ),
 
                           SizedBox(
-                            width: size.width * 0.22,
+                            // width: size.width * 0.22,
                             child: MaterialButton(
                               onPressed: () {
                                 setstate(() {
@@ -1181,7 +1100,7 @@ class _TestingState extends State<Testing> {
                                 navigatePopFun(context);
                               },
                               child: Text(
-                                "${getTranslated(context, 'clear')}",
+                                "${getTranslated(context, 'reset')}",
                                 style: TextStyle(
                                     fontSize: size.width * 0.05,
                                     fontFamily: Fonts.dmSansBold,
@@ -1212,6 +1131,24 @@ class _TestingState extends State<Testing> {
                                   setstate);
                             }),
                       )),
+                      SizedBox(
+                        height: size.height * 0.01,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          MaterialButton(
+                            color: AppColors.siginbackgrond,
+                            textColor: AppColors.white,
+                            onPressed: () {
+                              navigatePopFun(context);
+                              fiestasgetPosts(date: filterDate);
+                            },
+                            child: Text(
+                                "${getTranslated(context, 'applyFilter')}"),
+                          )
+                        ],
+                      )
                     ],
                   ),
                 );

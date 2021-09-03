@@ -100,39 +100,42 @@ class Datum {
     this.id,
     this.date,
     this.time,
-    this.parentId,
     this.orderBy,
+    this.transferCharge,
     this.totalPrice,
     this.address,
     this.orderStatus,
     this.paymentMode,
     this.categoryDetail,
+    this.grandTotal,
     this.orderItem,
   });
 
   int? id;
   DateTime? date;
   String? time;
-  int? parentId;
   int? orderBy;
+  String? transferCharge;
   int? totalPrice;
   String? address;
   String? orderStatus;
   String? paymentMode;
   CategoryDetail? categoryDetail;
+  double? grandTotal;
   List<OrderItem>? orderItem;
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
         id: json["id"],
         date: DateTime.parse(json["date"]),
         time: json["time"],
-        parentId: json["parent_id"],
         orderBy: json["order_by"],
+        transferCharge: json["transfer_charge"],
         totalPrice: json["total_price"],
         address: json["address"],
         orderStatus: json["order_status"],
-        paymentMode: json["payment_mode"] == null ? null : json["payment_mode"],
+        paymentMode: json["payment_mode"],
         categoryDetail: CategoryDetail.fromJson(json["category_detail"]),
+        grandTotal: json["grand_total"].toDouble(),
         orderItem: List<OrderItem>.from(
             json["order_item"].map((x) => OrderItem.fromJson(x))),
       );
@@ -140,21 +143,23 @@ class Datum {
   Map<String, dynamic> toJson() => {
         "id": id,
         "date":
-            "${date!.year.toString().padLeft(4, '0')}-${date!.month.toString().padLeft(2, '0')}-${date!.day.toString().padLeft(2, '0')}",
+            "${date?.year.toString().padLeft(4, '0')}-${date?.month.toString().padLeft(2, '0')}-${date?.day.toString().padLeft(2, '0')}",
         "time": time,
-        "parent_id": parentId,
         "order_by": orderBy,
+        "transfer_charge": transferCharge,
         "total_price": totalPrice,
         "address": address,
         "order_status": orderStatus,
-        "payment_mode": paymentMode == null ? null : paymentMode,
+        "payment_mode": paymentMode,
         "category_detail": categoryDetail?.toJson(),
+        "grand_total": grandTotal,
         "order_item": List<dynamic>.from(orderItem!.map((x) => x.toJson())),
       };
 }
 
 class CategoryDetail {
   CategoryDetail({
+    this.id,
     this.name,
     this.parentId,
     this.image,
@@ -162,10 +167,10 @@ class CategoryDetail {
     this.isInMyCart,
     this.isInMyCartQuantity,
     this.isFavourite,
-    this.id,
-    this.price,
+    this.quantityInCl,
   });
 
+  int? id;
   String? name;
   int? parentId;
   String? image;
@@ -173,31 +178,30 @@ class CategoryDetail {
   bool? isInMyCart;
   int? isInMyCartQuantity;
   bool? isFavourite;
-  int? id;
-  String? price;
+  dynamic quantityInCl;
 
   factory CategoryDetail.fromJson(Map<String, dynamic> json) => CategoryDetail(
+        id: json["id"],
         name: json["name"],
-        parentId: json["parent_id"] == null ? null : json["parent_id"],
+        parentId: json["parent_id"],
         image: json["image"],
         description: json["description"],
         isInMyCart: json["is_in_my_cart"],
         isInMyCartQuantity: json["is_in_my_cart_quantity"],
         isFavourite: json["is_favourite"],
-        id: json["id"] == null ? null : json["id"],
-        price: json["price"] == null ? null : json["price"],
+        quantityInCl: json["quantity_in_cl"],
       );
 
   Map<String, dynamic> toJson() => {
+        "id": id,
         "name": name,
-        "parent_id": parentId == null ? null : parentId,
+        "parent_id": parentId,
         "image": image,
         "description": description,
         "is_in_my_cart": isInMyCart,
         "is_in_my_cart_quantity": isInMyCartQuantity,
         "is_favourite": isFavourite,
-        "id": id == null ? null : id,
-        "price": price == null ? null : price,
+        "quantity_in_cl": quantityInCl,
       };
 }
 
@@ -214,14 +218,14 @@ class OrderItem {
   int? preFiestaId;
   int? quantity;
   int? price;
-  CategoryDetail? preFiesta;
+  PreFiesta? preFiesta;
 
   factory OrderItem.fromJson(Map<String, dynamic> json) => OrderItem(
         orderId: json["order_id"],
         preFiestaId: json["pre_fiesta_id"],
         quantity: json["quantity"],
         price: json["price"],
-        preFiesta: CategoryDetail.fromJson(json["pre_fiesta"]),
+        preFiesta: PreFiesta.fromJson(json["pre_fiesta"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -230,5 +234,61 @@ class OrderItem {
         "quantity": quantity,
         "price": price,
         "pre_fiesta": preFiesta?.toJson(),
+      };
+}
+
+class PreFiesta {
+  PreFiesta({
+    this.id,
+    this.name,
+    this.quantity,
+    this.categories,
+    this.image,
+    this.price,
+    this.description,
+    this.isInMyCart,
+    this.isInMyCartQuantity,
+    this.isFavourite,
+    this.quantityInCl,
+  });
+
+  int? id;
+  String? name;
+  int? quantity;
+  String? categories;
+  String? image;
+  String? price;
+  String? description;
+  bool? isInMyCart;
+  int? isInMyCartQuantity;
+  bool? isFavourite;
+  int? quantityInCl;
+
+  factory PreFiesta.fromJson(Map<String, dynamic> json) => PreFiesta(
+        id: json["id"],
+        name: json["name"],
+        quantity: json["quantity"],
+        categories: json["categories"],
+        image: json["image"],
+        price: json["price"],
+        description: json["description"],
+        isInMyCart: json["is_in_my_cart"],
+        isInMyCartQuantity: json["is_in_my_cart_quantity"],
+        isFavourite: json["is_favourite"],
+        quantityInCl: json["quantity_in_cl"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "quantity": quantity,
+        "categories": categories,
+        "image": image,
+        "price": price,
+        "description": description,
+        "is_in_my_cart": isInMyCart,
+        "is_in_my_cart_quantity": isInMyCartQuantity,
+        "is_favourite": isFavourite,
+        "quantity_in_cl": quantityInCl,
       };
 }

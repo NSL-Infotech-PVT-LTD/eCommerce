@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:funfy/apis/addressApi.dart';
-import 'package:funfy/apis/introApi.dart';
+
 import 'package:funfy/components/dialogs.dart';
-import 'package:funfy/components/navigation.dart';
-import 'package:funfy/ui/screens/address/addressEdit.dart';
+
 import 'package:funfy/ui/screens/address/addressList.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
-import 'package:funfy/utils/Constants.dart';
+
 import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/langauge_constant.dart';
@@ -232,13 +231,13 @@ class _AddressAddState extends State<AddressAdd> {
                         securityField(
                             context: context,
                             controller: zipController,
-                            error: stateError,
+                            error: zipError,
                             title: "${getTranslated(context, 'zipcode')}",
                             hint: "${getTranslated(context, 'enterZipCode')}"),
                         securityField(
                             context: context,
                             controller: countryController,
-                            error: stateError,
+                            error: countryError,
                             title: "${getTranslated(context, 'country')}",
                             hint: "${getTranslated(context, 'enterCountry')}"),
                         SizedBox(
@@ -279,7 +278,12 @@ class _AddressAddState extends State<AddressAdd> {
   // input field
 
   Widget securityField(
-      {context, String? title, String? hint, String? error, controller}) {
+      {context,
+      String? title,
+      String? hint,
+      String? error,
+      controller,
+      bool enable = true}) {
     var size = MediaQuery.of(context).size;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -294,6 +298,7 @@ class _AddressAddState extends State<AddressAdd> {
           style: TextStyle(color: AppColors.white),
           cursorColor: AppColors.white,
           controller: controller,
+          enabled: enable,
           keyboardType: TextInputType.text,
           decoration: InputDecoration(
               fillColor: HexColor("#3e332b"),

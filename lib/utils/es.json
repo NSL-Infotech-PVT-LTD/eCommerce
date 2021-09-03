@@ -241,10 +241,17 @@
   "filterSuccessfullycleared": "Filtro desactivado correctamente",
   "myOrders": "Mis ordenes",
   "edit": "Editar",
+  "changeAddress": "Cambiar dirección",
+  "Dowanttoselectthisaddress": "¿Quieres seleccionar esta dirección?",
+  "Dowanttodeletethisaddress": "¿Quieres borrar esta dirección?",
   "clear": "Claro",
+  "reset": "Reiniciar",
+  "noNotification": "Sin notificación",
   "filter": "Filtro",
   "others": "Otros",
+  "addLoacation": "Añadir lugar",
   "recent": "Reciente",
+  "applyFilter": "Aplicar filtro",
   "CheckyourordersyouboughtforPrefiestas": "Consulta los pedidos que compraste para las Prefiestas",
   "theSessionhasexpired": "La sesión ha expirado. ¡Vuelve a iniciar sesión!"
 }

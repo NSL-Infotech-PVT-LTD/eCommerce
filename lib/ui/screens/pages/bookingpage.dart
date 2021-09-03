@@ -32,8 +32,7 @@ class _BookingPageState extends State<BookingPage> {
   // FiestasBookingList? fiestasBookingListModel = FiestasBookingList();
 
   List fiestasBookingListRes = [];
-  PreFiestasBookingListModel? preFiestasBookingList =
-      PreFiestasBookingListModel();
+  PreFiestasBookingListModel? preFiestasBookingList;
   bool _loading = false;
 
   bool _preFiestasLoading = false;
@@ -63,24 +62,6 @@ class _BookingPageState extends State<BookingPage> {
             fiestasBookingListRes = data.toList();
             _loading = false;
           });
-
-          // if (res!["code"] == 200 && res["status"] == true) {
-          //   // print("after return  ${res?.toJson().toString()}");
-
-          //   // Iterable data = res["data"]["data"].tolist;
-
-          //   print(res);
-
-          //   setState(() {
-          //     // fiestasBookingListModel = res;
-
-          //     // var rlist =
-          //     //     fiestasBookingListModel?.data?.data?.reversed.toList();
-
-          //     // fiestasBookingListModel?.data?.data = rlist;
-          //     _loading = false;
-          //   });
-          // }
         });
       } catch (e) {
         setState(() {
@@ -94,24 +75,31 @@ class _BookingPageState extends State<BookingPage> {
 
   priFiestasBookings() async {
     print("run 2 ---------------- ");
-    await preFiestaBookingListApi().then((res) {
+    try {
+      await preFiestaBookingListApi().then((res) {
+        setState(() {
+          _preFiestasLoading = false;
+        });
+
+        if (res?.code == 200 && res?.status == true) {
+          // print("res data ----------- ");
+          // print("after return  ${res?.toJson().toString()}");
+
+          setState(() {
+            preFiestasBookingList = res;
+
+            var rlist = preFiestasBookingList?.data?.data?.reversed.toList();
+            preFiestasBookingList?.data?.data = rlist;
+            _preFiestasLoading = false;
+          });
+        }
+      });
+    } catch (e) {
+      print("error --------- $e");
       setState(() {
         _preFiestasLoading = false;
       });
-
-      if (res?.code == 200 && res?.status == true) {
-        // print("res data ----------- ");
-        // print("after return  ${res?.toJson().toString()}");
-
-        setState(() {
-          preFiestasBookingList = res;
-
-          var rlist = preFiestasBookingList?.data?.data?.reversed.toList();
-          preFiestasBookingList?.data?.data = rlist;
-          _preFiestasLoading = false;
-        });
-      }
-    });
+    }
   }
 
   @override
@@ -302,9 +290,10 @@ class _BookingPageState extends State<BookingPage> {
                           _preFiestasLoading
                               ? Center(child: CircularProgressIndicator())
                               : _preFiestasLoading == false &&
-                                      preFiestasBookingList
-                                              ?.data?.data?.length ==
-                                          0
+                                          preFiestasBookingList
+                                                  ?.data?.data?.length ==
+                                              0 ||
+                                      preFiestasBookingList == null
                                   ? Center(
                                       child: Text(
                                       "${Strings.listEmpty}",
@@ -324,11 +313,6 @@ class _BookingPageState extends State<BookingPage> {
                                             context: context,
                                             index: index,
                                             model: preFiestasBookingList);
-
-                                        // preFiestasOrderItem(
-                                        //     context: context,
-                                        //     index: index,
-                                        //     model: preFiestasBookingList);
                                       }),
                         ],
                       ))
@@ -590,131 +574,6 @@ Widget fiestasOrdersItem(
           ),
         ),
       ],
-    ),
-  );
-}
-
-Widget preFiestasOrderItem(
-    {context, int? index, PreFiestasBookingListModel? model}) {
-  var size = MediaQuery.of(context).size;
-
-  print(model?.toJson());
-
-  var data = model?.data?.data?.elementAt(index!).categoryDetail;
-
-  // String orderid =
-  //     "${model?.data?.data?.elementAt(index!).orderItem?.elementAt(0).orderId}";
-
-  return InkWell(
-    onTap: () {
-      navigatorPushFun(
-          context,
-          YourOrderSum(
-              orderID: model?.data?.data?.elementAt(index!).id.toString()));
-    },
-    child: Container(
-      margin: EdgeInsets.only(top: size.height * 0.02),
-      child: roundedBoxBorder(
-          context: context,
-          height: size.height * 0.23,
-          width: size.width,
-          backgroundColor: AppColors.itemBackground,
-          borderColor: AppColors.tagBorder,
-          borderSize: size.width * 0.0025,
-          child: Container(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // center content
-                Container(
-                    padding: EdgeInsets.only(
-                        top: size.height * 0.025, left: size.width * 0.05),
-                    width: size.width * 0.7,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "${data?.name}",
-                          // "${data?.name}",
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              color: AppColors.white,
-                              fontSize: size.width * 0.054,
-                              fontFamily: Fonts.dmSansBold),
-                        ),
-                        SizedBox(
-                          height: size.height * 0.008,
-                        ),
-                        Text(
-                          "${data?.description}",
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              color: AppColors.itemDescription,
-                              fontSize: size.width * 0.033,
-                              fontFamily: Fonts.dmSansRegular),
-                        ),
-
-                        SizedBox(
-                          height: size.height * 0.016,
-                        ),
-
-                        // order Now
-                        GestureDetector(
-                          onTap: () {
-                            navigatorPushFun(
-                                context,
-                                YourOrderSum(
-                                    orderID: model?.data?.data
-                                        ?.elementAt(index!)
-                                        .id
-                                        .toString()));
-                          },
-                          child: roundedBoxR(
-                              radius: size.width * 0.006,
-                              width: size.width * 0.3,
-                              // height: size.height * 0.04,
-                              backgroundColor: AppColors.siginbackgrond,
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: size.height * 0.01,
-                                    horizontal: size.width * 0.03),
-                                alignment: Alignment.center,
-                                child: Text(
-                                  "${getTranslated(context, "orderDetails")}",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: AppColors.white,
-                                      fontSize: size.width * 0.034,
-                                      fontFamily: Fonts.dmSansBold),
-                                ),
-                              )),
-                        )
-                      ],
-                    )),
-
-                // right image
-
-                Container(
-                  // color: Colors.blue,
-                  margin: EdgeInsets.only(right: size.width * 0.03),
-
-                  padding: EdgeInsets.only(
-                      top: size.height * 0.02, bottom: size.height * 0.013),
-                  width: size.width * 0.25,
-                  // decoration: BoxDecoration(),
-                  child: Image.network(
-                    "${data?.image ?? Images.beerNetwork}",
-                    // "${Images.beerNetwork}"
-
-                    // fit: BoxFit.fill,
-                  ),
-                )
-              ],
-            ),
-          )),
     ),
   );
 }

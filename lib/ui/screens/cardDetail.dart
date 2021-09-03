@@ -333,8 +333,6 @@ class _CartDetailState extends State<CartDetail> {
             payLoading = false;
           });
 
-          print("here is ${res?.toJson()}");
-
           if (res["status"] == true && res["code"] == 201) {
             setState(() {
               UserData.ticketcartMap.clear();

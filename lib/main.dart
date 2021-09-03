@@ -6,12 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:funfy/apis/userdataM.dart';
-import 'package:funfy/ui/screens/address/addressList.dart';
-import 'package:funfy/ui/screens/filterUiTest.dart';
-import 'package:funfy/ui/screens/home.dart';
+import 'package:funfy/ui/mapTesting.dart';
+
 import 'package:funfy/ui/screens/splash.dart';
-import 'package:funfy/ui/screens/testingUi.dart';
-import 'package:funfy/ui/screens/translateTesting.dart';
+
 import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/localizing.dart';
@@ -241,7 +239,8 @@ class _MyAppState extends State<MyApp> {
         },
         darkTheme: ThemeData.dark(), //
         // home: TranslateTest());
-        home: Splash());
+        // home: Splash());
+        home: PickerDemo());
     // home: FilterUiT());
     // home: Home(
     //   pageIndexNum: 0,

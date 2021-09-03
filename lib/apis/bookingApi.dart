@@ -47,9 +47,7 @@ Future fiestasBooking(
 
   // var response = Map<String, dynamic>.from(jsonRes);
 
-  print(res.body);
-
-  print(jsonRes['error']);
+  // print(res.body);
 
   if (res.statusCode == 201) {
     return jsonRes;
@@ -203,7 +201,7 @@ Future<PrefiestasOrderDetailModel?> prefiestasShowOrderDetail(
     {String? orderId}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
-    'X-localization': '${Constants.prefs?.getString("language")}'
+    // 'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   // print("token is here - ${UserData.userToken}");
@@ -214,6 +212,10 @@ Future<PrefiestasOrderDetailModel?> prefiestasShowOrderDetail(
 
   var res = await http.post(Uri.parse(Urls.preFiestasOrderItemDetail),
       body: body, headers: headers);
+
+  // print("data is here ");
+
+  // print(res.body);
 
   if (res.statusCode == 200) {
     // print(res.body);

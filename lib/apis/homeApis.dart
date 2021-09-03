@@ -23,7 +23,7 @@ Future<FiestasModel?> fiestasPostGet(
 
   var body = {
     type == null ? "" : "type": "$type",
-    dateFilter == null || dateFilter == "" ? "" : "filter": "$dateFilter",
+    dateFilter == null || dateFilter == "" ? "" : "date": "$dateFilter",
     "local": "${filterDataF['local']}",
     "environment": "${filterDataF['environment']}",
     "schedule": "${filterDataF['schedule']}",
@@ -281,7 +281,9 @@ Future<bool?> notificationOffApi({int? notificationNum}) async {
 
 // notification List api
 
-Future<NotificationListModel?> notificatiListApi({int? notificationNum}) async {
+// NotificationListModel?
+
+Future notificatiListApi({int? notificationNum}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
     //  'X-localization': '${Constants.prefs?.getString("language")}'
@@ -293,10 +295,14 @@ Future<NotificationListModel?> notificatiListApi({int? notificationNum}) async {
       ),
       headers: headers);
 
-  print(res.body);
+  // print(res.body);
+
+  var jsonData = json.decode(res.body);
 
   if (res.statusCode == 200) {
-    return notificationListModelFromJson(res.body);
+    return jsonData;
+
+    // return notificationListModelFromJson(res.body);
   } else {
     print(res.body);
   }

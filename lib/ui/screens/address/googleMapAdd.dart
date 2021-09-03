@@ -3,7 +3,7 @@ import 'package:google_maps_place_picker/google_maps_place_picker.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class GoogleLocationAdd extends StatefulWidget {
-  static final kInitialPosition = LatLng(-33.8567844, 151.213108);
+  // static final kInitialPosition = LatLng(-33.8567844, 151.213108);
 
   @override
   _HomePageState createState() => _HomePageState();

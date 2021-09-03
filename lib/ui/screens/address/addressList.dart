@@ -4,10 +4,12 @@ import 'package:flutter_svg/svg.dart';
 
 import 'package:funfy/apis/addressApi.dart';
 import 'package:funfy/components/dialogs.dart';
+import 'package:funfy/components/locationget.dart';
 import 'package:funfy/components/navigation.dart';
 
 import 'package:funfy/models/addressLsitModel.dart';
 import 'package:funfy/ui/screens/address/addressAdd.dart';
+import 'package:funfy/ui/screens/address/addressEdit.dart';
 
 import 'package:funfy/ui/screens/address/googleMapAdd.dart';
 import 'package:funfy/ui/screens/home.dart';
@@ -18,6 +20,7 @@ import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/langauge_constant.dart';
+import 'package:funfy/utils/strings.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_place_picker/google_maps_place_picker.dart';
 
@@ -37,6 +40,9 @@ class _AddressListState extends State<AddressList> {
   bool _loading = false;
 
   bool _edit = false;
+
+  double lats = 0.0;
+  double lngs = 0.0;
 
   AddressListModel? addressListModel;
 
@@ -60,8 +66,19 @@ class _AddressListState extends State<AddressList> {
             _loading = false;
           });
 
+          if (value?.data?.length == 0 || value == null) {
+            setState(() {
+              Constants.prefs?.setString("addres", '');
+              Constants.prefs?.setString("addressId", '');
+            });
+          }
+
           if (value != null) {
             addressListModel = value;
+
+            var data = value.data?.toList().reversed;
+
+            addressListModel?.data = data?.toList();
           } else {
             Dialogs.showBasicsFlash(
                 context: context,
@@ -86,10 +103,21 @@ class _AddressListState extends State<AddressList> {
 
   // addAddress
 
+  getLatLong() {
+    if (Constants.prefs?.getString("lat") != '' &&
+        Constants.prefs?.getString("addres") != null) {
+      lats = double.parse('${Constants.prefs?.getString("lat")}');
+      lngs = double.parse('${Constants.prefs?.getString("lng")}');
+    } else {
+      determinePosition();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     getAddresApiCall();
+    getLatLong();
   }
 
   @override
@@ -113,12 +141,12 @@ class _AddressListState extends State<AddressList> {
         return false;
       },
       child: Scaffold(
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              Constants.prefs?.getString("addressId");
-            },
-            child: Icon(Icons.add),
-          ),
+          // floatingActionButton: FloatingActionButton(
+          //   onPressed: () {
+          //     Constants.prefs?.getString("addressId");
+          //   },
+          //   child: Icon(Icons.add),
+          // ),
           backgroundColor: AppColors.blackBackground,
           body: Column(
             children: [
@@ -151,52 +179,57 @@ class _AddressListState extends State<AddressList> {
                           color: AppColors.white,
                           fontSize: size.width * 0.05),
                     ),
-                    _edit == false
-                        ? InkWell(
-                            onTap: () {
-                              setState(() {
-                                _edit = true;
-                              });
-                            },
-                            child: Row(
-                              children: [
-                                roundedBoxBorder(
-                                    context: context,
-                                    radius: size.width * 0.025,
-                                    backgroundColor: Colors.transparent,
-                                    borderColor: AppColors.white,
-                                    borderSize: size.width * 0.004,
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: size.width * 0.008,
-                                          horizontal: size.height * 0.012),
-                                      child: Text(
-                                        "${getTranslated(context, 'edit')}",
-                                        style: TextStyle(
-                                            fontFamily: Fonts.dmSansBold,
-                                            color: AppColors.white,
-                                            fontSize: size.width * 0.04),
-                                      ),
-                                    )),
-                                SizedBox(
-                                  width: size.width * 0.04,
-                                )
-                              ],
-                            ),
+                    addressListModel?.data?.length == 0 ||
+                            addressListModel == null
+                        ? SizedBox(
+                            width: size.width * 0.13,
                           )
-                        : SizedBox(
-                            width: size.width * 0.17,
-                            child: IconButton(
-                                onPressed: () {
+                        : _edit == false
+                            ? InkWell(
+                                onTap: () {
                                   setState(() {
-                                    _edit = false;
+                                    _edit = true;
                                   });
                                 },
-                                icon: Icon(
-                                  Icons.check,
-                                  color: AppColors.white,
-                                )),
-                          )
+                                child: Row(
+                                  children: [
+                                    roundedBoxBorder(
+                                        context: context,
+                                        radius: size.width * 0.025,
+                                        backgroundColor: Colors.transparent,
+                                        borderColor: AppColors.white,
+                                        borderSize: size.width * 0.004,
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: size.width * 0.008,
+                                              horizontal: size.height * 0.012),
+                                          child: Text(
+                                            "${getTranslated(context, 'edit')}",
+                                            style: TextStyle(
+                                                fontFamily: Fonts.dmSansBold,
+                                                color: AppColors.white,
+                                                fontSize: size.width * 0.04),
+                                          ),
+                                        )),
+                                    SizedBox(
+                                      width: size.width * 0.04,
+                                    )
+                                  ],
+                                ),
+                              )
+                            : SizedBox(
+                                width: size.width * 0.17,
+                                child: IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        _edit = false;
+                                      });
+                                    },
+                                    icon: Icon(
+                                      Icons.check,
+                                      color: AppColors.white,
+                                    )),
+                              )
                   ],
                 ),
               ),
@@ -267,9 +300,13 @@ class _AddressListState extends State<AddressList> {
                               Container(
                                 width: size.width * 0.8,
                                 child: Text(
-                                  Constants.prefs?.getString("addres") != null
+                                  Constants.prefs?.getString("addres") !=
+                                              null &&
+                                          Constants.prefs
+                                                  ?.getString("addres") !=
+                                              ''
                                       ? "${Constants.prefs?.getString("addres")}"
-                                      : "${getTranslated(context, "location")}",
+                                      : "${getTranslated(context, "addLoacation")}",
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
@@ -308,13 +345,58 @@ class _AddressListState extends State<AddressList> {
                         // });
                         Navigator.of(context)
                             .push(MaterialPageRoute(builder: (context) {
+                          // return
+
+                          // PlacePicker(
+                          //   apiKey: Strings.mapKey, // Put YOUR OWN KEY here.
+                          //   onPlacePicked: (result) {
+                          //     print(result);
+                          //     Navigator.of(context).pop();
+                          //   },
+                          //   initialPosition: LatLng(0.0, 0.0),
+                          //   useCurrentLocation: true,
+
+                          //   selectedPlaceWidgetBuilder:
+                          //       (_, selectedPlace, state, isSearchBarFocused) {
+                          //     return isSearchBarFocused
+                          //         ? Container(
+                          //             color: Colors.yellow,
+                          //             width: 100,
+                          //             height: 100)
+                          //         // Use FloatingCard or just create your own Widget.
+                          //         : FloatingCard(
+                          //             bottomPosition:
+                          //                 MediaQuery.of(context).size.height *
+                          //                     0.05,
+                          //             leftPosition:
+                          //                 MediaQuery.of(context).size.width *
+                          //                     0.05,
+                          //             width: MediaQuery.of(context).size.width *
+                          //                 0.9,
+                          //             borderRadius: BorderRadius.circular(12.0),
+                          //             child: state == SearchingState.Searching
+                          //                 ? Center(
+                          //                     child:
+                          //                         CircularProgressIndicator())
+                          //                 : RaisedButton(
+                          //                     onPressed: () {
+                          //                       print(
+                          //                           "do something with [selectedPlace] data");
+                          //                     },
+                          //                   ),
+                          //           );
+                          //   },
+                          // );
+
                           return PlacePicker(
-                            apiKey: "AIzaSyClclCEKHSt57KvUbgxcjZCwRqrbhpZq5M",
-                            initialPosition: LatLng(31.326015, 75.576180),
+                            apiKey: Strings.mapKey,
+                            initialPosition: LatLng(lats, lngs),
                             useCurrentLocation: true,
                             selectInitialPosition: true,
+                            usePlaceDetailSearch: true,
 
                             //usePlaceDetailSearch: true,
+
                             onPlacePicked: (result) {
                               print("here is ${result.geometry?.location.lat}");
 
@@ -428,10 +510,40 @@ class _AddressListState extends State<AddressList> {
     return InkWell(
       onTap: () {
         if (_edit) {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            return PlacePicker(
+              apiKey: Strings.mapKey,
+              initialPosition: LatLng(double.parse("${model?.latitude}"),
+                  double.parse("${model?.longitude}")),
+              useCurrentLocation: true,
+              selectInitialPosition: true,
+              hidePlaceDetailsWhenDraggingPin: false,
+
+              //usePlaceDetailSearch: true,
+              onPlacePicked: (result) {
+                result.geometry?.location.lat != null
+                    ? Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => AddressEdit(
+                            addressmodel: model,
+                            lat: result.geometry?.location.lat,
+                            lng: result.geometry?.location.lng)))
+                    : print("Select Address");
+                setState(() {});
+              },
+            );
+          }));
         } else {
-          setState(() {
-            Constants.prefs?.setString("addres", "$address");
-          });
+          Dialogs.simpleAlertDialog(
+              context: context,
+              title: "${getTranslated(context, 'changeAddress')}",
+              content: "${getTranslated(context, 'Dowanttoselectthisaddress')}",
+              func: () {
+                setState(() {
+                  Constants.prefs?.setString("addres", "$address");
+                  Constants.prefs?.setString("addressId", "${model?.id}");
+                });
+                navigatePopFun(context);
+              });
         }
       },
       child: Container(
@@ -446,7 +558,15 @@ class _AddressListState extends State<AddressList> {
             _edit
                 ? InkWell(
                     onTap: () {
-                      deleteAddressFun(id: model?.id.toString());
+                      Dialogs.simpleAlertDialog(
+                          context: context,
+                          title: "${getTranslated(context, 'delete')}",
+                          content:
+                              "${getTranslated(context, 'Dowanttodeletethisaddress')}",
+                          func: () {
+                            navigatePopFun(context);
+                            deleteAddressFun(id: model?.id.toString());
+                          });
                     },
                     child: Container(
                       // width: size.width * 0.05,
