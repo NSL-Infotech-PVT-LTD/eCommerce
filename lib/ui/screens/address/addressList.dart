@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-
 import 'package:funfy/apis/addressApi.dart';
 import 'package:funfy/components/dialogs.dart';
 import 'package:funfy/components/locationget.dart';
 import 'package:funfy/components/navigation.dart';
-
 import 'package:funfy/models/addressLsitModel.dart';
 import 'package:funfy/ui/screens/address/addressAdd.dart';
 import 'package:funfy/ui/screens/address/addressEdit.dart';
-
 import 'package:funfy/ui/screens/address/googleMapAdd.dart';
+import 'package:funfy/ui/screens/address/mapShowAE.dart';
 import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/Constants.dart';
@@ -337,82 +335,13 @@ class _AddressListState extends State<AddressList> {
 
                     InkWell(
                       onTap: () {
-                        // Navigator.of(context)
-                        //     .push(MaterialPageRoute(
-                        //         builder: (context) => GoogleLocationAdd()))
-                        //     .then((value) {
-                        //   getAddresApiCall();
-                        // });
                         Navigator.of(context)
                             .push(MaterialPageRoute(builder: (context) {
-                          // return
+                          // return .
 
-                          // PlacePicker(
-                          //   apiKey: Strings.mapKey, // Put YOUR OWN KEY here.
-                          //   onPlacePicked: (result) {
-                          //     print(result);
-                          //     Navigator.of(context).pop();
-                          //   },
-                          //   initialPosition: LatLng(0.0, 0.0),
-                          //   useCurrentLocation: true,
-
-                          //   selectedPlaceWidgetBuilder:
-                          //       (_, selectedPlace, state, isSearchBarFocused) {
-                          //     return isSearchBarFocused
-                          //         ? Container(
-                          //             color: Colors.yellow,
-                          //             width: 100,
-                          //             height: 100)
-                          //         // Use FloatingCard or just create your own Widget.
-                          //         : FloatingCard(
-                          //             bottomPosition:
-                          //                 MediaQuery.of(context).size.height *
-                          //                     0.05,
-                          //             leftPosition:
-                          //                 MediaQuery.of(context).size.width *
-                          //                     0.05,
-                          //             width: MediaQuery.of(context).size.width *
-                          //                 0.9,
-                          //             borderRadius: BorderRadius.circular(12.0),
-                          //             child: state == SearchingState.Searching
-                          //                 ? Center(
-                          //                     child:
-                          //                         CircularProgressIndicator())
-                          //                 : RaisedButton(
-                          //                     onPressed: () {
-                          //                       print(
-                          //                           "do something with [selectedPlace] data");
-                          //                     },
-                          //                   ),
-                          //           );
-                          //   },
-                          // );
-
-                          return PlacePicker(
-                            apiKey: Strings.mapKey,
-                            initialPosition: LatLng(lats, lngs),
-                            useCurrentLocation: true,
-                            selectInitialPosition: true,
-                            usePlaceDetailSearch: true,
-
-                            //usePlaceDetailSearch: true,
-
-                            onPlacePicked: (result) {
-                              print("here is ${result.geometry?.location.lat}");
-
-                              print("here is ${result.geometry?.location.lng}");
-
-                              result.geometry?.location.lat != null
-                                  ? Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                          builder: (context) => AddressAdd(
-                                              lat:
-                                                  result.geometry?.location.lat,
-                                              lng: result
-                                                  .geometry?.location.lng)))
-                                  : print("Select Address");
-                              setState(() {});
-                            },
+                          return PlacePickerB(
+                            Strings.mapKey,
+                            typeAE: 1,
                           );
                         }));
                       },
@@ -511,25 +440,12 @@ class _AddressListState extends State<AddressList> {
       onTap: () {
         if (_edit) {
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-            return PlacePicker(
-              apiKey: Strings.mapKey,
-              initialPosition: LatLng(double.parse("${model?.latitude}"),
-                  double.parse("${model?.longitude}")),
-              useCurrentLocation: true,
-              selectInitialPosition: true,
-              hidePlaceDetailsWhenDraggingPin: false,
-
-              //usePlaceDetailSearch: true,
-              onPlacePicked: (result) {
-                result.geometry?.location.lat != null
-                    ? Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => AddressEdit(
-                            addressmodel: model,
-                            lat: result.geometry?.location.lat,
-                            lng: result.geometry?.location.lng)))
-                    : print("Select Address");
-                setState(() {});
-              },
+            return PlacePickerB(
+              Strings.mapKey,
+              typeAE: 2,
+              latE: double.parse("${model?.latitude}"),
+              lngE: double.parse("${model?.longitude}"),
+              address: model,
             );
           }));
         } else {

@@ -63,6 +63,7 @@ dependencies:
   google_maps_place_picker: ^2.0.0-nullsafety.3
   flutter_glow: ^0.2.0
   place_picker: ^0.9.19-nullsafety
+  sliding_up_panel: ^2.0.0+1
   
   
 

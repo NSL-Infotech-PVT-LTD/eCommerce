@@ -7,6 +7,7 @@ import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/components/dialogs.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/components/sizeclass/SizeConfig.dart';
+import 'package:funfy/components/swipeButtons.dart';
 import 'package:funfy/models/cardListmodel.dart';
 import 'package:funfy/ui/screens/bookingSuccess.dart';
 import 'package:funfy/ui/screens/stripe/input_formatters.dart';
@@ -534,7 +535,7 @@ class _CartDetailState extends State<CartDetail> {
                                               int.parse(
                                                       "${cardList?.data?.data?.length}") >
                                                   0
-                                          ? SwipeButton(
+                                          ? SwipeButtonB(
                                               thumb: SvgPicture.asset(
                                                 Images.swipeButtonSvg,
                                                 fit: BoxFit.cover,
@@ -553,8 +554,8 @@ class _CartDetailState extends State<CartDetail> {
                                                       fontSize:
                                                           size.width * 0.05)),
                                               onSwipeEnd: () {
-                                                fiestasBookingApi(
-                                                    cardid: cardId);
+                                                // fiestasBookingApi(
+                                                //     cardid: cardId);
                                               },
                                             )
                                           : payLoading &&

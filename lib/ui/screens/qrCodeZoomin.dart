@@ -14,8 +14,10 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 class QrCodeZoomIn extends StatefulWidget {
   final qrId;
+  final id;
 
-  const QrCodeZoomIn({Key? key, this.qrId}) : super(key: key);
+  const QrCodeZoomIn({Key? key, this.qrId, @required this.id})
+      : super(key: key);
 
   @override
   _QrCodeZoomInState createState() => _QrCodeZoomInState();
@@ -110,7 +112,7 @@ class _QrCodeZoomInState extends State<QrCodeZoomIn> {
                   navigatorPushFun(
                       context,
                       BookNowBeta(
-                        fiestasID: widget.qrId,
+                        fiestasID: widget.id,
                       ));
                 },
                 child: roundedBoxR(

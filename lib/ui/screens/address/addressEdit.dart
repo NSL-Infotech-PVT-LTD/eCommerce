@@ -133,7 +133,6 @@ class _AddressEditState extends State<AddressEdit> {
         _loading = true;
       });
       try {
-        var introdata = await getIntrodata();
         await updateaddAddressApi(
                 id: "${widget.addressmodel?.id}",
                 addresname: nameController.text.toString(),

@@ -2,14 +2,26 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:funfy/apis/addressApi.dart';
+import 'package:funfy/components/dialogs.dart';
+import 'package:funfy/components/navigation.dart';
+import 'package:funfy/models/addressLsitModel.dart';
+import 'package:funfy/ui/screens/address/addressList.dart';
+import 'package:funfy/ui/screens/address/map/searchInput.dart';
+import 'package:funfy/ui/widgets/roundContainer.dart';
+import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/colors.dart';
+import 'package:funfy/utils/langauge_constant.dart';
+import 'package:geocoding/geocoding.dart' as locationG;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
 import 'package:place_picker/entities/entities.dart';
 import 'package:place_picker/entities/localization_item.dart';
 import 'package:place_picker/uuid.dart';
 import 'package:place_picker/widgets/widgets.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 /// Place picker widget made with map widget from
 /// [google_maps_flutter](https://github.com/flutter/plugins/tree/master/packages/google_maps_flutter)
@@ -22,12 +34,24 @@ class PlacePickerB extends StatefulWidget {
   /// [here](https://cloud.google.com/maps-platform/)
   final String apiKey;
 
+  final int? typeAE;
+
+  final double? latE;
+  final double? lngE;
+  final Addressdata? address;
+
   /// Location to be displayed when screen is showed. If this is set or not null, the
   /// map does not pan to the user's current location.
   final LatLng? displayLocation;
   LocalizationItem? localizationItem;
 
-  PlacePickerB(this.apiKey, {this.displayLocation, this.localizationItem}) {
+  PlacePickerB(this.apiKey,
+      {this.displayLocation,
+      @required this.typeAE,
+      this.localizationItem,
+      this.latE,
+      this.lngE,
+      this.address}) {
     if (this.localizationItem == null) {
       this.localizationItem = new LocalizationItem();
     }
@@ -62,12 +86,22 @@ class PlacePickerBState extends State<PlacePickerB> {
 
   String previousSearchTerm = '';
 
+  bool bottomSheetShow = false;
+  TextEditingController addressController = TextEditingController();
+  String addressError = "";
+  String addressNameError = "";
+
+  bool moovingTrue = false;
+
+  TextEditingController addressNameController = TextEditingController();
+  PanelController _pc = new PanelController();
+
   // constructor
   PlacePickerBState();
 
   void onMapCreated(GoogleMapController controller) {
     this.mapController.complete(controller);
-    moveToCurrentUserLocation();
+    widget.typeAE != 2 ? moveToCurrentUserLocation() : print("Edit");
   }
 
   @override
@@ -81,9 +115,15 @@ class PlacePickerBState extends State<PlacePickerB> {
   void initState() {
     super.initState();
     markers.add(Marker(
-      position: widget.displayLocation ?? LatLng(5.6037, 0.1870),
+      position: widget.typeAE == 2
+          ? LatLng(widget.latE!, widget.lngE!)
+          : widget.displayLocation ?? LatLng(5.6037, 0.1870),
       markerId: MarkerId("selected-location"),
     ));
+
+    if (widget.typeAE == 2) {
+      setAddressFromLatLng(widget.latE!, widget.lngE!);
+    }
   }
 
   @override
@@ -92,87 +132,345 @@ class PlacePickerBState extends State<PlacePickerB> {
     super.dispose();
   }
 
+  bool _loadingL = false;
+  double slideSheetMinSize = 0.05;
+
+  // address
+  String street = "";
+  String city = "";
+  String stateA = "";
+  String country = "";
+  String zip = "";
+
+  double latL = 0.0;
+  double lngL = 0.0;
+
+  // add and edit location funcs
+
+  // validation
+
+  formValid() {
+    addressError = "";
+    addressNameError = "";
+
+    setState(() {
+      if (addressController.text.length == 0) {
+        addressError = "${getTranslated(context, 'PleaseSelectLocation')}";
+      }
+      if (addressNameController.text.length == 0) {
+        addressNameError =
+            "${getTranslated(context, "pleaseEnterAddressname")}";
+      }
+    });
+
+    if (addressController.text.length != 0 &&
+        addressNameController.text.length != 0) {
+      if (widget.typeAE == 1) {
+        addLocationFunc();
+      } else {
+        editLocationFunc();
+      }
+    }
+  }
+
+  addLocationFunc() async {
+    FocusScope.of(context).requestFocus(FocusNode());
+    var net = await Internetcheck.check();
+    if (net != true) {
+      Internetcheck.showdialog(context: context);
+    } else {
+      setState(() {
+        _loadingL = true;
+      });
+      try {
+        await addAddressApi(
+                addresname: addressNameController.text.toString(),
+                street: street,
+                city: city,
+                state: stateA,
+                zip: zip,
+                country: country,
+                latitude: latL.toString(),
+                longitude: lngL.toString())
+            .then((value) {
+          setState(() {
+            _loadingL = false;
+          });
+
+          if (value!) {
+            Dialogs.showBasicsFlash(
+                context: context,
+                color: Colors.green,
+                duration: Duration(milliseconds: 1),
+                content:
+                    "${getTranslated(context, 'addresssuccessfullycreated')}");
+
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => AddressList()));
+          } else {
+            Dialogs.showBasicsFlash(
+                context: context,
+                color: AppColors.siginbackgrond,
+                duration: Duration(seconds: 1),
+                content: "${getTranslated(context, 'errortoaddaddress')}");
+          }
+        });
+      } catch (e) {
+        print("Here Creating error > $e");
+        setState(() {
+          _loadingL = false;
+        });
+        Dialogs.showBasicsFlash(
+            context: context,
+            color: AppColors.siginbackgrond,
+            duration: Duration(seconds: 1),
+            content: "${getTranslated(context, 'errortoaddaddress')}");
+      }
+    }
+  }
+
+  editLocationFunc() async {
+    FocusScope.of(context).requestFocus(FocusNode());
+    var net = await Internetcheck.check();
+    if (net != true) {
+      Internetcheck.showdialog(context: context);
+    } else {
+      setState(() {
+        _loadingL = true;
+      });
+      try {
+        await updateaddAddressApi(
+                id: "${widget.address?.id}",
+                addresname: addressNameController.text.toString(),
+                street: street,
+                city: city,
+                state: stateA,
+                zip: zip,
+                country: country,
+                latitude: widget.latE.toString(),
+                longitude: widget.lngE.toString())
+            .then((value) {
+          setState(() {
+            _loadingL = false;
+          });
+
+          if (value!) {
+            Dialogs.showBasicsFlash(
+                context: context,
+                color: Colors.green,
+                duration: Duration(milliseconds: 1),
+                content:
+                    "${getTranslated(context, 'addresssuccessfullyUpdated')}");
+
+            navigatorPushFun(context, AddressList());
+          } else {
+            Dialogs.showBasicsFlash(
+                context: context,
+                color: AppColors.siginbackgrond,
+                duration: Duration(seconds: 1),
+                content: "${getTranslated(context, 'errortoaddaddress')}");
+          }
+        });
+      } catch (e) {
+        print("Here Creating error > $e");
+        setState(() {
+          _loadingL = false;
+        });
+        Dialogs.showBasicsFlash(
+            context: context,
+            color: AppColors.siginbackgrond,
+            duration: Duration(seconds: 1),
+            content: "${getTranslated(context, 'errortoaddaddress')}");
+      }
+    }
+  }
+
+  // set Address from lat lng
+
+  setAddressFromLatLng(double ln, double lo) async {
+    List<locationG.Placemark> placemarks =
+        await locationG.placemarkFromCoordinates(ln, lo);
+    var placemark = placemarks[0];
+
+    print(placemark);
+
+    String address =
+        "${placemark.street}, ${placemark.locality},${placemark.administrativeArea}, ${placemark.country}";
+
+    setState(() {
+      widget.typeAE == 2
+          ? addressNameController.text = widget.address!.name.toString()
+          : print("Edit");
+      street = placemark.street.toString();
+      city = placemark.locality.toString();
+      stateA = placemark.administrativeArea.toString();
+      zip = placemark.postalCode.toString();
+      country = placemark.country.toString();
+
+      _pc.open();
+      addressController.text = address;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        key: this.appBarKey,
-        title: SearchInput(searchPlace),
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-      ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: GoogleMap(
+    var size = MediaQuery.of(context).size;
+    return WillPopScope(
+      onWillPop: () async {
+        if (_pc.isPanelOpen) {
+          _pc.close();
+        } else {
+          navigatePopFun(context);
+        }
+
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: AppColors.blackBackground,
+          key: this.appBarKey,
+          title: SearchInputB(searchPlace),
+          automaticallyImplyLeading: false,
+        ),
+        body: Stack(
+          children: <Widget>[
+            // Expanded(
+            //   child:
+
+            GoogleMap(
               initialCameraPosition: CameraPosition(
-                target: widget.displayLocation ?? LatLng(5.6037, 0.1870),
+                target: widget.typeAE == 2
+                    ? LatLng(widget.latE!, widget.lngE!)
+                    : widget.displayLocation ?? LatLng(5.6037, 0.1870),
                 zoom: 15,
               ),
               myLocationButtonEnabled: true,
               myLocationEnabled: true,
               onMapCreated: onMapCreated,
-              onCameraMove: (v) {
-                print("address : $v");
+              onCameraIdle: () async {
+                setAddressFromLatLng(latL, lngL);
+                clearOverlay();
+                moveToLocation(LatLng(latL, lngL));
+                setState(() {
+                  moovingTrue = false;
+                });
               },
-              onTap: (latLng) {
-                print("Here is $latLng");
+              onCameraMove: (v) {
+                setState(() {
+                  moovingTrue = true;
+                });
+                // print("address : ${v.target.latitude}");
+                latL = v.target.latitude;
+                lngL = v.target.longitude;
+
+                _pc.close();
+
+                // setAddressFromLatLng(v.target.latitude, v.target.longitude);
+              },
+              onTap: (latLng) async {
+                latL = latLng.latitude;
+                lngL = latLng.longitude;
+
                 clearOverlay();
                 moveToLocation(latLng);
-                showNotificationBottomSheet();
+                setAddressFromLatLng(latLng.latitude, latLng.longitude);
               },
               markers: markers,
             ),
-          ),
-          // if (!this.hasSearchTerm)
-          //   Expanded(
-          //     child: Column(
-          //       crossAxisAlignment: CrossAxisAlignment.start,
-          //       children: <Widget>[
-          //         SelectPlaceAction(
-          //             getLocationName(),
-          //             () => Navigator.of(context).pop(this.locationResult),
-          //             widget.localizationItem!.tapToSelectLocation),
-          //         Divider(height: 8),
-          //         Padding(
-          //           child: Text(widget.localizationItem!.nearBy,
-          //               style: TextStyle(fontSize: 16)),
-          //           padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-          //         ),
-          //         Expanded(
-          //           child: ListView(
-          //             children: nearbyPlaces
-          //                 .map((it) => NearbyPlaceItem(
-          //                     it, () => moveToLocation(it.latLng!)))
-          //                 .toList(),
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-        ],
+
+            moovingTrue
+                ? Center(
+                    child: Icon(
+                    Icons.push_pin,
+                    color: Colors.black,
+                  ))
+                : SizedBox(),
+
+            // Sliding Up
+            SlidingUpPanel(
+              controller: _pc,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(size.width * 0.05),
+                  topRight: Radius.circular(size.width * 0.05)),
+              minHeight: size.height * 0.05,
+              maxHeight: size.height * 0.5,
+              panel: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                        vertical: size.height * 0.02,
+                        horizontal: size.width * 0.06),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(size.width * 0.05),
+                          topRight: Radius.circular(size.width * 0.05)),
+                      color: AppColors.blackBackground,
+                    ),
+                    child: Column(
+                      children: [
+                        roundedBoxR(
+                            height: size.height * 0.008,
+                            width: size.width * 0.3,
+                            radius: size.width * 0.2,
+                            backgroundColor: Colors.grey),
+                        SizedBox(
+                          height: size.height * 0.05,
+                        ),
+                        inputF(
+                          context: context,
+                          controller: addressController,
+                          title: "${getTranslated(context, 'yourLocation')}",
+                          hint:
+                              "${getTranslated(context, 'hereisYourLocation')}",
+                          error: addressError,
+                        ),
+                        inputF(
+                          context: context,
+                          controller: addressNameController,
+                          title: "${getTranslated(context, 'addressName')}",
+                          hint: "${getTranslated(context, 'enterAddressname')}",
+                          error: addressNameError,
+                        ),
+                        SizedBox(
+                          height: size.height * 0.01,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            formValid();
+                          },
+                          child: roundedBoxR(
+                              height: size.height * 0.065,
+                              radius: size.width * 0.02,
+                              backgroundColor: AppColors.siginbackgrond,
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  "${getTranslated(context, 'saveLocation')}",
+                                  style: TextStyle(
+                                      color: AppColors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: size.width * 0.04),
+                                ),
+                              )),
+                        ),
+                      ],
+                    ),
+                  ),
+                  _loadingL
+                      ? Center(
+                          child: CircularProgressIndicator(
+                            color: AppColors.white,
+                          ),
+                        )
+                      : SizedBox(),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
-  }
-
-  // bottom sheet
-
-  showNotificationBottomSheet() {
-    var size = MediaQuery.of(context).size;
-    showModalBottomSheet(
-        barrierColor: Colors.transparent,
-        backgroundColor: AppColors.blackBackground,
-        context: context,
-        builder: (context) {
-          return StatefulBuilder(
-              key: _keyScaffold,
-              builder: (context, setstate) {
-                return Container(
-                  color: AppColors.blackBackground,
-                  height: size.height * 0.42,
-                );
-              });
-        });
   }
 
   /// Hides the autocomplete overlay
@@ -560,8 +858,63 @@ class PlacePickerBState extends State<PlacePickerB> {
       LatLng target = LatLng(locationData.latitude!, locationData.longitude!);
       moveToLocation(target);
     }).catchError((error) {
-      // TODO: Handle the exception here
       print(error);
     });
+  }
+
+  Widget inputF(
+      {context,
+      String? title,
+      String? hint,
+      String? error,
+      controller,
+      bool enable = true}) {
+    var size = MediaQuery.of(context).size;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("$title",
+            style: TextStyle(
+                fontSize: size.width * 0.038, color: AppColors.white)),
+        SizedBox(
+          height: size.height * 0.008,
+        ),
+        TextField(
+          style: TextStyle(color: AppColors.white),
+          cursorColor: AppColors.white,
+          controller: controller,
+          enabled: enable,
+          keyboardType: TextInputType.text,
+          decoration: InputDecoration(
+              fillColor: HexColor("#3e332b"),
+              filled: true,
+              errorText: error,
+              enabledBorder: const OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(4)),
+                borderSide: BorderSide(width: 1, color: Colors.grey),
+              ),
+              disabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(4)),
+                borderSide: BorderSide(width: 1, color: Colors.grey),
+              ),
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(4)),
+                  borderSide: BorderSide(
+                    width: 1,
+                  )),
+              errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(4)),
+                  borderSide: BorderSide(width: 1, color: Colors.black)),
+              focusedErrorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(4)),
+                  borderSide: BorderSide(width: 1, color: Colors.grey)),
+              hintStyle: TextStyle(color: HexColor("#6c604e")),
+              hintText: "$hint"),
+        ),
+      ],
+    );
   }
 }

@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:funfy/apis/userdataM.dart';
-import 'package:funfy/ui/mapTesting.dart';
 
 import 'package:funfy/ui/screens/splash.dart';
 
@@ -239,8 +238,8 @@ class _MyAppState extends State<MyApp> {
         },
         darkTheme: ThemeData.dark(), //
         // home: TranslateTest());
-        // home: Splash());
-        home: PickerDemo());
+        home: Splash());
+    // home: PickerDemo());
     // home: FilterUiT());
     // home: Home(
     //   pageIndexNum: 0,

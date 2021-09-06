@@ -453,127 +453,133 @@ Widget fiestasOrdersItem(
 
   // print("here is name - ${data!.fiestaDetail!.clubDetail!.name!}");
 
-  return Container(
-    // color: AppColors.brownLite,
+  return InkWell(
+    onTap: () {
+      navigatorPushFun(context,
+          FiestasMoreOrderDetail(fiestaBookingId: "${model[index]['id']}"));
+    },
+    child: Container(
+      // color: AppColors.brownLite,
 
-    margin: EdgeInsets.symmetric(
-        vertical: size.height * 0.01, horizontal: size.width * 0.03),
-    padding: EdgeInsets.symmetric(
-        vertical: size.height * 0.02, horizontal: size.width * 0.04),
-    alignment: Alignment.topLeft,
+      margin: EdgeInsets.symmetric(
+          vertical: size.height * 0.01, horizontal: size.width * 0.03),
+      padding: EdgeInsets.symmetric(
+          vertical: size.height * 0.02, horizontal: size.width * 0.04),
+      alignment: Alignment.topLeft,
 
-    decoration: BoxDecoration(
-        //  color: HexColor("#38332f"),
-        // color: Colors.blue,
-        image: DecorationImage(
-            image: AssetImage("assets/pngicons/fiestasBackground.png"),
-            fit: BoxFit.cover)),
+      decoration: BoxDecoration(
+          //  color: HexColor("#38332f"),
+          // color: Colors.blue,
+          image: DecorationImage(
+              image: AssetImage("assets/pngicons/fiestasBackground.png"),
+              fit: BoxFit.cover)),
 
-    child: Column(
-      // mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        roundedBoxR(
-            width: size.width * 0.16,
+      child: Column(
+        // mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          roundedBoxR(
+              width: size.width * 0.16,
+              height: size.height * 0.03,
+              backgroundColor: AppColors.green,
+              radius: size.width * 0.01,
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  "${getTranslated(context, "open")}",
+                  // Strings.open,
+                  style: TextStyle(
+                      fontFamily: Fonts.dmSansBold,
+                      color: AppColors.white,
+                      fontSize: size.width * 0.035),
+                ),
+              )),
+          SizedBox(
+            height: size.height * 0.003,
+          ),
+          Text(
+            // data!.fiestaDetail!.clubDetail!.name!.toString(),
+            "${model[index]['fiesta_detail']['club_detail']['name']}",
+            style: TextStyle(
+                fontFamily: Fonts.dmSansBold,
+                color: AppColors.white,
+                fontSize: size.width * 0.072),
+          ),
+          SizedBox(
+            height: size.height * 0.003,
+          ),
+          ratingstars(
+              size: size.width * 0.052,
+              ittempading: size.width * 0.001,
+              color: AppColors.tagBorder,
+              rating: ratingF),
+          SizedBox(
+            height: size.height * 0.02,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                  width: size.width * 0.1,
+                  child: SvgPicture.asset(Images.ticketImageSvg)),
+              SizedBox(
+                width: size.width * 0.042,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "${getTranslated(context, "ticket")}",
+                    // Strings.ticket,
+                    style: TextStyle(
+                        fontFamily: Fonts.dmSansBold,
+                        color: AppColors.white,
+                        fontSize: size.width * 0.05),
+                  ),
+                  Text(
+                    "${getTranslated(context, "qty")} : ${model[index]['total_tickets']}",
+                    //   Strings.qty + ":2",
+                    style: TextStyle(
+                        fontFamily: Fonts.dmSansBold,
+                        color: AppColors.white,
+                        fontSize: size.width * 0.03),
+                  ),
+                ],
+              ),
+              Spacer(),
+              Text(
+                Strings.euro +
+                    "${model[index]['total_price']}", //"${data?.totalPrice}",
+                style: TextStyle(
+                    fontFamily: Fonts.dmSansMedium,
+                    color: AppColors.white,
+                    fontSize: size.width * 0.08),
+              ),
+            ],
+          ),
+          SizedBox(
             height: size.height * 0.03,
-            backgroundColor: AppColors.green,
-            radius: size.width * 0.01,
-            child: Align(
-              alignment: Alignment.center,
+          ),
+          Center(
+            child: GestureDetector(
+              onTap: () {
+                navigatorPushFun(
+                    context,
+                    FiestasMoreOrderDetail(
+                        fiestaBookingId: "${model[index]['id']}"));
+              },
               child: Text(
-                "${getTranslated(context, "open")}",
-                // Strings.open,
+                "${getTranslated(context, "moreDetails")}",
+                //Strings.moreDetails,
                 style: TextStyle(
                     fontFamily: Fonts.dmSansBold,
-                    color: AppColors.white,
-                    fontSize: size.width * 0.035),
+                    color: AppColors.siginbackgrond,
+                    fontSize: size.width * 0.05),
               ),
-            )),
-        SizedBox(
-          height: size.height * 0.003,
-        ),
-        Text(
-          // data!.fiestaDetail!.clubDetail!.name!.toString(),
-          "${model[index]['fiesta_detail']['club_detail']['name']}",
-          style: TextStyle(
-              fontFamily: Fonts.dmSansBold,
-              color: AppColors.white,
-              fontSize: size.width * 0.072),
-        ),
-        SizedBox(
-          height: size.height * 0.003,
-        ),
-        ratingstars(
-            size: size.width * 0.052,
-            ittempading: size.width * 0.001,
-            color: AppColors.tagBorder,
-            rating: ratingF),
-        SizedBox(
-          height: size.height * 0.02,
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-                width: size.width * 0.1,
-                child: SvgPicture.asset(Images.ticketImageSvg)),
-            SizedBox(
-              width: size.width * 0.042,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "${getTranslated(context, "ticket")}",
-                  // Strings.ticket,
-                  style: TextStyle(
-                      fontFamily: Fonts.dmSansBold,
-                      color: AppColors.white,
-                      fontSize: size.width * 0.05),
-                ),
-                Text(
-                  "${getTranslated(context, "qty")} : ${model[index]['total_tickets']}",
-                  //   Strings.qty + ":2",
-                  style: TextStyle(
-                      fontFamily: Fonts.dmSansBold,
-                      color: AppColors.white,
-                      fontSize: size.width * 0.03),
-                ),
-              ],
-            ),
-            Spacer(),
-            Text(
-              Strings.euro +
-                  "${model[index]['total_price']}", //"${data?.totalPrice}",
-              style: TextStyle(
-                  fontFamily: Fonts.dmSansMedium,
-                  color: AppColors.white,
-                  fontSize: size.width * 0.08),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: size.height * 0.03,
-        ),
-        Center(
-          child: GestureDetector(
-            onTap: () {
-              navigatorPushFun(
-                  context,
-                  FiestasMoreOrderDetail(
-                      fiestaBookingId: "${model[index]['id']}"));
-            },
-            child: Text(
-              "${getTranslated(context, "moreDetails")}",
-              //Strings.moreDetails,
-              style: TextStyle(
-                  fontFamily: Fonts.dmSansBold,
-                  color: AppColors.siginbackgrond,
-                  fontSize: size.width * 0.05),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     ),
   );
 }

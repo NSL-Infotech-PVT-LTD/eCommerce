@@ -402,8 +402,9 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                                               type: PageTransitionType
                                                   .topToBottom,
                                               child: QrCodeZoomIn(
-                                                qrId: widget.fiestaBookingId
-                                                    .toString(),
+                                                id: fiestasBookingDetailModel
+                                                    ?.data![0].fiestaId,
+                                                qrId: widget.fiestaBookingId,
                                               )));
 
                                       // navigatorPushFun(context, QrCodeZoomIn());
