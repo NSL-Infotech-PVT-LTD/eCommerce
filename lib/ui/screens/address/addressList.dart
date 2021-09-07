@@ -10,6 +10,7 @@ import 'package:funfy/ui/screens/address/addressAdd.dart';
 import 'package:funfy/ui/screens/address/addressEdit.dart';
 import 'package:funfy/ui/screens/address/googleMapAdd.dart';
 import 'package:funfy/ui/screens/address/mapShowAE.dart';
+import 'package:funfy/ui/screens/buynow.dart';
 import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/Constants.dart';
@@ -25,7 +26,9 @@ import 'package:google_maps_place_picker/google_maps_place_picker.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 class AddressList extends StatefulWidget {
-  const AddressList({Key? key}) : super(key: key);
+  final int? navNum;
+
+  const AddressList({Key? key, @required this.navNum}) : super(key: key);
 
   @override
   _AddressListState createState() => _AddressListState();

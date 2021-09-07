@@ -205,8 +205,8 @@ class PlacePickerBState extends State<PlacePickerB> {
                 content:
                     "${getTranslated(context, 'addresssuccessfullycreated')}");
 
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => AddressList()));
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => AddressList(navNum: 0)));
           } else {
             Dialogs.showBasicsFlash(
                 context: context,
@@ -262,7 +262,7 @@ class PlacePickerBState extends State<PlacePickerB> {
                 content:
                     "${getTranslated(context, 'addresssuccessfullyUpdated')}");
 
-            navigatorPushFun(context, AddressList());
+            navigatorPushFun(context, AddressList(navNum: 0));
           } else {
             Dialogs.showBasicsFlash(
                 context: context,
@@ -349,16 +349,16 @@ class PlacePickerBState extends State<PlacePickerB> {
               onMapCreated: onMapCreated,
               onCameraIdle: () async {
                 setAddressFromLatLng(latL, lngL);
-                clearOverlay();
-                moveToLocation(LatLng(latL, lngL));
-                setState(() {
-                  moovingTrue = false;
-                });
+                // clearOverlay();
+                // moveToLocation(LatLng(latL, lngL));
+                // setState(() {
+                //   moovingTrue = false;
+                // });
               },
               onCameraMove: (v) {
-                setState(() {
-                  moovingTrue = true;
-                });
+                // setState(() {
+                //   moovingTrue = true;
+                // });
                 // print("address : ${v.target.latitude}");
                 latL = v.target.latitude;
                 lngL = v.target.longitude;

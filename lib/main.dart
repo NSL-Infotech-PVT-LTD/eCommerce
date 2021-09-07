@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -6,9 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:funfy/apis/userdataM.dart';
-
+import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/screens/splash.dart';
-
 import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/localizing.dart';
@@ -89,6 +87,15 @@ class _MyAppState extends State<MyApp> {
     UserData.deviceToken = "$token";
 
     Constants.prefs?.setString("fToken", "$token");
+  } // on tap
+
+  onSelectNotification(String payload) {
+    print("Here is noti f -------------");
+    // Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+    //   return Home(
+    //     pageIndexNum: 1,
+    //   );
+    // }));
   }
 
   @override
@@ -110,6 +117,8 @@ class _MyAppState extends State<MyApp> {
 
       AndroidNotification? android = message.notification?.android;
 
+      print("Here is on tap notification-----------");
+
       // if (notification != null && android != null) {
       //   if (message.data["data_type"] != null && message.data["data_type"] == "Message") {
       //     print("issue 1");
@@ -120,6 +129,8 @@ class _MyAppState extends State<MyApp> {
       //   }
       // }
     });
+
+    /// on tap code
 
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
@@ -144,12 +155,17 @@ class _MyAppState extends State<MyApp> {
         );
         if (message.data["data_type"] != null &&
             message.data["data_type"] == "Message") {
-          print("issue 2");
           // reciverName =  "${message.data["sender_name"]}";
           // image = "${message.data["profile_img"]}";
           // reciverId = "${message.data["target_id"]}";
           // navigatorKey.currentState.pushNamed('/notification');
+
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => Home(
+                    pageIndexNum: 2,
+                  )));
         }
+
         print("==============> yashu gautam ${message.data}");
       }
     });
@@ -157,6 +173,14 @@ class _MyAppState extends State<MyApp> {
 
     super.initState();
   }
+
+  // Future<String> onSelectNotification() async {
+  //   Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+  //     return Home(
+  //       pageIndexNum: 2,
+  //     );
+  //   }));
+  // }
 
   getMe() async {
     RemoteMessage? initialMessage =
@@ -187,24 +211,27 @@ class _MyAppState extends State<MyApp> {
   }
 
   getMeLocal() async {
-    await flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-      // onSelectNotification: (String payload) async {
-      //   print("======LOCAL NOTIFICATION======>0 $payload");
-      //   Map myMap = jsonDecode(payload);
-      //   print("====myMap====>${json.encode(payload)}");
-      //   print("====myMap====>${json.decode(payload)["target_id"]}");
-      //   print("====myMap====>${myMap["target_id"]}");
-      //   print("====myMap====>$payload}");
-      //   if (myMap["data_type"] != null && myMap["data_type"] == "Message") {
-      //     print("issue 4");
-      //     reciverName =  "${myMap["sender_name"]}";
-      //     image = "${myMap["profile_img"]}";
-      //     reciverId = "${myMap["target_id"]}";
-      //     navigatorKey.currentState.pushNamed('/notification');
-      //   }
-      //}
-    );
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: (v) async {
+      // print("Here is on select notification --- $v");
+    }
+
+        // onSelectNotification: (String payload) async {
+        //   print("======LOCAL NOTIFICATION======>0 $payload");
+        //   Map myMap = jsonDecode(payload);
+        //   print("====myMap====>${json.encode(payload)}");
+        //   print("====myMap====>${json.decode(payload)["target_id"]}");
+        //   print("====myMap====>${myMap["target_id"]}");
+        //   print("====myMap====>$payload}");
+        //   if (myMap["data_type"] != null && myMap["data_type"] == "Message") {
+        //     print("issue 4");
+        //     reciverName =  "${myMap["sender_name"]}";
+        //     image = "${myMap["profile_img"]}";
+        //     reciverId = "${myMap["target_id"]}";
+        //     navigatorKey.currentState.pushNamed('/notification');
+        //   }
+        //}
+        );
   }
 
   @override

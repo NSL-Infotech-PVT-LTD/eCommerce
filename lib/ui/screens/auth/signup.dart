@@ -256,8 +256,7 @@ class _SignUpState extends State<SignUp> {
                     Navigator.of(context).pop();
                   },
                   leading: Icon(
-                    Icons.error,
-                    //  Icons.male,
+                    Icons.male,
                     // color: AppColors.siginbackgrond,
                   ),
                   title: Text(
@@ -280,7 +279,7 @@ class _SignUpState extends State<SignUp> {
                     Navigator.of(context).pop();
                   },
                   // leading: Icon(Icons.female),
-                  leading: Icon(Icons.error),
+                  leading: Icon(Icons.female),
                   title: Text("${getTranslated(context, "female")}",
                       // Strings.female,
 
@@ -299,7 +298,7 @@ class _SignUpState extends State<SignUp> {
                     Navigator.of(context).pop();
                   },
                   // leading: Icon(Icons.female),
-                  leading: Icon(Icons.error),
+                  leading: Icon(Icons.transgender),
                   title: Text("${getTranslated(context, "other")}",
                       // Strings.other,
 

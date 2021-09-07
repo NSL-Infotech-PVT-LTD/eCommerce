@@ -329,7 +329,7 @@ class _HomeMPageState extends State<HomeMPage> {
                 actions: [
                   InkWell(
                     onTap: () {
-                      navigatorPushFun(context, AddressList());
+                      navigatorPushFun(context, AddressList(navNum: 0));
                     },
                     child: Container(
                       padding: EdgeInsets.symmetric(
@@ -377,7 +377,8 @@ class _HomeMPageState extends State<HomeMPage> {
 
                               InkWell(
                                 onTap: () {
-                                  navigatorPushFun(context, AddressList());
+                                  navigatorPushFun(
+                                      context, AddressList(navNum: 0));
                                 },
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -432,11 +433,12 @@ class _HomeMPageState extends State<HomeMPage> {
                           ),
 
                           // notification icon
-                          GestureDetector(
+                          InkWell(
                             onTap: () {
                               navigatorPushFun(context, Notifications());
                             },
                             child: Container(
+                              padding: EdgeInsets.all(2),
                               margin: EdgeInsets.only(right: size.width * 0.03),
                               child: Icon(
                                 Icons.notifications,

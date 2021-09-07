@@ -1,16 +1,15 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/components/dialogs.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/models/cardListmodel.dart';
-import 'package:funfy/models/fiestasBooking.dart';
 import 'package:funfy/models/fiestasBookingDetailModel.dart';
-import 'package:funfy/models/fiestasBookingListModel.dart';
 import 'package:funfy/models/fiestasDetailmodel.dart';
-import 'package:funfy/models/makePrefiestasmodel.dart';
 import 'package:funfy/models/preFiestasBookingListModel.dart';
 import 'package:funfy/models/preFiestasCartModel.dart';
 import 'package:funfy/models/prefiestasOrderDetailModel.dart';
+import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/urls.dart';
@@ -237,7 +236,6 @@ Future<PrefiestasCartModel?> getPrefiestasCart() async {
       await http.post(Uri.parse(Urls.preFiestasGetCartUrl), headers: headers);
 
   if (res.statusCode == 200) {
-    print("here is cart - ${res.body}");
     return prefiestasCartModelFromJson(res.body);
   } else {
     print("here is error ${res.body}");
@@ -302,7 +300,6 @@ Future<CardListModel?> getCardList({String? cardToken}) async {
   if (res.statusCode == 200) {
     // print("here is fiestas detail - ${res.body}");
 
-    print("Card added  ${res.body}");
     return cardListModelFromJson(res.body);
   } else {
     return null;
@@ -334,7 +331,7 @@ Future deleteCard({String? cardIds}) async {
 // fiestas booking order detail
 
 Future<FiestasBookingDetailModel?> fiestaBookingOrderDetailApi(
-    {String? fiestasId}) async {
+    {String? fiestasId, context}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
     'X-localization': '${Constants.prefs?.getString("language")}'
@@ -346,6 +343,23 @@ Future<FiestasBookingDetailModel?> fiestaBookingOrderDetailApi(
       headers: headers, body: body);
 
   print(res.body);
+  if (res.statusCode == 422) {
+    Dialogs.simpleOkAlertDialog(
+        context: context,
+        content: "${getTranslated(context, 'theSelectedItemIsinvalid')}",
+        title: "${getTranslated(context, 'alert!')}",
+        func: () {
+          navigatePopFun(context);
+        });
+
+    Future.delayed(Duration(seconds: 2), () {
+      navigatorPushFun(
+          context,
+          Home(
+            pageIndexNum: 0,
+          ));
+    });
+  }
 
   if (res.statusCode == 200) {
     // return null;

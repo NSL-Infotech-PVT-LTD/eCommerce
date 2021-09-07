@@ -254,6 +254,8 @@
   "PleaseSelectLocation": "Seleccione la ubicación",
   "others": "Otros",
   "searchplace": "Lugar de búsqueda",
+  "pleaseAddYourLocation": "Por favor agregue su ubicación",
+  "theSelectedItemIsinvalid": "El artículo seleccionado no es válido.",
   "addLoacation": "Añadir lugar",
   "recent": "Reciente",
   "applyFilter": "Aplicar filtro",

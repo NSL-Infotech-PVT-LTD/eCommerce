@@ -947,29 +947,6 @@ class _BookNowBetaState extends State<BookNowBeta> {
                                   });
                                 }),
                           ),
-                          // Positioned(
-                          //     bottom: 5,
-                          //     right: 5,
-                          //     child:
-
-                          // MaterialButton(
-                          //     color: Colors.blue,
-                          //     textColor: Colors.white,
-                          //     child: Center(child: Icon(Icons.arrow_forward)),
-                          //     minWidth: size.width * 0.05,
-                          //     onPressed: () {
-                          //       setState(() {
-                          //         mapZoom = false;
-                          //       });
-                          //     }),
-
-                          //     FloatingActionButton(
-                          //   backgroundColor: AppColors.blackBackground,
-                          //   onPressed: () {
-                          //     navigateToMap();
-                          //   },
-                          //   child: Icon(Icons.arrow_forward),
-                          // ))
                         ],
                       )
                     : SizedBox()

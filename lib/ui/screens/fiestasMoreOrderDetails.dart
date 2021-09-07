@@ -63,7 +63,7 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
     } else {
       try {
         await fiestaBookingOrderDetailApi(
-                fiestasId: widget.fiestaBookingId.toString())
+                fiestasId: widget.fiestaBookingId.toString(), context: context)
             .then((value) {
           // print("here is model : ${value?.toJson()}");
           setState(() {
@@ -180,7 +180,6 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                                 children: [
                                   Text(
                                     "${getTranslated(context, "doYouLikeOurService")}",
-                                    // Strings.doYouLikeOurService,
                                     style: TextStyle(
                                         color: AppColors.white,
                                         fontFamily: Fonts.dmSansMedium,
@@ -192,7 +191,6 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                                   RatingBar.builder(
                                     itemSize: size.width * 0.125,
                                     initialRating: currentRating,
-                                    // ignoreGestures: true,
                                     minRating: 1,
                                     direction: Axis.horizontal,
                                     allowHalfRating: false,
@@ -268,19 +266,11 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
 
-    // print("Look here" + "$date");
-
     var data = fiestasBookingDetailModel?.data![0].fiestaDetail;
 
     return WillPopScope(
       onWillPop: backCall,
       child: Scaffold(
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: () {
-        //     showRatingBottomSheet();
-        //   },
-        //   child: Icon(Icons.add),
-        // ),
         backgroundColor: AppColors.siginbackgrond,
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -309,8 +299,6 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                 child: Stack(children: [
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: size.width * 0.05),
-                    // padding: EdgeInsets.symmetric(
-                    //     vertical: size.height * 0.02, horizontal: size.width * 0.034),
                     alignment: Alignment.topCenter,
                     width: size.width,
                     height: size.height * 0.79,
@@ -318,7 +306,6 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                         color: AppColors.white,
                         borderRadius: BorderRadius.all(
                             Radius.circular(size.width * 0.02))),
-
                     child: Column(
                       children: [
                         SizedBox(
@@ -560,7 +547,7 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                                         title:
                                             getTranslated(context, "location"),
                                         description:
-                                            "8496 East Thompson Street Birmingham, AL 35209")
+                                            "${fiestasBookingDetailModel?.data![0].fiestaDetail?.clubDetail?.location ?? getTranslated(context, 'location')}")
                                   ],
                                 ),
                               )

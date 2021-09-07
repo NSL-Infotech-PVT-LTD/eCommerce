@@ -37,7 +37,7 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
   var _card = new PaymentCard();
   var _formKey = new GlobalKey<FormState>();
   var _autoValidateMode = AutovalidateMode.disabled;
-  CardListModel? cardList;
+  CardListModel? cardListP;
 
   bool _loading = false;
 
@@ -86,12 +86,9 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
         });
         await getPrefiestasCart().then((res) {
           setState(() {
-            _loading = false;
-          });
-          setState(() {
             UserData.myCartModel = res;
 
-            print(res?.toJson());
+            // print(res?.toJson());
           });
         });
       } catch (e) {
@@ -99,7 +96,7 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
           _loading = false;
           UserData.myCartModel = null;
         });
-        print("error in my cart $UserData.myCartModel");
+
         print(e);
       }
     }
@@ -252,18 +249,12 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
       getCardList().then((value) {
         setState(() {
           _loading = false;
-
-          cardList = value;
+          cardListP = value;
 
           if (value != null && value.data?.data?.length != 0) {
             cardFormShow = false;
           }
-
-          // cardId = cardList?.data?.data?.id!;
         });
-
-        print("here is value");
-        print(value?.toJson());
       });
     } catch (e) {
       setState(() {
@@ -277,9 +268,9 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
   @override
   void initState() {
     // get card list
+    getMyCart();
 
     getCardListApi();
-    getMyCart();
 
     StripePayment.setOptions(StripeOptions(
         publishableKey: Strings.publishKey,
@@ -530,7 +521,7 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
                                 child:
                                     Center(child: CircularProgressIndicator()),
                               )
-                            : cardList != null && cardFormShow == false
+                            : cardListP != null && cardFormShow == false
                                 ? Column(
                                     children: [
                                       Column(
@@ -538,18 +529,19 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
                                           for (int i = 0;
                                               i <
                                                   int.parse(
-                                                      "${cardList?.data?.data?.length}");
+                                                      "${cardListP?.data?.data?.length}");
                                               i++)
                                             ticket(
                                                 context: context,
-                                                model: cardList?.data?.data![i],
+                                                model:
+                                                    cardListP?.data?.data![i],
                                                 index: i)
                                         ],
                                       ),
                                       groupValue != -1 &&
                                               swipebuttonShowBool &&
                                               int.parse(
-                                                      "${cardList?.data?.data?.length}") >
+                                                      "${cardListP?.data?.data?.length}") >
                                                   0
                                           ? SwipeButton(
                                               thumb: SvgPicture.asset(
@@ -620,67 +612,6 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
                                               : SizedBox()
                                     ],
                                   )
-
-                                // Column(
-                                //     children: [
-                                //       Container(
-                                //         height: size.height * 0.2,
-                                //         child: Expanded(
-                                //           child: ListView.builder(
-                                //               itemCount: cardList
-                                //                       ?.data?.data?.length ??
-                                //                   0,
-                                //               itemBuilder: (context, index) {
-                                //                 return ticket(
-                                //                     context: context,
-                                //                     model: cardList
-                                //                         ?.data?.data![index]);
-                                //               }),
-                                //         ),
-                                //       ),
-
-                                //       SizedBox(
-                                //         height: size.height * 0.03,
-                                //       ),
-
-                                //       // swipe to pay with card list
-
-                                //       groupValue != -1
-                                //           ? InkWell(
-                                //               onTap: () {
-                                //                 fiestasBookingApi(
-                                //                     cardid: cardId);
-                                //               },
-                                //               child: roundedBoxR(
-                                //                 radius: size.width * 0.02,
-                                //                 width: size.width,
-                                //                 height: size.height * 0.07,
-                                //                 backgroundColor:
-                                //                     AppColors.siginbackgrond,
-                                //                 child: Center(
-                                //                   child: _loading
-                                //                       ? CircularProgressIndicator(
-                                //                           color:
-                                //                               AppColors.white)
-                                //                       : Text(
-                                //                           "${getTranslated(context, "swipetopay")}",
-                                //                           style: TextStyle(
-                                //                               fontSize:
-                                //                                   size.width *
-                                //                                       0.045,
-                                //                               fontFamily: Fonts
-                                //                                   .dmSansMedium,
-                                //                               color: AppColors
-                                //                                   .white),
-                                //                         ),
-                                //                 ),
-                                //               ),
-                                //             )
-                                //           : SizedBox()
-                                //     ],
-                                //   )
-
-                                // card form
                                 : Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -883,8 +814,8 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
                                       ),
 
                                       // view card button
-                                      cardList != null &&
-                                              cardList?.data?.data?.length != 0
+                                      cardListP != null &&
+                                              cardListP?.data?.data?.length != 0
                                           ? InkWell(
                                               onTap: () {
                                                 setState(() {

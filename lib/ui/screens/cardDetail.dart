@@ -180,23 +180,7 @@ class _CartDetailState extends State<CartDetail> {
         setState(() {
           addCardLoading = false;
 
-          // print(value["data"]["data"]["id"]);
-
-          // if (value == null || value.data?.data?.length == 0) {
-          //   cardFormShow = false;
-
-          //   fiestasBookingApi(cardid: value["data"]["data"]["id"]);
-          // }
-
           getCardListApi();
-
-          // fiestasBookingApi(cardid:)
-
-          // cardId = value["data"]["data"]["id"];
-
-          // cardFormShow = false;
-
-          // fiestasBookingApi(cardid: cardId);
         });
 
         print("here is value");
@@ -262,12 +246,7 @@ class _CartDetailState extends State<CartDetail> {
           if (value != null && value.data?.data?.length != 0) {
             cardFormShow = false;
           }
-
-          // cardId = cardList?.data?.data?.id!;
         });
-
-        // print("here is value");
-        // print(value?.toJson());
       });
     } catch (e) {
       setState(() {
@@ -535,7 +514,7 @@ class _CartDetailState extends State<CartDetail> {
                                               int.parse(
                                                       "${cardList?.data?.data?.length}") >
                                                   0
-                                          ? SwipeButtonB(
+                                          ? SwipeButton(
                                               thumb: SvgPicture.asset(
                                                 Images.swipeButtonSvg,
                                                 fit: BoxFit.cover,
@@ -554,8 +533,8 @@ class _CartDetailState extends State<CartDetail> {
                                                       fontSize:
                                                           size.width * 0.05)),
                                               onSwipeEnd: () {
-                                                // fiestasBookingApi(
-                                                //     cardid: cardId);
+                                                fiestasBookingApi(
+                                                    cardid: cardId);
                                               },
                                             )
                                           : payLoading &&

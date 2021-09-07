@@ -142,8 +142,8 @@ class _AddressAddState extends State<AddressAdd> {
                 content:
                     "${getTranslated(context, 'addresssuccessfullycreated')}");
 
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => AddressList()));
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => AddressList(navNum: 0)));
           } else {
             Dialogs.showBasicsFlash(
                 context: context,

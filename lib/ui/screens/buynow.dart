@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:funfy/apis/bookingApi.dart';
 import 'package:funfy/apis/userdataM.dart';
+import 'package:funfy/components/dialogs.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/models/fiestasDetailmodel.dart';
 import 'package:funfy/components/sizeclass/SizeConfig.dart';
+import 'package:funfy/ui/screens/address/addressList.dart';
 import 'package:funfy/ui/screens/bookingSuccess.dart';
 import 'package:funfy/ui/screens/cardDetail.dart';
 import 'package:funfy/ui/widgets/rating.dart';
+import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
@@ -389,21 +392,38 @@ class _BuyNowState extends State<BuyNow> {
                           child: ElevatedButton(
                             child: Text(
                               "${getTranslated(context, "proceedtopay")}",
-                              //      Strings.proceedtopay,
                               style: TextStyle(
                                   color: AppColors.white,
                                   fontSize: size.width * 0.05,
                                   fontFamily: Fonts.dmSansBold),
                             ),
                             onPressed: () {
-                              // fiestasBookingApi();
-
-                              navigatorPushFun(
-                                  context,
-                                  CartDetail(
-                                      fiestasId: widget.fiestasM?.data?.id));
-
-                              // navigatorPushFun(context, CreditCard());
+                              if (Constants.prefs?.getString("addres") !=
+                                      null &&
+                                  Constants.prefs?.getString("addres") != '' &&
+                                  Constants.prefs?.getString("addressId") !=
+                                      null &&
+                                  Constants.prefs?.getString("addressId") !=
+                                      '') {
+                                navigatorPushFun(
+                                    context,
+                                    CartDetail(
+                                        fiestasId: widget.fiestasM?.data?.id));
+                              } else {
+                                Dialogs.simpleOkAlertDialog(
+                                    context: context,
+                                    content:
+                                        "${getTranslated(context, 'pleaseAddYourLocation')}",
+                                    title:
+                                        "${getTranslated(context, 'alert!')}",
+                                    func: () {
+                                      navigatorPushFun(
+                                          context,
+                                          AddressList(
+                                            navNum: 1,
+                                          ));
+                                    });
+                              }
                             },
                             style: ElevatedButton.styleFrom(
                               padding: EdgeInsets.symmetric(

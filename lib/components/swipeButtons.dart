@@ -87,6 +87,7 @@ class _SwipeState extends State<SwipeButtonB> {
   double _width = 0;
 
   bool _swiped = false;
+  int swipeValue = 0;
 
   Color swipeColor = Colors.white;
 
@@ -207,19 +208,21 @@ class _SwipeState extends State<SwipeButtonB> {
               swipeColor = Colors.white;
               _swiped = true;
               widget.onSwipe?.call();
-            }
-
-            if (_offset.dx == width - widget.height) {
-              print("Swipe Here ---------------");
+              print("Swipe Here ---------------3");
             }
           });
         }
         break;
+
+      case _SwipeButtonType.Swipe:
+        print("swiping---------");
+        break;
+
       case _SwipeButtonType.Expand:
         if (_width + details.delta.dx > 0 && !_swiped && widget.enabled) {
           setState(() {
             _width = _width + details.delta.dx * _velocity;
-            print("Swipe Here ---------------2");
+            // print("Swipe Here ---------------2");
 
             if (_width >= width - widget.trackPadding.horizontal && !_swiped) {
               _swiped = true;
@@ -229,13 +232,28 @@ class _SwipeState extends State<SwipeButtonB> {
         }
         break;
     }
+
+    double dx = min(
+      _offset.dx + details.delta.dx * _velocity,
+      width - widget.height,
+    );
+    _offset = Offset(dx, 0);
+
+    print("D  : ${details.delta.dx}  $_width   b : ${details.delta.dx}");
+
+    // if () {
+    //   print("value is 0----------");
+    // }
+
+    if (details.delta.dx == 0.01 && !_swiped) {
+      print("value is 0----------");
+    }
   }
 
   _onHorizontalDragEnd(DragEndDetails details) {
     setState(() {
       _offset = Offset.zero;
       _width = 0;
-      print("Swipe Here ---------------3");
     });
     widget.onSwipeEnd?.call();
   }

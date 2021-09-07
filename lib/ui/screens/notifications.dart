@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:funfy/apis/homeApis.dart';
+import 'package:funfy/components/navigation.dart';
 import 'package:funfy/components/sizeclass/SizeConfig.dart';
 import 'package:funfy/main.dart';
 import 'package:funfy/models/notificationListModel.dart';
+import 'package:funfy/ui/screens/Your%20order%20Summery.dart';
+import 'package:funfy/ui/screens/fiestasMoreOrderDetails.dart';
 import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
@@ -202,6 +205,7 @@ class _NotificationsState extends State<Notifications> {
                                 // "${notificationListModel?.data?.data?.elementAt(index).body}",
                                 time:
                                     "${DateFormat.yMd().add_jm().format(dateCreated)}",
+                                jsonData: notificationData[index],
                                 active: true);
                           }),
                     ),
@@ -212,58 +216,84 @@ class _NotificationsState extends State<Notifications> {
 }
 
 Widget notificationItem(
-    {context, String? imageUrl, String? title, String? time, bool? active}) {
+    {context,
+    String? imageUrl,
+    String? title,
+    String? time,
+    bool? active,
+    jsonData}) {
   var size = MediaQuery.of(context).size;
-  return Container(
-    color: active == true
-        ? AppColors.notificatonActive
-        : AppColors.blackBackground,
-    padding: EdgeInsets.symmetric(
-        vertical: size.height * 0.02, horizontal: size.width * 0.03),
-    margin: EdgeInsets.only(top: size.height * 0.005),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        CircleAvatar(
-          backgroundColor: AppColors.white,
-          radius: size.width * 0.08,
-          backgroundImage: NetworkImage(
-            "$imageUrl",
+  return InkWell(
+    onTap: () {
+      print(jsonData);
+
+      if (jsonData["booking_detail"]["data_type"] == "order") {
+        navigatorPushFun(
+            context,
+            YourOrderSum(
+                orderID: jsonData["booking_detail"]["target_id"].toString()));
+      }
+      if (jsonData["booking_detail"]["data_type"] == "Booking") {
+        print(jsonData["booking_detail"]["target_id"]);
+        navigatorPushFun(
+            context,
+            FiestasMoreOrderDetail(
+              fiestaBookingId:
+                  jsonData["booking_detail"]["target_id"].toString(),
+            ));
+      }
+    },
+    child: Container(
+      color: active == true
+          ? AppColors.notificatonActive
+          : AppColors.blackBackground,
+      padding: EdgeInsets.symmetric(
+          vertical: size.height * 0.02, horizontal: size.width * 0.03),
+      margin: EdgeInsets.only(top: size.height * 0.005),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          CircleAvatar(
+            backgroundColor: AppColors.white,
+            radius: size.width * 0.08,
+            backgroundImage: NetworkImage(
+              "$imageUrl",
+            ),
           ),
-        ),
-        SizedBox(
-          width: size.width * 0.03,
-        ),
-        Container(
-          width: size.width * 0.73,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "$title",
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                    color: AppColors.white,
-                    fontFamily: Fonts.dmSansBold,
-                    fontSize: size.width * 0.036),
-              ),
-              SizedBox(
-                height: size.height * 0.008,
-              ),
-              Text(
-                "$time",
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                    color: AppColors.descriptionfirst,
-                    fontFamily: Fonts.dmSansMedium,
-                    fontSize: size.width * 0.036),
-              ),
-            ],
+          SizedBox(
+            width: size.width * 0.03,
           ),
-        ),
-      ],
+          Container(
+            width: size.width * 0.73,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "$title",
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      color: AppColors.white,
+                      fontFamily: Fonts.dmSansBold,
+                      fontSize: size.width * 0.036),
+                ),
+                SizedBox(
+                  height: size.height * 0.008,
+                ),
+                Text(
+                  "$time",
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      color: AppColors.descriptionfirst,
+                      fontFamily: Fonts.dmSansMedium,
+                      fontSize: size.width * 0.036),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     ),
   );
 }

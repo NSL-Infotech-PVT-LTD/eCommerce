@@ -386,33 +386,6 @@ class _YourOrderSumState extends State<YourOrderSum> {
                                     ],
                                   ),
                                   SizedBox(
-                                    height: size.height * 0.03,
-                                  ),
-                                  sameItem3(
-                                      size: size,
-                                      topTile: "Alcohol",
-                                      title: "Ron Bucanero Anejo",
-                                      decription: "70 CL",
-                                      price: "25.88"),
-                                  SizedBox(
-                                    height: size.height * 0.03,
-                                  ),
-                                  sameItem3(
-                                      size: size,
-                                      topTile: "Mix",
-                                      title: "Ron Bucanero Anejo",
-                                      decription: "70 CL",
-                                      price: "25.88"),
-                                  SizedBox(
-                                    height: size.height * 0.03,
-                                  ),
-                                  sameItem3(
-                                      size: size,
-                                      topTile: "Extras",
-                                      title: "Ron Bucanero Anejo",
-                                      decription: "70 CL",
-                                      price: "25.88"),
-                                  SizedBox(
                                     height: SizeConfig.screenHeight * 0.05,
                                   ),
                                   Container(

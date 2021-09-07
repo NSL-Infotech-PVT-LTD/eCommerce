@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:funfy/apis/bookingApi.dart';
 import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/components/dialogs.dart';
+import 'package:funfy/components/navigation.dart';
+import 'package:funfy/ui/screens/address/addressList.dart';
 import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/screens/preFiestasCardDetail.dart';
 import 'package:funfy/ui/screens/preFistaOrderMix.dart';
@@ -461,18 +463,33 @@ class _CartpageState extends State<Cartpage> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // print(
-                      //     "Look here pid - ${myCartModel?.data?.parentDetail?.id}");
-
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => PreFistaOrder(
-                                  preFiestasID: UserData
-                                      .myCartModel?.data?.parentDetail?.id
-                                      .toString()))).then((value) {
-                        getMyCart();
-                      });
+                      if (Constants.prefs?.getString("addres") != null &&
+                          Constants.prefs?.getString("addres") != '' &&
+                          Constants.prefs?.getString("addressId") != null &&
+                          Constants.prefs?.getString("addressId") != '') {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PreFistaOrder(
+                                    preFiestasID: UserData
+                                        .myCartModel?.data?.parentDetail?.id
+                                        .toString()))).then((value) {
+                          getMyCart();
+                        });
+                      } else {
+                        Dialogs.simpleOkAlertDialog(
+                            context: context,
+                            content:
+                                "${getTranslated(context, 'pleaseAddYourLocation')}",
+                            title: "${getTranslated(context, 'alert!')}",
+                            func: () {
+                              navigatorPushFun(
+                                  context,
+                                  AddressList(
+                                    navNum: 1,
+                                  ));
+                            });
+                      }
                     },
                     child: Text(
                       "${getTranslated(context, "change")}",

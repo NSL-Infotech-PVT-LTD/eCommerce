@@ -157,7 +157,11 @@ class _AddressEditState extends State<AddressEdit> {
                     "${getTranslated(context, 'addresssuccessfullyUpdated')}");
 
             clearFeilds();
-            navigatorPushFun(context, AddressList());
+            navigatorPushFun(
+                context,
+                AddressList(
+                  navNum: 0,
+                ));
           } else {
             Dialogs.showBasicsFlash(
                 context: context,
