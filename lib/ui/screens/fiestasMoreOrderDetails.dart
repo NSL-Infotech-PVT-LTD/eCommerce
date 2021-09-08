@@ -77,11 +77,14 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
 
             time = DateFormat('hh:mm a').format(dateTime!);
 
-            if (fiestasBookingDetailModel?.data![0].bookingStatus ==
-                "completed") {
+            // if (fiestasBookingDetailModel?.data![0].bookingStatus ==
+            //     "completed") {
+            //   showRatingBottomSheet();
+            // }
+
+            if (fiestasBookingDetailModel?.data![0].readyForReview == true) {
               showRatingBottomSheet();
             }
-
             var ratM =
                 fiestasBookingDetailModel?.data![0].fiestaDetail?.clubRating;
 
