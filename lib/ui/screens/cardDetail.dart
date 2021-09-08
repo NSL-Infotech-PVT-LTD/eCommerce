@@ -333,7 +333,8 @@ class _CartDetailState extends State<CartDetail> {
             Dialogs.simpleOkAlertDialog(
                 context: context,
                 title: "${getTranslated(context, "alert!")}",
-                content: "${res['error']}",
+                content: "${getTranslated(context, 'paymentisFailed')}",
+                // content: "${res['error']}",
                 func: () {
                   navigatePopFun(context);
                 });

@@ -38,7 +38,6 @@ class FiestasDetailModel {
 class Data {
   Data({
     this.id,
-    this.type,
     this.clubId,
     this.name,
     this.timestamp,
@@ -63,12 +62,16 @@ class Data {
     this.leftVipTicket,
     this.isFavourite,
     this.distanceMiles,
+    this.filterLocal,
+    this.filterEnvironment,
+    this.filterMusic,
+    this.filterClothing,
+    this.filterSchedule,
     this.clubDetail,
     this.fiestaImages,
   });
 
   int? id;
-  String? type;
   int? clubId;
   String? name;
   DateTime? timestamp;
@@ -88,17 +91,21 @@ class Data {
   String? totalStandardTickets;
   String? totalNormalTickets;
   dynamic clubRating;
-  var leftNormalTicket;
-  var leftStandardTicket;
-  var leftVipTicket;
+  int? leftNormalTicket;
+  int? leftStandardTicket;
+  int? leftVipTicket;
   bool? isFavourite;
   String? distanceMiles;
+  Filter? filterLocal;
+  Filter? filterEnvironment;
+  Filter? filterMusic;
+  Filter? filterClothing;
+  Filter? filterSchedule;
   ClubDetail? clubDetail;
   List<FiestaImage>? fiestaImages;
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
         id: json["id"],
-        type: json["type"],
         clubId: json["club_id"],
         name: json["name"],
         timestamp: DateTime.parse(json["timestamp"]),
@@ -123,6 +130,11 @@ class Data {
         leftVipTicket: json["left_vip_ticket"],
         isFavourite: json["is_favourite"],
         distanceMiles: json["distance_miles"],
+        filterLocal: Filter.fromJson(json["filter_local"]),
+        filterEnvironment: Filter.fromJson(json["filter_environment"]),
+        filterMusic: Filter.fromJson(json["filter_music"]),
+        filterClothing: Filter.fromJson(json["filter_clothing"]),
+        filterSchedule: Filter.fromJson(json["filter_schedule"]),
         clubDetail: ClubDetail.fromJson(json["club_detail"]),
         fiestaImages: List<FiestaImage>.from(
             json["fiesta_images"].map((x) => FiestaImage.fromJson(x))),
@@ -130,7 +142,6 @@ class Data {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "type": type,
         "club_id": clubId,
         "name": name,
         "timestamp": timestamp?.toIso8601String(),
@@ -155,6 +166,11 @@ class Data {
         "left_vip_ticket": leftVipTicket,
         "is_favourite": isFavourite,
         "distance_miles": distanceMiles,
+        "filter_local": filterLocal?.toJson(),
+        "filter_environment": filterEnvironment?.toJson(),
+        "filter_music": filterMusic?.toJson(),
+        "filter_clothing": filterClothing?.toJson(),
+        "filter_schedule": filterSchedule?.toJson(),
         "club_detail": clubDetail?.toJson(),
         "fiesta_images":
             List<dynamic>.from(fiestaImages!.map((x) => x.toJson())),
@@ -179,8 +195,8 @@ class ClubDetail {
   String? capacity;
   String? description;
   String? location;
-  dynamic latitude;
-  dynamic longitude;
+  String? latitude;
+  String? longitude;
 
   factory ClubDetail.fromJson(Map<String, dynamic> json) => ClubDetail(
         id: json["id"],
@@ -226,5 +242,25 @@ class FiestaImage {
         "id": id,
         "image": image,
         "fiesta_id": fiestaId,
+      };
+}
+
+class Filter {
+  Filter({
+    this.name,
+    this.nameEs,
+  });
+
+  String? name;
+  String? nameEs;
+
+  factory Filter.fromJson(Map<String, dynamic> json) => Filter(
+        name: json["name"],
+        nameEs: json["name_es"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "name": name,
+        "name_es": nameEs,
       };
 }

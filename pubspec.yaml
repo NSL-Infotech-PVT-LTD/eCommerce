@@ -64,6 +64,7 @@ dependencies:
   flutter_glow: ^0.2.0
   place_picker: ^0.9.19-nullsafety
   sliding_up_panel: ^2.0.0+1
+
   
   
 
@@ -94,6 +95,7 @@ flutter:
     - assets/images/
     - assets/svgicons/
     - assets/pngicons/
+    - assets/partydetail/
     - assets/images/introimage.jpg
     - assets/images/logo.png
     - assets/images/background.jpg

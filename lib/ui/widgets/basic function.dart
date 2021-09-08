@@ -7,6 +7,7 @@ import 'package:funfy/components/shortPrices.dart';
 import 'package:funfy/components/sizeclass/SizeConfig.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/colors.dart';
+import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 
@@ -53,6 +54,13 @@ Widget ticket({context, index, mapdata, addFunc, removeFunc}) {
     alignment: Alignment.topCenter,
     children: [
       Container(
+        margin: EdgeInsets.only(top: 10),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              width: 0.3,
+              color: AppColors.tagBorder,
+            )),
         width: SizeConfig.screenWidth,
         child: Column(
           children: [
@@ -102,6 +110,21 @@ Widget ticket({context, index, mapdata, addFunc, removeFunc}) {
                                 ),
                               ),
                               Container(
+                                width: size.width * 0.48,
+                                child: Text(
+                                  mapdata["description"],
+                                  style: TextStyle(
+                                    color: AppColors.white,
+                                    fontSize: size.width * 0.04,
+                                    fontFamily: Fonts.dmSansMedium,
+                                  ),
+                                  textAlign: TextAlign.start,
+                                  maxLines: 2,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              Container(
                                 width: SizeConfig.screenWidth * 0.40,
                                 child: Text(
                                   mapdata['max'] == 0
@@ -109,7 +132,7 @@ Widget ticket({context, index, mapdata, addFunc, removeFunc}) {
                                       : "${getTranslated(context, "qty")} : ${mapdata['max']}",
                                   style: TextStyle(
                                     color: AppColors.descriptionfirst,
-                                    fontSize: size.width * 0.05,
+                                    fontSize: size.width * 0.035,
                                     fontFamily: "DM Sans Bold",
                                   ),
                                   textAlign: TextAlign.start,
@@ -149,9 +172,121 @@ Widget ticket({context, index, mapdata, addFunc, removeFunc}) {
 
                                     // + - buttons
                                     mapdata['max'] != 0
-                                        ? Row(
-                                            children: [
-                                              GestureDetector(
+                                        ? UserData.ticketcartMap
+                                                .containsKey(index)
+                                            ? Row(
+                                                children: [
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      removeFunc(
+                                                          name: mapdata["name"],
+                                                          index: index);
+                                                    },
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                        color:
+                                                            Colors.transparent,
+                                                        border: Border.all(
+                                                            color: AppColors
+                                                                .white),
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    size.width *
+                                                                        0.01)),
+                                                      ),
+                                                      height: SizeConfig
+                                                              .screenHeight *
+                                                          0.04,
+                                                      width: SizeConfig
+                                                              .screenWidth *
+                                                          0.08,
+                                                      child: Center(
+                                                          child: Text(
+                                                        "-",
+                                                        style: TextStyle(
+                                                          color:
+                                                              AppColors.white,
+                                                          fontFamily:
+                                                              "DM Sans Medium",
+                                                          fontSize:
+                                                              size.width * 0.04,
+                                                        ),
+                                                      )),
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width:
+                                                        SizeConfig.screenWidth *
+                                                            0.03,
+                                                  ),
+
+                                                  // center number
+                                                  Text(
+                                                    UserData.ticketcartMap
+                                                            .containsKey(index)
+                                                        ? UserData
+                                                            .ticketcartMap[
+                                                                index]
+                                                                ["ticketCount"]
+                                                            .toString()
+                                                        : "0",
+                                                    style: TextStyle(
+                                                        fontFamily:
+                                                            "DM Sans Medium",
+                                                        fontSize:
+                                                            size.width * 0.04,
+                                                        color: AppColors.white),
+                                                  ),
+                                                  SizedBox(
+                                                    width:
+                                                        SizeConfig.screenWidth *
+                                                            0.03,
+                                                  ),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      addFunc(
+                                                          index: index,
+                                                          name: mapdata["name"],
+                                                          count: 1,
+                                                          price: int.parse(
+                                                              mapdata["price"]
+                                                                  .toString()),
+                                                          image:
+                                                              mapdata["image"]);
+                                                    },
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                        color: AppColors.skin,
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    size.width *
+                                                                        0.01)),
+                                                      ),
+                                                      height: SizeConfig
+                                                              .screenHeight *
+                                                          0.04,
+                                                      width: SizeConfig
+                                                              .screenWidth *
+                                                          0.08,
+                                                      child: Center(
+                                                          child: Text(
+                                                        "+",
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                "DM Sans Medium",
+                                                            fontSize:
+                                                                size.width *
+                                                                    0.04,
+                                                            color: AppColors
+                                                                .homeBackground),
+                                                      )),
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                            : InkWell(
                                                 onTap: () {
                                                   removeFunc(
                                                       name: mapdata["name"],
@@ -159,9 +294,10 @@ Widget ticket({context, index, mapdata, addFunc, removeFunc}) {
                                                 },
                                                 child: Container(
                                                   decoration: BoxDecoration(
-                                                    color: Colors.transparent,
+                                                    color: AppColors.skin,
                                                     border: Border.all(
-                                                        color: AppColors.white),
+                                                      color: Colors.transparent,
+                                                    ),
                                                     borderRadius: BorderRadius
                                                         .all(Radius.circular(
                                                             size.width * 0.01)),
@@ -171,12 +307,13 @@ Widget ticket({context, index, mapdata, addFunc, removeFunc}) {
                                                           0.04,
                                                   width:
                                                       SizeConfig.screenWidth *
-                                                          0.08,
+                                                          0.2,
                                                   child: Center(
                                                       child: Text(
-                                                    "-",
+                                                    "+ ${getTranslated(context, 'add')}",
                                                     style: TextStyle(
-                                                      color: AppColors.white,
+                                                      color: AppColors
+                                                          .blackBackground,
                                                       fontFamily:
                                                           "DM Sans Medium",
                                                       fontSize:
@@ -184,70 +321,7 @@ Widget ticket({context, index, mapdata, addFunc, removeFunc}) {
                                                     ),
                                                   )),
                                                 ),
-                                              ),
-                                              SizedBox(
-                                                width: SizeConfig.screenWidth *
-                                                    0.03,
-                                              ),
-
-                                              // center number
-                                              Text(
-                                                UserData.ticketcartMap
-                                                        .containsKey(index)
-                                                    ? UserData
-                                                        .ticketcartMap[index]
-                                                            ["ticketCount"]
-                                                        .toString()
-                                                    : "0",
-                                                style: TextStyle(
-                                                    fontFamily:
-                                                        "DM Sans Medium",
-                                                    fontSize: size.width * 0.04,
-                                                    color: AppColors.white),
-                                              ),
-                                              SizedBox(
-                                                width: SizeConfig.screenWidth *
-                                                    0.03,
-                                              ),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  addFunc(
-                                                      index: index,
-                                                      name: mapdata["name"],
-                                                      count: 1,
-                                                      price: int.parse(
-                                                          mapdata["price"]
-                                                              .toString()),
-                                                      image: mapdata["image"]);
-                                                },
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                    color: AppColors.skin,
-                                                    borderRadius: BorderRadius
-                                                        .all(Radius.circular(
-                                                            size.width * 0.01)),
-                                                  ),
-                                                  height:
-                                                      SizeConfig.screenHeight *
-                                                          0.04,
-                                                  width:
-                                                      SizeConfig.screenWidth *
-                                                          0.08,
-                                                  child: Center(
-                                                      child: Text(
-                                                    "+",
-                                                    style: TextStyle(
-                                                        fontFamily:
-                                                            "DM Sans Medium",
-                                                        fontSize:
-                                                            size.width * 0.04,
-                                                        color: AppColors
-                                                            .homeBackground),
-                                                  )),
-                                                ),
-                                              ),
-                                            ],
-                                          )
+                                              )
                                         : SizedBox()
                                   ],
                                 )
@@ -269,11 +343,14 @@ Widget ticket({context, index, mapdata, addFunc, removeFunc}) {
       //
 
       mapdata['max'] == 0
-          ? roundedBoxR(
-              radius: size.width * 0.04,
-              width: size.width,
-              height: size.height * 0.143,
-              backgroundColor: Colors.black.withOpacity(0.5))
+          ? Container(
+              margin: EdgeInsets.only(top: 10),
+              child: roundedBoxR(
+                  radius: size.width * 0.045,
+                  width: size.width,
+                  height: size.height * 0.143,
+                  backgroundColor: Colors.black.withOpacity(0.5)),
+            )
           : SizedBox()
     ],
   );

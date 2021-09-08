@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:funfy/apis/userdataM.dart';
+import 'package:funfy/ui/screens/fiestasMoreOrderDetails.dart';
 import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/screens/splash.dart';
 import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/localizing.dart';
+import 'package:funfy/utils/strings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
 
@@ -87,15 +89,6 @@ class _MyAppState extends State<MyApp> {
     UserData.deviceToken = "$token";
 
     Constants.prefs?.setString("fToken", "$token");
-  } // on tap
-
-  onSelectNotification(String payload) {
-    print("Here is noti f -------------");
-    // Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-    //   return Home(
-    //     pageIndexNum: 1,
-    //   );
-    // }));
   }
 
   @override
@@ -118,21 +111,35 @@ class _MyAppState extends State<MyApp> {
       AndroidNotification? android = message.notification?.android;
 
       print("Here is on tap notification-----------");
-
-      // if (notification != null && android != null) {
-      //   if (message.data["data_type"] != null && message.data["data_type"] == "Message") {
-      //     print("issue 1");
-      //     reciverName =  "${message.data["sender_name"]}";
-      //     image = "${message.data["profile_img"]}";
-      //     reciverId = "${message.data["target_id"]}";
-      //     navigatorKey.currentState.pushNamed('/notification');
-      //   }
-      // }
     });
 
     /// on tap code
 
-    flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: (String? payload) async {
+      // onSelectNotificationL(payload!);
+      var payloadJson = json.decode(payload!);
+
+      print(payloadJson);
+
+      var data = json.decode(payloadJson["data"]);
+
+      if (data["data_type"] == "Booking") {
+        print("under-------------");
+
+        try {
+          // Navigator.pushNamed(context, '/home');
+          // Navigator.of(context).push(MaterialPageRoute(
+          //     builder: (context) => FiestasMoreOrderDetail(
+          //           fiestaBookingId: 36,
+          //           nav: 1,
+          //         )));
+
+        } catch (e) {
+          print("here is error $e--------------");
+        }
+      }
+    });
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       Map<String, dynamic> notification = message.data;
@@ -154,17 +161,7 @@ class _MyAppState extends State<MyApp> {
           payload: json.encode(message.data),
         );
         if (message.data["data_type"] != null &&
-            message.data["data_type"] == "Message") {
-          // reciverName =  "${message.data["sender_name"]}";
-          // image = "${message.data["profile_img"]}";
-          // reciverId = "${message.data["target_id"]}";
-          // navigatorKey.currentState.pushNamed('/notification');
-
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => Home(
-                    pageIndexNum: 2,
-                  )));
-        }
+            message.data["data_type"] == "Message") {}
 
         print("==============> yashu gautam ${message.data}");
       }
@@ -174,25 +171,9 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
 
-  // Future<String> onSelectNotification() async {
-  //   Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-  //     return Home(
-  //       pageIndexNum: 2,
-  //     );
-  //   }));
-  // }
-
   getMe() async {
     RemoteMessage? initialMessage =
         await FirebaseMessaging.instance.getInitialMessage();
-
-    // if (initialMessage!.data["data_type"] != null && initialMessage!.data["data_type"] == "Message") {
-    //     print("issue 3");
-    // reciverName =  "${initialMessage.data["sender_name"]}";
-    // image = "${initialMessage.data["profile_img"]}";
-    // reciverId = "${initialMessage.data["target_id"]}";
-    // navigatorKey.currentState.pushNamed('/notification');
-    //}
   }
 
   initializePlatformSpecifics() {
@@ -214,28 +195,12 @@ class _MyAppState extends State<MyApp> {
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: (v) async {
       // print("Here is on select notification --- $v");
-    }
-
-        // onSelectNotification: (String payload) async {
-        //   print("======LOCAL NOTIFICATION======>0 $payload");
-        //   Map myMap = jsonDecode(payload);
-        //   print("====myMap====>${json.encode(payload)}");
-        //   print("====myMap====>${json.decode(payload)["target_id"]}");
-        //   print("====myMap====>${myMap["target_id"]}");
-        //   print("====myMap====>$payload}");
-        //   if (myMap["data_type"] != null && myMap["data_type"] == "Message") {
-        //     print("issue 4");
-        //     reciverName =  "${myMap["sender_name"]}";
-        //     image = "${myMap["profile_img"]}";
-        //     reciverId = "${myMap["target_id"]}";
-        //     navigatorKey.currentState.pushNamed('/notification');
-        //   }
-        //}
-        );
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    // runApp(GetMaterialApp(home: Home()));
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: "funfy",
@@ -263,6 +228,11 @@ class _MyAppState extends State<MyApp> {
           print("hello + ${supportedLocales.first}");
           return supportedLocales.first;
         },
+        // initialRoute: '/',
+        // routes: <String, WidgetBuilder>{
+        //   '/': (BuildContext context) => new Splash(),
+        //   '/home': (BuildContext context) => new Home(),
+        // },
         darkTheme: ThemeData.dark(), //
         // home: TranslateTest());
         home: Splash());
@@ -273,3 +243,242 @@ class _MyAppState extends State<MyApp> {
     // ));
   }
 }
+
+
+// import 'dart:convert';
+// import 'package:firebase_core/firebase_core.dart';
+// import 'package:firebase_messaging/firebase_messaging.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+// import 'package:flutter_localizations/flutter_localizations.dart';
+// import 'package:funfy/apis/userdataM.dart';
+// import 'package:funfy/ui/screens/fiestasMoreOrderDetails.dart';
+// import 'package:funfy/ui/screens/splash.dart';
+// import 'package:funfy/utils/Constants.dart';
+// import 'package:funfy/utils/langauge_constant.dart';
+// import 'package:funfy/utils/localizing.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:flutter/services.dart';
+// import 'package:get/get.dart';
+// import 'dart:async';
+
+// const AndroidNotificationChannel channel = AndroidNotificationChannel(
+//     'high_importance_channel', // id
+//     'High Importance Notifications', // title
+//     'This channel is used for important notifications.', // description
+//     importance: Importance.high,
+//     playSound: true);
+
+// final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+//     FlutterLocalNotificationsPlugin();
+
+// Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+//   await Firebase.initializeApp();
+//   print('IN THE ON Background ===============>>>>>>>>>>> ${message.data}');
+// }
+
+// //check kri
+// //ok
+// String fcmToken = " ";
+
+// Future<void> main() async {
+//   WidgetsFlutterBinding.ensureInitialized();
+//   await Firebase.initializeApp();
+//   fcmToken = await FirebaseMessaging.instance.getToken().toString();
+//   print("====================> $fcmToken");
+
+//   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+//   await flutterLocalNotificationsPlugin
+//       .resolvePlatformSpecificImplementation<
+//           AndroidFlutterLocalNotificationsPlugin>()
+//       ?.createNotificationChannel(channel);
+
+//   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+//     alert: true,
+//     badge: true,
+//     sound: true,
+//   );
+
+//   runApp(MyApp());
+// }
+
+// class MyApp extends StatefulWidget {
+//   static void setLocale(BuildContext context, Locale newLocale) {
+//     _MyAppState? state = context.findAncestorStateOfType<_MyAppState>();
+//     state!.setLocale(newLocale);
+//   }
+
+//   @override
+//   _MyAppState createState() => _MyAppState();
+// }
+
+// var initializationSettings;
+
+// class _MyAppState extends State<MyApp> {
+//   Locale? _locale;
+//   setLocale(Locale locale) {
+//     setState(() {
+//       _locale = locale;
+//     });
+//   }
+
+//   var token;
+//   var initializationSettings;
+
+//   initializePlatformSpecifics() {
+//     // var initializationSettingsAndroid =
+//     //     AndroidInitializationSett  ings('app_notf_icon');
+//     var initializationSettingsAndroid =
+//         AndroidInitializationSettings('@mipmap/ic_launcher');
+//     var initializationSettingsIOS = IOSInitializationSettings(
+//       requestAlertPermission: true,
+//       requestBadgePermission: true,
+//       requestSoundPermission: false,
+//       onDidReceiveLocalNotification: (id, title, body, payload) async {
+//         // your call back to the UI
+//       },
+//     );
+//     initializationSettings = InitializationSettings(
+//         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+//   }
+
+//   getMe() async {
+//     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+//         onSelectNotification: (String? payload) async {
+//       // Map? myMap = jsonDecode(payload);
+
+//       // if (myMap["data_type"] == "Job" && token != null) {
+//       //   print("$myMap");
+
+//       //   Get.to(MissionRequest(id: myMap["target_id"]),
+//       //       transition: Transition.leftToRightWithFade,
+//       //       duration: Duration(milliseconds: 400));
+//       // } else if (myMap["data_type"] == "Message") {
+//       //   Get.to(
+//       //       ChatScreen(
+//       //           reciverName: "${myMap["sender_name"]}",
+//       //           image: "${myMap["profile_img"]}",
+//       //           receiverId: "${myMap["target_id"]}",
+//       //           channel:
+//       //               IOWebSocketChannel.connect("ws://23.20.179.178:8080/")),
+//       //       transition: Transition.leftToRightWithFade,
+//       //       duration: Duration(milliseconds: 400));
+//       // } else {
+//       //   if (token != null)
+//       //     Get.to(MissionRequest(id: myMap["target_id"]),
+//       //         transition: Transition.leftToRightWithFade,
+//       //         duration: Duration(milliseconds: 400));
+//       // }
+//     });
+//   }
+
+//   @override
+//   void didChangeDependencies() {
+//     getLocale().then((locale) {
+//       setState(() {
+//         this._locale = locale;
+//       });
+//     });
+//     super.didChangeDependencies();
+//   }
+
+//   getToken() async {
+//     print('here is F token $token');
+
+//     UserData.deviceToken = fcmToken;
+
+//     Constants.prefs?.setString("fToken", fcmToken);
+//   }
+
+//   @override
+//   void initState() {
+//     getToken();
+//     // getMeLocal();
+
+//     initializePlatformSpecifics();
+//     getMe();
+
+//     FirebaseMessaging.instance.requestPermission();
+//     print("CHECK $token");
+//     FirebaseMessaging.onMessage.listen(
+//       (RemoteMessage message) {
+//         print("IN THE ON MESSAGE ===============>>>>>>>>>>>");
+//         RemoteNotification? notification = message.notification;
+//         AndroidNotification? android = message.notification?.android;
+//         if (notification != null && android != null) {
+//           flutterLocalNotificationsPlugin.show(
+//               notification.hashCode,
+//               notification.title,
+//               notification.body,
+//               NotificationDetails(
+//                 android: AndroidNotificationDetails(
+//                   channel.id,
+//                   channel.name,
+//                   channel.description,
+//                   // color: Colors.blue,
+//                   playSound: true,
+//                   icon: '@mipmap/ic_launcher',
+//                 ),
+//               ),
+//               payload: json.encode(message.data));
+
+//           print(
+//               "======IN onMessage ========> YYYYYYYYYYYYYYYY ${message.data}");
+//         }
+//       },
+//     );
+
+//     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+//       print("IN THE OPEN MESSAGE  ============>>>>>>>>>>>");
+
+//       // on message
+//     });
+
+//     super.initState();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     // runApp(GetMaterialApp(home: Home()));
+//     return GetMaterialApp(
+//         debugShowCheckedModeBanner: false,
+//         title: "funfy",
+//         theme: ThemeData(
+//           primarySwatch: Colors.red,
+//         ),
+//         locale: _locale,
+//         localizationsDelegates: const [
+//           MyLocalization.delegate,
+//           GlobalMaterialLocalizations.delegate,
+//           GlobalWidgetsLocalizations.delegate,
+//           GlobalCupertinoLocalizations.delegate,
+//         ],
+//         supportedLocales: [
+//           const Locale('en', 'US'), // English, no country code
+//           const Locale('es', 'ES'), // Arabic, no country code
+//         ],
+//         localeResolutionCallback: (locale, supportedLocales) {
+//           for (var supportedLocale in supportedLocales) {
+//             if (supportedLocale.languageCode == locale!.languageCode &&
+//                 supportedLocale.countryCode == locale.countryCode) {
+//               return supportedLocale;
+//             }
+//           }
+//           print("hello + ${supportedLocales.first}");
+//           return supportedLocales.first;
+//         },
+//         // initialRoute: '/',
+//         // routes: <String, WidgetBuilder>{
+//         //   '/': (BuildContext context) => new Splash(),
+//         //   '/home': (BuildContext context) => new Home(),
+//         // },
+//         darkTheme: ThemeData.dark(), //
+//         // home: TranslateTest());
+//         home: Splash());
+//     // home: PickerDemo());
+//     // home: FilterUiT());
+//     // home: Home(
+//     //   pageIndexNum: 0,
+//     // ));
+//   }
+// }

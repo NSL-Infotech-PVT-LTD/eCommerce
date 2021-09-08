@@ -1241,8 +1241,11 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                                           SizedBox(
                                             width:
                                                 SizeConfig.screenWidth * 0.95,
-                                            child: richText("Select at most ",
-                                                "One", " from Mixes"),
+                                            child: richText(
+                                              "${getTranslated(context, 'selectAtMost')}",
+                                              "${getTranslated(context, 'one')}",
+                                              "${getTranslated(context, 'fromAlcohol')}",
+                                            ),
                                           ),
                                           Expanded(
                                             child: ListView.builder(
@@ -1304,8 +1307,11 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                                           SizedBox(
                                             width:
                                                 SizeConfig.screenWidth * 0.95,
-                                            child: richText("Select at most ",
-                                                "One", " from Mixes"),
+                                            child: richText(
+                                              "${getTranslated(context, 'selectAtMost')} ",
+                                              "${getTranslated(context, 'one')} ",
+                                              "${getTranslated(context, 'fromMixes')}",
+                                            ),
                                           ),
                                           Expanded(
                                             child: ListView.builder(
@@ -1363,8 +1369,11 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                                           SizedBox(
                                             width:
                                                 SizeConfig.screenWidth * 0.95,
-                                            child: richText("Select at most ",
-                                                "One", " from Mixes"),
+                                            child: richText(
+                                              "${getTranslated(context, 'selectAtMost')} ",
+                                              "${getTranslated(context, 'one')} ",
+                                              "${getTranslated(context, 'fromExtras')}",
+                                            ),
                                           ),
                                           Expanded(
                                             child: ListView.builder(

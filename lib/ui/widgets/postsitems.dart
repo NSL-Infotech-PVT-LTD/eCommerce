@@ -5,6 +5,7 @@ import 'package:funfy/components/shortPrices.dart';
 import 'package:funfy/models/fiestasmodel.dart';
 import 'package:funfy/models/preFiestasModel.dart';
 import 'package:funfy/ui/screens/bookNowBeta.dart';
+import 'package:funfy/ui/screens/fiestasBook.dart';
 import 'package:funfy/ui/screens/preFistaOrderMix.dart';
 import 'package:funfy/ui/widgets/rating.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
@@ -49,7 +50,7 @@ Widget fiestasItem({context, Datum? postModeldata}) {
   return InkWell(
     onTap: () {
       if (available != true) {
-        navigatorPushFun(context, BookNowBeta(fiestasID: postModeldata?.id));
+        navigatorPushFun(context, FiestasBook(fiestasID: postModeldata?.id));
       }
     },
     child: Stack(

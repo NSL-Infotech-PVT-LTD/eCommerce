@@ -260,5 +260,13 @@
   "Doyouwanttodeletetheaddress": "Do you want to delete the address ?",
   "myOrders": "My Orders",
   "CheckyourordersyouboughtforPrefiestas": "Check your orders you bought for Pre-fiestas",
-  "theSessionhasexpired": "The Session has expired, Please Signin Again !"
+  "theSessionhasexpired": "The Session has expired, Please Signin Again !",
+  "selectAtMost": "Select at most",
+  "one": "one",
+  "paymentisFailed": "Payment is Failed",
+  "peopleAttendinginthisevent": "People Attending in this event",
+  "add": "Add",
+  "fromAlcohol": "From Alcohol",
+  "fromMixes": "From Mixes",
+  "fromExtras": "From Extras"
 }

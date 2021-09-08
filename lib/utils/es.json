@@ -260,5 +260,13 @@
   "recent": "Reciente",
   "applyFilter": "Aplicar filtro",
   "CheckyourordersyouboughtforPrefiestas": "Consulta los pedidos que compraste para las Prefiestas",
-  "theSessionhasexpired": "La sesión ha expirado. ¡Vuelve a iniciar sesión!"
+  "theSessionhasexpired": "La sesión ha expirado. ¡Vuelve a iniciar sesión!",
+  "selectAtMost": "Seleccionar como máximo",
+  "one": "uno",
+  "paymentisFailed": "Pago Fallido",
+  "add": "Agregar",
+  "peopleAttendinginthisevent": "Personas que asistirán a este evento",
+  "fromAlcohol": "Del Alcohol",
+  "fromMixes": "De Mixes",
+  "fromExtras": "De Extras"
 }
