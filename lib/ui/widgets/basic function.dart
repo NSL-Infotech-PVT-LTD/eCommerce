@@ -288,9 +288,14 @@ Widget ticket({context, index, mapdata, addFunc, removeFunc}) {
                                               )
                                             : InkWell(
                                                 onTap: () {
-                                                  removeFunc(
+                                                  addFunc(
+                                                      index: index,
                                                       name: mapdata["name"],
-                                                      index: index);
+                                                      count: 1,
+                                                      price: int.parse(
+                                                          mapdata["price"]
+                                                              .toString()),
+                                                      image: mapdata["image"]);
                                                 },
                                                 child: Container(
                                                   decoration: BoxDecoration(

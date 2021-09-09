@@ -118,8 +118,8 @@ class Datum {
   String? transferCharge;
   int? totalPrice;
   String? address;
-  String? orderStatus;
-  String? paymentMode;
+  OrderStatus? orderStatus;
+  PaymentMode? paymentMode;
   CategoryDetail? categoryDetail;
   double? grandTotal;
   List<OrderItem>? orderItem;
@@ -132,8 +132,8 @@ class Datum {
         transferCharge: json["transfer_charge"],
         totalPrice: json["total_price"],
         address: json["address"],
-        orderStatus: json["order_status"],
-        paymentMode: json["payment_mode"],
+        orderStatus: orderStatusValues.map[json["order_status"]],
+        paymentMode: paymentModeValues.map[json["payment_mode"]],
         categoryDetail: CategoryDetail.fromJson(json["category_detail"]),
         grandTotal: json["grand_total"].toDouble(),
         orderItem: List<OrderItem>.from(
@@ -149,8 +149,8 @@ class Datum {
         "transfer_charge": transferCharge,
         "total_price": totalPrice,
         "address": address,
-        "order_status": orderStatus,
-        "payment_mode": paymentMode,
+        "order_status": orderStatusValues.reverse[orderStatus],
+        "payment_mode": paymentModeValues.reverse[paymentMode],
         "category_detail": categoryDetail?.toJson(),
         "grand_total": grandTotal,
         "order_item": List<dynamic>.from(orderItem!.map((x) => x.toJson())),
@@ -171,7 +171,7 @@ class CategoryDetail {
   });
 
   int? id;
-  String? name;
+  CategoryDetailName? name;
   int? parentId;
   String? image;
   String? description;
@@ -182,7 +182,7 @@ class CategoryDetail {
 
   factory CategoryDetail.fromJson(Map<String, dynamic> json) => CategoryDetail(
         id: json["id"],
-        name: json["name"],
+        name: categoryDetailNameValues.map[json["name"]],
         parentId: json["parent_id"],
         image: json["image"],
         description: json["description"],
@@ -194,7 +194,7 @@ class CategoryDetail {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "name": name,
+        "name": categoryDetailNameValues.reverse[name],
         "parent_id": parentId,
         "image": image,
         "description": description,
@@ -204,6 +204,13 @@ class CategoryDetail {
         "quantity_in_cl": quantityInCl,
       };
 }
+
+enum CategoryDetailName { WHITE_KNIGHT, BEER_PONG_ANIMALS }
+
+final categoryDetailNameValues = EnumValues({
+  "Beer Pong Animals": CategoryDetailName.BEER_PONG_ANIMALS,
+  "White knight": CategoryDetailName.WHITE_KNIGHT
+});
 
 class OrderItem {
   OrderItem({
@@ -217,7 +224,7 @@ class OrderItem {
   int? orderId;
   int? preFiestaId;
   int? quantity;
-  int? price;
+  var price;
   PreFiesta? preFiesta;
 
   factory OrderItem.fromJson(Map<String, dynamic> json) => OrderItem(
@@ -253,22 +260,22 @@ class PreFiesta {
   });
 
   int? id;
-  String? name;
+  PreFiestaName? name;
   int? quantity;
-  String? categories;
+  Categories? categories;
   String? image;
   String? price;
   String? description;
   bool? isInMyCart;
   int? isInMyCartQuantity;
   bool? isFavourite;
-  int? quantityInCl;
+  dynamic quantityInCl;
 
   factory PreFiesta.fromJson(Map<String, dynamic> json) => PreFiesta(
         id: json["id"],
-        name: json["name"],
+        name: preFiestaNameValues.map[json["name"]],
         quantity: json["quantity"],
-        categories: json["categories"],
+        categories: categoriesValues.map[json["categories"]],
         image: json["image"],
         price: json["price"],
         description: json["description"],
@@ -280,9 +287,9 @@ class PreFiesta {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "name": name,
+        "name": preFiestaNameValues.reverse[name],
         "quantity": quantity,
-        "categories": categories,
+        "categories": categoriesValues.reverse[categories],
         "image": image,
         "price": price,
         "description": description,
@@ -291,4 +298,44 @@ class PreFiesta {
         "is_favourite": isFavourite,
         "quantity_in_cl": quantityInCl,
       };
+}
+
+enum Categories { ALCOHOL, MIX, EXTRAS }
+
+final categoriesValues = EnumValues({
+  "alcohol": Categories.ALCOHOL,
+  "extras": Categories.EXTRAS,
+  "mix": Categories.MIX
+});
+
+enum PreFiestaName { DEMO, HASSAN_BERNIER, DELPHIA_QUIGLEY, TESTING }
+
+final preFiestaNameValues = EnumValues({
+  "Delphia Quigley": PreFiestaName.DELPHIA_QUIGLEY,
+  "demo": PreFiestaName.DEMO,
+  "Hassan Bernier": PreFiestaName.HASSAN_BERNIER,
+  "testing": PreFiestaName.TESTING
+});
+
+enum OrderStatus { PAID, ACCEPTED }
+
+final orderStatusValues =
+    EnumValues({"accepted": OrderStatus.ACCEPTED, "paid": OrderStatus.PAID});
+
+enum PaymentMode { CARD }
+
+final paymentModeValues = EnumValues({"card": PaymentMode.CARD});
+
+class EnumValues<T> {
+  Map<String, T> map;
+  Map<T, String>? reverseMap;
+
+  EnumValues(this.map);
+
+  Map<T, String> get reverse {
+    if (reverseMap == null) {
+      reverseMap = map.map((k, v) => new MapEntry(v, k));
+    }
+    return reverseMap!;
+  }
 }

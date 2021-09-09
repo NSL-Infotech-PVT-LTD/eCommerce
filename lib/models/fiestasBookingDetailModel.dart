@@ -114,9 +114,9 @@ class FiestaDetail {
   String? totalMembers;
   int? filterLocalId;
   dynamic clubRating;
-  int? leftNormalTicket;
-  int? leftStandardTicket;
-  String? leftVipTicket;
+  var leftNormalTicket;
+  var leftStandardTicket;
+  var leftVipTicket;
   bool? isFavourite;
   String? distanceMiles;
   Filter? filterLocal;

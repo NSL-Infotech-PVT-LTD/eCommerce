@@ -441,7 +441,7 @@ class _FiestasBookState extends State<FiestasBook> {
                                   ),
                                 ];
                               },
-                              body: TabBarView(children: [
+                              body: PageView(children: [
                                 // first tab bar view widget
                                 SingleChildScrollView(
                                   child: Container(

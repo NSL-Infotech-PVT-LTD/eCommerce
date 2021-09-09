@@ -1371,7 +1371,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                                                 SizeConfig.screenWidth * 0.95,
                                             child: richText(
                                               "${getTranslated(context, 'selectAtMost')} ",
-                                              "${getTranslated(context, 'one')} ",
+                                              "${getTranslated(context, 'alert!')}"                          "${getTranslated(context, 'one')} ",
                                               "${getTranslated(context, 'fromExtras')}",
                                             ),
                                           ),

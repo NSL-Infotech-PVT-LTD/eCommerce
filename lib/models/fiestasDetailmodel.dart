@@ -91,9 +91,9 @@ class Data {
   String? totalStandardTickets;
   String? totalNormalTickets;
   dynamic clubRating;
-  int? leftNormalTicket;
-  int? leftStandardTicket;
-  int? leftVipTicket;
+  var leftNormalTicket;
+  var leftStandardTicket;
+  var leftVipTicket;
   bool? isFavourite;
   String? distanceMiles;
   Filter? filterLocal;

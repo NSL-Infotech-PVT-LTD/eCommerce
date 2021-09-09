@@ -78,7 +78,7 @@ Future fiestasBookingList() async {
 
   final jsonRes = json.decode(res.body);
 
-  print("here is fiestas body");
+  // print("here is fiestas body");
 
   // print(res.body);
 
@@ -89,7 +89,7 @@ Future fiestasBookingList() async {
     // return fiestasBookingListFromJson(res.body);
     return jsonRes["data"]["data"];
   } else {
-    // print(res.body);
+    print(res.body);
   }
 }
 
@@ -147,13 +147,19 @@ Future<PreFiestasBookingListModel?> preFiestaBookingListApi() async {
   var res = await http.post(Uri.parse(Urls.preFiestasBookingListUrl),
       headers: headers);
 
-  // print(res.body);
-
   if (res.statusCode == 200) {
-    return preFiestasBookingListModelFromJson(res.body);
-  } else {
+    // print("body Here ---------");
+
     // print(res.body);
 
+    try {
+      return preFiestasBookingListModelFromJson(res.body);
+    } catch (e) {
+      print("e-------------------- $e");
+    }
+  } else {
+    print("else Here ---------");
+    print(res.body);
   }
 }
 

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:funfy/apis/bookingApi.dart';
 import 'package:funfy/components/navigation.dart';
-import 'package:funfy/models/fiestasBookingListModel.dart';
 import 'package:funfy/models/preFiestasBookingListModel.dart';
 import 'package:funfy/ui/screens/Your%20order%20Summery.dart';
 import 'package:funfy/ui/screens/fiestasMoreOrderDetails.dart';
@@ -49,14 +48,14 @@ class _BookingPageState extends State<BookingPage> {
       });
       try {
         await fiestasBookingList().then((res) {
-          print("here is json");
+          // print("here is json");
 
-          print(res[0]["id"]);
+          // print(res[0]["id"]);
           // print(res.body);
 
           Iterable data = res.reversed.toList();
 
-          print(data);
+          // print(data);
 
           setState(() {
             fiestasBookingListRes = data.toList();
@@ -77,6 +76,7 @@ class _BookingPageState extends State<BookingPage> {
     print("run 2 ---------------- ");
     try {
       await preFiestaBookingListApi().then((res) {
+        print(res?.toJson());
         setState(() {
           _preFiestasLoading = false;
         });

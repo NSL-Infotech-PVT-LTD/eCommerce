@@ -79,6 +79,7 @@ class _SigninState extends State<Signin> {
 
       try {
         await signinUser(
+                context: context,
                 email: _emailController.text,
                 password: _passwordController.text,
                 devicetype: Platform.isAndroid ? "android" : "ios")
