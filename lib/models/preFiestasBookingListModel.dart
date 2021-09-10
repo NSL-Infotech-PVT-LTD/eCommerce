@@ -59,7 +59,7 @@ class Data {
   String? lastPageUrl;
   dynamic nextPageUrl;
   String? path;
-  int? perPage;
+  var perPage;
   dynamic prevPageUrl;
   int? to;
   int? total;
@@ -112,28 +112,28 @@ class Datum {
   });
 
   int? id;
-  DateTime? date;
-  String? time;
+  dynamic date;
+  dynamic time;
   int? orderBy;
   String? transferCharge;
   int? totalPrice;
   String? address;
-  OrderStatus? orderStatus;
-  PaymentMode? paymentMode;
+  String? orderStatus;
+  String? paymentMode;
   CategoryDetail? categoryDetail;
   double? grandTotal;
   List<OrderItem>? orderItem;
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
         id: json["id"],
-        date: DateTime.parse(json["date"]),
+        date: json["date"],
         time: json["time"],
         orderBy: json["order_by"],
         transferCharge: json["transfer_charge"],
         totalPrice: json["total_price"],
         address: json["address"],
-        orderStatus: orderStatusValues.map[json["order_status"]],
-        paymentMode: paymentModeValues.map[json["payment_mode"]],
+        orderStatus: json["order_status"],
+        paymentMode: json["payment_mode"],
         categoryDetail: CategoryDetail.fromJson(json["category_detail"]),
         grandTotal: json["grand_total"].toDouble(),
         orderItem: List<OrderItem>.from(
@@ -142,15 +142,14 @@ class Datum {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "date":
-            "${date?.year.toString().padLeft(4, '0')}-${date?.month.toString().padLeft(2, '0')}-${date?.day.toString().padLeft(2, '0')}",
+        "date": date,
         "time": time,
         "order_by": orderBy,
         "transfer_charge": transferCharge,
         "total_price": totalPrice,
         "address": address,
-        "order_status": orderStatusValues.reverse[orderStatus],
-        "payment_mode": paymentModeValues.reverse[paymentMode],
+        "order_status": orderStatus,
+        "payment_mode": paymentMode,
         "category_detail": categoryDetail?.toJson(),
         "grand_total": grandTotal,
         "order_item": List<dynamic>.from(orderItem!.map((x) => x.toJson())),
@@ -171,7 +170,7 @@ class CategoryDetail {
   });
 
   int? id;
-  CategoryDetailName? name;
+  String? name;
   int? parentId;
   String? image;
   String? description;
@@ -182,7 +181,7 @@ class CategoryDetail {
 
   factory CategoryDetail.fromJson(Map<String, dynamic> json) => CategoryDetail(
         id: json["id"],
-        name: categoryDetailNameValues.map[json["name"]],
+        name: json["name"],
         parentId: json["parent_id"],
         image: json["image"],
         description: json["description"],
@@ -194,7 +193,7 @@ class CategoryDetail {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "name": categoryDetailNameValues.reverse[name],
+        "name": name,
         "parent_id": parentId,
         "image": image,
         "description": description,
@@ -204,13 +203,6 @@ class CategoryDetail {
         "quantity_in_cl": quantityInCl,
       };
 }
-
-enum CategoryDetailName { WHITE_KNIGHT, BEER_PONG_ANIMALS }
-
-final categoryDetailNameValues = EnumValues({
-  "Beer Pong Animals": CategoryDetailName.BEER_PONG_ANIMALS,
-  "White knight": CategoryDetailName.WHITE_KNIGHT
-});
 
 class OrderItem {
   OrderItem({
@@ -224,7 +216,7 @@ class OrderItem {
   int? orderId;
   int? preFiestaId;
   int? quantity;
-  var price;
+  int? price;
   PreFiesta? preFiesta;
 
   factory OrderItem.fromJson(Map<String, dynamic> json) => OrderItem(
@@ -260,22 +252,22 @@ class PreFiesta {
   });
 
   int? id;
-  PreFiestaName? name;
+  String? name;
   int? quantity;
-  Categories? categories;
+  String? categories;
   String? image;
   String? price;
   String? description;
   bool? isInMyCart;
   int? isInMyCartQuantity;
   bool? isFavourite;
-  dynamic quantityInCl;
+  int? quantityInCl;
 
   factory PreFiesta.fromJson(Map<String, dynamic> json) => PreFiesta(
         id: json["id"],
-        name: preFiestaNameValues.map[json["name"]],
+        name: json["name"],
         quantity: json["quantity"],
-        categories: categoriesValues.map[json["categories"]],
+        categories: json["categories"],
         image: json["image"],
         price: json["price"],
         description: json["description"],
@@ -287,9 +279,9 @@ class PreFiesta {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "name": preFiestaNameValues.reverse[name],
+        "name": name,
         "quantity": quantity,
-        "categories": categoriesValues.reverse[categories],
+        "categories": categories,
         "image": image,
         "price": price,
         "description": description,
@@ -298,44 +290,4 @@ class PreFiesta {
         "is_favourite": isFavourite,
         "quantity_in_cl": quantityInCl,
       };
-}
-
-enum Categories { ALCOHOL, MIX, EXTRAS }
-
-final categoriesValues = EnumValues({
-  "alcohol": Categories.ALCOHOL,
-  "extras": Categories.EXTRAS,
-  "mix": Categories.MIX
-});
-
-enum PreFiestaName { DEMO, HASSAN_BERNIER, DELPHIA_QUIGLEY, TESTING }
-
-final preFiestaNameValues = EnumValues({
-  "Delphia Quigley": PreFiestaName.DELPHIA_QUIGLEY,
-  "demo": PreFiestaName.DEMO,
-  "Hassan Bernier": PreFiestaName.HASSAN_BERNIER,
-  "testing": PreFiestaName.TESTING
-});
-
-enum OrderStatus { PAID, ACCEPTED }
-
-final orderStatusValues =
-    EnumValues({"accepted": OrderStatus.ACCEPTED, "paid": OrderStatus.PAID});
-
-enum PaymentMode { CARD }
-
-final paymentModeValues = EnumValues({"card": PaymentMode.CARD});
-
-class EnumValues<T> {
-  Map<String, T> map;
-  Map<T, String>? reverseMap;
-
-  EnumValues(this.map);
-
-  Map<T, String> get reverse {
-    if (reverseMap == null) {
-      reverseMap = map.map((k, v) => new MapEntry(v, k));
-    }
-    return reverseMap!;
-  }
 }

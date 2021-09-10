@@ -55,7 +55,8 @@ Future<UserModel?> signinUser(
 }
 
 Future<FacebookSigninModel?> facebookLogin(
-    {String? name,
+    {context,
+    String? name,
     String? email,
     String? fbId,
     String? deviceType,
@@ -82,13 +83,22 @@ Future<FacebookSigninModel?> facebookLogin(
     return facebookSigninModelFromJson(res.body);
   } else if (res.statusCode == 200) {
     return facebookSigninModelFromJson(res.body);
+  } else if (res.statusCode == 422) {
+    Dialogs.simpleOkAlertDialog(
+        context: context,
+        title: "${getTranslated(context, 'alert!')}",
+        content: "${jsondata['error']}",
+        func: () {
+          navigatePopFun(context);
+        });
   } else {
     print("Error in Facebook signin Api");
   }
 }
 
 Future<GoogleSigninModel?> googleLogin(
-    {String? name,
+    {context,
+    String? name,
     String? email,
     String? googleid,
     String? deviceType,
@@ -114,6 +124,14 @@ Future<GoogleSigninModel?> googleLogin(
     return googleSigninModelFromJson(res.body);
   } else if (res.statusCode == 200) {
     return googleSigninModelFromJson(res.body);
+  } else if (res.statusCode == 422) {
+    Dialogs.simpleOkAlertDialog(
+        context: context,
+        title: "${getTranslated(context, 'alert!')}",
+        content: "${jsondata['error']}",
+        func: () {
+          navigatePopFun(context);
+        });
   } else {
     print("Error in Google signin Api");
   }

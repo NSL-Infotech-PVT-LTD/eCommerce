@@ -313,6 +313,11 @@ class _FiestasBookState extends State<FiestasBook> {
     }
   }
 
+  PageController pageControllerL = PageController();
+
+  int pageChanged = 1;
+  bool fiestasButton = true;
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -418,461 +423,623 @@ class _FiestasBookState extends State<FiestasBook> {
                                     sliver: SliverList(
                                       delegate: SliverChildListDelegate([
                                         //table view
-                                        TabBar(
-                                          unselectedLabelColor: Colors.grey,
 
-                                          // indicatorColor:
-                                          //     AppColors.siginbackgrond,
-                                          tabs: [
-                                            Tab(
-                                              icon: Text(
-                                                "${getTranslated(context, "about")}",
-                                              ),
-                                            ),
-                                            Tab(
-                                              icon: Text(
-                                                "${getTranslated(context, "booking")}",
-                                              ),
-                                            ),
-                                          ],
+                                        Container(
+                                          // padding: EdgeInsets.symmetric(
+                                          //     vertical: size.height * 0.01,
+                                          //     horizontal: size.width * 0.04),
+                                          // color: Colors.blue,
+                                          width: size.width,
+                                          // height: size.height * 0.09,
+                                          child: roundedBox(
+                                              width: size.width * 0.8,
+                                              height: size.height * 0.07,
+                                              backgroundColor: AppColors
+                                                  .homeTopbuttonbackground,
+                                              child: Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical:
+                                                        size.height * 0.01,
+                                                    horizontal:
+                                                        size.width * 0.022),
+                                                child: Row(
+                                                  children: [
+                                                    // fiestas button
+
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: GestureDetector(
+                                                        onTap: () {
+                                                          pageControllerL.animateToPage(
+                                                              pageChanged = 0,
+                                                              duration: Duration(
+                                                                  milliseconds:
+                                                                      150),
+                                                              curve: Curves
+                                                                  .bounceInOut);
+                                                          setState(() {
+                                                            pageChanged = 0;
+                                                            fiestasButton =
+                                                                true;
+                                                          });
+                                                        },
+                                                        child: roundedBox(
+                                                            backgroundColor:
+                                                                fiestasButton
+                                                                    ? AppColors
+                                                                        .siginbackgrond
+                                                                    : AppColors
+                                                                        .homeTopbuttonbackground,
+                                                            child: Align(
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              child: Text(
+                                                                "${getTranslated(context, "about")}",
+                                                                //    Strings.fiestas,
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        size.width *
+                                                                            0.038,
+                                                                    fontFamily:
+                                                                        Fonts
+                                                                            .dmSansBold,
+                                                                    color: AppColors
+                                                                        .white),
+                                                              ),
+                                                            )),
+                                                      ),
+                                                    ),
+
+                                                    SizedBox(
+                                                      width: size.width * 0.01,
+                                                    ),
+
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: GestureDetector(
+                                                        onTap: () {
+                                                          pageControllerL.animateToPage(
+                                                              pageChanged = 1,
+                                                              duration: Duration(
+                                                                  milliseconds:
+                                                                      200),
+                                                              curve: Curves
+                                                                  .bounceInOut);
+                                                          setState(() {
+                                                            pageChanged = 1;
+                                                            fiestasButton =
+                                                                false;
+                                                          });
+                                                        },
+                                                        child: roundedBox(
+                                                            // width: size.width * 0.44,
+                                                            backgroundColor:
+                                                                fiestasButton
+                                                                    ? AppColors
+                                                                        .homeTopbuttonbackground
+                                                                    : AppColors
+                                                                        .siginbackgrond,
+                                                            child: Align(
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              child: Text(
+                                                                "${getTranslated(context, "booking")}",
+                                                                //   Strings.preFiestas,
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        size.width *
+                                                                            0.038,
+                                                                    fontFamily:
+                                                                        Fonts
+                                                                            .dmSansBold,
+                                                                    color: AppColors
+                                                                        .white),
+                                                              ),
+                                                            )),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              )),
                                         ),
+
+                                        // TabBar(
+                                        //   unselectedLabelColor: Colors.grey,
+
+                                        //   // indicatorColor:
+                                        //   //     AppColors.siginbackgrond,
+                                        //   tabs: [
+                                        //     Tab(
+                                        //       icon: Text(
+                                        //         "${getTranslated(context, "about")}",
+                                        //       ),
+                                        //     ),
+                                        //     Tab(
+                                        //       icon: Text(
+                                        //         "${getTranslated(context, "booking")}",
+                                        //       ),
+                                        //     ),
+                                        //   ],
+                                        // ),
                                       ]),
                                     ),
                                   ),
                                 ];
                               },
-                              body: PageView(children: [
-                                // first tab bar view widget
-                                SingleChildScrollView(
-                                  child: Container(
-                                    color: AppColors.homeBackground,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        // heading data
+                              body: PageView(
+                                  pageSnapping: true,
+                                  controller: pageControllerL,
+                                  onPageChanged: (index) {
+                                    setState(() {
+                                      print(index);
+                                      pageChanged = index;
 
-                                        Container(
-                                          margin: EdgeInsets.only(
-                                            top: size.height * 0.015,
-                                            left: size.width * 0.04,
-                                            right: size.width * 0.04,
-                                          ),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                "${fiestasDetailModel?.data!.name}",
-                                                style: TextStyle(
-                                                    fontSize: size.width * 0.1,
-                                                    fontFamily: "DM Sans Bold",
-                                                    color: AppColors.white),
-                                                maxLines: 1,
-                                                softWrap: true,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                              SizedBox(
-                                                height: size.height * 0.005,
-                                              ),
-                                              ratingstars(
-                                                  size: size.width * 0.06,
-                                                  ittempading:
-                                                      size.width * 0.005,
-                                                  color: AppColors.tagBorder,
-                                                  rating: rating)
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: size.height * 0.01,
-                                        ),
-                                        Container(
-                                          width: size.width * 0.9,
-                                          child: aboutItems(
-                                              imageHeight: 0.038,
-                                              size: size,
-                                              icon:
-                                                  "assets/partydetail/peopplecoming.png",
-                                              content:
-                                                  "${fiestasDetailModel?.data!.totalMembers} ${getTranslated(context, 'peopleAttendinginthisevent')}"),
-                                        ),
-                                        SizedBox(
-                                          height: size.height * 0.03,
-                                        ),
-                                        Container(
-                                          margin: EdgeInsets.symmetric(
-                                              horizontal: size.width * 0.025),
-                                          child: Row(
-                                            children: [
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  aboutItems(
-                                                      imageHeight: 0.035,
-                                                      size: size,
-                                                      icon:
-                                                          "assets/partydetail/calender.png",
-                                                      content:
-                                                          "$day ${month?.substring(0, 4)}"),
-                                                  // SizedBox(
-                                                  //   height: size.width * 0.06,
-                                                  // ),
-                                                  aboutItems(
-                                                      imageHeight: 0.035,
-                                                      size: size,
-                                                      icon:
-                                                          "assets/partydetail/dresScode.png",
-                                                      content:
-                                                          "${fiestasDetailModel?.data?.filterMusic?.name}"),
-                                                ],
-                                              ),
-                                              SizedBox(
-                                                width: size.width * 0.07,
-                                              ),
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  aboutItems(
-                                                      imageHeight: 0.035,
-                                                      // circlePading: 0.05,
-                                                      size: size,
-                                                      icon:
-                                                          "assets/partydetail/time.png",
-                                                      content:
-                                                          "$onlyTime $amPm"),
-                                                  // SizedBox(
-                                                  //   height: size.height * 0.005,
-                                                  // ),
-                                                  aboutItems(
-                                                      imageHeight: 0.035,
-                                                      size: size,
-                                                      icon:
-                                                          "assets/partydetail/music.png",
-                                                      content:
-                                                          "${fiestasDetailModel?.data?.filterClothing?.name}"),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: size.height * 0.03,
-                                        ),
-
-                                        // Description
-
-                                        Container(
-                                          width: size.width,
-                                          margin: EdgeInsets.symmetric(
-                                              horizontal: size.width * 0.04),
-                                          // height:
-                                          //     SizeConfig.screenHeight * 0.40,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                "${getTranslated(context, "description")}",
-                                                // Strings.description,
-                                                style: TextStyle(
-                                                  color: AppColors.white,
-                                                  fontFamily: Fonts.dmSansBold,
-                                                  fontSize: size.width * 0.046,
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                  height:
-                                                      SizeConfig.screenHeight *
-                                                          0.01),
-                                              Divider(
-                                                color: AppColors.tagBorder,
-                                                thickness: 0.3,
-                                              ),
-                                              SizedBox(
-                                                  height:
-                                                      SizeConfig.screenHeight *
-                                                          0.01),
-                                              Text(
-                                                  // "${getTranslated(context, "lorem")}",
-                                                  "${fiestasDetailModel?.data!.description ?? getTranslated(context, "nodataFound")}",
-                                                  style: TextStyle(
-                                                      fontFamily: "Product",
-                                                      fontSize: 14,
-                                                      color: AppColors.white)),
-                                            ],
-                                          ),
-                                        ),
-
-                                        //>
-
-                                        SizedBox(
-                                          height: size.height * 0.05,
-                                        ),
-                                        Stack(
+                                      if (index == 0) {
+                                        fiestasButton = true;
+                                      } else {
+                                        fiestasButton = false;
+                                      }
+                                    });
+                                  },
+                                  children: [
+                                    // first tab bar view widget
+                                    SingleChildScrollView(
+                                      child: Container(
+                                        color: AppColors.homeBackground,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
+                                            // heading data
+
                                             Container(
-                                              height: 200,
-                                              child: GoogleMap(
-                                                zoomControlsEnabled: false,
-                                                onTap: (latLng) {
-                                                  print(
-                                                      "Current Value ==> $latLng");
-                                                },
-                                                onMapCreated: _onMapCreated,
-                                                initialCameraPosition:
-                                                    CameraPosition(
-                                                  target: LatLng(
-                                                      double.parse(
-                                                          fiestasDetailModel
-                                                                  ?.data
-                                                                  ?.clubDetail
-                                                                  ?.latitude ??
-                                                              "0.0"),
-                                                      double.parse(
-                                                          fiestasDetailModel
-                                                                  ?.data
-                                                                  ?.clubDetail
-                                                                  ?.longitude ??
-                                                              "0.0")),
-                                                  zoom: 10.0,
-                                                ),
-                                                markers: _markers,
+                                              margin: EdgeInsets.only(
+                                                top: size.height * 0.015,
+                                                left: size.width * 0.04,
+                                                right: size.width * 0.04,
+                                              ),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "${fiestasDetailModel?.data!.name}",
+                                                    style: TextStyle(
+                                                        fontSize:
+                                                            size.width * 0.1,
+                                                        fontFamily:
+                                                            "DM Sans Bold",
+                                                        color: AppColors.white),
+                                                    maxLines: 1,
+                                                    softWrap: true,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                  SizedBox(
+                                                    height: size.height * 0.005,
+                                                  ),
+                                                  ratingstars(
+                                                      size: size.width * 0.06,
+                                                      ittempading:
+                                                          size.width * 0.005,
+                                                      color:
+                                                          AppColors.tagBorder,
+                                                      rating: rating)
+                                                ],
                                               ),
                                             ),
-                                            Positioned(
-                                              bottom: 0,
-                                              left: 5,
-                                              child: MaterialButton(
-                                                  color: Colors.blue,
-                                                  textColor: Colors.white,
-                                                  child: Center(
-                                                      child:
-                                                          Icon(Icons.zoom_in)),
-                                                  minWidth: size.width * 0.05,
-
-                                                  // Text("Zoom In"),
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      mapZoom = true;
-                                                    });
-                                                  }),
-                                            )
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-
-                                Stack(
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        // heading data
-
-                                        Container(
-                                          margin: EdgeInsets.only(
-                                            top: size.height * 0.015,
-                                            left: size.width * 0.04,
-                                            right: size.width * 0.04,
-                                          ),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                "${fiestasDetailModel?.data!.name}",
-                                                style: TextStyle(
-                                                    fontSize: size.width * 0.1,
-                                                    fontFamily: "DM Sans Bold",
-                                                    color: AppColors.white),
-                                                maxLines: 1,
-                                                softWrap: true,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                              SizedBox(
-                                                height: size.height * 0.005,
-                                              ),
-                                              ratingstars(
-                                                  size: size.width * 0.06,
-                                                  ittempading:
-                                                      size.width * 0.005,
-                                                  color: AppColors.tagBorder,
-                                                  rating: rating)
-                                            ],
-                                          ),
-                                        ),
-
-                                        SizedBox(
-                                          height: size.height * 0.02,
-                                        ),
-                                        Expanded(
-                                          child: ListView.builder(
-                                              itemCount:
-                                                  UserData.tiketList.length,
-                                              itemBuilder: (
-                                                BuildContext context,
-                                                index,
-                                              ) {
-                                                return ticket(
-                                                    context: context,
-                                                    index: index,
-                                                    mapdata: UserData
-                                                        .tiketList[index],
-                                                    addFunc: addTicket,
-                                                    removeFunc: ticketRemove);
-                                              }),
-                                        ),
-                                      ],
-                                    ),
-                                    UserData.ticketcartMap.isEmpty
-                                        ? SizedBox()
-                                        : Positioned(
-                                            bottom: 0.0,
-                                            child: Stack(
-                                              children: [
-                                                Container(
-                                                    width:
-                                                        SizeConfig.screenWidth,
-                                                    height: SizeConfig
-                                                            .screenHeight *
-                                                        0.10,
-                                                    child: SvgPicture.asset(
-                                                      "assets/images/Rectangle.svg",
-                                                      fit: BoxFit.fill,
-                                                    )),
-                                                Container(
-                                                  width: SizeConfig.screenWidth,
-                                                  padding: EdgeInsets.symmetric(
-                                                      horizontal:
-                                                          size.width * 0.03,
-                                                      vertical:
-                                                          size.height * 0.01),
-                                                  child: Row(
+                                            SizedBox(
+                                              height: size.height * 0.01,
+                                            ),
+                                            Container(
+                                              width: size.width * 0.9,
+                                              child: aboutItems(
+                                                  imageHeight: 0.038,
+                                                  size: size,
+                                                  icon:
+                                                      "assets/partydetail/peopplecoming.png",
+                                                  content:
+                                                      "${fiestasDetailModel?.data!.totalMembers} ${getTranslated(context, 'peopleAttendinginthisevent')}"),
+                                            ),
+                                            SizedBox(
+                                              height: size.height * 0.03,
+                                            ),
+                                            Container(
+                                              margin: EdgeInsets.symmetric(
+                                                  horizontal:
+                                                      size.width * 0.025),
+                                              child: Row(
+                                                children: [
+                                                  Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
                                                     children: [
-                                                      Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                            "${getTranslated(context, "addtocart")}",
-                                                            // Strings.addtocart,
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                            style: TextStyle(
-                                                                color: AppColors
-                                                                    .brownlite,
-                                                                fontSize:
-                                                                    size.width *
-                                                                        0.03),
-                                                          ),
-                                                          SizedBox(
-                                                            height: SizeConfig
-                                                                    .screenHeight *
-                                                                0.01,
-                                                          ),
-                                                          Row(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .end,
-                                                              children: [
-                                                                SvgPicture
-                                                                    .asset(
-                                                                  "assets/images/ticket.svg",
-                                                                  width:
-                                                                      size.width *
-                                                                          0.07,
-                                                                ),
-                                                                SizedBox(
-                                                                  width:
-                                                                      size.width *
-                                                                          0.02,
-                                                                ),
-                                                                Container(
-                                                                  // width: SizeConfig.screenWidth * 0.40,
-                                                                  child: Text(
-                                                                    "${getTranslated(context, "ticket")} * ${UserData.totalTicketNum}",
-                                                                    // "${Strings.ticket} * ${UserData.totalTicketNum}",
-                                                                    style:
-                                                                        TextStyle(
-                                                                      color: AppColors
-                                                                          .white,
-                                                                      fontSize:
-                                                                          size.width *
-                                                                              0.05,
-                                                                      fontFamily:
-                                                                          "DM Sans Bold",
-                                                                    ),
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .start,
-                                                                    maxLines: 1,
-                                                                    softWrap:
-                                                                        true,
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .clip,
-                                                                  ),
-                                                                ),
-                                                              ]),
-                                                        ],
-                                                      ),
-                                                      SizedBox(
-                                                        width: SizeConfig
-                                                                .screenWidth *
-                                                            0.04,
-                                                      ),
-                                                      Spacer(),
-                                                      ElevatedButton(
-                                                        child: Text(
-                                                          "${getTranslated(context, "buyNow")}",
-                                                          // Strings.buyNow,
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                        onPressed: () {
-                                                          Navigator.of(context)
-                                                              .push(MaterialPageRoute(
-                                                                  builder: (context) =>
-                                                                      BuyNow(
-                                                                          fiestasM:
-                                                                              fiestasDetailModel)))
-                                                              .then((value) {
-                                                            setState(() {
-                                                              totalTicket();
-                                                            });
-                                                          });
-                                                        },
-                                                        style: ElevatedButton
-                                                            .styleFrom(
-                                                          padding: EdgeInsets.symmetric(
-                                                              horizontal: SizeConfig
-                                                                      .screenWidth *
-                                                                  0.06,
-                                                              vertical: SizeConfig
-                                                                      .screenHeight *
-                                                                  0.02),
-                                                          primary:
-                                                              AppColors.redlite,
-                                                        ),
-                                                      ),
+                                                      aboutItems(
+                                                          imageHeight: 0.035,
+                                                          size: size,
+                                                          icon:
+                                                              "assets/partydetail/calender.png",
+                                                          content:
+                                                              "$day ${month?.substring(0, 4)}"),
+                                                      // SizedBox(
+                                                      //   height: size.width * 0.06,
+                                                      // ),
+                                                      aboutItems(
+                                                          imageHeight: 0.035,
+                                                          size: size,
+                                                          icon:
+                                                              "assets/partydetail/dresScode.png",
+                                                          content:
+                                                              "${fiestasDetailModel?.data?.filterMusic?.name}"),
                                                     ],
                                                   ),
+                                                  SizedBox(
+                                                    width: size.width * 0.07,
+                                                  ),
+                                                  Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      aboutItems(
+                                                          imageHeight: 0.035,
+                                                          // circlePading: 0.05,
+                                                          size: size,
+                                                          icon:
+                                                              "assets/partydetail/time.png",
+                                                          content:
+                                                              "$onlyTime $amPm"),
+                                                      // SizedBox(
+                                                      //   height: size.height * 0.005,
+                                                      // ),
+                                                      aboutItems(
+                                                          imageHeight: 0.035,
+                                                          size: size,
+                                                          icon:
+                                                              "assets/partydetail/music.png",
+                                                          content:
+                                                              "${fiestasDetailModel?.data?.filterClothing?.name}"),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: size.height * 0.03,
+                                            ),
+
+                                            // Description
+
+                                            Container(
+                                              width: size.width,
+                                              margin: EdgeInsets.symmetric(
+                                                  horizontal:
+                                                      size.width * 0.04),
+                                              // height:
+                                              //     SizeConfig.screenHeight * 0.40,
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "${getTranslated(context, "description")}",
+                                                    // Strings.description,
+                                                    style: TextStyle(
+                                                      color: AppColors.white,
+                                                      fontFamily:
+                                                          Fonts.dmSansBold,
+                                                      fontSize:
+                                                          size.width * 0.046,
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                      height: SizeConfig
+                                                              .screenHeight *
+                                                          0.01),
+                                                  Divider(
+                                                    color: AppColors.tagBorder,
+                                                    thickness: 0.3,
+                                                  ),
+                                                  SizedBox(
+                                                      height: SizeConfig
+                                                              .screenHeight *
+                                                          0.01),
+                                                  Text(
+                                                      // "${getTranslated(context, "lorem")}",
+                                                      "${fiestasDetailModel?.data!.description ?? getTranslated(context, "nodataFound")}",
+                                                      style: TextStyle(
+                                                          fontFamily: "Product",
+                                                          fontSize: 14,
+                                                          color:
+                                                              AppColors.white)),
+                                                ],
+                                              ),
+                                            ),
+
+                                            //>
+
+                                            SizedBox(
+                                              height: size.height * 0.05,
+                                            ),
+                                            Stack(
+                                              children: [
+                                                Container(
+                                                  height: 200,
+                                                  child: GoogleMap(
+                                                    zoomControlsEnabled: false,
+                                                    onTap: (latLng) {
+                                                      print(
+                                                          "Current Value ==> $latLng");
+                                                    },
+                                                    onMapCreated: _onMapCreated,
+                                                    initialCameraPosition:
+                                                        CameraPosition(
+                                                      target: LatLng(
+                                                          double.parse(
+                                                              fiestasDetailModel
+                                                                      ?.data
+                                                                      ?.clubDetail
+                                                                      ?.latitude ??
+                                                                  "0.0"),
+                                                          double.parse(
+                                                              fiestasDetailModel
+                                                                      ?.data
+                                                                      ?.clubDetail
+                                                                      ?.longitude ??
+                                                                  "0.0")),
+                                                      zoom: 10.0,
+                                                    ),
+                                                    markers: _markers,
+                                                  ),
+                                                ),
+                                                Positioned(
+                                                  bottom: 0,
+                                                  left: 5,
+                                                  child: MaterialButton(
+                                                      color: Colors.blue,
+                                                      textColor: Colors.white,
+                                                      child: Center(
+                                                          child: Icon(
+                                                              Icons.zoom_in)),
+                                                      minWidth:
+                                                          size.width * 0.05,
+
+                                                      // Text("Zoom In"),
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          mapZoom = true;
+                                                        });
+                                                      }),
                                                 )
                                               ],
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+
+                                    Stack(
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            // heading data
+
+                                            Container(
+                                              margin: EdgeInsets.only(
+                                                top: size.height * 0.015,
+                                                left: size.width * 0.04,
+                                                right: size.width * 0.04,
+                                              ),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "${fiestasDetailModel?.data!.name}",
+                                                    style: TextStyle(
+                                                        fontSize:
+                                                            size.width * 0.1,
+                                                        fontFamily:
+                                                            "DM Sans Bold",
+                                                        color: AppColors.white),
+                                                    maxLines: 1,
+                                                    softWrap: true,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                  SizedBox(
+                                                    height: size.height * 0.005,
+                                                  ),
+                                                  ratingstars(
+                                                      size: size.width * 0.06,
+                                                      ittempading:
+                                                          size.width * 0.005,
+                                                      color:
+                                                          AppColors.tagBorder,
+                                                      rating: rating)
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                  ],
-                                ),
-                              ]),
+
+                                            SizedBox(
+                                              height: size.height * 0.02,
+                                            ),
+                                            Expanded(
+                                              child: ListView.builder(
+                                                  itemCount:
+                                                      UserData.tiketList.length,
+                                                  itemBuilder: (
+                                                    BuildContext context,
+                                                    index,
+                                                  ) {
+                                                    return ticket(
+                                                        context: context,
+                                                        index: index,
+                                                        mapdata: UserData
+                                                            .tiketList[index],
+                                                        addFunc: addTicket,
+                                                        removeFunc:
+                                                            ticketRemove);
+                                                  }),
+                                            ),
+                                          ],
+                                        ),
+                                        UserData.ticketcartMap.isEmpty
+                                            ? SizedBox()
+                                            : Positioned(
+                                                bottom: 0.0,
+                                                child: Stack(
+                                                  children: [
+                                                    Container(
+                                                        width: SizeConfig
+                                                            .screenWidth,
+                                                        height: SizeConfig
+                                                                .screenHeight *
+                                                            0.10,
+                                                        child: SvgPicture.asset(
+                                                          "assets/images/Rectangle.svg",
+                                                          fit: BoxFit.fill,
+                                                        )),
+                                                    Container(
+                                                      width: SizeConfig
+                                                          .screenWidth,
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: size
+                                                                      .width *
+                                                                  0.03,
+                                                              vertical:
+                                                                  size.height *
+                                                                      0.01),
+                                                      child: Row(
+                                                        children: [
+                                                          Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text(
+                                                                "${getTranslated(context, "addtocart")}",
+                                                                // Strings.addtocart,
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                style: TextStyle(
+                                                                    color: AppColors
+                                                                        .brownlite,
+                                                                    fontSize:
+                                                                        size.width *
+                                                                            0.03),
+                                                              ),
+                                                              SizedBox(
+                                                                height: SizeConfig
+                                                                        .screenHeight *
+                                                                    0.01,
+                                                              ),
+                                                              Row(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .end,
+                                                                  children: [
+                                                                    SvgPicture
+                                                                        .asset(
+                                                                      "assets/images/ticket.svg",
+                                                                      width: size
+                                                                              .width *
+                                                                          0.07,
+                                                                    ),
+                                                                    SizedBox(
+                                                                      width: size
+                                                                              .width *
+                                                                          0.02,
+                                                                    ),
+                                                                    Container(
+                                                                      // width: SizeConfig.screenWidth * 0.40,
+                                                                      child:
+                                                                          Text(
+                                                                        "${getTranslated(context, "ticket")} * ${UserData.totalTicketNum}",
+                                                                        // "${Strings.ticket} * ${UserData.totalTicketNum}",
+                                                                        style:
+                                                                            TextStyle(
+                                                                          color:
+                                                                              AppColors.white,
+                                                                          fontSize:
+                                                                              size.width * 0.05,
+                                                                          fontFamily:
+                                                                              "DM Sans Bold",
+                                                                        ),
+                                                                        textAlign:
+                                                                            TextAlign.start,
+                                                                        maxLines:
+                                                                            1,
+                                                                        softWrap:
+                                                                            true,
+                                                                        overflow:
+                                                                            TextOverflow.clip,
+                                                                      ),
+                                                                    ),
+                                                                  ]),
+                                                            ],
+                                                          ),
+                                                          SizedBox(
+                                                            width: SizeConfig
+                                                                    .screenWidth *
+                                                                0.04,
+                                                          ),
+                                                          Spacer(),
+                                                          ElevatedButton(
+                                                            child: Text(
+                                                              "${getTranslated(context, "buyNow")}",
+                                                              // Strings.buyNow,
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                            onPressed: () {
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .push(MaterialPageRoute(
+                                                                      builder: (context) => BuyNow(
+                                                                          fiestasM:
+                                                                              fiestasDetailModel)))
+                                                                  .then(
+                                                                      (value) {
+                                                                setState(() {
+                                                                  totalTicket();
+                                                                });
+                                                              });
+                                                            },
+                                                            style:
+                                                                ElevatedButton
+                                                                    .styleFrom(
+                                                              padding: EdgeInsets.symmetric(
+                                                                  horizontal:
+                                                                      SizeConfig
+                                                                              .screenWidth *
+                                                                          0.06,
+                                                                  vertical:
+                                                                      SizeConfig
+                                                                              .screenHeight *
+                                                                          0.02),
+                                                              primary: AppColors
+                                                                  .redlite,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                      ],
+                                    ),
+                                  ]),
                             ),
                           ),
                           _loadingMainCenter

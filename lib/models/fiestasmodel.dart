@@ -57,7 +57,7 @@ class Data {
   String? lastPageUrl;
   dynamic nextPageUrl;
   String? path;
-  int? perPage;
+  var perPage;
   dynamic prevPageUrl;
   int? to;
   int? total;
@@ -127,8 +127,8 @@ class Datum {
   });
 
   int? id;
-  String? type;
-  int? clubId;
+  var type;
+  var clubId;
   String? name;
   DateTime? timestamp;
   dynamic image;

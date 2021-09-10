@@ -74,8 +74,8 @@ class OrderDetail {
   });
 
   int? id;
-  DateTime? date;
-  String? time;
+  dynamic date;
+  dynamic time;
   int? orderBy;
   String? transferCharge;
   int? totalPrice;
@@ -89,7 +89,7 @@ class OrderDetail {
 
   factory OrderDetail.fromJson(Map<String, dynamic> json) => OrderDetail(
         id: json["id"],
-        date: DateTime.parse(json["date"]),
+        date: json["date"],
         time: json["time"],
         orderBy: json["order_by"],
         transferCharge: json["transfer_charge"],
@@ -106,8 +106,7 @@ class OrderDetail {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "date":
-            "${date?.year.toString().padLeft(4, '0')}-${date?.month.toString().padLeft(2, '0')}-${date?.day.toString().padLeft(2, '0')}",
+        "date": date,
         "time": time,
         "order_by": orderBy,
         "transfer_charge": transferCharge,
@@ -134,6 +133,7 @@ class Detail {
     this.isFavourite,
     this.quantityInCl,
     this.status,
+    this.price,
   });
 
   int? id;
@@ -146,6 +146,7 @@ class Detail {
   bool? isFavourite;
   dynamic quantityInCl;
   String? status;
+  String? price;
 
   factory Detail.fromJson(Map<String, dynamic> json) => Detail(
         id: json["id"],
@@ -158,6 +159,7 @@ class Detail {
         isFavourite: json["is_favourite"],
         quantityInCl: json["quantity_in_cl"],
         status: json["status"] == null ? null : json["status"],
+        price: json["price"] == null ? null : json["price"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -171,6 +173,7 @@ class Detail {
         "is_favourite": isFavourite,
         "quantity_in_cl": quantityInCl,
         "status": status == null ? null : status,
+        "price": price == null ? null : price,
       };
 }
 
@@ -649,7 +652,7 @@ class Checks {
 
   dynamic addressLine1Check;
   dynamic addressPostalCodeCheck;
-  String? cvcCheck;
+  dynamic cvcCheck;
 
   factory Checks.fromJson(Map<String, dynamic> json) => Checks(
         addressLine1Check: json["address_line1_check"],
@@ -736,7 +739,7 @@ class Source {
   String? brand;
   String? country;
   String? customer;
-  String? cvcCheck;
+  dynamic cvcCheck;
   dynamic dynamicLast4;
   int? expMonth;
   int? expYear;

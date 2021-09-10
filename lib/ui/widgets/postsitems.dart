@@ -313,7 +313,7 @@ Widget preFiestasItem({context, ProductInfo? prefiestasdata}) {
                                       fontWeight: FontWeight.w600),
                                 ),
                                 Text(
-                                  "${prefiestasdata?.price != null && prefiestasdata?.price != '' ? int.parse('${prefiestasdata?.price}') < 2 ? prefiestasdata?.price?.substring(0, 2) : prefiestasdata?.price : 29}",
+                                  "${prefiestasdata?.price != null && prefiestasdata?.price != '' ? int.parse('${prefiestasdata?.price}') > 2 ? prefiestasdata?.price?.substring(0, 2) : prefiestasdata?.price : 29}",
                                   // overflow: TextOverflow.visible,
                                   style: TextStyle(
                                       fontSize: size.width * 0.06,

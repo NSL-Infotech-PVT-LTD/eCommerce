@@ -441,7 +441,9 @@ class _YourOrderSumState extends State<YourOrderSum> {
                                         ),
                                         Spacer(),
                                         Text(
-                                          Strings.euro + " " + grandTotal,
+                                          Strings.euro +
+                                              " " +
+                                              "${prefiestasOrderDetailModel?.data?.orderDetail![0].grandTotal}",
                                           style: TextStyle(
                                               color: AppColors.white,
                                               fontSize: size.width * 0.065,
@@ -493,20 +495,22 @@ class _YourOrderSumState extends State<YourOrderSum> {
                                               SizeConfig.screenHeight * 0.02),
                                       Text(
                                         // "25 JUNE, Today",
+                                        "${prefiestasOrderDetailModel?.data?.orderDetail![0].orderStatus}"
+                                            .toUpperCase(),
 
-                                        "$deliverydate",
+                                        // "$deliverydate",
                                         style: TextStyle(
                                             color: AppColors.itemDescription,
-                                            fontSize: size.width * 0.04,
+                                            fontSize: size.width * 0.05,
                                             fontFamily: Fonts.dmSansMedium),
                                       ),
-                                      Text(
-                                        "$deliveryTime",
-                                        style: TextStyle(
-                                            color: AppColors.itemDescription,
-                                            fontSize: size.width * 0.04,
-                                            fontFamily: Fonts.dmSansMedium),
-                                      ),
+                                      // Text(
+                                      //   "$deliveryTime",
+                                      //   style: TextStyle(
+                                      //       color: AppColors.itemDescription,
+                                      //       fontSize: size.width * 0.04,
+                                      //       fontFamily: Fonts.dmSansMedium),
+                                      // ),
                                     ],
                                   ),
                                 ],

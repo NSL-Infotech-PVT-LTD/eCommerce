@@ -15,7 +15,12 @@ import 'package:funfy/utils/urls.dart';
 import 'package:http/http.dart' as http;
 
 Future<FiestasModel?> fiestasPostGet(
-    {context, String? type, String? dateFilter, filterDataF}) async {
+    {context,
+    String? type,
+    String? dateFilter,
+    filterDataF,
+    String? pageCount,
+    String? limitCount}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
     //  'X-localization': '${Constants.prefs?.getString("language")}'
@@ -30,10 +35,14 @@ Future<FiestasModel?> fiestasPostGet(
     "music": "${filterDataF['music']}",
     "clothing": "${filterDataF['clothing']}",
     "ageGroup": "${filterDataF['ageGroup']}",
+    "limit": "${limitCount ?? ''}",
+    'page': "${pageCount ?? ''}"
   };
 
   var res = await http.post(Uri.parse(Urls.fiestasPostUrl),
       body: body, headers: headers);
+
+  // print(res.body);
 
   if (res.statusCode == 401) {
     userSessionExpired(context);
@@ -46,13 +55,16 @@ Future<FiestasModel?> fiestasPostGet(
   }
 }
 
-Future<PrefiestasModel?> prefiestasPostGet({context}) async {
+Future<PrefiestasModel?> prefiestasPostGet(
+    {context, String? pageCount, String? limitCount}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
     //  'X-localization': '${Constants.prefs?.getString("language")}'
   };
-  var res =
-      await http.post(Uri.parse(Urls.preFiestasPostsUrl), headers: headers);
+
+  var body = {"limit": "${limitCount ?? ''}", "page": "${pageCount ?? ''}"};
+  var res = await http.post(Uri.parse(Urls.preFiestasPostsUrl),
+      body: body, headers: headers);
 
   // print(res.body);
 

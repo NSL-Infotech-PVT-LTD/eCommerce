@@ -65,6 +65,16 @@ class _HomeMPageState extends State<HomeMPage> {
     "ageGroup": ""
   };
 
+  // pagination
+
+  bool fiestasLoadingPage = false;
+  bool prefiestasLoadingPage = false;
+
+  ScrollController _fiestasScrollController = ScrollController();
+  int limitCount = 5;
+  int fiestasPageCount = 1;
+  int prefiestasPageCount = 1;
+
   _handleRadioValueChange(int? value, String key) {
     setState(() {
       groupvalue["$key"] = value!;
@@ -89,7 +99,9 @@ class _HomeMPageState extends State<HomeMPage> {
     });
   }
 
-  fiestasgetPosts({String? date}) async {
+  fiestasgetPosts({
+    String? date,
+  }) async {
     var net = await Internetcheck.check();
     if (net == false) {
       Internetcheck.showdialog(context: context);
@@ -97,9 +109,12 @@ class _HomeMPageState extends State<HomeMPage> {
     {
       try {
         setState(() {
+          UserData.fiestasdata?.data?.data = [];
           _fiestasPostLoading = true;
         });
         await fiestasPostGet(
+                limitCount: limitCount.toString(),
+                pageCount: "1",
                 context: context,
                 type: tagType,
                 dateFilter: date.toString(),
@@ -125,7 +140,11 @@ class _HomeMPageState extends State<HomeMPage> {
       setState(() {
         _prefiestasPostLoading = true;
       });
-      await prefiestasPostGet(context: context).then((posts) {
+      await prefiestasPostGet(
+              context: context,
+              pageCount: prefiestasPageCount.toString(),
+              limitCount: limitCount.toString())
+          .then((posts) {
         // print(posts?.toJson());
         setState(() {
           prefiestasdata = posts;
@@ -264,26 +283,134 @@ class _HomeMPageState extends State<HomeMPage> {
     }
   }
 
-  // ------ //
-
-  // ScrollController? _controller;
-
   @override
   void initState() {
-    setState(() {
-      UserData.sControlller = ScrollController();
+    // page
+
+    _fiestasScrollController.addListener(() {
+      double maxScroll = _fiestasScrollController.position.maxScrollExtent;
+      double currentScroll = _fiestasScrollController.position.pixels;
+      double delta = MediaQuery.of(context).size.height * 0.20;
+      if (maxScroll - currentScroll <= delta) {
+        fiestasPagination();
+        prefiestasPagination();
+        print("page ...............");
+      }
     });
+
+    // _fiestasScrollController.addListener(() {
+    //   print("here ...............");
+    // });
 
     super.initState();
     fiestasgetPosts(date: filterDate);
+
     preFiestasPostget();
     determinePosition();
     getFilterData();
+
+    print("page ..........");
+  }
+
+  //pagination
+  fiestasPagination() async {
+    var net = await Internetcheck.check();
+
+    if (net == false) {
+      Internetcheck.showdialog(context: context);
+    }
+    {
+      if (fiestasLoadingPage) {
+        return;
+      }
+
+      if (fiestasPageCount >
+          int.parse('${UserData.fiestasdata?.data?.total}')) {
+        print('No More Products');
+
+        return;
+      }
+
+      if (UserData.fiestasdata != null) {
+        try {
+          setState(() {
+            fiestasLoadingPage = true;
+          });
+          print("get data ........");
+          fiestasPageCount = fiestasPageCount + 1;
+          await fiestasPostGet(
+                  limitCount: limitCount.toString(),
+                  pageCount: fiestasPageCount.toString(),
+                  context: context,
+                  type: tagType,
+                  dateFilter: filterDate,
+                  filterDataF: filterData)
+              .then((FiestasModel? posts) {
+            setState(() {
+              var fdata = posts?.data?.data;
+              UserData.fiestasdata?.data?.data?.addAll(fdata!);
+              fiestasLoadingPage = false;
+            });
+          });
+        } catch (e) {
+          print("fiestas Error $e");
+          setState(() {
+            fiestasLoadingPage = false;
+          });
+        }
+      }
+    }
+  }
+
+  prefiestasPagination() async {
+    var net = await Internetcheck.check();
+
+    if (net == false) {
+      Internetcheck.showdialog(context: context);
+    }
+    {
+      if (prefiestasLoadingPage) {
+        return;
+      }
+
+      if (prefiestasPageCount > int.parse('${prefiestasdata?.data?.total}')) {
+        print('No More Products');
+
+        return;
+      }
+
+      if (prefiestasdata != null) {
+        try {
+          print("get data pre ........");
+          prefiestasPageCount = prefiestasPageCount + 1;
+          setState(() {
+            prefiestasLoadingPage = true;
+          });
+          await prefiestasPostGet(
+                  context: context,
+                  pageCount: prefiestasPageCount.toString(),
+                  limitCount: limitCount.toString())
+              .then((posts) {
+            // print(posts?.toJson());
+            setState(() {
+              var preData = posts?.data?.data;
+              prefiestasdata?.data?.data?.addAll(preData!); // = posts;
+              prefiestasLoadingPage = false;
+            });
+          });
+        } catch (e) {
+          print("fiestas Error $e");
+          setState(() {
+            prefiestasLoadingPage = false;
+          });
+        }
+      }
+    }
   }
 
   @override
   void dispose() {
-    UserData.sControlller!.dispose();
+    _fiestasScrollController.dispose();
     super.dispose();
   }
 
@@ -320,7 +447,7 @@ class _HomeMPageState extends State<HomeMPage> {
           // ),
           backgroundColor: AppColors.blackBackground,
           body: CustomScrollView(
-            controller: UserData.sControlller,
+            controller: _fiestasScrollController,
             slivers: [
               SliverAppBar(
                 automaticallyImplyLeading: false,
@@ -467,6 +594,7 @@ class _HomeMPageState extends State<HomeMPage> {
                 toolbarHeight: size.height * 0.085,
                 backgroundColor: AppColors.blackBackground,
                 actions: [
+                  //fp
                   Container(
                     padding: EdgeInsets.symmetric(
                         vertical: size.height * 0.01,
@@ -896,6 +1024,26 @@ class _HomeMPageState extends State<HomeMPage> {
                           : SliverList(
                               delegate: SliverChildBuilderDelegate(
                               (context, index) {
+                                if (index ==
+                                        int.parse(
+                                            '${UserData.fiestasdata?.data?.data?.length}') &&
+                                    fiestasLoadingPage) {
+                                  return Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    padding: EdgeInsets.all(5),
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        CircularProgressIndicator(
+                                          color: AppColors.white,
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }
+
                                 return Padding(
                                   padding: EdgeInsets.symmetric(
                                       horizontal: size.width * 0.04),
@@ -906,8 +1054,12 @@ class _HomeMPageState extends State<HomeMPage> {
                                           ?.elementAt(index)),
                                 );
                               },
-                              childCount:
-                                  UserData.fiestasdata?.data?.data?.length ?? 0,
+                              childCount: fiestasLoadingPage
+                                  ? int.parse(
+                                          '${UserData.fiestasdata?.data?.data?.length}') +
+                                      1
+                                  : int.parse(
+                                      '${UserData.fiestasdata?.data?.data?.length}'),
                             ))
                   : SliverToBoxAdapter(
                       child: SizedBox(),
@@ -990,7 +1142,27 @@ class _HomeMPageState extends State<HomeMPage> {
                           : SliverList(
                               delegate: SliverChildBuilderDelegate(
                               (context, index) {
-                                print(prefiestasdata?.toJson());
+                                // print(prefiestasdata?.toJson());
+
+                                if (index ==
+                                        int.parse(
+                                            "${prefiestasdata?.data?.data?.length ?? 0}") &&
+                                    prefiestasLoadingPage) {
+                                  return Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    padding: EdgeInsets.all(5),
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        CircularProgressIndicator(
+                                          color: AppColors.white,
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }
                                 return Padding(
                                   padding: EdgeInsets.symmetric(
                                       horizontal: size.width * 0.04),
@@ -1000,8 +1172,12 @@ class _HomeMPageState extends State<HomeMPage> {
                                           prefiestasdata?.data?.data?[index]),
                                 );
                               },
-                              childCount:
-                                  prefiestasdata?.data?.data?.length ?? 0,
+                              childCount: prefiestasLoadingPage
+                                  ? int.parse(
+                                          "${prefiestasdata?.data?.data?.length ?? 0}") +
+                                      1
+                                  : int.parse(
+                                      "${prefiestasdata?.data?.data?.length ?? 0}"),
                             ))
                   : SliverToBoxAdapter(
                       child: SizedBox(),

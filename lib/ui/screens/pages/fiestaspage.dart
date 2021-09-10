@@ -179,25 +179,6 @@ class _FiestasPageState extends State<FiestasPage> {
     });
   }
 
-  // checkDateSelected(date) {
-  //   print(date);
-
-  //   for (var i in dates) {
-  //     // print(i["fulldate"]);
-  //     if (i["active"] == true) {
-  //       setState(() {
-  //         i["active"] = false;
-  //         return;
-  //       });
-  //     } else {
-  //       setState(() {
-  //         i["active"] = true;
-  //         return;
-  //       });
-  //     }
-  //   }
-  // }
-
   Future<void> selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -776,66 +757,6 @@ class _FiestasPageState extends State<FiestasPage> {
                                                                   .homeBackground),
                                                     ),
                                                   );
-                                                  // return GestureDetector(
-                                                  //   onTap: () async {
-                                                  //     String pic = dates[index]
-                                                  //             ["fulldate"]
-                                                  //         .toString();
-                                                  //     DateTime picked =
-                                                  //         DateTime.parse(pic);
-
-                                                  //     // print(picked);
-
-                                                  //     setState(() {
-                                                  //       nowdate = picked;
-                                                  //       daysInMonth(picked);
-                                                  //     });
-
-                                                  //     // get fiestast post
-
-                                                  //     String? fomatDate =
-                                                  //         await dateFormat(
-                                                  //             date: picked);
-
-                                                  //     setState(() {
-                                                  //       filterDate = fomatDate;
-                                                  //     });
-
-                                                  //     fiestasgetPosts(
-                                                  //         date: fomatDate);
-                                                  //   },
-                                                  //   child: Container(
-                                                  //     margin: EdgeInsets.only(
-                                                  //         left: size.width *
-                                                  //             0.01),
-                                                  //     child: dateButton(
-                                                  //         context: context,
-                                                  //         text: dates[index]
-                                                  //                 ["date"]
-                                                  //             .toString(),
-                                                  //         textColor: dates[index]
-                                                  //                     [
-                                                  //                     "active"] ==
-                                                  //                 true
-                                                  //             ? AppColors
-                                                  //                 .homeBackground
-                                                  //             : AppColors.white,
-                                                  //         month: dates[index]
-                                                  //                 ["month"]
-                                                  //             .toString(),
-                                                  //         borderColor:
-                                                  //             AppColors.white,
-                                                  //         borderwidth: size.width *
-                                                  //             0.003,
-                                                  //         backgroundColor:
-                                                  //             dates[index]["active"] ==
-                                                  //                     true
-                                                  //                 ? AppColors
-                                                  //                     .tagBorder
-                                                  //                 : AppColors
-                                                  //                     .homeBackground),
-                                                  //   ),
-                                                  // );
                                                 }),
                                           ),
                                           SizedBox(

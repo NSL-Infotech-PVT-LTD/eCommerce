@@ -59,7 +59,7 @@ class Data {
   String? lastPageUrl;
   dynamic nextPageUrl;
   String? path;
-  int? perPage;
+  var perPage;
   dynamic prevPageUrl;
   int? to;
   int? total;

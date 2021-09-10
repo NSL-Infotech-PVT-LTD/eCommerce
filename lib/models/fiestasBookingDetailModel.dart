@@ -119,11 +119,11 @@ class FiestaDetail {
   var leftVipTicket;
   bool? isFavourite;
   String? distanceMiles;
-  Filter? filterLocal;
-  Filter? filterEnvironment;
-  Filter? filterMusic;
-  Filter? filterClothing;
-  Filter? filterSchedule;
+  FilterLocal? filterLocal;
+  dynamic filterEnvironment;
+  dynamic filterMusic;
+  dynamic filterClothing;
+  dynamic filterSchedule;
   ClubDetail? clubDetail;
 
   factory FiestaDetail.fromJson(Map<String, dynamic> json) => FiestaDetail(
@@ -142,11 +142,11 @@ class FiestaDetail {
         leftVipTicket: json["left_vip_ticket"],
         isFavourite: json["is_favourite"],
         distanceMiles: json["distance_miles"],
-        filterLocal: Filter.fromJson(json["filter_local"]),
-        filterEnvironment: Filter.fromJson(json["filter_environment"]),
-        filterMusic: Filter.fromJson(json["filter_music"]),
-        filterClothing: Filter.fromJson(json["filter_clothing"]),
-        filterSchedule: Filter.fromJson(json["filter_schedule"]),
+        filterLocal: FilterLocal.fromJson(json["filter_local"]),
+        filterEnvironment: json["filter_environment"],
+        filterMusic: json["filter_music"],
+        filterClothing: json["filter_clothing"],
+        filterSchedule: json["filter_schedule"],
         clubDetail: ClubDetail.fromJson(json["club_detail"]),
       );
 
@@ -167,10 +167,10 @@ class FiestaDetail {
         "is_favourite": isFavourite,
         "distance_miles": distanceMiles,
         "filter_local": filterLocal?.toJson(),
-        "filter_environment": filterEnvironment?.toJson(),
-        "filter_music": filterMusic?.toJson(),
-        "filter_clothing": filterClothing?.toJson(),
-        "filter_schedule": filterSchedule?.toJson(),
+        "filter_environment": filterEnvironment,
+        "filter_music": filterMusic,
+        "filter_clothing": filterClothing,
+        "filter_schedule": filterSchedule,
         "club_detail": clubDetail?.toJson(),
       };
 }
@@ -219,8 +219,8 @@ class ClubDetail {
       };
 }
 
-class Filter {
-  Filter({
+class FilterLocal {
+  FilterLocal({
     this.name,
     this.nameEs,
   });
@@ -228,7 +228,7 @@ class Filter {
   String? name;
   String? nameEs;
 
-  factory Filter.fromJson(Map<String, dynamic> json) => Filter(
+  factory FilterLocal.fromJson(Map<String, dynamic> json) => FilterLocal(
         name: json["name"],
         nameEs: json["name_es"],
       );
