@@ -268,5 +268,8 @@
   "add": "Add",
   "fromAlcohol": "From Alcohol",
   "fromMixes": "From Mixes",
-  "fromExtras": "From Extras"
+  "fromExtras": "From Extras",
+  "pending": "Pending",
+  "delivered": "Delivered",
+  "termsAndConditions": "Terms & Conditions"
 }

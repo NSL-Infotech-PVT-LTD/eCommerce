@@ -131,7 +131,7 @@ class Datum {
   var clubId;
   String? name;
   DateTime? timestamp;
-  dynamic image;
+  var image;
   String? description;
   String? ageGroup;
   int? filterLocalId;

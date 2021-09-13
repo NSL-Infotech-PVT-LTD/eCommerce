@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:funfy/apis/userdataM.dart';
+import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/screens/splash.dart';
 import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/localizing.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
@@ -27,36 +29,9 @@ Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   print('IN THE ON Background ===============>>>>>>>>>>> ${message.data}');
 
-  // var jsonData = json.decode(message.data['data']);
-  // var mid = jsonData['target_id'];
-  // print("message ${message.notification?.android}");
-  // RemoteNotification? notification = RemoteNotification.fromMap(message.data);
-  // AndroidNotification? android = message.notification?.android;
-  // if (notification != null && android != null)
-
-  // if (message.data.length != 0) {
-  //   flutterLocalNotificationsPlugin.show(
-  //       mid,
-  //       message.data['title'],
-  //       message.data['body'],
-  //
-  //       // notification.hashCode,
-  //       // notification.title,
-  //       // notification.body,
-  //       NotificationDetails(
-  //         android: AndroidNotificationDetails(
-  //           channel.id,
-  //           channel.name,
-  //           channel.description,
-  //           // color: Colors.blue,
-  //           playSound: true,
-  //           icon: '@mipmap/ic_launcher',
-  //         ),
-  //       ),
-  //       payload: json.encode(message.data));
-  //
-  //   print("======IN onMessage ========> YYYYYYYYYYYYYYYY ${message.data}");
-  // }
+  Get.to(Home(
+    pageIndexNum: 2,
+  ));
 }
 
 String fcmToken = " ";
@@ -172,11 +147,11 @@ class _MyAppState extends State<MyApp> {
     print("CHECK $token");
     FirebaseMessaging.onMessage.listen(
       (RemoteMessage message) {
-        print("IN THE ON MESSAGE ===============>>>>>>>>>>> ${message.data}");
-        print(
-            "IN THE ON MESSAGE ===============>>>>>>>>>>> ${message.notification}");
-        print(
-            "IN THE ON MESSAGE ===============>>>>>>>>>>> ${message.data["screen"]}");
+        // print("IN THE ON MESSAGE ===============>>>>>>>>>>> ${message.data}");
+        // print(
+        //     "IN THE ON MESSAGE ===============>>>>>>>>>>> ${message.notification}");
+        // print(
+        //     "IN THE ON MESSAGE ===============>>>>>>>>>>> ${message.data["screen"]}");
         // print("noti ${message.notification}");
 
         // print("message $message");
@@ -218,6 +193,16 @@ class _MyAppState extends State<MyApp> {
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print("IN THE OPEN MESSAGE  ============>>>>>>>>>>>");
 
+      // on background notification on tap
+      Get.to(Home(
+        pageIndexNum: 1,
+      ));
+
+      // Navigator.of(context).push(MaterialPageRoute(
+      //     builder: (context) => Home(
+      //           pageIndexNum: 1,
+      //         )));
+
       // on message
     });
 
@@ -227,14 +212,20 @@ class _MyAppState extends State<MyApp> {
   getMeLocal() async {
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: (v) async {
-      // print("Here is on select notification --- $v");
+      print("Here is on select notification --- $v");
+
+      // on fourground notification on tap
+
+      Get.to(Home(
+        pageIndexNum: 1,
+      ));
     });
   }
 
   @override
   Widget build(BuildContext context) {
     // runApp(GetMaterialApp(home: Home()));
-    return MaterialApp(
+    return GetMaterialApp(
         debugShowCheckedModeBanner: false,
         title: "funfy",
         theme: ThemeData(

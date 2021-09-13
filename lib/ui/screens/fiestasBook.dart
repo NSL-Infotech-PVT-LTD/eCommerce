@@ -293,7 +293,7 @@ class _FiestasBookState extends State<FiestasBook> {
             }
 
             if (fiestasDetailModel?.data?.clubRating == null ||
-                fiestasDetailModel?.data?.clubRating == 0) {
+                fiestasDetailModel?.data?.clubRating == 0.0) {
               rating = 0.0;
             } else {
               rating = double.parse("${fiestasDetailModel?.data?.clubRating}");
@@ -608,7 +608,7 @@ class _FiestasBookState extends State<FiestasBook> {
                                                     "${fiestasDetailModel?.data!.name}",
                                                     style: TextStyle(
                                                         fontSize:
-                                                            size.width * 0.1,
+                                                            size.width * 0.08,
                                                         fontFamily:
                                                             "DM Sans Bold",
                                                         color: AppColors.white),
@@ -633,16 +633,13 @@ class _FiestasBookState extends State<FiestasBook> {
                                             SizedBox(
                                               height: size.height * 0.01,
                                             ),
-                                            Container(
-                                              width: size.width * 0.9,
-                                              child: aboutItems(
-                                                  imageHeight: 0.038,
-                                                  size: size,
-                                                  icon:
-                                                      "assets/partydetail/peopplecoming.png",
-                                                  content:
-                                                      "${fiestasDetailModel?.data!.totalMembers} ${getTranslated(context, 'peopleAttendinginthisevent')}"),
-                                            ),
+                                            aboutItems(
+                                                imageHeight: 0.038,
+                                                size: size,
+                                                icon:
+                                                    "assets/partydetail/peopplecoming.png",
+                                                content:
+                                                    "${fiestasDetailModel?.data!.totalMembers} ${getTranslated(context, 'peopleAttendinginthisevent')}"),
                                             SizedBox(
                                               height: size.height * 0.03,
                                             ),
@@ -673,7 +670,7 @@ class _FiestasBookState extends State<FiestasBook> {
                                                           icon:
                                                               "assets/partydetail/dresScode.png",
                                                           content:
-                                                              "${fiestasDetailModel?.data?.filterMusic?.name}"),
+                                                              "${fiestasDetailModel?.data?.filterClothing?.name}"),
                                                     ],
                                                   ),
                                                   SizedBox(
@@ -701,7 +698,7 @@ class _FiestasBookState extends State<FiestasBook> {
                                                           icon:
                                                               "assets/partydetail/music.png",
                                                           content:
-                                                              "${fiestasDetailModel?.data?.filterClothing?.name}"),
+                                                              "${fiestasDetailModel?.data?.filterMusic?.name}"),
                                                     ],
                                                   ),
                                                 ],
@@ -843,7 +840,7 @@ class _FiestasBookState extends State<FiestasBook> {
                                                     "${fiestasDetailModel?.data!.name}",
                                                     style: TextStyle(
                                                         fontSize:
-                                                            size.width * 0.1,
+                                                            size.width * 0.08,
                                                         fontFamily:
                                                             "DM Sans Bold",
                                                         color: AppColors.white),
@@ -1189,14 +1186,18 @@ Widget aboutItems(
             "$icon",
             height: size.height * imageHeight,
           )),
-      Text(
-        "$content",
-        overflow: TextOverflow.ellipsis,
-        maxLines: 1,
-        style: TextStyle(
-            color: AppColors.white,
-            fontSize: size.width * 0.045,
-            fontFamily: Fonts.dmSansBold),
+      Container(
+        // width: size.width * 0.7,
+        constraints: BoxConstraints(maxWidth: size.width * 0.8),
+        child: Text(
+          "$content",
+          overflow: TextOverflow.ellipsis,
+          maxLines: 2,
+          style: TextStyle(
+              color: AppColors.white,
+              fontSize: size.width * 0.045,
+              fontFamily: Fonts.dmSansBold),
+        ),
       )
     ],
   );

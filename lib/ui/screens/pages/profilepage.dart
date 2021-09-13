@@ -397,23 +397,33 @@ class _ProfilepageState extends State<Profilepage> {
                               showNotificationBottomSheet();
                             }),
 
-                        centerlistItem(
+                        centerlistItemSvg(
                             context: context,
-                            title: "${getTranslated(context, "help")}",
+                            title:
+                                "${getTranslated(context, 'termsAndConditions')}",
                             //  Strings.help,
-                            leftIconImage: Images.helppng,
+                            leftIconImage: "assets/svgicons/tnc.svg",
                             onTapfunc: () {
                               navigatorPushFun(context, HelpScreen());
                             }),
 
-                        centerlistItem(
-                            context: context,
-                            title: "${getTranslated(context, "about")}",
-                            //Strings.about,
-                            leftIconImage: Images.aboutpng,
-                            onTapfunc: () {
-                              navigatorPushFun(context, AboutScreen());
-                            }),
+                        // centerlistItem(
+                        //     context: context,
+                        //     title: "${getTranslated(context, "help")}",
+                        //     //  Strings.help,
+                        //     leftIconImage: Images.helppng,
+                        //     onTapfunc: () {
+                        //       navigatorPushFun(context, HelpScreen());
+                        //     }),
+
+                        // centerlistItem(
+                        //     context: context,
+                        //     title: "${getTranslated(context, "about")}",
+                        //     //Strings.about,
+                        //     leftIconImage: Images.aboutpng,
+                        //     onTapfunc: () {
+                        //       navigatorPushFun(context, AboutScreen());
+                        //     }),
 
                         SizedBox(
                           height: size.height * 0.04,
@@ -506,6 +516,69 @@ Widget centerlistItem(
                               size: size.width * 0.055,
                             )
                           : Image.asset("$leftIconImage")),
+                  SizedBox(
+                    width: size.width * 0.03,
+                  ),
+                  Text(
+                    title.toString(),
+                    style: TextStyle(
+                        fontFamily: Fonts.dmSansRegular,
+                        color: AppColors.white,
+                        fontSize: size.width * 0.04),
+                  ),
+                ]),
+                Container(
+                  alignment: Alignment.center,
+                  width: size.width * 0.06,
+                  child: Icon(
+                    Icons.chevron_right,
+                    color: AppColors.white,
+                    size: size.width * 0.07,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: size.height * 0.01,
+          ),
+          Divider(
+            color: Colors.white,
+            thickness: size.height * 0.0003,
+          )
+        ],
+      ),
+    ),
+  );
+}
+
+Widget centerlistItemSvg(
+    {context,
+    String? leftIconImage,
+    String? title,
+    String? rightIconImage,
+    bool? icon,
+    onTapfunc}) {
+  var size = MediaQuery.of(context).size;
+
+  return InkWell(
+    onTap: () {
+      onTapfunc();
+    },
+    child: Container(
+      margin: EdgeInsets.only(top: size.height * 0.02),
+      child: Column(
+        children: [
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: size.width * 0.02),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(children: [
+                  Container(
+                      alignment: Alignment.center,
+                      width: size.width * 0.045,
+                      child: SvgPicture.asset(leftIconImage!)),
                   SizedBox(
                     width: size.width * 0.03,
                   ),

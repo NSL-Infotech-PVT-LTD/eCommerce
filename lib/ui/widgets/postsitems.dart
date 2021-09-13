@@ -4,7 +4,6 @@ import 'package:funfy/components/navigation.dart';
 import 'package:funfy/components/shortPrices.dart';
 import 'package:funfy/models/fiestasmodel.dart';
 import 'package:funfy/models/preFiestasModel.dart';
-import 'package:funfy/ui/screens/bookNowBeta.dart';
 import 'package:funfy/ui/screens/fiestasBook.dart';
 import 'package:funfy/ui/screens/preFistaOrderMix.dart';
 import 'package:funfy/ui/widgets/rating.dart';
@@ -199,7 +198,7 @@ Widget fiestasItem({context, Datum? postModeldata}) {
                           onTap: () {
                             if (available != true) {
                               navigatorPushFun(context,
-                                  BookNowBeta(fiestasID: postModeldata?.id));
+                                  FiestasBook(fiestasID: postModeldata?.id));
                             }
                           },
                           child: roundedBoxR(

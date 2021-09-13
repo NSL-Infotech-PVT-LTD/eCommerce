@@ -21,14 +21,20 @@ Future<FiestasModel?> fiestasPostGet(
     filterDataF,
     String? pageCount,
     String? limitCount}) async {
+  print("here is date filter");
+
+  print("$dateFilter");
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
     //  'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   var body = {
-    type == null ? "" : "type": "$type",
-    dateFilter == null || dateFilter == "" ? "" : "date": "$dateFilter",
+    // type == null ? "" :
+
+    "type": "${type ?? ''}",
+    // dateFilter == null || dateFilter == "" ? "" :
+    "date": "${dateFilter ?? ''}",
     "local": "${filterDataF['local']}",
     "environment": "${filterDataF['environment']}",
     "schedule": "${filterDataF['schedule']}",
@@ -36,20 +42,27 @@ Future<FiestasModel?> fiestasPostGet(
     "clothing": "${filterDataF['clothing']}",
     "ageGroup": "${filterDataF['ageGroup']}",
     "limit": "${limitCount ?? ''}",
+    "sort_by": "desc",
     'page': "${pageCount ?? ''}"
   };
 
   var res = await http.post(Uri.parse(Urls.fiestasPostUrl),
       body: body, headers: headers);
 
-  // print(res.body);
+  print(res.body);
 
   if (res.statusCode == 401) {
     userSessionExpired(context);
   }
 
   if (res.statusCode == 200) {
-    return fiestasModelFromJson(res.body);
+    try {
+      // print("here is data");
+      // print(res.body);
+      return fiestasModelFromJson(res.body);
+    } catch (e) {
+      print("here is filter error........$e");
+    }
   } else if (res.statusCode == 422) {
     print("ERRRO IN THE API in fiestas");
   }
@@ -218,7 +231,7 @@ Future<String?> helpApi() async {
   };
 
   var res = await http.get(
-    Uri.parse(Urls.helpUrl),
+    Uri.parse(Urls.termsandconditionsUrl),
   );
 
   // print(res.body);

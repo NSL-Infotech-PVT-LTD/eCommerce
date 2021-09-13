@@ -72,7 +72,7 @@ class Data {
   });
 
   int? id;
-  int? clubId;
+  var clubId;
   String? name;
   DateTime? timestamp;
   dynamic image;
@@ -90,7 +90,7 @@ class Data {
   String? totalVipTickets;
   String? totalStandardTickets;
   String? totalNormalTickets;
-  dynamic clubRating;
+  var clubRating;
   var leftNormalTicket;
   var leftStandardTicket;
   var leftVipTicket;
@@ -195,8 +195,8 @@ class ClubDetail {
   String? capacity;
   String? description;
   String? location;
-  String? latitude;
-  String? longitude;
+  dynamic latitude;
+  dynamic longitude;
 
   factory ClubDetail.fromJson(Map<String, dynamic> json) => ClubDetail(
         id: json["id"],

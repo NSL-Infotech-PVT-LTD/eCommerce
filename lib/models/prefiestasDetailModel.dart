@@ -96,6 +96,7 @@ class ParentData {
     this.isInMyCartQuantity,
     this.isFavourite,
     this.quantityInCl,
+    this.quantityInCart,
     this.videoUrl,
     this.status,
   });
@@ -112,6 +113,7 @@ class ParentData {
   int? isInMyCartQuantity;
   bool? isFavourite;
   int? quantityInCl;
+  int? quantityInCart;
   String? videoUrl;
   String? status;
 
@@ -129,6 +131,7 @@ class ParentData {
         isFavourite: json["is_favourite"],
         quantityInCl:
             json["quantity_in_cl"] == null ? null : json["quantity_in_cl"],
+        quantityInCart: json["quantity_in_cart"],
         videoUrl: json["video_url"] == null ? null : json["video_url"],
         status: json["status"] == null ? null : json["status"],
       );
@@ -146,6 +149,7 @@ class ParentData {
         "is_in_my_cart_quantity": isInMyCartQuantity,
         "is_favourite": isFavourite,
         "quantity_in_cl": quantityInCl == null ? null : quantityInCl,
+        "quantity_in_cart": quantityInCart,
         "video_url": videoUrl == null ? null : videoUrl,
         "status": status == null ? null : status,
       };

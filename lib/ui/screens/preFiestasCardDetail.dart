@@ -20,6 +20,7 @@ import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:slide_to_confirm/slide_to_confirm.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 
 class PrefiestasCardDetail extends StatefulWidget {
@@ -544,29 +545,52 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
                                               int.parse(
                                                       "${cardListP?.data?.data?.length}") >
                                                   0
-                                          ? SwipeButton(
-                                              thumb: SvgPicture.asset(
-                                                Images.swipeButtonSvg,
-                                                fit: BoxFit.cover,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                              activeTrackColor:
+                                          ? ConfirmationSlider(
+                                              backgroundColor:
                                                   AppColors.siginbackgrond,
                                               height: size.height * 0.07,
-                                              child: Text(
+                                              backgroundColorEnd:
+                                                  Colors.red.shade700,
+                                              text:
                                                   "${getTranslated(context, "swipetopay")}",
-                                                  style: TextStyle(
-                                                      color: AppColors.white,
-                                                      fontFamily:
-                                                          Fonts.dmSansBold,
-                                                      fontSize:
-                                                          size.width * 0.05)),
-                                              onSwipeEnd: () {
+                                              backgroundShape:
+                                                  BorderRadius.circular(8),
+                                              foregroundShape:
+                                                  BorderRadius.circular(8),
+                                              foregroundColor:
+                                                  HexColor('#9f150d'),
+                                              textStyle: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold),
+                                              onConfirmation: () {
                                                 prefiestasBookingApi(
                                                     cardid: cardId);
-                                              },
-                                            )
+                                              })
+
+                                          // SwipeButton(
+                                          //     thumb: SvgPicture.asset(
+                                          //       Images.swipeButtonSvg,
+                                          //       fit: BoxFit.cover,
+                                          //     ),
+                                          //     borderRadius:
+                                          //         BorderRadius.circular(8),
+                                          //     activeTrackColor:
+                                          //         AppColors.siginbackgrond,
+                                          //     height: size.height * 0.07,
+                                          //     child: Text(
+                                          //         "${getTranslated(context, "swipetopay")}",
+                                          //         style: TextStyle(
+                                          //             color: AppColors.white,
+                                          //             fontFamily:
+                                          //                 Fonts.dmSansBold,
+                                          //             fontSize:
+                                          //                 size.width * 0.05)),
+                                          //     onSwipeEnd: () {
+                                          //       prefiestasBookingApi(
+                                          //           cardid: cardId);
+                                          //     },
+                                          //   )
+
                                           : payLoading &&
                                                   swipebuttonShowBool == false
                                               ? roundedBoxR(

@@ -231,52 +231,52 @@ class _BuyNowState extends State<BuyNow> {
                               // mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: AppColors.green,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(6)),
-                                      ),
-                                      height: SizeConfig.screenHeight * 0.03,
-                                      width: SizeConfig.screenWidth * 0.15,
-                                      child: Center(
-                                          child: Text(
-                                        "${getTranslated(context, "OPEN")}",
-                                        //   "OPEN",
-                                        style: TextStyle(
-                                          color: AppColors.white,
-                                          fontFamily: "BabasNeue",
-                                          fontSize: size.width * 0.043,
-                                        ),
-                                      )),
-                                    ),
-                                    SizedBox(
-                                        width: SizeConfig.screenWidth * 0.03),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: AppColors.homeBackground,
-                                        border:
-                                            Border.all(color: AppColors.white),
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(6)),
-                                      ),
-                                      height: SizeConfig.screenHeight * 0.03,
-                                      width: SizeConfig.screenWidth * 0.15,
-                                      child: Center(
-                                          child: Text(
-                                        "${getTranslated(context, "club")}",
-                                        //    "Club",
-                                        style: TextStyle(
-                                          color: AppColors.white,
-                                          fontFamily: "DM Sans Medium",
-                                          fontSize: size.width * 0.035,
-                                        ),
-                                      )),
-                                    ),
-                                  ],
-                                ),
+                                // Row(
+                                //   children: [
+                                //     Container(
+                                //       decoration: BoxDecoration(
+                                //         color: AppColors.green,
+                                //         borderRadius: BorderRadius.all(
+                                //             Radius.circular(6)),
+                                //       ),
+                                //       height: SizeConfig.screenHeight * 0.03,
+                                //       width: SizeConfig.screenWidth * 0.15,
+                                //       child: Center(
+                                //           child: Text(
+                                //         "${getTranslated(context, "OPEN")}",
+                                //         //   "OPEN",
+                                //         style: TextStyle(
+                                //           color: AppColors.white,
+                                //           fontFamily: "BabasNeue",
+                                //           fontSize: size.width * 0.043,
+                                //         ),
+                                //       )),
+                                //     ),
+                                //     SizedBox(
+                                //         width: SizeConfig.screenWidth * 0.03),
+                                //     Container(
+                                //       decoration: BoxDecoration(
+                                //         color: AppColors.homeBackground,
+                                //         border:
+                                //             Border.all(color: AppColors.white),
+                                //         borderRadius: BorderRadius.all(
+                                //             Radius.circular(6)),
+                                //       ),
+                                //       height: SizeConfig.screenHeight * 0.03,
+                                //       width: SizeConfig.screenWidth * 0.15,
+                                //       child: Center(
+                                //           child: Text(
+                                //         "${getTranslated(context, "club")}",
+                                //         //    "Club",
+                                //         style: TextStyle(
+                                //           color: AppColors.white,
+                                //           fontFamily: "DM Sans Medium",
+                                //           fontSize: size.width * 0.035,
+                                //         ),
+                                //       )),
+                                //     ),
+                                //   ],
+                                // ),
                                 Container(
                                   // cvfbgtkl;./
                                   width: SizeConfig.screenWidth * 0.60,
@@ -300,7 +300,8 @@ class _BuyNowState extends State<BuyNow> {
                                     size: size.width * 0.06,
                                     ittempading: size.width * 0.005,
                                     color: AppColors.tagBorder,
-                                    rating: 3.0)
+                                    rating: double.parse(
+                                        "${widget.fiestasM?.data?.clubRating}"))
                               ],
                             ),
                           ],

@@ -824,6 +824,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  slide_to_confirm:
+    dependency: "direct main"
+    description:
+      name: slide_to_confirm
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.0"
   sliding_up_panel:
     dependency: "direct main"
     description:
@@ -1021,5 +1028,5 @@ packages:
     source: hosted
     version: "5.1.2"
 sdks:
-  dart: ">=2.12.0 <3.0.0"
+  dart: ">=2.13.0 <3.0.0"
   flutter: ">=2.0.1"

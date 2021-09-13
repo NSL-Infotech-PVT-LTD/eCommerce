@@ -56,7 +56,7 @@ class _HelpScreenState extends State<HelpScreen> {
         appBar: AppBar(
           backgroundColor: AppColors.blackBackground,
           centerTitle: true,
-          title: Text("${getTranslated(context, "help")}"),
+          title: Text("${getTranslated(context, 'termsAndConditions')}"),
         ),
 
         body: _loading

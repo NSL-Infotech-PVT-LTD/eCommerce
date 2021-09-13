@@ -6,7 +6,7 @@ import 'package:funfy/components/shortPrices.dart';
 import 'package:funfy/models/favourite/fiestasFavouriteModel.dart';
 import 'package:funfy/models/favourite/preFiestasFavModel.dart';
 import 'package:funfy/models/fiestasmodel.dart';
-import 'package:funfy/ui/screens/bookNowBeta.dart';
+import 'package:funfy/ui/screens/fiestasBook.dart';
 import 'package:funfy/ui/screens/preFistaOrderMix.dart';
 import 'package:funfy/ui/widgets/rating.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
@@ -268,7 +268,7 @@ fiestasItemFav({context, int? index, FiestasFavouriteModel? model, funcRun}) {
     onTap: () {
       Navigator.of(context)
           .push(MaterialPageRoute(
-              builder: (context) => BookNowBeta(fiestasID: data?.id)))
+              builder: (context) => FiestasBook(fiestasID: data?.id)))
           .then((value) {
         funcRun();
       });
@@ -411,7 +411,7 @@ fiestasItemFav({context, int? index, FiestasFavouriteModel? model, funcRun}) {
                         Navigator.of(context)
                             .push(MaterialPageRoute(
                                 builder: (context) =>
-                                    BookNowBeta(fiestasID: data?.id)))
+                                    FiestasBook(fiestasID: data?.id)))
                             .then((value) {
                           funcRun();
                         });

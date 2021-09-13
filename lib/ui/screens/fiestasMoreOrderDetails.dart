@@ -5,7 +5,7 @@ import 'package:funfy/apis/bookingApi.dart';
 import 'package:funfy/components/dialogs.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/models/fiestasBookingDetailModel.dart';
-import 'package:funfy/ui/screens/bookNowBeta.dart';
+import 'package:funfy/ui/screens/fiestasBook.dart';
 import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/screens/pages/bookingpage.dart';
 import 'package:funfy/ui/screens/qrCodeZoomin.dart';
@@ -124,10 +124,10 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
     navigatePopFun(context);
     var data = fiestasBookingDetailModel?.data![0];
 
+    int rat = currentRating.toInt();
+
     fiestaRatingApi(
-            orderId: "${data?.id}",
-            fiestasId: "${data?.fiestaId}",
-            rating: currentRating)
+            orderId: "${data?.id}", fiestasId: "${data?.fiestaId}", rating: rat)
         .then((value) {
       if (value == false) {
         showRatingBottomSheet();
@@ -197,7 +197,6 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                                     minRating: 1,
                                     direction: Axis.horizontal,
                                     allowHalfRating: false,
-                                    itemCount: 5,
                                     unratedColor: AppColors.starUnselect,
                                     itemPadding: EdgeInsets.symmetric(
                                         horizontal: size.width * 0.01),
@@ -566,7 +565,7 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                           onTap: () {
                             navigatorPushFun(
                                 context,
-                                BookNowBeta(
+                                FiestasBook(
                                   fiestasID: fiestasBookingDetailModel
                                       ?.data![0].fiestaId,
                                 ));

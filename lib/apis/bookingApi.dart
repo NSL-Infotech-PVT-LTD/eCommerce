@@ -109,7 +109,7 @@ Future addproductinCartPrefiestas(
 
   var jsonBody = json.decode(res.body);
 
-  print("here is json body cart $jsonBody");
+  // print("here is json body cart $jsonBody");
 
   // CreatePrefiestasCartModel jsonBody =
   //     createPrefiestasCartModelFromJson(res.body); // .decode(res.body);
@@ -378,7 +378,7 @@ Future<FiestasBookingDetailModel?> fiestaBookingOrderDetailApi(
 // fiestas rating Api
 
 Future<bool?> fiestaRatingApi(
-    {String? orderId, String? fiestasId, double? rating}) async {
+    {String? orderId, String? fiestasId, int? rating}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
   };
@@ -408,7 +408,7 @@ Future<bool?> fiestaRatingApi(
 
 // fiestas rating Api
 
-Future<bool?> prefiestaRatingApi({String? orderId, double? rating}) async {
+Future<bool?> prefiestaRatingApi({String? orderId, int? rating}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
   };

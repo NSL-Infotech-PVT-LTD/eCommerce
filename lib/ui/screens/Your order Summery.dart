@@ -59,21 +59,24 @@ class _YourOrderSumState extends State<YourOrderSum> {
             prefiestasOrderDetailModel = res;
 
             // Delivery date time
-            DateTime deliverydate1 = DateTime.parse(
-                "${prefiestasOrderDetailModel?.data?.orderDetail![0].date}");
+            // DateTime deliverydate1 = DateTime.parse(
+            //     "${prefiestasOrderDetailModel?.data?.orderDetail![0].date}");
 
-            var time = prefiestasOrderDetailModel?.data?.orderDetail![0].time;
+            // var time = prefiestasOrderDetailModel?.data?.orderDetail![0].time;
 
-            var time2 =
-                DateFormat.jm().format(DateFormat("hh:mm:ss").parse("$time"));
+            // var time2 =
+            //     DateFormat.jm().format(DateFormat("hh:mm:ss").parse("$time"));
 
-            var date2 = DateFormat('d MMMM').format(deliverydate1);
+            // var date2 = DateFormat('d MMMM').format(deliverydate1);
 
-            deliverydate = "$date2";
-            deliveryTime = "${getTranslated(context, "till")} $time2";
+            // deliverydate = "$date2";
+            // deliveryTime = "${getTranslated(context, "till")} $time2";
 
-            grandTotal =
-                "${prefiestasOrderDetailModel?.data?.orderDetail![0].grandTotal}";
+            // grandTotal =
+            //     "${prefiestasOrderDetailModel?.data?.orderDetail![0].grandTotal}";
+
+            print(
+                "here is status ${prefiestasOrderDetailModel?.data?.orderDetail![0].orderStatus}");
 
             if (prefiestasOrderDetailModel?.data?.orderDetail![0].orderStatus ==
                 "completed") {
@@ -99,8 +102,9 @@ class _YourOrderSumState extends State<YourOrderSum> {
 
     var data = prefiestasOrderDetailModel?.data?.orderDetail![0];
 
-    prefiestaRatingApi(orderId: "${data?.id}", rating: currentRating)
-        .then((value) {
+    int rat = currentRating.toInt();
+
+    prefiestaRatingApi(orderId: "${data?.id}", rating: rat).then((value) {
       if (value == false) {
       } else {
         setState(() {
@@ -495,7 +499,7 @@ class _YourOrderSumState extends State<YourOrderSum> {
                                               SizeConfig.screenHeight * 0.02),
                                       Text(
                                         // "25 JUNE, Today",
-                                        "${prefiestasOrderDetailModel?.data?.orderDetail![0].orderStatus}"
+                                        "${prefiestasOrderDetailModel?.data?.orderDetail![0].orderStatus == 'completed' ? getTranslated(context, 'delivered') : getTranslated(context, 'pending')}"
                                             .toUpperCase(),
 
                                         // "$deliverydate",

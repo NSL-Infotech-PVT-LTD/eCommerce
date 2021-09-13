@@ -109,7 +109,7 @@ class _HomeMPageState extends State<HomeMPage> {
     {
       try {
         setState(() {
-          UserData.fiestasdata?.data?.data = [];
+          UserData.fiestasdata = FiestasModel();
           _fiestasPostLoading = true;
         });
         await fiestasPostGet(
@@ -121,6 +121,7 @@ class _HomeMPageState extends State<HomeMPage> {
                 filterDataF: filterData)
             .then((FiestasModel? posts) {
           setState(() {
+            print(posts?.toJson());
             UserData.fiestasdata = posts;
             _fiestasPostLoading = false;
           });
@@ -147,6 +148,7 @@ class _HomeMPageState extends State<HomeMPage> {
           .then((posts) {
         // print(posts?.toJson());
         setState(() {
+          prefiestasdata = PrefiestasModel();
           prefiestasdata = posts;
           _prefiestasPostLoading = false;
         });
@@ -439,7 +441,7 @@ class _HomeMPageState extends State<HomeMPage> {
       child: Scaffold(
           // floatingActionButton: FloatingActionButton(
           //   onPressed: () {
-          //     print(UserData.sControlller);
+          //     print(UserData.fiestasdata?.toJson());
 
           //     // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=> Home()));
           //   },
