@@ -58,4 +58,5 @@ class Urls {
   static String logoutUrl = baseUrl + "logout";
   static String fiestasfilterUrl = baseUrl + "customer/fiesta/filters";
   static String termsandCondition = baseUrl + "config/terms_and_conditions";
+  static String privacyPolUrl = baseUrl + "config/privacy_policy";
 }

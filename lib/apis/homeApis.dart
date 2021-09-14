@@ -247,6 +247,28 @@ Future<String?> helpApi() async {
   }
 }
 
+Future<String?> privacypol() async {
+  var headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+    //  'X-localization': '${Constants.prefs?.getString("language")}'
+  };
+
+  var res = await http.get(
+    Uri.parse(Urls.privacyPolUrl),
+  );
+
+  // print(res.body);
+
+  var response = jsonDecode(res.body);
+
+  if (res.statusCode == 200) {
+    return response["data"]["config"];
+  } else {
+    print(res.body);
+
+    return "false";
+  }
+}
 // about us Api
 
 Future<String?> aboutApi() async {

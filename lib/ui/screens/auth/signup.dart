@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:funfy/apis/homeApis.dart';
 import 'package:funfy/apis/signupApi.dart';
 import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/components/dialogs.dart';
@@ -26,6 +27,7 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  static GlobalKey<ScaffoldState> _keyScaffold = GlobalKey();
   String lorem =
       "<p style=\"text-align: center; \"><span style=\"font-size: 1rem;\"><b>Terms and Conditions</b></span></p><div id=\"Content\" style=\"margin: 0px; padding: 0px; position: relative; font-family: \" open=\"\" sans\",=\"\" arial,=\"\" sans-serif;=\"\" font-size:=\"\" 14px;=\"\" text-align:=\"\" center;\"=\"\"><div id=\"Translation\" style=\"margin: 0px 28.7969px; padding: 0px; text-align: left;\"><p style=\"margin-right: 0px; margin-bottom: 15px; margin-left: 0px; padding: 0px; text-align: justify;\">On the other hand, we denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they cannot foresee the pain and trouble that are bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is the same as saying through shrinking from toil and pain. These cases are perfectly simple and easy to distinguish. In a free hour, when our power of choice is untrammeled and when nothing prevents our being able to do what we like best, every pleasure is to be welcomed and every pain avoided. But in certain circumstances and owing to the claims of duty or the obligations of business it will frequently occur that pleasures have to be repudiated and annoyances accepted. The wise man therefore always holds in these matters to this principle of selection: he rejects pleasures to secure other greater pleasures, or else he endures pains to avoid worse pains.\"</p><div><br></div></div></div><p><br></p><p><br></p><p><br></p>";
   final _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -193,45 +195,92 @@ class _SignUpState extends State<SignUp> {
     }
   }
 
+  bool termLoading = false;
+
+  String termHtml = "";
+
+  String privacyHtml = "";
+
+  // api call
+  tersConditions() async {
+    var net = await Internetcheck.check();
+
+    if (net != true) {
+      Internetcheck.showdialog(context: context);
+    } else {
+      try {
+        setState(() {
+          _loading = true;
+        });
+        helpApi().then((htmlString) {
+          setState(() {
+            _loading = false;
+            termHtml = htmlString!;
+
+            // print("here is html = $termHtml");
+          });
+        });
+
+        privacypol().then((htmlString2) {
+          setState(() {
+            _loading = false;
+            privacyHtml = htmlString2!;
+
+            // print("here is html = $privacyHtml");
+          });
+        });
+      } catch (e) {
+        print(e);
+        setState(() {
+          _loading = false;
+        });
+      }
+    }
+  }
+
   void _showBottomSheet({context, String? titletext, String? description}) {
     var size = MediaQuery.of(context).size;
     showModalBottomSheet(
         context: context,
         builder: (context) {
-          return Container(
-            margin: EdgeInsets.only(top: size.height * 0.008),
-            color: Colors.white,
-            height: size.height * 08,
-            width: size.width,
-            child: Column(
-              children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    icon: Icon(Icons.cancel_outlined),
+          return StatefulBuilder(
+              key: _keyScaffold,
+              builder: (context, setstate) {
+                return Container(
+                  margin: EdgeInsets.only(top: size.height * 0.008),
+                  color: Colors.white,
+                  height: size.height * 08,
+                  width: size.width,
+                  child: Column(
+                    children: [
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: IconButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          icon: Icon(Icons.cancel_outlined),
+                        ),
+                      ),
+                      Container(
+                        child: Text(
+                          "${getTranslated(context, "$titletext")}",
+                          // titletext.toString(),
+                          style: TextStyle(
+                            fontFamily: Fonts.dmSansBold,
+                            fontSize: size.width * 0.05,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                          child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: Html(data: description),
+                      ))
+                    ],
                   ),
-                ),
-                Container(
-                  child: Text(
-                    "${getTranslated(context, "titletext")}",
-                    // titletext.toString(),
-                    style: TextStyle(
-                      fontFamily: Fonts.dmSansBold,
-                      fontSize: size.width * 0.05,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: SingleChildScrollView(
-                      scrollDirection: Axis.vertical,
-                      child: Html(data: description)),
-                )
-              ],
-            ),
-          );
+                );
+              });
         });
   }
 
@@ -319,21 +368,26 @@ class _SignUpState extends State<SignUp> {
   @override
   void initState() {
     super.initState();
+    tersConditions();
 
     _termsandConditions = TapGestureRecognizer()
       ..onTap = () {
-        _showBottomSheet(
-            context: context,
-            titletext: Strings.termsOfService,
-            description: UserData.termsofservice);
+        if (_loading == false) {
+          _showBottomSheet(
+              context: context,
+              titletext: "termsAndConditions",
+              description: termHtml);
+        }
       };
 
     _policy = TapGestureRecognizer()
       ..onTap = () {
-        _showBottomSheet(
-            context: context,
-            titletext: Strings.privacypolicy,
-            description: UserData.privacypolicy);
+        if (_loading == false) {
+          _showBottomSheet(
+              context: context,
+              titletext: "privacyPolicy",
+              description: privacyHtml);
+        }
       };
   }
 
@@ -692,7 +746,9 @@ class _SignUpState extends State<SignUp> {
                           onTap: () {
                             print("signup");
 
-                            signupUser();
+                            if (_loading == false) {
+                              signupUser();
+                            }
                           },
                           child: roundedBox(
                               // width: size.width * 0.78,

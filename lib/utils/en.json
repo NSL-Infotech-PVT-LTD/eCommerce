@@ -271,5 +271,6 @@
   "fromExtras": "From Extras",
   "pending": "Pending",
   "delivered": "Delivered",
-  "termsAndConditions": "Terms & Conditions"
+  "termsAndConditions": "Terms & Conditions",
+  "privacyPolicy": "Privacy policy"
 }
