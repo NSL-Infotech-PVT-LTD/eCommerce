@@ -34,7 +34,7 @@ class _YourOrderSumState extends State<YourOrderSum> {
   bool ratting = false;
   double currentRating = 3.0;
   PrefiestasOrderDetailModel? prefiestasOrderDetailModel =
-      PrefiestasOrderDetailModel();
+  PrefiestasOrderDetailModel();
   bool _loading = false;
 
   double count = 0.0;
@@ -72,7 +72,7 @@ class _YourOrderSumState extends State<YourOrderSum> {
             var time = prefiestasOrderDetailModel?.data?.orderDetail![0].time;
 
             var time2 =
-                DateFormat.jm().format(DateFormat("hh:mm:ss").parse("$time"));
+            DateFormat.jm().format(DateFormat("hh:mm:ss").parse("$time"));
 
             var date2 = DateFormat('d MMMM').format(deliverydate1);
 
@@ -80,7 +80,7 @@ class _YourOrderSumState extends State<YourOrderSum> {
             deliveryTime = "${getTranslated(context, "till")} $time2";
 
             if (prefiestasOrderDetailModel
-                    ?.data?.orderDetail![0].transferCharge !=
+                ?.data?.orderDetail![0].transferCharge !=
                 null) {
               var transferCharger = prefiestasOrderDetailModel
                   ?.data?.orderDetail![0].transferCharge;
@@ -90,7 +90,7 @@ class _YourOrderSumState extends State<YourOrderSum> {
               grandTotal = (transferCharger + totPrice).toString();
             } else {
               grandTotal =
-                  "${prefiestasOrderDetailModel?.data?.orderDetail![0].totalPrice}";
+              "${prefiestasOrderDetailModel?.data?.orderDetail![0].totalPrice}";
             }
 
             if (prefiestasOrderDetailModel?.data?.orderDetail![0].orderStatus ==
@@ -179,7 +179,7 @@ class _YourOrderSumState extends State<YourOrderSum> {
                       itemCount: 5,
                       unratedColor: AppColors.starUnselect,
                       itemPadding:
-                          EdgeInsets.symmetric(horizontal: size.width * 0.01),
+                      EdgeInsets.symmetric(horizontal: size.width * 0.01),
                       itemBuilder: (context, _) => Icon(
                         Icons.star,
                         color: AppColors.ratingYellow,
@@ -228,9 +228,9 @@ class _YourOrderSumState extends State<YourOrderSum> {
           context,
           MaterialPageRoute(
               builder: (BuildContext context) => Home(
-                    pageIndexNum: 0,
-                  )),
-          (route) => false);
+                pageIndexNum: 0,
+              )),
+              (route) => false);
     } else {
       Navigator.of(context).pop();
     }
@@ -244,10 +244,10 @@ class _YourOrderSumState extends State<YourOrderSum> {
     return WillPopScope(
       onWillPop: backCall,
       child: Scaffold(
-          // floatingActionButton: FloatingActionButton(
-          //   onPressed: () {},
-          //   child: Icon(Icons.add),
-          // ),
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {},
+        //   child: Icon(Icons.add),
+        // ),
 
           backgroundColor: AppColors.homeBackgroundLite,
           appBar: AppBar(
@@ -268,388 +268,328 @@ class _YourOrderSumState extends State<YourOrderSum> {
           ),
           body: _loading
               ? Center(
-                  child: CircularProgressIndicator(),
-                )
+            child: CircularProgressIndicator(),
+          )
               : SingleChildScrollView(
-                  child: Container(
-                    color: AppColors.homeBackgroundLite,
-                    padding: EdgeInsets.all(9.0),
-                    child: Column(
+            child: Container(
+              color: AppColors.homeBackgroundLite,
+              padding: EdgeInsets.all(9.0),
+              child: Column(
+                children: [
+                  // rating popup
+
+                  ratting ? ratingPopup(size: size) : SizedBox(),
+
+                  SizedBox(
+                    height: size.height * 0.02,
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: size.width * 0.045),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                          Radius.circular(size.width * 0.02)),
+                      color: AppColors.greenCont,
+                    ),
+                    height: SizeConfig.screenHeight * 0.08,
+                    child: Row(
                       children: [
-                        // rating popup
-
-                        ratting ? ratingPopup(size: size) : SizedBox(),
-
-                        SizedBox(
-                          height: size.height * 0.02,
-                        ),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: size.width * 0.045),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(size.width * 0.02)),
-                            color: AppColors.greenCont,
-                          ),
-                          height: SizeConfig.screenHeight * 0.08,
-                          child: Row(
-                            children: [
-                              SvgPicture.asset(
-                                "assets/svgicons/card.svg",
-                                color: Colors.white,
-                                height: size.width * 0.075,
-                              ),
-                              SizedBox(
-                                width: SizeConfig.screenWidth * 0.03,
-                              ),
-                              Text(
-                                "${getTranslated(context, "Paymentstatus")}",
-                                style: TextStyle(
-                                    color: AppColors.white,
-                                    fontSize: size.width * 0.05,
-                                    fontFamily: Fonts.dmSansMedium),
-                              ),
-                              Spacer(),
-                              Text(
-                                "${getTranslated(context, "PAID")}",
-                                style: TextStyle(
-                                    color: AppColors.white,
-                                    fontSize: size.width * 0.05,
-                                    fontFamily: Fonts.dmSansBold),
-                              ),
-                            ],
-                          ),
+                        SvgPicture.asset(
+                          "assets/svgicons/card.svg",
+                          color: Colors.white,
+                          height: size.width * 0.075,
                         ),
                         SizedBox(
-                          height: SizeConfig.screenHeight * 0.025,
+                          width: SizeConfig.screenWidth * 0.03,
                         ),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: size.width * 0.04,
-                              vertical: size.height * 0.02),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: AppColors.borderColor),
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(size.width * 0.02)),
-                            color: AppColors.homeBackground,
-                          ),
-                          //  height: SizeConfig.screenHeight * 0.10,
-                          child: Row(
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "${prefiestasOrderDetailModel?.data?.parentDetail?.name}",
-                                    // "${getTranslated(context, "PackLaHavana")}",
-                                    //"Pack La Havana",
-                                    style: TextStyle(
-                                        color: AppColors.white,
-                                        fontSize: size.width * 0.05,
-                                        fontFamily: Fonts.dmSansBold),
-                                  ),
-                                  SizedBox(
-                                    height: SizeConfig.screenHeight * 0.02,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      ConstrainedBox(
-                                          constraints: BoxConstraints(
-                                              maxWidth: SizeConfig.screenWidth *
-                                                  0.68),
-                                          child: Text(
-                                            "${prefiestasOrderDetailModel?.data?.parentDetail?.description}",
-                                            // "${getTranslated(context, "lorem")}",
-                                            // Strings.lorem,
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                color:
-                                                    AppColors.itemDescription,
-                                                fontSize: size.width * 0.04,
-                                                fontFamily:
-                                                    Fonts.dmSansRegular),
-                                          )),
-                                      // Spacer(),
-                                      Container(
-                                          height: size.height * 0.08,
-                                          width: size.width * 0.18,
-                                          // color: Colors.blue,
-                                          child: Image.network(
-                                            "${prefiestasOrderDetailModel?.data?.parentDetail?.image}",
-                                            // Images.beerNetwork,
-                                          ))
-                                    ],
-                                  ),
+                        Text(
+                          "${getTranslated(context, "Paymentstatus")}",
+                          style: TextStyle(
+                              color: AppColors.white,
+                              fontSize: size.width * 0.05,
+                              fontFamily: Fonts.dmSansMedium),
+                        ),
+                        Spacer(),
+                        Text(
+                          "${getTranslated(context, "PAID")}",
+                          style: TextStyle(
+                              color: AppColors.white,
+                              fontSize: size.width * 0.05,
+                              fontFamily: Fonts.dmSansBold),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: SizeConfig.screenHeight * 0.025,
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: size.width * 0.04,
+                        vertical: size.height * 0.02),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColors.borderColor),
+                      borderRadius: BorderRadius.all(
+                          Radius.circular(size.width * 0.02)),
+                      color: AppColors.homeBackground,
+                    ),
+                    //  height: SizeConfig.screenHeight * 0.10,
+                    child: Row(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "${prefiestasOrderDetailModel?.data?.parentDetail?.name}",
+                              // "${getTranslated(context, "PackLaHavana")}",
+                              //"Pack La Havana",
+                              style: TextStyle(
+                                  color: AppColors.white,
+                                  fontSize: size.width * 0.05,
+                                  fontFamily: Fonts.dmSansBold),
+                            ),
+                            SizedBox(
+                              height: SizeConfig.screenHeight * 0.02,
+                            ),
+                            Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                              children: [
+                                ConstrainedBox(
+                                    constraints: BoxConstraints(
+                                        maxWidth: SizeConfig.screenWidth *
+                                            0.68),
+                                    child: Text(
+                                      "${prefiestasOrderDetailModel?.data?.parentDetail?.description}",
+                                      // "${getTranslated(context, "lorem")}",
+                                      // Strings.lorem,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          color:
+                                          AppColors.itemDescription,
+                                          fontSize: size.width * 0.04,
+                                          fontFamily:
+                                          Fonts.dmSansRegular),
+                                    )),
+                                // Spacer(),
+                                Container(
+                                    height: size.height * 0.08,
+                                    width: size.width * 0.18,
+                                    // color: Colors.blue,
+                                    child: Image.network(
+                                      "${prefiestasOrderDetailModel?.data?.parentDetail?.image}",
+                                      // Images.beerNetwork,
+                                    ))
+                              ],
+                            ),
 
-                                  // ListView.builder(
-                                  //     itemCount: 3,
-                                  //     itemBuilder: (context, index) {
-                                  //       return Container(
-                                  //         child: Column(
-                                  //           children: [
-                                  //             SizedBox(
-                                  //               height: size.height * 0.03,
-                                  //             ),
-                                  //             sameItem3(
-                                  //                 size: size,
-                                  //                 topTile: "Alcohol",
-                                  //                 title: "Ron Bucanero Anejo",
-                                  //                 decription: "70 CL",
-                                  //                 price: "25.88"),
-                                  //           ],
-                                  //         ),
-                                  //       );
-                                  //     }),
+                            // ListView.builder(
+                            //     itemCount: 3,
+                            //     itemBuilder: (context, index) {
+                            //       return Container(
+                            //         child: Column(
+                            //           children: [
+                            //             SizedBox(
+                            //               height: size.height * 0.03,
+                            //             ),
+                            //             sameItem3(
+                            //                 size: size,
+                            //                 topTile: "Alcohol",
+                            //                 title: "Ron Bucanero Anejo",
+                            //                 decription: "70 CL",
+                            //                 price: "25.88"),
+                            //           ],
+                            //         ),
+                            //       );
+                            //     }),
 
-                                  // prefiestasOrderDetailModel?.data?.orderDetail![0].orderItem?.toList().forEach((element) { })
+                            // prefiestasOrderDetailModel?.data?.orderDetail![0].orderItem?.toList().forEach((element) { })
 
+                            Column(
+                              children: [
+                                for (OrderItem i
+                                in prefiestasOrderDetailModel!
+                                    .data!.orderDetail![0].orderItem!
+                                    .toList())
                                   Column(
                                     children: [
-                                      for (OrderItem i
-                                          in prefiestasOrderDetailModel!
-                                              .data!.orderDetail![0].orderItem!
-                                              .toList())
-                                        Column(
-                                          children: [
-                                            SizedBox(
-                                              height: size.height * 0.03,
-                                            ),
-                                            sameItem3(
-                                                size: size,
-                                                topTile:
-                                                    "${i.preFiesta?.categories}",
-                                                title: "${i.preFiesta?.name}",
-                                                decription:
-                                                    "${i.preFiesta?.quantity} CL",
-                                                price: "${i.price}"),
-                                          ],
-                                        )
+                                      SizedBox(
+                                        height: size.height * 0.03,
+                                      ),
+                                      sameItem3(
+                                          size: size,
+                                          topTile:
+                                          "${i.preFiesta?.categories}",
+                                          title: "${i.preFiesta?.name}",
+                                          decription:
+                                          "${i.preFiesta?.quantity} CL",
+                                          price: "${i.price}"),
                                     ],
-                                  ),
-                                  // SizedBox(
-                                  //   height: size.height * 0.03,
-                                  // ),
-                                  // sameItem3(
-                                  //     size: size,
-                                  //     topTile: "Alcohol",
-                                  //     title: "Ron Bucanero Anejo",
-                                  //     decription: "70 CL",
-                                  //     price: "25.88"),
-                                  // SizedBox(
-                                  //   height: size.height * 0.03,
-                                  // ),
-                                  // sameItem3(
-                                  //     size: size,
-                                  //     topTile: "Mix",
-                                  //     title: "Ron Bucanero Anejo",
-                                  //     decription: "70 CL",
-                                  //     price: "25.88"),
-                                  // SizedBox(
-                                  //   height: size.height * 0.03,
-                                  // ),
-                                  // sameItem3(
-                                  //     size: size,
-                                  //     topTile: "Extras",
-                                  //     title: "Ron Bucanero Anejo",
-                                  //     decription: "70 CL",
-                                  //     price: "25.88"),
-                                  SizedBox(
-                                    height: SizeConfig.screenHeight * 0.05,
-                                  ),
-                                  Container(
-                                    width: SizeConfig.screenWidth * 0.82,
-                                    child: DottedLine(
-                                      dashLength: 10,
-                                      dashGapLength: 13,
-                                      lineThickness: 2,
-                                      dashColor: Colors.grey,
-                                      dashGapColor: AppColors.homeBackground,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: SizeConfig.screenHeight * 0.04,
-                                  ),
-                                  Container(
-                                    width: SizeConfig.screenWidth * 0.80,
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          "${getTranslated(context, "transferCharges")}",
-                                          //   "Other Taxes",
-                                          style: TextStyle(
-                                              color: AppColors.white,
-                                              fontSize: size.width * 0.05,
-                                              fontFamily: Fonts.dmSansMedium),
-                                        ),
-                                        Spacer(),
-                                        Text(
-                                          "${Strings.euro} ${prefiestasOrderDetailModel?.data?.orderDetail?[0].transferCharge ?? 0.0}",
-                                          style: TextStyle(
-                                              color: AppColors.white,
-                                              fontSize: size.width * 0.05,
-                                              fontFamily: Fonts.dmSansBold),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: SizeConfig.screenHeight * 0.04,
-                                  ),
-                                  Container(
-                                    width: SizeConfig.screenWidth * 0.80,
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          "${getTranslated(context, "GrandTotal")}",
-                                          //   "Grand Total",
-                                          style: TextStyle(
-                                              color: AppColors.white,
-                                              fontSize: size.width * 0.06,
-                                              fontFamily: Fonts.dmSansMedium),
-                                        ),
-                                        Spacer(),
-                                        Text(
-                                          Strings.euro + " " + grandTotal,
-                                          style: TextStyle(
-                                              color: AppColors.white,
-                                              fontSize: size.width * 0.065,
-                                              fontFamily: Fonts.dmSansBold),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
+                                  )
+                              ],
+                            ),
+                            // SizedBox(
+                            //   height: size.height * 0.03,
+                            // ),
+                            // sameItem3(
+                            //     size: size,
+                            //     topTile: "Alcohol",
+                            //     title: "Ron Bucanero Anejo",
+                            //     decription: "70 CL",
+                            //     price: "25.88"),
+                            // SizedBox(
+                            //   height: size.height * 0.03,
+                            // ),
+                            // sameItem3(
+                            //     size: size,
+                            //     topTile: "Mix",
+                            //     title: "Ron Bucanero Anejo",
+                            //     decription: "70 CL",
+                            //     price: "25.88"),
+                            // SizedBox(
+                            //   height: size.height * 0.03,
+                            // ),
+                            // sameItem3(
+                            //     size: size,
+                            //     topTile: "Extras",
+                            //     title: "Ron Bucanero Anejo",
+                            //     decription: "70 CL",
+                            //     price: "25.88"),
+                            SizedBox(
+                              height: SizeConfig.screenHeight * 0.05,
+                            ),
+                            Container(
+                              width: SizeConfig.screenWidth * 0.82,
+                              child: DottedLine(
+                                dashLength: 10,
+                                dashGapLength: 13,
+                                lineThickness: 2,
+                                dashColor: Colors.grey,
+                                dashGapColor: AppColors.homeBackground,
                               ),
-                              //Image.asset(name)
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: SizeConfig.screenHeight * 0.02),
-                        Container(
-                          width: SizeConfig.screenWidth,
-                          height: SizeConfig.screenHeight * 0.11,
-                          child: DottedBorder(
-                            radius: Radius.elliptical(100, 100),
-                            color: AppColors.borderColor,
-                            // gap: 3,
-                            strokeWidth: 1,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
+                            ),
+                            SizedBox(
+                              height: SizeConfig.screenHeight * 0.04,
+                            ),
+                            Container(
+                              width: SizeConfig.screenWidth * 0.80,
                               child: Row(
-                                // crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Icon(
-                                    Icons.access_time,
-                                    color: AppColors.white,
-                                  ),
-                                  SizedBox(
-                                    width: SizeConfig.screenWidth * 0.03,
-                                  ),
                                   Text(
-                                    "${getTranslated(context, "DeliveryStatus")}",
-                                    //"Delivery Status",
+                                    "${getTranslated(context, "transferCharges")}",
+                                    //   "Other Taxes",
                                     style: TextStyle(
                                         color: AppColors.white,
                                         fontSize: size.width * 0.05,
                                         fontFamily: Fonts.dmSansMedium),
                                   ),
                                   Spacer(),
-                                  Column(
-                                    children: [
-                                      SizedBox(
-                                          height:
-                                              SizeConfig.screenHeight * 0.02),
-                                      Text(
-                                        // "25 JUNE, Today",
-
-                                        "$deliverydate",
-                                        style: TextStyle(
-                                            color: AppColors.itemDescription,
-                                            fontSize: size.width * 0.04,
-                                            fontFamily: Fonts.dmSansMedium),
-                                      ),
-                                      Text(
-                                        "$deliveryTime",
-                                        style: TextStyle(
-                                            color: AppColors.itemDescription,
-                                            fontSize: size.width * 0.04,
-                                            fontFamily: Fonts.dmSansMedium),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            //Image.asset(name)
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: SizeConfig.screenHeight * 0.02),
-                      Container(
-                        width: SizeConfig.screenWidth,
-                        height: SizeConfig.screenHeight * 0.11,
-                        child: DottedBorder(
-                          radius: Radius.elliptical(100, 100),
-                          color: AppColors.borderColor,
-                          // gap: 3,
-                          strokeWidth: 1,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              // crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Icon(
-                                  Icons.access_time,
-                                  color: AppColors.white,
-                                ),
-                                SizedBox(
-                                  width: SizeConfig.screenWidth * 0.03,
-                                ),
-                                Text(
-                                  "${getTranslated(context, "DeliveryStatus")}",
-                                  //"Delivery Status",
-                                  style: TextStyle(
-                                      color: AppColors.white,
-                                      fontSize: size.width * 0.05,
-                                      fontFamily: Fonts.dmSansMedium),
-                                ),
-                                Spacer(),
-                                Column(
-                                  children: [
-                                    SizedBox(
-                                        height: SizeConfig.screenHeight * 0.02),
-                                    Text(
-                                      "25 JUNE, Today",
-                                      style: TextStyle(
-                                          color: AppColors.itemDescription,
-                                          fontSize: size.width * 0.04,
-                                          fontFamily: Fonts.dmSansMedium),
-                                    ),
-                                    Text(
-                                      "Till 04:00 PM",
-                                      style: TextStyle(
-                                          color: AppColors.itemDescription,
-                                          fontSize: size.width * 0.04,
-                                          fontFamily: Fonts.dmSansMedium),
-                                    ),
-                                  ],
-                                ),
-                              ],
-=======
+                                  Text(
+                                    "${Strings.euro} ${prefiestasOrderDetailModel?.data?.orderDetail?[0].transferCharge ?? 0.0}",
+                                    style: TextStyle(
+                                        color: AppColors.white,
+                                        fontSize: size.width * 0.05,
+                                        fontFamily: Fonts.dmSansBold),
+                                  )
                                 ],
                               ),
->>>>>>> 0e52ef1b6c52649421455366eaaab12611acbba4
                             ),
-                          ),
+                            SizedBox(
+                              height: SizeConfig.screenHeight * 0.04,
+                            ),
+                            Container(
+                              width: SizeConfig.screenWidth * 0.80,
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "${getTranslated(context, "GrandTotal")}",
+                                    //   "Grand Total",
+                                    style: TextStyle(
+                                        color: AppColors.white,
+                                        fontSize: size.width * 0.06,
+                                        fontFamily: Fonts.dmSansMedium),
+                                  ),
+                                  Spacer(),
+                                  Text(
+                                    Strings.euro + " " + grandTotal,
+                                    style: TextStyle(
+                                        color: AppColors.white,
+                                        fontSize: size.width * 0.065,
+                                        fontFamily: Fonts.dmSansBold),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                        SizedBox(height: SizeConfig.screenHeight * 0.04),
+                        //Image.asset(name)
                       ],
                     ),
                   ),
-                )),
+                  SizedBox(height: SizeConfig.screenHeight * 0.02),
+                  Container(
+                    width: SizeConfig.screenWidth,
+                    height: SizeConfig.screenHeight * 0.11,
+                    child: DottedBorder(
+                      radius: Radius.elliptical(100, 100),
+                      color: AppColors.borderColor,
+                      // gap: 3,
+                      strokeWidth: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          // crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Icon(
+                              Icons.access_time,
+                              color: AppColors.white,
+                            ),
+                            SizedBox(
+                              width: SizeConfig.screenWidth * 0.03,
+                            ),
+                            Text(
+                              "${getTranslated(context, "DeliveryStatus")}",
+                              //"Delivery Status",
+                              style: TextStyle(
+                                  color: AppColors.white,
+                                  fontSize: size.width * 0.05,
+                                  fontFamily: Fonts.dmSansMedium),
+                            ),
+                            Spacer(),
+                            Column(
+                              children: [
+                                SizedBox(
+                                    height:
+                                    SizeConfig.screenHeight * 0.02),
+                                Text(
+                                  // "25 JUNE, Today",
+
+                                  "$deliverydate",
+                                  style: TextStyle(
+                                      color: AppColors.itemDescription,
+                                      fontSize: size.width * 0.04,
+                                      fontFamily: Fonts.dmSansMedium),
+                                ),
+                                Text(
+                                  "$deliveryTime",
+                                  style: TextStyle(
+                                      color: AppColors.itemDescription,
+                                      fontSize: size.width * 0.04,
+                                      fontFamily: Fonts.dmSansMedium),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: SizeConfig.screenHeight * 0.04),
+                ],
+              ),
+            ),
+          )),
     );
   }
 }

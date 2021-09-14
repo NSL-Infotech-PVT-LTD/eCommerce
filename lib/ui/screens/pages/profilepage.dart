@@ -79,7 +79,7 @@ class _ProfilepageState extends State<Profilepage> {
 
                     Container(
                       padding:
-                          EdgeInsets.symmetric(horizontal: size.width * 0.05),
+                      EdgeInsets.symmetric(horizontal: size.width * 0.05),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -107,61 +107,49 @@ class _ProfilepageState extends State<Profilepage> {
                           Spacer(),
                           notiLoading
                               ? Container(
-                            margin: EdgeInsets.only(top: size.height * 0.02  ),
-                                child: Row(
-                                    children: [
-                                      Container(
-                                          // height: size.height * 0.033,
-                                          // width: size.width * 0.06,
-                                        height: 20,
-                                  margin:
-                                      EdgeInsets.only(top: size.height * 0.02),
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Container(
-                                          // height: size.height * 0.03,
-                                          // width: size.width * 0.06,
-                                          height: 20,
-
-                                          width: 20,
-                                          child: CircularProgressIndicator()),
-                                      SizedBox(
-                                        width: size.width * 0.04,
-                                      )
-                                    ],
-                                  ),
-
-                              )
-
+                            margin:
+                            EdgeInsets.only(top: size.height * 0.02),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Container(
+                                  // height: size.height * 0.03,
+                                  // width: size.width * 0.06,
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator()),
+                                SizedBox(
+                                  width: size.width * 0.04,
                                 )
-
+                              ],
+                            ),
+                          )
                               : Switch(
-                                  onChanged: (v) async {
-                                    setstate(() {
-                                      notiLoading = true;
-                                    });
+                            onChanged: (v) async {
+                              setstate(() {
+                                notiLoading = true;
+                              });
 
-                                    await notificationOffApi(
-                                            notificationNum: v ? 1 : 0)
-                                        .then((value) {
-                                      print("res value $value");
-                                      setstate(() {
-                                        notiLoading = false;
-                                        toggleBool = value!;
-                                      });
-                                    });
+                              await notificationOffApi(
+                                  notificationNum: v ? 1 : 0)
+                                  .then((value) {
+                                print("res value $value");
+                                setstate(() {
+                                  notiLoading = false;
+                                  toggleBool = value!;
+                                });
+                              });
 
-                                    setstate(() {
-                                      notiLoading = false;
-                                    });
-                                  },
-                                  value: toggleBool,
-                                  activeColor: AppColors.white,
-                                  activeTrackColor: AppColors.siginbackgrond,
-                                  inactiveThumbColor: AppColors.white,
-                                  inactiveTrackColor: Colors.grey[300],
-                                )
+                              setstate(() {
+                                notiLoading = false;
+                              });
+                            },
+                            value: toggleBool,
+                            activeColor: AppColors.white,
+                            activeTrackColor: AppColors.siginbackgrond,
+                            inactiveThumbColor: AppColors.white,
+                            inactiveTrackColor: Colors.grey[300],
+                          )
                         ],
                       ),
                     ),
@@ -197,7 +185,7 @@ class _ProfilepageState extends State<Profilepage> {
         context: context,
         title: "${getTranslated(context, "alert")}", // Strings.alert,
         content:
-            "${getTranslated(context, "areYousureWantToLogout")}", //Strings.areYousureWantToLogout,
+        "${getTranslated(context, "areYousureWantToLogout")}", //Strings.areYousureWantToLogout,
         func: () async {
           navigatePopFun(context);
           setState(() {
@@ -216,7 +204,7 @@ class _ProfilepageState extends State<Profilepage> {
                     context,
                     MaterialPageRoute(
                         builder: (BuildContext context) => Signin()),
-                    (route) => false);
+                        (route) => false);
               }
             });
           } catch (e) {
@@ -302,9 +290,9 @@ class _ProfilepageState extends State<Profilepage> {
                         GestureDetector(
                           onTap: () {
                             Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => EditProfile()))
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => EditProfile()))
                                 .then((value) {
                               setState(() {});
                             });
@@ -316,9 +304,9 @@ class _ProfilepageState extends State<Profilepage> {
                                 color: AppColors.white,
                               )
 
-                              //  Image.asset(Images.editpen)
+                            //  Image.asset(Images.editpen)
 
-                              ),
+                          ),
                         )
                       ],
                       // edit
@@ -413,7 +401,7 @@ class _ProfilepageState extends State<Profilepage> {
                                     children: [
                                       SizedBox(width: size.width * 0.045),
                                       Container(
-                                          // color: Colors.green,
+                                        // color: Colors.green,
                                           height: size.height * 0.031,
                                           width: size.width * 0.06,
                                           child: Image.asset(Images.logout)),
@@ -438,10 +426,10 @@ class _ProfilepageState extends State<Profilepage> {
               ),
               _loading
                   ? Center(
-                      child: CircularProgressIndicator(
-                        color: AppColors.white,
-                      ),
-                    )
+                child: CircularProgressIndicator(
+                  color: AppColors.white,
+                ),
+              )
                   : SizedBox()
             ],
           ),
@@ -453,11 +441,11 @@ class _ProfilepageState extends State<Profilepage> {
 
 Widget centerlistItem(
     {context,
-    String? leftIconImage,
-    String? title,
-    String? rightIconImage,
-    bool? icon,
-    onTapfunc}) {
+      String? leftIconImage,
+      String? title,
+      String? rightIconImage,
+      bool? icon,
+      onTapfunc}) {
   var size = MediaQuery.of(context).size;
 
   return InkWell(
@@ -479,10 +467,10 @@ Widget centerlistItem(
                       width: size.width * 0.045,
                       child: icon != null
                           ? Icon(
-                              Icons.translate,
-                              color: AppColors.white,
-                              size: size.width * 0.055,
-                            )
+                        Icons.translate,
+                        color: AppColors.white,
+                        size: size.width * 0.055,
+                      )
                           : Image.asset("$leftIconImage")),
                   SizedBox(
                     width: size.width * 0.03,
