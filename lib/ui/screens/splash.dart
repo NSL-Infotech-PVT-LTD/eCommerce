@@ -50,7 +50,7 @@ class _SplashState extends State<Splash> {
 
       // term();
       // policy();
-      if (value == null) {
+      if (value == null || value == "null") {
         navigatorPushFun(context, TranslationPage(fromSplash: true));
       } else {
         if (introdata.length != 0 && introdata != []) {
@@ -60,8 +60,10 @@ class _SplashState extends State<Splash> {
                           Constants.prefs?.getString("token") != ""
                       ? Home(pageIndexNum: 0)
                       // ? Testing()
-                      // : Intro()
-                      : Signin()));
+                      : Intro()
+              // : Signin()
+
+              ));
         } else {
           print("no intro data");
 

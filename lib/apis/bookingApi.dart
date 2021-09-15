@@ -203,7 +203,8 @@ Future makeOrderApi({String? cartId, String? addressId, String? cardID}) async {
 // prefiestas Order detail show ------------------- //
 
 Future<PrefiestasOrderDetailModel?> prefiestasShowOrderDetail(
-    {String? orderId}) async {
+    {String? orderId, context}) async {
+  print("here is id of prefiestas - $orderId");
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
     // 'X-localization': '${Constants.prefs?.getString("language")}'
@@ -225,8 +226,39 @@ Future<PrefiestasOrderDetailModel?> prefiestasShowOrderDetail(
   if (res.statusCode == 200) {
     // print(res.body);
     return prefiestasOrderDetailModelFromJson(res.body);
+  } else if (res.statusCode == 422) {
+    Dialogs.simpleOkAlertDialog(
+        context: context,
+        content: "${getTranslated(context, 'theSelectedItemIsinvalid')}",
+        title: "${getTranslated(context, 'alert!')}",
+        func: () {
+          navigatePopFun(context);
+        });
+
+    Future.delayed(Duration(seconds: 2), () {
+      navigatorPushFun(
+          context,
+          Home(
+            pageIndexNum: 0,
+          ));
+    });
   } else {
     print("here is error ${res.body}");
+    Dialogs.simpleOkAlertDialog(
+        context: context,
+        content: "${getTranslated(context, 'theSelectedItemIsinvalid')}",
+        title: "${getTranslated(context, 'alert!')}",
+        func: () {
+          navigatePopFun(context);
+        });
+
+    Future.delayed(Duration(seconds: 2), () {
+      navigatorPushFun(
+          context,
+          Home(
+            pageIndexNum: 0,
+          ));
+    });
   }
 }
 

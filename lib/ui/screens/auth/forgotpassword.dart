@@ -271,7 +271,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       TextSpan(
                         // recognizer: _termsandConditions,
                         text:
-                            "${getTranslated(context, "backToSignIn")}", //"${Strings.termsOfService}",
+                            " ${getTranslated(context, "backToSignIn")}", //"${Strings.termsOfService}",
                         style: TextStyle(
                             fontFamily: Fonts.dmSansBold,
                             decoration: TextDecoration.underline,

@@ -204,7 +204,9 @@ class _ProfilepageState extends State<Profilepage> {
                 Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
-                        builder: (BuildContext context) => Signin()),
+                        builder: (BuildContext context) => TranslationPage(
+                              fromSplash: true,
+                            )),
                     (route) => false);
               }
             });

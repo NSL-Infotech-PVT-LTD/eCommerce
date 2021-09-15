@@ -48,7 +48,8 @@ class _YourOrderSumState extends State<YourOrderSum> {
         _loading = true;
       });
       try {
-        await prefiestasShowOrderDetail(orderId: widget.orderID.toString())
+        await prefiestasShowOrderDetail(
+                context: context, orderId: widget.orderID.toString())
             .then((res) {
           print("data is here ");
 

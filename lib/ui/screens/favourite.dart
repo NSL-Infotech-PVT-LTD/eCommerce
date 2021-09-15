@@ -194,8 +194,10 @@ class _FavouriteState extends State<Favourite> {
                       // loading
                       _loading
                           ? Center(child: CircularProgressIndicator())
-                          : _loading == false &&
-                                  fiestasFavModel?.data?.data?.length == 0
+                          : (_loading == false &&
+                                      fiestasFavModel?.data?.data?.length ==
+                                          0) ||
+                                  (_loading == false && fiestasFavModel == null)
                               ? Center(
                                   child: Text(
                                   "${Strings.listEmpty}",
@@ -222,8 +224,11 @@ class _FavouriteState extends State<Favourite> {
                     children: [
                       prifestasLoading
                           ? Center(child: CircularProgressIndicator())
-                          : _loading == false &&
-                                  preFiestasFavModel?.data?.data?.length == 0
+                          : (_loading == false &&
+                                      preFiestasFavModel?.data?.data?.length ==
+                                          0) ||
+                                  (_loading == false &&
+                                      preFiestasFavModel == null)
                               ? Center(
                                   child: Text(
                                   "${Strings.listEmpty}",
@@ -262,7 +267,7 @@ fiestasItemFav({context, int? index, FiestasFavouriteModel? model, funcRun}) {
 
   String month = DateFormat('MMM').format(date);
 
-  String price = k_m_b_generator(int.parse("${data?.ticketPrice}"));
+  String price = k_m_b_generator(int.parse("${data?.ticketPriceNormal}"));
 
   return InkWell(
     onTap: () {

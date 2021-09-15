@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:funfy/apis/homeApis.dart';
 import 'package:funfy/components/navigation.dart';
-import 'package:funfy/components/sizeclass/SizeConfig.dart';
-import 'package:funfy/main.dart';
 import 'package:funfy/models/notificationListModel.dart';
 import 'package:funfy/ui/screens/Your%20order%20Summery.dart';
 import 'package:funfy/ui/screens/fiestasMoreOrderDetails.dart';
@@ -11,7 +9,6 @@ import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/langauge_constant.dart';
-import 'package:funfy/utils/strings.dart';
 import 'package:intl/intl.dart';
 
 class Notifications extends StatefulWidget {
@@ -22,13 +19,20 @@ class Notifications extends StatefulWidget {
 }
 
 class _NotificationsState extends State<Notifications> {
-  NotificationListModel? notificationListModel;
-  var notificationData;
+  // NotificationListModel? notificationListModel;
+
+  List notificationDataList = [];
+  Map? notificationData;
   bool _loading = false;
   int _today = -1;
   int _earlier = -1;
 
   DateTime dateTime = DateTime.now();
+
+  // pagination
+  ScrollController notificationScrollController = ScrollController();
+  bool pageLoading = false;
+  int page = 1;
 
   getNotificationList() async {
     var net = await Internetcheck.check();
@@ -39,29 +43,15 @@ class _NotificationsState extends State<Notifications> {
     {
       try {
         setState(() {
+          page = 1;
           setState(() {
             _loading = true;
           });
         });
         notificatiListApi().then((value) {
           setState(() {
-            // for (var i = 0;
-            //     i > int.parse("${value?.data?.data?.length}");
-            //     i++) {
-            //   DateTime dateCreated = DateTime.parse(
-            //       "${notificationListModel?.data?.data?.elementAt(i).createdAt}");
-
-            //   if (_today == -1 && dateCreated.day == dateTime.day) {
-            //     _today = i;
-            //   }
-            //   if (_earlier == -1 && dateCreated.day != dateTime.day) {
-            //     _earlier = i;
-            //     print("here is er $_earlier");
-            //   }
-            // }
-
-            // notificationListModel = value;
-            notificationData = value['data']['data'];
+            notificationDataList = value['data']['data'];
+            notificationData = value;
 
             _loading = false;
           });
@@ -76,10 +66,83 @@ class _NotificationsState extends State<Notifications> {
     }
   }
 
+  //pagination
+  notificationPagination() async {
+    var net = await Internetcheck.check();
+
+    print("notification data ${notificationData!["data"]["total"]}  $page");
+
+    if (net == false) {
+      Internetcheck.showdialog(context: context);
+    }
+    {
+      if (pageLoading) {
+        return;
+      }
+
+      if (page > int.parse('${notificationData!["data"]["last_page"]}')) {
+        print('No More Products');
+
+        return;
+      }
+
+      try {
+        setState(() {
+          pageLoading = true;
+        });
+        print("get data ........");
+        page = page + 1;
+
+        notificatiListApi(pageCount: page).then((value) {
+          setState(() {
+            notificationDataList.addAll(value['data']['data']);
+            notificationData = value;
+
+            pageLoading = false;
+          });
+        });
+        // await fiestasPostGet(
+        //         limitCount: limitCount.toString(),
+        //         pageCount: fiestasPageCount.toString(),
+        //         context: context,
+        //         type: tagType,
+        //         dateFilter: filterDate,
+        //         filterDataF: filterData)
+        //     .then((FiestasModel? posts) {
+        //   setState(() {
+        //     var fdata = posts?.data?.data;
+        //     UserData.fiestasdata?.data?.data?.addAll(fdata!);
+        //     fiestasLoadingPage = false;
+        //   });
+        // });
+      } catch (e) {
+        print("noti page Error $e");
+        setState(() {
+          pageLoading = false;
+        });
+      }
+    }
+  }
+
   @override
   void initState() {
+    notificationScrollController.addListener(() {
+      double maxScroll = notificationScrollController.position.maxScrollExtent;
+      double currentScroll = notificationScrollController.position.pixels;
+      double delta = MediaQuery.of(context).size.height * 0.20;
+      if (maxScroll - currentScroll <= delta) {
+        print("page ...............");
+        notificationPagination();
+      }
+    });
     super.initState();
     getNotificationList();
+  }
+
+  @override
+  void dispose() {
+    notificationScrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -115,7 +178,7 @@ class _NotificationsState extends State<Notifications> {
                 color: AppColors.white,
               ),
             )
-          : _loading == false && notificationListModel?.data?.data?.length == 0
+          : _loading == false && notificationDataList.length == 0
               ? Center(
                   child: Text(
                     "${getTranslated(context, "noNotification")}",
@@ -126,68 +189,35 @@ class _NotificationsState extends State<Notifications> {
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // today
-                    // Container(
-                    //   margin: EdgeInsets.only(
-                    //       left: size.width * 0.05,
-                    //       top: size.height * 0.02,
-                    //       bottom: size.height * 0.01),
-                    //   child: Text(
-                    //     "${getTranslated(context, "today")}",
-                    //     // Strings.today,
-                    //     style: TextStyle(
-                    //         color: AppColors.white,
-                    //         fontFamily: Fonts.dmSansMedium,
-                    //         fontSize: size.width * 0.045),
-                    //   ),
-                    // ),
                     Expanded(
                       child: ListView.builder(
-                          itemCount: notificationData.length ?? 0,
-                          // notificationListModel?.data?.data?.length ?? 0,
+                          controller: notificationScrollController,
+                          itemCount: notificationDataList.length,
                           itemBuilder: (context, index) {
                             DateTime dateCreated = DateTime.parse(
-                                "${notificationData[index]['created_at']}"
+                                "${notificationDataList[index]['created_at']}"
                                 // "${notificationListModel?.data?.data?.elementAt(index).createdAt}"
 
                                 );
 
-                            if (_today != -0 && index == _today) {
-                              // _today = true;
-                              return Container(
-                                margin: EdgeInsets.only(
-                                    left: size.width * 0.05,
-                                    top: size.height * 0.02,
-                                    bottom: size.height * 0.01),
-                                child: Text(
-                                  "${getTranslated(context, "today")}",
-                                  // Strings.today,
-                                  style: TextStyle(
-                                      color: AppColors.white,
-                                      fontFamily: Fonts.dmSansMedium,
-                                      fontSize: size.width * 0.045),
-                                ),
-                              );
-                            }
+                            // if (_today != -0 && index == _today) {
+                            //   // _today = true;
+                            //   return Container(
+                            //     margin: EdgeInsets.only(
+                            //         left: size.width * 0.05,
+                            //         top: size.height * 0.02,
+                            //         bottom: size.height * 0.01),
+                            //     child: Text(
+                            //       "${getTranslated(context, "today")}",
+                            //       // Strings.today,
+                            //       style: TextStyle(
+                            //           color: AppColors.white,
+                            //           fontFamily: Fonts.dmSansMedium,
+                            //           fontSize: size.width * 0.045),
+                            //     ),
+                            //   );
+                            // }
 
-                            if (_earlier != -0 && index == _earlier) {
-                              // _earlier = true;
-
-                              return Container(
-                                margin: EdgeInsets.only(
-                                    left: size.width * 0.05,
-                                    top: size.height * 0.02,
-                                    bottom: size.height * 0.01),
-                                child: Text(
-                                  "${getTranslated(context, "earlier")}",
-                                  // Strings.today,
-                                  style: TextStyle(
-                                      color: AppColors.white,
-                                      fontFamily: Fonts.dmSansMedium,
-                                      fontSize: size.width * 0.045),
-                                ),
-                              );
-                            }
                             return notificationItem(
                                 context: context,
                                 imageUrl:
@@ -197,18 +227,35 @@ class _NotificationsState extends State<Notifications> {
                                     //         .targetByDetail
                                     //         ?.image ??
 
-                                    notificationData[index]['booking_detail']
-                                            ['image'] ??
+                                    notificationDataList[index]
+                                            ['booking_detail']['image'] ??
                                         Images.beerNetwork,
-                                title:
-                                    notificationData[index]['body'].toString(),
+                                title: notificationDataList[index]['body']
+                                    .toString(),
                                 // "${notificationListModel?.data?.data?.elementAt(index).body}",
                                 time:
                                     "${DateFormat.yMd().add_jm().format(dateCreated)}",
-                                jsonData: notificationData[index],
+                                jsonData: notificationDataList[index],
                                 active: true);
                           }),
                     ),
+                    pageLoading
+                        ? Container(
+                            height: size.height * 0.08,
+                            width: MediaQuery.of(context).size.width,
+                            padding: EdgeInsets.all(5),
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                CircularProgressIndicator(
+                                  color: AppColors.white,
+                                ),
+                              ],
+                            ),
+                          )
+                        : SizedBox()
                   ],
                 ),
     );

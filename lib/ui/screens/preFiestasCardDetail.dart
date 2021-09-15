@@ -549,6 +549,7 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
                                               backgroundColor:
                                                   AppColors.siginbackgrond,
                                               height: size.height * 0.07,
+                                              width: size.width * 0.9,
                                               backgroundColorEnd:
                                                   Colors.red.shade700,
                                               text:
@@ -566,31 +567,6 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
                                                 prefiestasBookingApi(
                                                     cardid: cardId);
                                               })
-
-                                          // SwipeButton(
-                                          //     thumb: SvgPicture.asset(
-                                          //       Images.swipeButtonSvg,
-                                          //       fit: BoxFit.cover,
-                                          //     ),
-                                          //     borderRadius:
-                                          //         BorderRadius.circular(8),
-                                          //     activeTrackColor:
-                                          //         AppColors.siginbackgrond,
-                                          //     height: size.height * 0.07,
-                                          //     child: Text(
-                                          //         "${getTranslated(context, "swipetopay")}",
-                                          //         style: TextStyle(
-                                          //             color: AppColors.white,
-                                          //             fontFamily:
-                                          //                 Fonts.dmSansBold,
-                                          //             fontSize:
-                                          //                 size.width * 0.05)),
-                                          //     onSwipeEnd: () {
-                                          //       prefiestasBookingApi(
-                                          //           cardid: cardId);
-                                          //     },
-                                          //   )
-
                                           : payLoading &&
                                                   swipebuttonShowBool == false
                                               ? roundedBoxR(

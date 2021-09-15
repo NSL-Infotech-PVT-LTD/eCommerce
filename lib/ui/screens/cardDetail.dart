@@ -521,6 +521,7 @@ class _CartDetailState extends State<CartDetail> {
                                           // swipe to pay
 
                                           ConfirmationSlider(
+                                              width: size.width * 0.9,
                                               backgroundColor:
                                                   AppColors.siginbackgrond,
                                               height: size.height * 0.07,

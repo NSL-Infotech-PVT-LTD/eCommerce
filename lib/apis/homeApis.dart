@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:funfy/apis/signinApi.dart';
 import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/models/favourite/fiestasFavouriteModel.dart';
@@ -188,10 +189,13 @@ Future<FiestasFavouriteModel?> fiestasFavouriteListApi() async {
 
   // print(res.body);
 
-  var response = fiestasFavouriteModelFromJson(res.body);
-
   if (res.statusCode == 200) {
-    return response;
+    try {
+      return fiestasFavouriteModelFromJson(res.body);
+    } catch (e) {
+      print(e);
+      return null;
+    }
   } else {
     print(res.body);
   }
@@ -208,13 +212,15 @@ Future<PrefiestasFavouriteModel?> prefiestasFavouriteListApi() async {
   var res = await http.post(Uri.parse(Urls.preFiestasfavoriteListUrl),
       headers: headers);
 
-  // print(res.body);
-
-  PrefiestasFavouriteModel response =
-      prefiestasFavouriteModelFromJson(res.body);
+  print(res.body);
 
   if (res.statusCode == 200) {
-    return response;
+    try {
+      return prefiestasFavouriteModelFromJson(res.body);
+    } catch (e) {
+      print('Here is p error $e');
+      return null;
+    }
   } else {
     print(res.body);
   }
@@ -330,19 +336,22 @@ Future<bool?> notificationOffApi({int? notificationNum}) async {
 
 // NotificationListModel?
 
-Future notificatiListApi({int? notificationNum}) async {
+Future notificatiListApi({int? notificationNum, int? pageCount}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
     //  'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
+  var body = {"limit": "10", "page": "${pageCount ?? ''}"};
+
   var res = await http.post(
       Uri.parse(
         Urls.notificationUrl,
       ),
+      body: body,
       headers: headers);
 
-  // print(res.body);
+  print(res.body);
 
   var jsonData = json.decode(res.body);
 

@@ -59,7 +59,7 @@ class Data {
   String? lastPageUrl;
   dynamic nextPageUrl;
   String? path;
-  int? perPage;
+  var perPage;
   dynamic prevPageUrl;
   int? to;
   int? total;
@@ -102,23 +102,29 @@ class Datum {
     this.clubId,
     this.timestamp,
     this.description,
-    this.ticketPrice,
+    this.ticketPriceNormal,
     this.ticketPriceStandard,
     this.ticketPriceVip,
     this.totalMembers,
-    this.dressCode,
-    this.partyMusic,
-    this.type,
+    this.filterClothingId,
+    this.filterMusicId,
+    this.filterLocalId,
+    this.filterEnvironmentId,
+    this.filterScheduleId,
     this.totalNormalTickets,
     this.totalStandardTickets,
     this.totalVipTickets,
-    this.distanceKm,
-    this.distanceMiles,
-    this.isFavourite,
+    this.clubRating,
+    this.leftNormalTicket,
     this.leftStandardTicket,
     this.leftVipTicket,
-    this.leftNormalTicket,
-    this.clubRating,
+    this.isFavourite,
+    this.distanceMiles,
+    this.filterLocal,
+    this.filterEnvironment,
+    this.filterMusic,
+    this.filterClothing,
+    this.filterSchedule,
   });
 
   int? id;
@@ -126,23 +132,29 @@ class Datum {
   int? clubId;
   DateTime? timestamp;
   String? description;
-  String? ticketPrice;
+  String? ticketPriceNormal;
   String? ticketPriceStandard;
   String? ticketPriceVip;
   String? totalMembers;
-  String? dressCode;
-  String? partyMusic;
-  String? type;
+  int? filterClothingId;
+  int? filterMusicId;
+  int? filterLocalId;
+  int? filterEnvironmentId;
+  int? filterScheduleId;
   String? totalNormalTickets;
   String? totalStandardTickets;
   String? totalVipTickets;
-  String? distanceKm;
-  String? distanceMiles;
-  bool? isFavourite;
+  double? clubRating;
   var leftStandardTicket;
   var leftVipTicket;
   var leftNormalTicket;
-  dynamic clubRating;
+  bool? isFavourite;
+  String? distanceMiles;
+  Filter? filterLocal;
+  Filter? filterEnvironment;
+  Filter? filterMusic;
+  Filter? filterClothing;
+  Filter? filterSchedule;
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
         id: json["id"],
@@ -150,23 +162,30 @@ class Datum {
         clubId: json["club_id"],
         timestamp: DateTime.parse(json["timestamp"]),
         description: json["description"],
-        ticketPrice: json["ticket_price"],
+        ticketPriceNormal: json["ticket_price_normal"],
         ticketPriceStandard: json["ticket_price_standard"],
         ticketPriceVip: json["ticket_price_vip"],
         totalMembers: json["total_members"],
-        dressCode: json["dress_code"],
-        partyMusic: json["party_music"],
-        type: json["type"],
+        filterClothingId: json["filter_clothing_id"],
+        filterMusicId: json["filter_music_id"],
+        filterLocalId: json["filter_local_id"],
+        filterEnvironmentId: json["filter_environment_id"],
+        filterScheduleId: json["filter_schedule_id"],
         totalNormalTickets: json["total_normal_tickets"],
         totalStandardTickets: json["total_standard_tickets"],
         totalVipTickets: json["total_vip_tickets"],
-        distanceKm: json["distance_km"],
-        distanceMiles: json["distance_miles"],
-        isFavourite: json["is_favourite"],
+        clubRating:
+            json["club_rating"] == null ? null : json["club_rating"].toDouble(),
+        leftNormalTicket: json["left_normal_ticket"],
         leftStandardTicket: json["left_standard_ticket"],
         leftVipTicket: json["left_vip_ticket"],
-        leftNormalTicket: json["left_normal_ticket"],
-        clubRating: json["club_rating"],
+        isFavourite: json["is_favourite"],
+        distanceMiles: json["distance_miles"],
+        filterLocal: Filter.fromJson(json["filter_local"]),
+        filterEnvironment: Filter.fromJson(json["filter_environment"]),
+        filterMusic: Filter.fromJson(json["filter_music"]),
+        filterClothing: Filter.fromJson(json["filter_clothing"]),
+        filterSchedule: Filter.fromJson(json["filter_schedule"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -175,22 +194,48 @@ class Datum {
         "club_id": clubId,
         "timestamp": timestamp?.toIso8601String(),
         "description": description,
-        "ticket_price": ticketPrice,
+        "ticket_price_normal": ticketPriceNormal,
         "ticket_price_standard": ticketPriceStandard,
         "ticket_price_vip": ticketPriceVip,
         "total_members": totalMembers,
-        "dress_code": dressCode,
-        "party_music": partyMusic,
-        "type": type,
+        "filter_clothing_id": filterClothingId,
+        "filter_music_id": filterMusicId,
+        "filter_local_id": filterLocalId,
+        "filter_environment_id": filterEnvironmentId,
+        "filter_schedule_id": filterScheduleId,
         "total_normal_tickets": totalNormalTickets,
         "total_standard_tickets": totalStandardTickets,
         "total_vip_tickets": totalVipTickets,
-        "distance_km": distanceKm,
-        "distance_miles": distanceMiles,
-        "is_favourite": isFavourite,
+        "club_rating": clubRating == null ? null : clubRating,
+        "left_normal_ticket": leftNormalTicket,
         "left_standard_ticket": leftStandardTicket,
         "left_vip_ticket": leftVipTicket,
-        "left_normal_ticket": leftNormalTicket,
-        "club_rating": clubRating,
+        "is_favourite": isFavourite,
+        "distance_miles": distanceMiles,
+        "filter_local": filterLocal?.toJson(),
+        "filter_environment": filterEnvironment?.toJson(),
+        "filter_music": filterMusic?.toJson(),
+        "filter_clothing": filterClothing?.toJson(),
+        "filter_schedule": filterSchedule?.toJson(),
+      };
+}
+
+class Filter {
+  Filter({
+    this.name,
+    this.nameEs,
+  });
+
+  String? name;
+  String? nameEs;
+
+  factory Filter.fromJson(Map<String, dynamic> json) => Filter(
+        name: json["name"],
+        nameEs: json["name_es"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "name": name,
+        "name_es": nameEs,
       };
 }

@@ -59,7 +59,7 @@ class Data {
   String? lastPageUrl;
   dynamic nextPageUrl;
   String? path;
-  var perPage;
+  String? perPage;
   dynamic prevPageUrl;
   int? to;
   int? total;
@@ -109,6 +109,7 @@ class ProductInfo {
     this.isInMyCartQuantity,
     this.isFavourite,
     this.quantityInCl,
+    this.quantityInCart,
   });
 
   int? id;
@@ -122,6 +123,7 @@ class ProductInfo {
   int? isInMyCartQuantity;
   bool? isFavourite;
   dynamic quantityInCl;
+  int? quantityInCart;
 
   factory ProductInfo.fromJson(Map<String, dynamic> json) => ProductInfo(
         id: json["id"],
@@ -135,6 +137,7 @@ class ProductInfo {
         isInMyCartQuantity: json["is_in_my_cart_quantity"],
         isFavourite: json["is_favourite"],
         quantityInCl: json["quantity_in_cl"],
+        quantityInCart: json["quantity_in_cart"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -149,5 +152,6 @@ class ProductInfo {
         "is_in_my_cart_quantity": isInMyCartQuantity,
         "is_favourite": isFavourite,
         "quantity_in_cl": quantityInCl,
+        "quantity_in_cart": quantityInCart,
       };
 }

@@ -34,7 +34,7 @@ Widget dateButton(
                 child: Text(
                   text,
                   style: TextStyle(
-                      fontSize: size.width * 0.05,
+                      fontSize: size.width * 0.044,
                       fontFamily: Fonts.dmSansBold,
                       color: textColor),
                 ),
