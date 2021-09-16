@@ -180,7 +180,11 @@ class _CartDetailState extends State<CartDetail> {
       storePaymentCard(cardToken: cardToken ?? "").then((value) {
         setState(() {
           addCardLoading = false;
-
+          cardHolderNameController.clear();
+          cardNumberController.clear();
+          monthController.clear();
+          expireDateController.clear();
+          securityController.clear();
           getCardListApi();
         });
 
@@ -921,7 +925,11 @@ class _CartDetailState extends State<CartDetail> {
         _card.name = value;
       },
       keyboardType: TextInputType.text,
-      validator: (String? value) => value!.isEmpty ? Strings.fieldReq : null,
+      validator: (String? value) => value!.isEmpty
+          ? Strings.fieldReq
+          : !RegExp('[a-zA-Z]').hasMatch(value)
+              ? '${getTranslated(context, 'pleaseEnterValidName')}'
+              : null,
       decoration: InputDecoration(
           fillColor: HexColor("#3e332b"),
           filled: true,
@@ -1021,6 +1029,7 @@ class _CartDetailState extends State<CartDetail> {
     return TextFormField(
       style: TextStyle(color: AppColors.white),
       cursorColor: AppColors.white,
+      obscureText: true,
       controller: controller,
       keyboardType: TextInputType.number,
       inputFormatters: [

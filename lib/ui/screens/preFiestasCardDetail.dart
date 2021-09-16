@@ -34,6 +34,7 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
   TextEditingController monthController = TextEditingController();
   TextEditingController expireDateController = TextEditingController();
   TextEditingController securityController = TextEditingController();
+
   var _paymentCard = PaymentCard();
   var _card = new PaymentCard();
   var _formKey = new GlobalKey<FormState>();
@@ -183,7 +184,11 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
       storePaymentCard(cardToken: cardToken ?? "").then((value) {
         setState(() {
           addCardLoading = false;
-
+          cardHolderNameController.clear();
+          cardNumberController.clear();
+          monthController.clear();
+          expireDateController.clear();
+          securityController.clear();
           getCardListApi();
 
           // cardId = value["data"]["data"]["id"];
@@ -917,7 +922,11 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
         _card.name = value;
       },
       keyboardType: TextInputType.text,
-      validator: (String? value) => value!.isEmpty ? Strings.fieldReq : null,
+      validator: (String? value) => value!.isEmpty
+          ? Strings.fieldReq
+          : !RegExp('[a-zA-Z]').hasMatch(value)
+              ? '${getTranslated(context, 'pleaseEnterValidName')}'
+              : null,
       decoration: InputDecoration(
           fillColor: HexColor("#3e332b"),
           filled: true,
@@ -1016,6 +1025,7 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
   Widget securityField({String? hint, String? error, controller}) {
     return TextFormField(
       style: TextStyle(color: AppColors.white),
+      obscureText: true,
       cursorColor: AppColors.white,
       controller: controller,
       keyboardType: TextInputType.number,
