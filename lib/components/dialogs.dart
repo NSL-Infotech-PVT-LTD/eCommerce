@@ -88,6 +88,29 @@ class Dialogs {
     );
   }
 
+  static singleButtonAlertDialog(
+      {context, String? title, String? content, String? buttonContent, func}) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: new Text(title.toString()),
+          content: new Text(content.toString()),
+          actions: <Widget>[
+            TextButton(
+              child: new Text(buttonContent!
+                  //  Strings.yes
+                  ),
+              onPressed: () {
+                func();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   static showBasicsFlash(
       {context,
       Duration? duration,

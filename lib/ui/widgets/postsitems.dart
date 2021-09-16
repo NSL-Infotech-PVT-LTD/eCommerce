@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:funfy/components/dialogs.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/components/shortPrices.dart';
 import 'package:funfy/models/fiestasmodel.dart';
 import 'package:funfy/models/preFiestasModel.dart';
+import 'package:funfy/ui/screens/address/addressList.dart';
+import 'package:funfy/ui/screens/cardDetail.dart';
 import 'package:funfy/ui/screens/fiestasBook.dart';
 import 'package:funfy/ui/screens/preFistaOrderMix.dart';
 import 'package:funfy/ui/widgets/rating.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
+import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
@@ -39,8 +43,10 @@ Widget fiestasItem({context, Datum? postModeldata}) {
       postModeldata?.leftVipTicket.toString() == "0") {
     available = true;
   }
-
-  if (postModeldata?.clubRating == null || postModeldata?.clubRating == 0) {
+  print("postModeldata?.clubRating ${postModeldata?.clubRating}");
+  if (postModeldata?.clubRating == null ||
+      postModeldata?.clubRating == 0 ||
+      postModeldata?.clubRating == "null") {
     rating = 0.0;
   } else {
     rating = double.parse("${postModeldata?.clubRating}");
@@ -48,9 +54,7 @@ Widget fiestasItem({context, Datum? postModeldata}) {
 
   return InkWell(
     onTap: () {
-      if (available != true) {
-        navigatorPushFun(context, FiestasBook(fiestasID: postModeldata?.id));
-      }
+      navigatorPushFun(context, FiestasBook(fiestasID: postModeldata?.id));
     },
     child: Stack(
       children: [
@@ -59,11 +63,14 @@ Widget fiestasItem({context, Datum? postModeldata}) {
           width: size.width,
           height: size.height * 0.28,
           decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: NetworkImage(
-                    "${postModeldata?.fiestaImages![0].image}",
-                  ),
-                  fit: BoxFit.cover)),
+              image: postModeldata?.fiestaImages?.length != 0
+                  ? DecorationImage(
+                      image: NetworkImage(
+                          '${postModeldata?.fiestaImages![0].image}'),
+                      fit: BoxFit.cover)
+                  : DecorationImage(
+                      image: AssetImage("assets/AuthenticationIcon/BG_2.png"),
+                      fit: BoxFit.cover)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -194,41 +201,33 @@ Widget fiestasItem({context, Datum? postModeldata}) {
                         SizedBox(
                           height: size.height * 0.01,
                         ),
-                        InkWell(
-                          onTap: () {
-                            if (available != true) {
-                              navigatorPushFun(context,
-                                  FiestasBook(fiestasID: postModeldata?.id));
-                            }
-                          },
-                          child: roundedBoxR(
-                              width: size.width * 0.23,
-                              // height: size.height * 0.033,
-                              radius: 3.0,
-                              backgroundColor: available
-                                  ? Colors.grey[800]
-                                  : AppColors.siginbackgrond,
-                              child: Container(
-                                alignment: Alignment.center,
-                                padding: EdgeInsets.symmetric(
-                                    vertical: size.height * 0.008,
-                                    horizontal: size.width * 0.01),
-                                child: Text(
-                                  // Strings.booknow,
+                        roundedBoxR(
+                            width: size.width * 0.23,
+                            // height: size.height * 0.033,
+                            radius: 3.0,
+                            backgroundColor: available
+                                ? Colors.grey[800]
+                                : AppColors.siginbackgrond,
+                            child: Container(
+                              alignment: Alignment.center,
+                              padding: EdgeInsets.symmetric(
+                                  vertical: size.height * 0.008,
+                                  horizontal: size.width * 0.01),
+                              child: Text(
+                                // Strings.booknow,
 
-                                  available
-                                      ? "${getTranslated(context, "outofStock")}"
-                                      : "${getTranslated(context, "booknow")}",
+                                available
+                                    ? "${getTranslated(context, "outofStock")}"
+                                    : "${getTranslated(context, "booknow")}",
 
-                                  textAlign: TextAlign.center,
+                                textAlign: TextAlign.center,
 
-                                  style: TextStyle(
-                                      fontSize: size.width * 0.03,
-                                      fontFamily: Fonts.dmSansBold,
-                                      color: AppColors.white),
-                                ),
-                              )),
-                        )
+                                style: TextStyle(
+                                    fontSize: size.width * 0.03,
+                                    fontFamily: Fonts.dmSansBold,
+                                    color: AppColors.white),
+                              ),
+                            ))
                       ],
                     )
                   ],
@@ -258,8 +257,25 @@ Widget preFiestasItem({context, ProductInfo? prefiestasdata}) {
 
   return InkWell(
     onTap: () {
-      navigatorPushFun(
-          context, PreFistaOrder(preFiestasID: prefiestasdata?.id));
+      if (Constants.prefs?.getString("addres") != null &&
+          Constants.prefs?.getString("addres") != '' &&
+          Constants.prefs?.getString("addressId") != null &&
+          Constants.prefs?.getString("addressId") != '') {
+        navigatorPushFun(
+            context, PreFistaOrder(preFiestasID: prefiestasdata?.id));
+      } else {
+        Dialogs.simpleOkAlertDialog(
+            context: context,
+            content: "${getTranslated(context, 'pleaseAddYourLocation')}",
+            title: "${getTranslated(context, 'alert!')}",
+            func: () {
+              navigatorPushFun(
+                  context,
+                  AddressList(
+                    navNum: 1,
+                  ));
+            });
+      }
     },
     child: Container(
       margin: EdgeInsets.only(top: size.height * 0.02),
@@ -294,7 +310,7 @@ Widget preFiestasItem({context, ProductInfo? prefiestasdata}) {
                         children: [
                           Container(
                             child: Text(
-                              Strings.from,
+                              "${getTranslated(context, 'from')}",
                               style: TextStyle(
                                   fontSize: size.width * 0.027,
                                   fontWeight: FontWeight.w600),
@@ -312,10 +328,10 @@ Widget preFiestasItem({context, ProductInfo? prefiestasdata}) {
                                       fontWeight: FontWeight.w600),
                                 ),
                                 Text(
-                                  "${prefiestasdata?.price != null && prefiestasdata?.price != '' ? int.parse('${prefiestasdata?.price}') > 2 ? prefiestasdata?.price?.substring(0, 2) : prefiestasdata?.price : 29}",
+                                  "${prefiestasdata?.price != null && prefiestasdata?.price != '' ? '${prefiestasdata?.price}'.length > 2 ? prefiestasdata?.price?.substring(0, 2) : prefiestasdata?.price : 29}",
                                   // overflow: TextOverflow.visible,
                                   style: TextStyle(
-                                      fontSize: size.width * 0.06,
+                                      fontSize: size.width * 0.054,
                                       fontWeight: FontWeight.w700),
                                 )
                               ],
@@ -363,32 +379,24 @@ Widget preFiestasItem({context, ProductInfo? prefiestasdata}) {
                         ),
 
                         // order Now
-                        GestureDetector(
-                          onTap: () {
-                            navigatorPushFun(
-                                context,
-                                PreFistaOrder(
-                                    preFiestasID: prefiestasdata?.id));
-                          },
-                          child: roundedBoxR(
-                              radius: size.width * 0.005,
-                              width: size.width * 0.25,
-                              height: size.height * 0.04,
-                              backgroundColor: AppColors.siginbackgrond,
-                              child: Container(
-                                alignment: Alignment.center,
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: size.width * 0.02),
-                                child: Text(
-                                  // Strings.orderNow,
-                                  "${getTranslated(context, "orderNow")}",
-                                  style: TextStyle(
-                                      color: AppColors.white,
-                                      fontSize: size.width * 0.03,
-                                      fontFamily: Fonts.dmSansBold),
-                                ),
-                              )),
-                        )
+                        roundedBoxR(
+                            radius: size.width * 0.005,
+                            width: size.width * 0.25,
+                            height: size.height * 0.04,
+                            backgroundColor: AppColors.siginbackgrond,
+                            child: Container(
+                              alignment: Alignment.center,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: size.width * 0.02),
+                              child: Text(
+                                // Strings.orderNow,
+                                "${getTranslated(context, "orderNow")}",
+                                style: TextStyle(
+                                    color: AppColors.white,
+                                    fontSize: size.width * 0.03,
+                                    fontFamily: Fonts.dmSansBold),
+                              ),
+                            ))
                       ],
                     )),
 

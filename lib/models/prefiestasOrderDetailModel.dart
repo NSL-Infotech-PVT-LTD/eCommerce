@@ -41,11 +41,11 @@ class Data {
     this.orderDetail,
   });
 
-  Detail? parentDetail;
+  ParentDetail? parentDetail;
   List<OrderDetail>? orderDetail;
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
-        parentDetail: Detail.fromJson(json["parentDetail"]),
+        parentDetail: ParentDetail.fromJson(json["parentDetail"]),
         orderDetail: List<OrderDetail>.from(
             json["orderDetail"].map((x) => OrderDetail.fromJson(x))),
       );
@@ -59,8 +59,6 @@ class Data {
 class OrderDetail {
   OrderDetail({
     this.id,
-    this.date,
-    this.time,
     this.orderBy,
     this.transferCharge,
     this.totalPrice,
@@ -74,31 +72,28 @@ class OrderDetail {
   });
 
   int? id;
-  dynamic date;
-  dynamic time;
+
   int? orderBy;
   String? transferCharge;
   int? totalPrice;
-  String? address;
-  String? orderStatus;
+  OrderDetailAddress? address;
+  var orderStatus;
   PaymentParams? paymentParams;
   String? paymentMode;
-  Detail? categoryDetail;
+  ParentDetail? categoryDetail;
   double? grandTotal;
   List<OrderItem>? orderItem;
 
   factory OrderDetail.fromJson(Map<String, dynamic> json) => OrderDetail(
         id: json["id"],
-        date: json["date"],
-        time: json["time"],
         orderBy: json["order_by"],
         transferCharge: json["transfer_charge"],
         totalPrice: json["total_price"],
-        address: json["address"],
+        address: OrderDetailAddress.fromJson(json["address"]),
         orderStatus: json["order_status"],
         paymentParams: PaymentParams.fromJson(json["payment_params"]),
         paymentMode: json["payment_mode"],
-        categoryDetail: Detail.fromJson(json["category_detail"]),
+        categoryDetail: ParentDetail.fromJson(json["category_detail"]),
         grandTotal: json["grand_total"].toDouble(),
         orderItem: List<OrderItem>.from(
             json["order_item"].map((x) => OrderItem.fromJson(x))),
@@ -106,12 +101,10 @@ class OrderDetail {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "date": date,
-        "time": time,
         "order_by": orderBy,
         "transfer_charge": transferCharge,
         "total_price": totalPrice,
-        "address": address,
+        "address": address?.toJson(),
         "order_status": orderStatus,
         "payment_params": paymentParams?.toJson(),
         "payment_mode": paymentMode,
@@ -121,8 +114,65 @@ class OrderDetail {
       };
 }
 
-class Detail {
-  Detail({
+class OrderDetailAddress {
+  OrderDetailAddress({
+    this.id,
+    this.userId,
+    this.name,
+    this.streetAddress,
+    this.city,
+    this.state,
+    this.zip,
+    this.country,
+    this.addressDefault,
+    this.latitude,
+    this.longitude,
+  });
+
+  int? id;
+  int? userId;
+  String? name;
+  String? streetAddress;
+  String? city;
+  String? state;
+  String? zip;
+  String? country;
+  String? addressDefault;
+  String? latitude;
+  String? longitude;
+
+  factory OrderDetailAddress.fromJson(Map<String, dynamic> json) =>
+      OrderDetailAddress(
+        id: json["id"],
+        userId: json["user_id"],
+        name: json["name"],
+        streetAddress: json["street_address"],
+        city: json["city"],
+        state: json["state"],
+        zip: json["zip"],
+        country: json["country"],
+        addressDefault: json["default"],
+        latitude: json["latitude"],
+        longitude: json["longitude"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "user_id": userId,
+        "name": name,
+        "street_address": streetAddress,
+        "city": city,
+        "state": state,
+        "zip": zip,
+        "country": country,
+        "default": addressDefault,
+        "latitude": latitude,
+        "longitude": longitude,
+      };
+}
+
+class ParentDetail {
+  ParentDetail({
     this.id,
     this.name,
     this.parentId,
@@ -132,8 +182,11 @@ class Detail {
     this.isInMyCartQuantity,
     this.isFavourite,
     this.quantityInCl,
-    this.status,
+    this.quantityInCart,
+    this.quantity,
+    this.categories,
     this.price,
+    this.status,
   });
 
   int? id;
@@ -144,11 +197,14 @@ class Detail {
   bool? isInMyCart;
   int? isInMyCartQuantity;
   bool? isFavourite;
-  dynamic quantityInCl;
-  String? status;
+  var quantityInCl;
+  int? quantityInCart;
+  int? quantity;
+  String? categories;
   String? price;
+  String? status;
 
-  factory Detail.fromJson(Map<String, dynamic> json) => Detail(
+  factory ParentDetail.fromJson(Map<String, dynamic> json) => ParentDetail(
         id: json["id"],
         name: json["name"],
         parentId: json["parent_id"] == null ? null : json["parent_id"],
@@ -157,9 +213,13 @@ class Detail {
         isInMyCart: json["is_in_my_cart"],
         isInMyCartQuantity: json["is_in_my_cart_quantity"],
         isFavourite: json["is_favourite"],
-        quantityInCl: json["quantity_in_cl"],
-        status: json["status"] == null ? null : json["status"],
+        quantityInCl:
+            json["quantity_in_cl"] == null ? null : json["quantity_in_cl"],
+        quantityInCart: json["quantity_in_cart"],
+        quantity: json["quantity"] == null ? null : json["quantity"],
+        categories: json["categories"] == null ? null : json["categories"],
         price: json["price"] == null ? null : json["price"],
+        status: json["status"] == null ? null : json["status"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -171,14 +231,18 @@ class Detail {
         "is_in_my_cart": isInMyCart,
         "is_in_my_cart_quantity": isInMyCartQuantity,
         "is_favourite": isFavourite,
-        "quantity_in_cl": quantityInCl,
-        "status": status == null ? null : status,
+        "quantity_in_cl": quantityInCl == null ? null : quantityInCl,
+        "quantity_in_cart": quantityInCart,
+        "quantity": quantity == null ? null : quantity,
+        "categories": categories == null ? null : categories,
         "price": price == null ? null : price,
+        "status": status == null ? null : status,
       };
 }
 
 class OrderItem {
   OrderItem({
+    this.id,
     this.orderId,
     this.preFiestaId,
     this.quantity,
@@ -186,82 +250,29 @@ class OrderItem {
     this.preFiesta,
   });
 
+  int? id;
   int? orderId;
   int? preFiestaId;
   int? quantity;
   int? price;
-  PreFiesta? preFiesta;
+  ParentDetail? preFiesta;
 
   factory OrderItem.fromJson(Map<String, dynamic> json) => OrderItem(
+        id: json["id"],
         orderId: json["order_id"],
         preFiestaId: json["pre_fiesta_id"],
         quantity: json["quantity"],
         price: json["price"],
-        preFiesta: PreFiesta.fromJson(json["pre_fiesta"]),
+        preFiesta: ParentDetail.fromJson(json["pre_fiesta"]),
       );
 
   Map<String, dynamic> toJson() => {
+        "id": id,
         "order_id": orderId,
         "pre_fiesta_id": preFiestaId,
         "quantity": quantity,
         "price": price,
         "pre_fiesta": preFiesta?.toJson(),
-      };
-}
-
-class PreFiesta {
-  PreFiesta({
-    this.id,
-    this.name,
-    this.quantity,
-    this.categories,
-    this.image,
-    this.price,
-    this.description,
-    this.isInMyCart,
-    this.isInMyCartQuantity,
-    this.isFavourite,
-    this.quantityInCl,
-  });
-
-  int? id;
-  String? name;
-  int? quantity;
-  String? categories;
-  String? image;
-  String? price;
-  String? description;
-  bool? isInMyCart;
-  int? isInMyCartQuantity;
-  bool? isFavourite;
-  int? quantityInCl;
-
-  factory PreFiesta.fromJson(Map<String, dynamic> json) => PreFiesta(
-        id: json["id"],
-        name: json["name"],
-        quantity: json["quantity"],
-        categories: json["categories"],
-        image: json["image"],
-        price: json["price"],
-        description: json["description"],
-        isInMyCart: json["is_in_my_cart"],
-        isInMyCartQuantity: json["is_in_my_cart_quantity"],
-        isFavourite: json["is_favourite"],
-        quantityInCl: json["quantity_in_cl"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "quantity": quantity,
-        "categories": categories,
-        "image": image,
-        "price": price,
-        "description": description,
-        "is_in_my_cart": isInMyCart,
-        "is_in_my_cart_quantity": isInMyCartQuantity,
-        "is_favourite": isFavourite,
-        "quantity_in_cl": quantityInCl,
       };
 }
 
@@ -470,13 +481,13 @@ class BillingDetails {
     this.phone,
   });
 
-  Address? address;
+  BillingDetailsAddress? address;
   dynamic email;
   String? name;
   dynamic phone;
 
   factory BillingDetails.fromJson(Map<String, dynamic> json) => BillingDetails(
-        address: Address.fromJson(json["address"]),
+        address: BillingDetailsAddress.fromJson(json["address"]),
         email: json["email"],
         name: json["name"],
         phone: json["phone"],
@@ -490,8 +501,8 @@ class BillingDetails {
       };
 }
 
-class Address {
-  Address({
+class BillingDetailsAddress {
+  BillingDetailsAddress({
     this.city,
     this.country,
     this.line1,
@@ -507,7 +518,8 @@ class Address {
   dynamic postalCode;
   dynamic state;
 
-  factory Address.fromJson(Map<String, dynamic> json) => Address(
+  factory BillingDetailsAddress.fromJson(Map<String, dynamic> json) =>
+      BillingDetailsAddress(
         city: json["city"],
         country: json["country"],
         line1: json["line1"],

@@ -193,6 +193,7 @@ class _FiestasBookState extends State<FiestasBook> {
   setFavoriteBool() {
     setState(() {
       _fiestasfavoriteBool = fiestasDetailModel!.data!.isFavourite!;
+
       _onAddMarkerButtonPressed();
     });
   }
@@ -346,13 +347,13 @@ class _FiestasBookState extends State<FiestasBook> {
                         onPressed: addFavorite,
                         icon: Container(
                           child: SvgPicture.asset(
-                            _fiestasfavoriteBool
-                                ? "assets/partydetail/fullHeart.svg"
-                                : "assets/svgicons/hearticon.svg",
-                            // color: _fiestasfavoriteBool
-                            //     ? Colors.red
-                            //     : Colors.red
-                          ),
+                              "assets/svgicons/hearticon.svg",
+                              // _fiestasfavoriteBool
+                              //     ? "assets/partydetail/fullHeart.svg"
+                              //     : "assets/svgicons/hearticon.svg",
+                              color: _fiestasfavoriteBool
+                                  ? Colors.red
+                                  : Colors.white),
                         ),
                       )
                     ],

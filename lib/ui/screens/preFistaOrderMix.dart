@@ -11,9 +11,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:funfy/components/dialogs.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/components/sizeclass/SizeConfig.dart';
-import 'package:funfy/models/preFiestasModel.dart';
-import 'package:funfy/models/prifiestasAlMxEx.dart';
-import 'package:funfy/ui/screens/bookingSuccess.dart';
 import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/widgets/basic%20function.dart';
 import 'package:funfy/utils/Constants.dart';
@@ -66,6 +63,8 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
   bool _loadingBack = false;
 
   bool _favoriteBool = false;
+
+  bool alcoholTrue = false;
 
   // add favorite
 
@@ -349,7 +348,9 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
             // video
             _controller = VideoPlayerController.network(
                 // "https://www.youtube.com/watch?v=637wpikrN7s")
-                "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_20mb.mp4")
+
+                "${prefiestasDetailModel!.data!.parentData!.videoUrl}")
+              // "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_20mb.mp4")
               // "${prefiestasDetailModel!.data!.parentData!.videoUrl ?? 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_20mb.mp4'}")
               ..initialize().then((_) {
                 setState(() {});
@@ -446,28 +447,44 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                   _loadingCenter = false;
                 });
               } else {
-                await cartResetPrefiestas(
-                        preFiestaID: id, quantity: cartCount.toString())
-                    .then((resp) {
-                  setState(() {
-                    clearCart();
-                    _loadingCenter = false;
-                  });
-
-                  if (resp["status"] == true && resp["code"] == 201) {
-                    print("here is response : ${resp["code"]}");
+                try {
+                  await cartResetPrefiestas(
+                          preFiestaID: id, quantity: cartCount.toString())
+                      .then((resp) {
                     setState(() {
                       clearCart();
-                      cart[index] = {
-                        "id": id,
-                        "preticketCount": cartCount,
-                      };
-                      Constants.prefs?.setString("alcohol", "1");
-
-                      totalCount(value: true);
+                      _loadingCenter = false;
                     });
-                  }
-                });
+
+                    print("here is res....");
+
+                    print(resp);
+
+                    if (resp["status"] == true && resp["code"] == 201) {
+                      print("here is response : ${resp["code"]}");
+                      setState(() {
+                        clearCart();
+                        cart[index] = {
+                          "id": id,
+                          "preticketCount": cartCount,
+                        };
+                        Constants.prefs?.setString("alcohol", "1");
+
+                        setState(() {
+                          totalCountInCart = int.parse(
+                              "${resp["data"]["cart"]["quantity_in_cart"]}");
+
+                          Constants.prefs?.setString('cartTot',
+                              "${resp["data"]["cart"]["quantity_in_cart"]}");
+                        });
+
+                        // totalCount(value: true);
+                      });
+                    }
+                  });
+                } catch (e) {
+                  print("Here data error 422 reset $e");
+                }
               }
             });
       }
@@ -742,7 +759,12 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                 Constants.prefs?.setString(
                     'cartTot', "${res["data"]["cart"]["quantity_in_cart"]}");
               });
+            } else {
+              setState(() {
+                totalCountInCart = 0;
+              });
             }
+
             setState(() {
               returnV = "true";
             });
@@ -1203,8 +1225,8 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                                                 SizeConfig.screenWidth * 0.95,
                                             child: richText(
                                               "${getTranslated(context, 'selectAtMost')}",
-                                              "${getTranslated(context, 'one')}",
-                                              "${getTranslated(context, 'fromAlcohol')}",
+                                              " ${getTranslated(context, 'one')} ",
+                                              "${getTranslated(context, 'fromAlcohol')} ",
                                             ),
                                           ),
                                           Expanded(
@@ -1332,8 +1354,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                                                 SizeConfig.screenWidth * 0.95,
                                             child: richText(
                                               "${getTranslated(context, 'selectAtMost')} ",
-                                              "${getTranslated(context, 'alert!')}"
-                                                  "${getTranslated(context, 'one')} ",
+                                              "${getTranslated(context, 'one')} ",
                                               "${getTranslated(context, 'fromExtras')}",
                                             ),
                                           ),

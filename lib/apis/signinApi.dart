@@ -8,6 +8,7 @@ import 'package:funfy/models/facebookSigninModel.dart';
 import 'package:funfy/models/googleSigninModel.dart';
 import 'package:funfy/models/userModel.dart';
 import 'package:funfy/ui/screens/auth/signin.dart';
+import 'package:funfy/ui/screens/languageScreen.dart';
 import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
@@ -201,7 +202,13 @@ logout(context) {
 
         Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (BuildContext context) => Signin()),
+            MaterialPageRoute(
+                builder: (BuildContext context) =>
+                    TranslationPage(fromSplash: true)
+
+                //  Signin()
+
+                ),
             (route) => false);
       });
 }
@@ -240,6 +247,11 @@ Future<bool?> logoutApi() async {
 
     //  gender
     Constants.prefs?.setString("gender", "");
+
+    // language
+    Constants.prefs?.setString(Strings.radioValue, 'en');
+
+    Constants.prefs?.setString('es', 'null');
 
     //  social
     Constants.prefs?.setString("social", "false");
@@ -288,6 +300,11 @@ userSessionExpired(context) {
 
     // profileImage
     Constants.prefs?.setString("profileImage", "");
+
+    // language
+    // Constants.prefs?.setString(Strings.radioValue, 'null');
+
+    // Constants.prefs?.setString('es', 'null');
 
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => Signin()), (route) => false);

@@ -31,7 +31,9 @@ class _BookingPageState extends State<BookingPage> {
   // FiestasBookingList? fiestasBookingListModel = FiestasBookingList();
 
   List fiestasBookingListRes = [];
-  PreFiestasBookingListModel? preFiestasBookingList;
+
+  List prifiestasBookingList = [];
+  // PreFiestasBookingListModel? preFiestasBookingList;
   bool _loading = false;
 
   bool _preFiestasLoading = false;
@@ -76,22 +78,28 @@ class _BookingPageState extends State<BookingPage> {
     print("run 2 ---------------- ");
     try {
       await preFiestaBookingListApi().then((res) {
-        print(res?.toJson());
         setState(() {
           _preFiestasLoading = false;
         });
 
-        if (res?.code == 200 && res?.status == true) {
+        if (res["code"] == 200 && res["status"] == true) {
           // print("res data ----------- ");
           // print("after return  ${res?.toJson().toString()}");
 
-          setState(() {
-            preFiestasBookingList = res;
+          var resRevData = res["data"]["data"];
 
-            var rlist = preFiestasBookingList?.data?.data?.reversed.toList();
-            preFiestasBookingList?.data?.data = rlist;
+          setState(() {
+            prifiestasBookingList = resRevData.reversed.toList();
             _preFiestasLoading = false;
           });
+
+          // setState(() {
+          //   preFiestasBookingList = res;
+
+          //   var rlist = preFiestasBookingList?.data?.data?.reversed.toList();
+          //   preFiestasBookingList?.data?.data = rlist;
+          //   _preFiestasLoading = false;
+          // });
         }
       });
     } catch (e) {
@@ -290,10 +298,8 @@ class _BookingPageState extends State<BookingPage> {
                           _preFiestasLoading
                               ? Center(child: CircularProgressIndicator())
                               : _preFiestasLoading == false &&
-                                          preFiestasBookingList
-                                                  ?.data?.data?.length ==
-                                              0 ||
-                                      preFiestasBookingList == null
+                                          prifiestasBookingList.length == 0 ||
+                                      prifiestasBookingList == []
                                   ? Center(
                                       child: Text(
                                       "${Strings.listEmpty}",
@@ -305,14 +311,12 @@ class _BookingPageState extends State<BookingPage> {
                                       // itemCount: preFiestasBookingList
                                       //         ?.data?.data?.length ??
                                       //     0,
-                                      itemCount: preFiestasBookingList
-                                              ?.data?.data?.length ??
-                                          0,
+                                      itemCount: prifiestasBookingList.length,
                                       itemBuilder: (context, index) {
                                         return preFiestasOrderItemsNew(
                                             context: context,
                                             index: index,
-                                            model: preFiestasBookingList);
+                                            model: prifiestasBookingList);
                                       }),
                         ],
                       ))
@@ -323,17 +327,20 @@ class _BookingPageState extends State<BookingPage> {
   }
 }
 
-Widget preFiestasOrderItemsNew(
-    {context, PreFiestasBookingListModel? model, index}) {
+Widget preFiestasOrderItemsNew({context, List? model, index}) {
   var size = MediaQuery.of(context).size;
 
-  var data = model?.data?.data?.elementAt(index!);
+  var modeldata = model![index];
+
   return InkWell(
     onTap: () {
+      print("Modeldata here   $modeldata");
       navigatorPushFun(
           context,
           YourOrderSum(
-              orderID: model?.data?.data?.elementAt(index!).id.toString()));
+              nav: 0,
+              orderID: modeldata["id"]
+                  .toString())); // model?.data?.data?.elementAt(index!).id.toString()));
     },
     child: Container(
         margin: EdgeInsets.only(top: size.height * 0.017),
@@ -357,10 +364,15 @@ Widget preFiestasOrderItemsNew(
               height: 20,
               width: 20,
               child: Image.asset(
-                data?.orderStatus == "completed" ||
-                        data?.orderStatus == "reviewed"
+                modeldata["order_statuss"] == "completed" ||
+                        modeldata["orderStatus"] == "reviewed"
                     ? "assets/pngicons/activeBook.png"
                     : "assets/pngicons/pendingBook.png",
+
+                // data?.orderStatus == "completed" ||
+                //         data?.orderStatus == "reviewed"
+                //     ? "assets/pngicons/activeBook.png"
+                //     : "assets/pngicons/pendingBook.png",
                 fit: BoxFit.cover,
               ),
             ),
@@ -370,7 +382,7 @@ Widget preFiestasOrderItemsNew(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "${data?.categoryDetail?.name}",
+                    "${modeldata['category_detail']['name']}",
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                     style: TextStyle(
@@ -383,7 +395,7 @@ Widget preFiestasOrderItemsNew(
                     height: size.height * 0.008,
                   ),
                   Text(
-                    "${data?.categoryDetail?.description}",
+                    "${modeldata['category_detail']['description']}",
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,
                     style: TextStyle(

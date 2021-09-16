@@ -89,7 +89,8 @@ class FiestaDetail {
     this.ticketPriceStandard,
     this.ticketPriceVip,
     this.totalMembers,
-    this.filterLocalId,
+    this.filterMusicId,
+    this.filterClothingId,
     this.clubRating,
     this.leftNormalTicket,
     this.leftStandardTicket,
@@ -112,17 +113,18 @@ class FiestaDetail {
   String? ticketPriceStandard;
   String? ticketPriceVip;
   String? totalMembers;
-  int? filterLocalId;
-  dynamic clubRating;
+  int? filterMusicId;
+  int? filterClothingId;
+  int? clubRating;
   var leftNormalTicket;
   var leftStandardTicket;
   var leftVipTicket;
   bool? isFavourite;
   String? distanceMiles;
-  FilterLocal? filterLocal;
+  dynamic filterLocal;
   dynamic filterEnvironment;
-  dynamic filterMusic;
-  dynamic filterClothing;
+  Filter? filterMusic;
+  Filter? filterClothing;
   dynamic filterSchedule;
   ClubDetail? clubDetail;
 
@@ -135,17 +137,18 @@ class FiestaDetail {
         ticketPriceStandard: json["ticket_price_standard"],
         ticketPriceVip: json["ticket_price_vip"],
         totalMembers: json["total_members"],
-        filterLocalId: json["filter_local_id"],
+        filterMusicId: json["filter_music_id"],
+        filterClothingId: json["filter_clothing_id"],
         clubRating: json["club_rating"],
         leftNormalTicket: json["left_normal_ticket"],
         leftStandardTicket: json["left_standard_ticket"],
         leftVipTicket: json["left_vip_ticket"],
         isFavourite: json["is_favourite"],
         distanceMiles: json["distance_miles"],
-        filterLocal: FilterLocal.fromJson(json["filter_local"]),
+        filterLocal: json["filter_local"],
         filterEnvironment: json["filter_environment"],
-        filterMusic: json["filter_music"],
-        filterClothing: json["filter_clothing"],
+        filterMusic: Filter.fromJson(json["filter_music"]),
+        filterClothing: Filter.fromJson(json["filter_clothing"]),
         filterSchedule: json["filter_schedule"],
         clubDetail: ClubDetail.fromJson(json["club_detail"]),
       );
@@ -159,17 +162,18 @@ class FiestaDetail {
         "ticket_price_standard": ticketPriceStandard,
         "ticket_price_vip": ticketPriceVip,
         "total_members": totalMembers,
-        "filter_local_id": filterLocalId,
+        "filter_music_id": filterMusicId,
+        "filter_clothing_id": filterClothingId,
         "club_rating": clubRating,
         "left_normal_ticket": leftNormalTicket,
         "left_standard_ticket": leftStandardTicket,
         "left_vip_ticket": leftVipTicket,
         "is_favourite": isFavourite,
         "distance_miles": distanceMiles,
-        "filter_local": filterLocal?.toJson(),
+        "filter_local": filterLocal,
         "filter_environment": filterEnvironment,
-        "filter_music": filterMusic,
-        "filter_clothing": filterClothing,
+        "filter_music": filterMusic?.toJson(),
+        "filter_clothing": filterClothing?.toJson(),
         "filter_schedule": filterSchedule,
         "club_detail": clubDetail?.toJson(),
       };
@@ -185,6 +189,8 @@ class ClubDetail {
     this.location,
     this.latitude,
     this.longitude,
+    this.adminId,
+    this.adminDetail,
   });
 
   int? id;
@@ -195,6 +201,8 @@ class ClubDetail {
   String? location;
   String? latitude;
   String? longitude;
+  int? adminId;
+  AdminDetail? adminDetail;
 
   factory ClubDetail.fromJson(Map<String, dynamic> json) => ClubDetail(
         id: json["id"],
@@ -205,6 +213,8 @@ class ClubDetail {
         location: json["location"],
         latitude: json["latitude"],
         longitude: json["longitude"],
+        adminId: json["admin_id"],
+        adminDetail: AdminDetail.fromJson(json["admin_detail"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -216,11 +226,78 @@ class ClubDetail {
         "location": location,
         "latitude": latitude,
         "longitude": longitude,
+        "admin_id": adminId,
+        "admin_detail": adminDetail?.toJson(),
       };
 }
 
-class FilterLocal {
-  FilterLocal({
+class AdminDetail {
+  AdminDetail({
+    this.id,
+    this.name,
+    this.image,
+    this.mobile,
+    this.dob,
+    this.gender,
+    this.role,
+  });
+
+  int? id;
+  String? name;
+  String? image;
+  String? mobile;
+  DateTime? dob;
+  String? gender;
+  Role? role;
+
+  factory AdminDetail.fromJson(Map<String, dynamic> json) => AdminDetail(
+        id: json["id"],
+        name: json["name"],
+        image: json["image"],
+        mobile: json["mobile"],
+        dob: DateTime.parse(json["dob"]),
+        gender: json["gender"],
+        role: Role.fromJson(json["role"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "image": image,
+        "mobile": mobile,
+        "dob":
+            "${dob?.year.toString().padLeft(4, '0')}-${dob?.month.toString().padLeft(2, '0')}-${dob?.day.toString().padLeft(2, '0')}",
+        "gender": gender,
+        "role": role?.toJson(),
+      };
+}
+
+class Role {
+  Role({
+    this.name,
+    this.id,
+    this.permission,
+  });
+
+  String? name;
+  int? id;
+  List<dynamic>? permission;
+
+  factory Role.fromJson(Map<String, dynamic> json) => Role(
+        name: json["name"],
+        id: json["id"],
+        permission: List<dynamic>.from(json["permission"].map((x) => x)),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "name": name,
+        "id": id,
+        "permission": List<dynamic>.from(permission!.map((x) => x)),
+      };
+}
+
+class Filter {
+  Filter({
     this.name,
     this.nameEs,
   });
@@ -228,7 +305,7 @@ class FilterLocal {
   String? name;
   String? nameEs;
 
-  factory FilterLocal.fromJson(Map<String, dynamic> json) => FilterLocal(
+  factory Filter.fromJson(Map<String, dynamic> json) => Filter(
         name: json["name"],
         nameEs: json["name_es"],
       );

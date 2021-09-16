@@ -32,6 +32,10 @@ class _CartpageState extends State<Cartpage> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   bool _loading = false;
   bool _centerLoading = false;
+  bool alcoholTrue = false;
+
+  String _totalPrice = "0";
+  String _transferCharge = "0";
 
   // double count = 0.0;
 
@@ -51,14 +55,30 @@ class _CartpageState extends State<Cartpage> {
           });
           setState(() {
             UserData.myCartModel = res;
-            // print("error $myCartModel");
 
-            // print(res?.toJson());
+            print("here is cart ${res?.toJson()}");
 
-            // count = double.parse(
-            //             "${UserData.myCartModel?.data?.cart?.cartItems?.length}") /
-            //         10 +
-            //     0.15;
+            bool alco = false;
+
+            for (int i = 0;
+                i < int.parse('${res?.data?.cart?.cartItems?.length}');
+                i++) {
+              print("look here ");
+
+              String data =
+                  '${res?.data?.cart?.cartItems![i].preFiesta?.categories}';
+
+              if (data == 'alcohol' || data == 'Alcohol') {
+                alco = true;
+                print("code break");
+                break;
+              } else {
+                print("code else");
+                alco = false;
+              }
+            }
+
+            alcoholTrue = alco;
           });
         });
       } catch (e) {
@@ -227,8 +247,8 @@ class _CartpageState extends State<Cartpage> {
 
         print("here is num here  $totalCount");
 
-        Constants.prefs
-            ?.setString("cartTot", "${totalCount < 0 ? 0 : totalCount}");
+        // Constants.prefs
+        //     ?.setString("cartTot", "${totalCount < 0 ? 0 : totalCount}");
 
         setState(() {
           // myCartModel?.data?.cartItems?.removeAt(index!);
@@ -251,7 +271,7 @@ class _CartpageState extends State<Cartpage> {
           }
 
           if (type == "mix") {
-            Constants.prefs?.setString("cartTot", "$totalCount");
+            // Constants.prefs?.setString("cartTot", "$totalCount");
             UserData.preFiestasMixesTicketCart.clear();
 
             // UserData.myCartModel?.data?.cart?.cartItems?.removeAt(index!);
@@ -259,7 +279,7 @@ class _CartpageState extends State<Cartpage> {
           }
 
           if (type == "extras") {
-            Constants.prefs?.setString("cartTot", "$totalCount");
+            // Constants.prefs?.setString("cartTot", "$totalCount");
             UserData.preFiestasExtrasTicketCart.clear();
             // UserData.myCartModel?.data?.cart?.cartItems?.removeAt(index!);
             getMyCart();
@@ -299,7 +319,7 @@ class _CartpageState extends State<Cartpage> {
       }
 
       UserData.totalTicketNum = tot;
-      Constants.prefs?.setString("cartTot", tot.toString());
+      // Constants.prefs?.setString("cartTot", tot.toString());
 
       print(UserData.totalTicketNum);
 
@@ -326,7 +346,7 @@ class _CartpageState extends State<Cartpage> {
 
         print("here is num $totalCount");
 
-        Constants.prefs?.setString("cartTot", "$totalCount");
+        // Constants.prefs?.setString("cartTot", "$totalCount");
       });
     }
 
@@ -376,6 +396,9 @@ class _CartpageState extends State<Cartpage> {
               (res["code"] == 200 || res["code"] == 201)) {
             returnV = true;
 
+            _totalPrice = "${res["data"]["cart"]["total_price"]}";
+            _transferCharge = "${res["data"]["cart"]["transfer_charge"]}";
+
             if (res["data"]["message"] != "You're cart is empty!") {
               UserData.preFiestasCartid = res["data"]["cart"]["id"].toString();
             }
@@ -384,6 +407,7 @@ class _CartpageState extends State<Cartpage> {
           }
         });
       } catch (e) {
+        getMyCart();
         print("Error here -------------- $e");
 
         setState(() {
@@ -451,12 +475,19 @@ class _CartpageState extends State<Cartpage> {
             children: [
               Row(
                 children: [
-                  Text(
-                    "$title",
-                    style: TextStyle(
-                        color: AppColors.white,
-                        fontFamily: Fonts.dmSansBold,
-                        fontSize: size.width * 0.045),
+                  Container(
+                    // width: size.width * 0.42,
+
+                    constraints: BoxConstraints(maxWidth: size.width * 0.42),
+                    child: Text(
+                      "$title",
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: TextStyle(
+                          color: AppColors.white,
+                          fontFamily: Fonts.dmSansBold,
+                          fontSize: size.width * 0.045),
+                    ),
                   ),
                   SizedBox(
                     width: size.width * 0.03,
@@ -642,6 +673,8 @@ class _CartpageState extends State<Cartpage> {
   @override
   void initState() {
     super.initState();
+
+    _totalPrice = "0";
 
     setState(() {
       UserData.preFiestasAlcoholCartMap.clear();
@@ -975,10 +1008,59 @@ class _CartpageState extends State<Cartpage> {
                                                           height: size.height *
                                                               0.03,
                                                         ),
+
                                                         Container(
-                                                          width: size.width,
-                                                          alignment:
-                                                              Alignment.center,
+                                                          // width: SizeConfig
+                                                          //         .screenWidth *
+                                                          //     0.80,
+                                                          alignment: Alignment
+                                                              .centerLeft,
+                                                          child: Row(
+                                                            children: [
+                                                              Text(
+                                                                "${getTranslated(context, "transferCharges")}",
+                                                                //   "Other Taxes",
+                                                                style: TextStyle(
+                                                                    color: AppColors
+                                                                        .white,
+                                                                    fontSize:
+                                                                        size.width *
+                                                                            0.04,
+                                                                    fontFamily:
+                                                                        Fonts
+                                                                            .dmSansMedium),
+                                                              ),
+                                                              // Spacer(),
+
+                                                              SizedBox(
+                                                                width:
+                                                                    size.width *
+                                                                        0.03,
+                                                              ),
+                                                              Text(
+                                                                "${Strings.euro} ${_transferCharge != '0' && _transferCharge != "null" ? double.parse(_transferCharge).toStringAsFixed(2) : double.parse('${UserData.myCartModel?.data?.cart?.transferCharge ?? 0}').toStringAsFixed(2)}",
+                                                                style: TextStyle(
+                                                                    color: AppColors
+                                                                        .white,
+                                                                    fontSize:
+                                                                        size.width *
+                                                                            0.04,
+                                                                    fontFamily:
+                                                                        Fonts
+                                                                            .dmSansBold),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ),
+
+                                                        SizedBox(
+                                                          height: size.height *
+                                                              0.012,
+                                                        ),
+                                                        Container(
+                                                          // width: size.width,
+                                                          alignment: Alignment
+                                                              .centerLeft,
                                                           child: Text.rich(
                                                               TextSpan(
                                                                   text:
@@ -996,7 +1078,7 @@ class _CartpageState extends State<Cartpage> {
                                                                       InlineSpan>[
                                                                 TextSpan(
                                                                   text:
-                                                                      " ${Strings.euro} ${UserData.myCartModel?.data?.cart?.totalPrice}", //"${Strings.termsOfService}",
+                                                                      " ${Strings.euro} ${_totalPrice != "0" && _totalPrice != "null" ? _totalPrice : UserData.myCartModel?.data?.cart?.totalPrice}", //"${Strings.termsOfService}",
                                                                   style: TextStyle(
                                                                       fontFamily:
                                                                           Fonts
@@ -1018,7 +1100,7 @@ class _CartpageState extends State<Cartpage> {
                                                           //       fontSize: size.width *
                                                           //           0.06),
                                                           // ),
-                                                        )
+                                                        ),
                                                       ],
                                                     )
                                                   ],
@@ -1038,6 +1120,7 @@ class _CartpageState extends State<Cartpage> {
                                           SizedBox(height: size.height * 0.03),
 
                                           // button
+
                                           GestureDetector(
                                             onTap: () {
                                               UserData
@@ -1047,12 +1130,7 @@ class _CartpageState extends State<Cartpage> {
                                                               .cartItems!
                                                               .length >
                                                           0 &&
-                                                      (Constants.prefs?.getString("alcohol") !=
-                                                              null &&
-                                                          Constants.prefs?.getString("alcohol") !=
-                                                              "" &&
-                                                          Constants.prefs?.getString("alcohol") !=
-                                                              "0")
+                                                      alcoholTrue == true
                                                   ?
                                                   // makeOrder();
                                                   Navigator.push(
@@ -1065,9 +1143,13 @@ class _CartpageState extends State<Cartpage> {
                                                     })
                                                   : Dialogs.showBasicsFlash(
                                                       context: context,
-                                                      color: AppColors.siginbackgrond,
-                                                      duration: Duration(seconds: 3),
-                                                      content: getTranslated(context, "pleaseSelectAlcohol"));
+                                                      color: AppColors
+                                                          .siginbackgrond,
+                                                      duration:
+                                                          Duration(seconds: 3),
+                                                      content: getTranslated(
+                                                          context,
+                                                          "pleaseSelectAlcohol"));
                                             },
                                             child: roundedBoxR(
                                               width: size.width,

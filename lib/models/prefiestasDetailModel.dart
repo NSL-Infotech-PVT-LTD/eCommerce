@@ -104,7 +104,7 @@ class ParentData {
   int? id;
   String? name;
   int? parentId;
-  String? categories;
+  var categories;
   String? description;
   String? image;
   String? price;
@@ -112,7 +112,7 @@ class ParentData {
   bool? isInMyCart;
   int? isInMyCartQuantity;
   bool? isFavourite;
-  int? quantityInCl;
+  var quantityInCl;
   int? quantityInCart;
   String? videoUrl;
   String? status;

@@ -6,12 +6,12 @@ import 'package:funfy/utils/strings.dart';
 
 Widget dateButton(
     {context,
-    text,
-    month,
-    textColor,
-    borderwidth,
-    backgroundColor,
-    borderColor}) {
+      text,
+      month,
+      textColor,
+      borderwidth,
+      backgroundColor,
+      borderColor}) {
   var size = MediaQuery.of(context).size;
 
   return roundedBoxBorder(
@@ -20,7 +20,6 @@ Widget dateButton(
       width: size.width * 0.12,
       height: size.height * 0.06,
       backgroundColor: backgroundColor,
-
       borderColor: borderColor,
       child: Container(
         padding: EdgeInsets.symmetric(
@@ -35,8 +34,7 @@ Widget dateButton(
                 child: Text(
                   text,
                   style: TextStyle(
-                    fontSize: size.height * 0.024,
-                      // fontSize: size.width * 0.05,
+                      fontSize: size.width * 0.044,
                       fontFamily: Fonts.dmSansBold,
                       color: textColor),
                 ),

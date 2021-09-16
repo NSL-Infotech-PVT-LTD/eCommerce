@@ -14,12 +14,10 @@ import 'package:funfy/models/filterModel.dart';
 import 'package:funfy/models/preFiestasModel.dart';
 import 'package:funfy/ui/screens/address/addressList.dart';
 import 'package:funfy/ui/screens/fiestasAll.dart';
-
 import 'package:funfy/ui/screens/notifications.dart';
 import 'package:funfy/ui/widgets/dateButton.dart';
 import 'package:funfy/ui/widgets/postsitems.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
-import 'package:funfy/ui/widgets/tagsButton.dart';
 import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/colors.dart';
@@ -27,6 +25,7 @@ import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:intl/intl.dart';
+import 'package:location_permissions/location_permissions.dart';
 
 class HomeMPage extends StatefulWidget {
   @override
@@ -327,7 +326,7 @@ class _HomeMPageState extends State<HomeMPage> {
       }
 
       if (fiestasPageCount >
-          int.parse('${UserData.fiestasdata?.data?.total}')) {
+          int.parse('${UserData.fiestasdata?.data?.lastPage ?? 0}')) {
         print('No More Products');
 
         return;
@@ -375,7 +374,8 @@ class _HomeMPageState extends State<HomeMPage> {
         return;
       }
 
-      if (prefiestasPageCount > int.parse('${prefiestasdata?.data?.total}')) {
+      if (prefiestasPageCount >
+          int.parse('${prefiestasdata?.data?.lastPage ?? 0}')) {
         print('No More Products');
 
         return;
@@ -413,6 +413,7 @@ class _HomeMPageState extends State<HomeMPage> {
   @override
   void dispose() {
     _fiestasScrollController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -440,10 +441,17 @@ class _HomeMPageState extends State<HomeMPage> {
     return SafeArea(
       child: Scaffold(
           // floatingActionButton: FloatingActionButton(
-          //   onPressed: () {
-          //     print(UserData.fiestasdata?.toJson());
+          //   onPressed: () async {
 
-          //     // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=> Home()));
+          //     //PermissionStatus.denied
+
+          //     // ServiceStatus serviceStatus =
+          //     //     await LocationPermissions().checkServiceStatus();
+
+          //     // print("here is status $serviceStatus");
+
+          //     // PermissionStatus permission =
+          //     //     await LocationPermissions().checkPermissionStatus();
           //   },
           //   child: Icon(Icons.add),
           // ),
@@ -1028,7 +1036,7 @@ class _HomeMPageState extends State<HomeMPage> {
                               (context, index) {
                                 if (index ==
                                         int.parse(
-                                            '${UserData.fiestasdata?.data?.data?.length}') &&
+                                            '${UserData.fiestasdata?.data?.data?.length ?? 0}') &&
                                     fiestasLoadingPage) {
                                   return Container(
                                     width: MediaQuery.of(context).size.width,
@@ -1058,10 +1066,10 @@ class _HomeMPageState extends State<HomeMPage> {
                               },
                               childCount: fiestasLoadingPage
                                   ? int.parse(
-                                          '${UserData.fiestasdata?.data?.data?.length}') +
+                                          '${UserData.fiestasdata?.data?.data?.length ?? 0}') +
                                       1
                                   : int.parse(
-                                      '${UserData.fiestasdata?.data?.data?.length}'),
+                                      '${UserData.fiestasdata?.data?.data?.length ?? 0}'),
                             ))
                   : SliverToBoxAdapter(
                       child: SizedBox(),

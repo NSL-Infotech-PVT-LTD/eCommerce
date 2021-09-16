@@ -139,7 +139,8 @@ Future cartResetPrefiestas({
   return jsonBody;
 }
 
-Future<PreFiestasBookingListModel?> preFiestaBookingListApi() async {
+// PreFiestasBookingListModel?
+Future preFiestaBookingListApi() async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
   };
@@ -150,10 +151,11 @@ Future<PreFiestasBookingListModel?> preFiestaBookingListApi() async {
   if (res.statusCode == 200) {
     // print("body Here ---------");
 
-    // print(res.body);
+    print(res.body);
 
     try {
-      return preFiestasBookingListModelFromJson(res.body);
+      return json.decode(res.body);
+      // return preFiestasBookingListModelFromJson(res.body);
     } catch (e) {
       print("e-------------------- $e");
     }
@@ -203,7 +205,8 @@ Future makeOrderApi({String? cartId, String? addressId, String? cardID}) async {
 // prefiestas Order detail show ------------------- //
 
 Future<PrefiestasOrderDetailModel?> prefiestasShowOrderDetail(
-    {String? orderId}) async {
+    {String? orderId, context}) async {
+  print("here is id of prefiestas - $orderId");
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
     // 'X-localization': '${Constants.prefs?.getString("language")}'
@@ -223,10 +226,45 @@ Future<PrefiestasOrderDetailModel?> prefiestasShowOrderDetail(
   // print(res.body);
 
   if (res.statusCode == 200) {
-    // print(res.body);
-    return prefiestasOrderDetailModelFromJson(res.body);
+    print(res.body);
+    try {
+      return prefiestasOrderDetailModelFromJson(res.body);
+    } catch (e) {
+      print("here is error api $e");
+    }
+  } else if (res.statusCode == 422) {
+    Dialogs.simpleOkAlertDialog(
+        context: context,
+        content: "${getTranslated(context, 'theSelectedItemIsinvalid')}",
+        title: "${getTranslated(context, 'alert!')}",
+        func: () {
+          navigatePopFun(context);
+        });
+
+    Future.delayed(Duration(seconds: 2), () {
+      navigatorPushFun(
+          context,
+          Home(
+            pageIndexNum: 0,
+          ));
+    });
   } else {
     print("here is error ${res.body}");
+    Dialogs.simpleOkAlertDialog(
+        context: context,
+        content: "${getTranslated(context, 'theSelectedItemIsinvalid')}",
+        title: "${getTranslated(context, 'alert!')}",
+        func: () {
+          navigatePopFun(context);
+        });
+
+    Future.delayed(Duration(seconds: 2), () {
+      navigatorPushFun(
+          context,
+          Home(
+            pageIndexNum: 0,
+          ));
+    });
   }
 }
 

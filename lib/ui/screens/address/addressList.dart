@@ -6,11 +6,9 @@ import 'package:funfy/components/dialogs.dart';
 import 'package:funfy/components/locationget.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/models/addressLsitModel.dart';
-import 'package:funfy/ui/screens/address/addressAdd.dart';
-import 'package:funfy/ui/screens/address/addressEdit.dart';
-import 'package:funfy/ui/screens/address/googleMapAdd.dart';
+
 import 'package:funfy/ui/screens/address/mapShowAE.dart';
-import 'package:funfy/ui/screens/buynow.dart';
+
 import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/Constants.dart';
@@ -20,10 +18,9 @@ import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_maps_place_picker/google_maps_place_picker.dart';
 
 import 'package:hexcolor/hexcolor.dart';
+import 'package:location_permissions/location_permissions.dart';
 
 class AddressList extends StatefulWidget {
   final int? navNum;
@@ -142,12 +139,6 @@ class _AddressListState extends State<AddressList> {
         return false;
       },
       child: Scaffold(
-          // floatingActionButton: FloatingActionButton(
-          //   onPressed: () {
-          //     Constants.prefs?.getString("addressId");
-          //   },
-          //   child: Icon(Icons.add),
-          // ),
           backgroundColor: AppColors.blackBackground,
           body: Column(
             children: [
@@ -337,16 +328,49 @@ class _AddressListState extends State<AddressList> {
                     ),
 
                     InkWell(
-                      onTap: () {
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (context) {
-                          // return .
+                      onTap: () async {
+                        print("location....");
+                        await LocationPermissions()
+                            .requestPermissions()
+                            .then((permission) {
+                          print("value is here A$permission");
 
-                          return PlacePickerB(
-                            Strings.mapKey,
-                            typeAE: 1,
-                          );
-                        }));
+                          if (permission == PermissionStatus.denied) {
+                            Dialogs.singleButtonAlertDialog(
+                                context: context,
+                                title: "${getTranslated(
+                                  context,
+                                  'alert!',
+                                )}",
+                                content: "${getTranslated(
+                                  context,
+                                  'AllowPermissionFromYourMobilesettings',
+                                )}",
+                                buttonContent: "${getTranslated(
+                                  context,
+                                  'goToPhoneSettings',
+                                )}",
+                                func: () async {
+                                  Navigator.of(context).pop();
+                                  bool isOpened = await LocationPermissions()
+                                      .openAppSettings();
+                                  print("here is bool $isOpened");
+                                });
+                          } else {
+                            print("here is permission $permission");
+
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (context) {
+                              // return .
+
+                              return PlacePickerB(
+                                Strings.mapKey,
+                                typeAE: 1,
+                              );
+                            }));
+                          }
+                          return permission;
+                        });
                       },
                       child: Row(
                         children: [
@@ -440,7 +464,7 @@ class _AddressListState extends State<AddressList> {
 
   Widget addressIitem({size, String? address, Addressdata? model}) {
     return InkWell(
-      onTap: () {
+      onTap: () async {
         if (_edit) {
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
             return PlacePickerB(
@@ -452,17 +476,54 @@ class _AddressListState extends State<AddressList> {
             );
           }));
         } else {
-          Dialogs.simpleAlertDialog(
-              context: context,
-              title: "${getTranslated(context, 'changeAddress')}",
-              content: "${getTranslated(context, 'Dowanttoselectthisaddress')}",
-              func: () {
-                setState(() {
-                  Constants.prefs?.setString("addres", "$address");
-                  Constants.prefs?.setString("addressId", "${model?.id}");
-                });
-                navigatePopFun(context);
-              });
+          print("location....");
+          await LocationPermissions().requestPermissions().then((permission) {
+            print("value is here A$permission");
+
+            if (permission == PermissionStatus.denied) {
+              Dialogs.singleButtonAlertDialog(
+                  context: context,
+                  title: "${getTranslated(
+                    context,
+                    'alert!',
+                  )}",
+                  content: "${getTranslated(
+                    context,
+                    'AllowPermissionFromYourMobilesettings',
+                  )}",
+                  buttonContent: "${getTranslated(
+                    context,
+                    'goToPhoneSettings',
+                  )}",
+                  func: () async {
+                    Navigator.of(context).pop();
+                    bool isOpened =
+                        await LocationPermissions().openAppSettings();
+                    print("here is bool $isOpened");
+                  });
+            } else {
+              print("here is permission $permission");
+
+              Dialogs.simpleAlertDialog(
+                  context: context,
+                  title: "${getTranslated(context, 'changeAddress')}",
+                  content:
+                      "${getTranslated(context, 'Dowanttoselectthisaddress')}",
+                  func: () {
+                    setState(() {
+                      Constants.prefs?.setString("addres", "$address");
+                      Constants.prefs?.setString("addressId", "${model?.id}");
+                    });
+                    navigatePopFun(context);
+                    navigatorPushFun(
+                        context,
+                        Home(
+                          pageIndexNum: 0,
+                        ));
+                  });
+            }
+            return permission;
+          });
         }
       },
       child: Container(

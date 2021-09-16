@@ -204,7 +204,9 @@ class _ProfilepageState extends State<Profilepage> {
                 Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
-                        builder: (BuildContext context) => Signin()),
+                        builder: (BuildContext context) => TranslationPage(
+                          fromSplash: true,
+                        )),
                         (route) => false);
               }
             });
@@ -261,7 +263,7 @@ class _ProfilepageState extends State<Profilepage> {
                           height: size.height * 0.085,
                           child: CachedNetworkImage(
                             imageUrl:
-                                "${Constants.prefs?.getString('profileImage')}",
+                            "${Constants.prefs?.getString('profileImage')}",
                             imageBuilder: (context, imageProvider) => Container(
                               // width: size.width * 0.1,
                               // height: 60.0,
@@ -400,7 +402,7 @@ class _ProfilepageState extends State<Profilepage> {
                         centerlistItemSvg(
                             context: context,
                             title:
-                                "${getTranslated(context, 'termsAndConditions')}",
+                            "${getTranslated(context, 'termsAndConditions')}",
                             //  Strings.help,
                             leftIconImage: "assets/svgicons/tnc.svg",
                             onTapfunc: () {
@@ -554,11 +556,11 @@ Widget centerlistItem(
 
 Widget centerlistItemSvg(
     {context,
-    String? leftIconImage,
-    String? title,
-    String? rightIconImage,
-    bool? icon,
-    onTapfunc}) {
+      String? leftIconImage,
+      String? title,
+      String? rightIconImage,
+      bool? icon,
+      onTapfunc}) {
   var size = MediaQuery.of(context).size;
 
   return InkWell(

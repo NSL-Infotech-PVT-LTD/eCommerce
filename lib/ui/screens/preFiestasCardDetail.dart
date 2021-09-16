@@ -368,496 +368,267 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
     }
   }
 
+  Future<bool> backPress() async {
+    if (_loading == true || payLoading == true) {
+      Dialogs.showBasicsFlash(
+          context: context,
+          content:
+              "${getTranslated(context, "Pleasewaittransactionisinprogress")}",
+          color: AppColors.siginbackgrond,
+          duration: Duration(seconds: 2));
+    } else {
+      Navigator.of(context).pop();
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Container(
       color: HexColor("#3d322a"),
       child: SafeArea(
-        child: Scaffold(
-          floatingActionButton: cardFormShow == false
-              ? FloatingActionButton(
+        child: WillPopScope(
+          onWillPop: backPress,
+          child: Scaffold(
+            floatingActionButton: cardFormShow == false
+                ? FloatingActionButton(
+                    onPressed: () {
+                      setState(() {
+                        cardFormShow = true;
+                      });
+                    },
+                    child: Icon(Icons.add),
+                  )
+                : SizedBox(),
+            appBar: AppBar(
+              leading: IconButton(
                   onPressed: () {
-                    setState(() {
-                      cardFormShow = true;
-                    });
+                    backPress();
                   },
-                  child: Icon(Icons.add),
-                )
-              : SizedBox(),
-          appBar: AppBar(
-            title: Text("${getTranslated(context, "pay")}"),
-            centerTitle: true,
-            backgroundColor: AppColors.blackBackground,
-          ),
-          body: SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                  height: size.height,
-                  width: size.width,
-                  padding: EdgeInsets.symmetric(
-                      horizontal: size.width * 0.05,
-                      vertical: size.height * 0.02),
-                  decoration: BoxDecoration(
-                    color: AppColors.homeBackgroundLite,
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: <Color>[HexColor("#3d322a"), HexColor("#1a1613")],
-                      tileMode: TileMode.repeated,
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                  )),
+              automaticallyImplyLeading: false,
+              title: Text("${getTranslated(context, "pay")}"),
+              centerTitle: true,
+              backgroundColor: AppColors.blackBackground,
+            ),
+            body: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Container(
+                    height: size.height,
+                    width: size.width,
+                    padding: EdgeInsets.symmetric(
+                        horizontal: size.width * 0.05,
+                        vertical: size.height * 0.02),
+                    decoration: BoxDecoration(
+                      color: AppColors.homeBackgroundLite,
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: <Color>[
+                          HexColor("#3d322a"),
+                          HexColor("#1a1613")
+                        ],
+                        tileMode: TileMode.repeated,
+                      ),
                     ),
-                  ),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      // mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // top content
-                        Row(
-                          children: [
-                            SvgPicture.asset(
-                              "assets/svgicons/cartsvg.svg",
-                              width: size.width * 0.07,
-                            ),
-                            SizedBox(
-                              // width: SizeConfig.screenWidth * 0.03,
-                              width: size.width * 0.03,
-                            ),
-                            Text(
-                              "${getTranslated(context, "yourCart")}",
-                              style: TextStyle(
-                                  fontSize: size.width * 0.045,
-                                  fontFamily: Fonts.dmSansMedium,
-                                  color: AppColors.white),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: size.height * 0.02),
-                        _loading
-                            ? SizedBox()
-                            : roundedBoxR(
-                                radius: size.width * 0.02,
-                                // height: size.height * 0.08,
-                                backgroundColor: HexColor("#6b604d"),
-                                child: Container(
-                                  // alignment: Alignment.center,
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: size.width * 0.02,
-                                      vertical: size.height * 0.01),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    //  mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          SvgPicture.asset(
-                                            "assets/images/ticket.svg",
-                                          ),
-                                          SizedBox(
-                                            // width: SizeConfig.screenWidth * 0.03,
-                                            width: size.width * 0.03,
-                                          ),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                  "${getTranslated(context, "item")}",
-                                                  style: TextStyle(
-                                                      fontSize:
-                                                          size.width * 0.05,
-                                                      fontFamily:
-                                                          Fonts.dmSansMedium,
-                                                      color: AppColors.white)),
-                                              SizedBox(
-                                                height: size.height * 0.004,
-                                              ),
-                                              Text(
-                                                  "${getTranslated(context, "Qty")} : ${Constants.prefs?.getString('cartTot')}",
-                                                  style: TextStyle(
-                                                      fontSize:
-                                                          size.width * 0.035,
-                                                      fontFamily:
-                                                          Fonts.dmSansMedium,
-                                                      color: AppColors.white)),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                              "${Strings.euro} ${UserData.myCartModel?.data?.cart?.totalPrice}",
-                                              style: TextStyle(
-                                                  fontSize: size.width * 0.07,
-                                                  fontFamily:
-                                                      Fonts.dmSansMedium,
-                                                  color: AppColors.white)),
-                                        ],
-                                      )
-                                    ],
+                    child: SingleChildScrollView(
+                      child: Column(
+                        // mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // top content
+                          Row(
+                            children: [
+                              SvgPicture.asset(
+                                "assets/svgicons/cartsvg.svg",
+                                width: size.width * 0.07,
+                              ),
+                              SizedBox(
+                                // width: SizeConfig.screenWidth * 0.03,
+                                width: size.width * 0.03,
+                              ),
+                              Text(
+                                "${getTranslated(context, "yourCart")}",
+                                style: TextStyle(
+                                    fontSize: size.width * 0.045,
+                                    fontFamily: Fonts.dmSansMedium,
+                                    color: AppColors.white),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: size.height * 0.02),
+                          _loading
+                              ? SizedBox()
+                              : roundedBoxR(
+                                  radius: size.width * 0.02,
+                                  // height: size.height * 0.08,
+                                  backgroundColor: HexColor("#6b604d"),
+                                  child: Container(
+                                    // alignment: Alignment.center,
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: size.width * 0.02,
+                                        vertical: size.height * 0.01),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      //  mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            SvgPicture.asset(
+                                              "assets/images/ticket.svg",
+                                            ),
+                                            SizedBox(
+                                              // width: SizeConfig.screenWidth * 0.03,
+                                              width: size.width * 0.03,
+                                            ),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                    "${getTranslated(context, "item")}",
+                                                    style: TextStyle(
+                                                        fontSize:
+                                                            size.width * 0.05,
+                                                        fontFamily:
+                                                            Fonts.dmSansMedium,
+                                                        color:
+                                                            AppColors.white)),
+                                                SizedBox(
+                                                  height: size.height * 0.004,
+                                                ),
+                                                Text(
+                                                    "${getTranslated(context, "Qty")} : ${Constants.prefs?.getString('cartTot')}",
+                                                    style: TextStyle(
+                                                        fontSize:
+                                                            size.width * 0.035,
+                                                        fontFamily:
+                                                            Fonts.dmSansMedium,
+                                                        color:
+                                                            AppColors.white)),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                                "${Strings.euro} ${UserData.myCartModel?.data?.cart?.totalPrice}",
+                                                style: TextStyle(
+                                                    fontSize: size.width * 0.07,
+                                                    fontFamily:
+                                                        Fonts.dmSansMedium,
+                                                    color: AppColors.white)),
+                                          ],
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
 
-                        SizedBox(
-                          height: size.height * 0.05,
-                        ),
+                          SizedBox(
+                            height: size.height * 0.05,
+                          ),
 
-                        //center content
+                          //center content
 
-                        // Card lsit
+                          // Card lsit
 
-                        _loading
-                            ? Container(
-                                margin:
-                                    EdgeInsets.only(top: size.height * 0.24),
-                                child:
-                                    Center(child: CircularProgressIndicator()),
-                              )
-                            : cardListP != null && cardFormShow == false
-                                ? Column(
-                                    children: [
-                                      Column(
-                                        children: [
-                                          for (int i = 0;
-                                              i <
-                                                  int.parse(
-                                                      "${cardListP?.data?.data?.length}");
-                                              i++)
-                                            ticket(
-                                                context: context,
-                                                model:
-                                                    cardListP?.data?.data![i],
-                                                index: i)
-                                        ],
-                                      ),
-                                      groupValue != -1 &&
-                                              swipebuttonShowBool &&
-                                              int.parse(
-                                                      "${cardListP?.data?.data?.length}") >
-                                                  0
-                                          ? ConfirmationSlider(
-                                              backgroundColor:
-                                                  AppColors.siginbackgrond,
-                                              height: size.height * 0.07,
-                                              backgroundColorEnd:
-                                                  Colors.red.shade700,
-                                              text:
-                                                  "${getTranslated(context, "swipetopay")}",
-                                              backgroundShape:
-                                                  BorderRadius.circular(8),
-                                              foregroundShape:
-                                                  BorderRadius.circular(8),
-                                              foregroundColor:
-                                                  HexColor('#9f150d'),
-                                              textStyle: TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold),
-                                              onConfirmation: () {
-                                                prefiestasBookingApi(
-                                                    cardid: cardId);
-                                              })
-
-                                          // SwipeButton(
-                                          //     thumb: SvgPicture.asset(
-                                          //       Images.swipeButtonSvg,
-                                          //       fit: BoxFit.cover,
-                                          //     ),
-                                          //     borderRadius:
-                                          //         BorderRadius.circular(8),
-                                          //     activeTrackColor:
-                                          //         AppColors.siginbackgrond,
-                                          //     height: size.height * 0.07,
-                                          //     child: Text(
-                                          //         "${getTranslated(context, "swipetopay")}",
-                                          //         style: TextStyle(
-                                          //             color: AppColors.white,
-                                          //             fontFamily:
-                                          //                 Fonts.dmSansBold,
-                                          //             fontSize:
-                                          //                 size.width * 0.05)),
-                                          //     onSwipeEnd: () {
-                                          //       prefiestasBookingApi(
-                                          //           cardid: cardId);
-                                          //     },
-                                          //   )
-
-                                          : payLoading &&
-                                                  swipebuttonShowBool == false
-                                              ? roundedBoxR(
-                                                  radius: size.width * 0.02,
-                                                  width: size.width,
-                                                  height: size.height * 0.07,
-                                                  backgroundColor:
-                                                      AppColors.siginbackgrond,
-                                                  child: Center(
-                                                      child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      SizedBox(
-                                                        // height:
-                                                        //     size.height * 0.03,
-                                                        // width:
-                                                        //     size.width * 0.06,
-                                                        height: 20,
-                                                        width: 20,
-                                                        child:
-                                                            CircularProgressIndicator(
-                                                                color: AppColors
-                                                                    .white),
-                                                      ),
-                                                      SizedBox(
-                                                          width: size.width *
-                                                              0.02),
-                                                      Text(
-                                                        "${getTranslated(context, "pleaseWait")}",
-                                                        style: TextStyle(
-                                                            fontSize:
-                                                                size.width *
-                                                                    0.045,
-                                                            fontFamily: Fonts
-                                                                .dmSansMedium,
-                                                            color: AppColors
-                                                                .white),
-                                                      ),
-                                                    ],
-                                                  )),
-                                                )
-                                              : SizedBox()
-                                    ],
-                                  )
-                                : Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "${getTranslated(context, "Payment")}",
-                                        style: TextStyle(
-                                            fontSize: size.width * 0.045,
-                                            fontFamily: Fonts.dmSansMedium,
-                                            color: AppColors.white),
-                                      ),
-
-                                      SizedBox(
-                                        height: size.height * 0.01,
-                                      ),
-                                      roundedBoxR(
-                                          radius: size.width * 0.02,
-                                          // height: size.height * 0.4,
-                                          width: size.width,
-                                          backgroundColor: HexColor("#191512"),
-                                          child: Container(
-                                            padding: EdgeInsets.symmetric(
-                                                vertical: size.height * 0.02,
-                                                horizontal: size.width * 0.04),
-                                            child: Form(
-                                              key: _formKey,
-                                              autovalidateMode:
-                                                  _autoValidateMode,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      Container(
-                                                        child: CardUtils
-                                                            .getCardIcon(
-                                                                _paymentCard
-                                                                    .type),
-                                                      ),
-                                                      // SvgPicture.asset(
-                                                      //   "assets/images/ticket.svg",
-                                                      //   width: size.width * 0.05,
-                                                      // ),
-                                                      SizedBox(
-                                                        width:
-                                                            size.width * 0.02,
-                                                      ),
-                                                      Text(
-                                                        "${getTranslated(context, "addCreditDebitCard")}",
-                                                        style: TextStyle(
-                                                            fontSize:
-                                                                size.width *
-                                                                    0.045,
-                                                            fontFamily: Fonts
-                                                                .dmSansMedium,
-                                                            color: AppColors
-                                                                .white),
-                                                      ),
-                                                    ],
-                                                  ),
-
-                                                  SizedBox(
-                                                    height: size.height * 0.03,
-                                                  ),
-
-                                                  // input
-
-                                                  cardHolderField(
-                                                      hint:
-                                                          "${getTranslated(context, 'cardHoldername')}",
-                                                      controller:
-                                                          cardHolderNameController),
-
-                                                  SizedBox(
-                                                    height: size.height * 0.015,
-                                                  ),
-
-                                                  cardNumerField(
-                                                      hint:
-                                                          "${getTranslated(context, 'cardNumber')}",
-                                                      controller:
-                                                          cardNumberController),
-
-                                                  SizedBox(
-                                                    height: size.height * 0.03,
-                                                  ),
-
-                                                  //
-
-                                                  Text(
-                                                    "${getTranslated(context, "expireDate")}",
-                                                    style: TextStyle(
-                                                        fontSize:
-                                                            size.width * 0.045,
-                                                        fontFamily:
-                                                            Fonts.dmSansMedium,
-                                                        color: AppColors.white),
-                                                  ),
-
-                                                  SizedBox(
-                                                    height: size.height * 0.015,
-                                                  ),
-
-                                                  yearField(
-                                                      hint: "MM/YY",
-                                                      controller:
-                                                          expireDateController),
-
-                                                  SizedBox(
-                                                    height: size.height * 0.015,
-                                                  ),
-
-                                                  Row(
-                                                    children: [
-                                                      Expanded(
-                                                        child: securityField(
-                                                            hint:
-                                                                "Security Code",
-                                                            controller:
-                                                                securityController),
-                                                      ),
-                                                      SizedBox(
-                                                          width: size.width *
-                                                              0.03),
-                                                      Expanded(
-                                                        child: Container(),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          )),
-
-                                      SizedBox(
-                                        height: size.height * 0.03,
-                                      ),
-
-                                      // pay button
-
-                                      InkWell(
-                                        onTap: () {
-                                          _validateInputs();
-                                        },
-                                        child: roundedBoxR(
-                                          radius: size.width * 0.02,
-                                          width: size.width,
-                                          height: size.height * 0.07,
-                                          backgroundColor:
-                                              AppColors.siginbackgrond,
-                                          child: Center(
-                                            child: addCardLoading
-                                                ? Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      SizedBox(
-                                                        height:
-                                                            size.height * 0.03,
-                                                        width:
-                                                            size.width * 0.06,
-                                                        child:
-                                                            CircularProgressIndicator(
-                                                                color: AppColors
-                                                                    .white),
-                                                      ),
-                                                      SizedBox(
-                                                          width: size.width *
-                                                              0.02),
-                                                      Text(
-                                                        "${getTranslated(context, "pleaseWait")}",
-                                                        style: TextStyle(
-                                                            fontSize:
-                                                                size.width *
-                                                                    0.045,
-                                                            fontFamily: Fonts
-                                                                .dmSansMedium,
-                                                            color: AppColors
-                                                                .white),
-                                                      ),
-                                                    ],
-                                                  )
-                                                : Text(
-                                                    "${getTranslated(context, "continue")}",
-                                                    style: TextStyle(
-                                                        fontSize:
-                                                            size.width * 0.045,
-                                                        fontFamily:
-                                                            Fonts.dmSansMedium,
-                                                        color: AppColors.white),
-                                                  ),
-                                          ),
+                          _loading
+                              ? Container(
+                                  margin:
+                                      EdgeInsets.only(top: size.height * 0.24),
+                                  child: Center(
+                                      child: CircularProgressIndicator()),
+                                )
+                              : cardListP != null && cardFormShow == false
+                                  ? Column(
+                                      children: [
+                                        Column(
+                                          children: [
+                                            for (int i = 0;
+                                                i <
+                                                    int.parse(
+                                                        "${cardListP?.data?.data?.length}");
+                                                i++)
+                                              ticket(
+                                                  context: context,
+                                                  model:
+                                                      cardListP?.data?.data![i],
+                                                  index: i)
+                                          ],
                                         ),
-                                      ),
-
-                                      SizedBox(
-                                        height: size.height * 0.015,
-                                      ),
-
-                                      // view card button
-                                      cardListP != null &&
-                                              cardListP?.data?.data?.length != 0
-                                          ? InkWell(
-                                              onTap: () {
-                                                setState(() {
-                                                  cardFormShow = false;
-                                                });
-                                              },
-                                              child: roundedBoxR(
-                                                radius: size.width * 0.02,
-                                                width: size.width,
-                                                height: size.height * 0.07,
+                                        groupValue != -1 &&
+                                                swipebuttonShowBool &&
+                                                int.parse(
+                                                        "${cardListP?.data?.data?.length}") >
+                                                    0
+                                            ? ConfirmationSlider(
                                                 backgroundColor:
-                                                    HexColor("#6b604d"),
-                                                child: Center(
-                                                  child: _loading
-                                                      ? CircularProgressIndicator()
-                                                      : Text(
-                                                          "${getTranslated(context, "viewYourCard")}",
+                                                    AppColors.siginbackgrond,
+                                                height: size.height * 0.07,
+                                                width: size.width * 0.9,
+                                                backgroundColorEnd:
+                                                    Colors.red.shade700,
+                                                text:
+                                                    "${getTranslated(context, "swipetopay")}",
+                                                backgroundShape:
+                                                    BorderRadius.circular(8),
+                                                foregroundShape:
+                                                    BorderRadius.circular(8),
+                                                foregroundColor:
+                                                    HexColor('#9f150d'),
+                                                textStyle: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                                onConfirmation: () {
+                                                  prefiestasBookingApi(
+                                                      cardid: cardId);
+                                                })
+                                            : payLoading &&
+                                                    swipebuttonShowBool == false
+                                                ? roundedBoxR(
+                                                    radius: size.width * 0.02,
+                                                    width: size.width,
+                                                    height: size.height * 0.07,
+                                                    backgroundColor: AppColors
+                                                        .siginbackgrond,
+                                                    child: Center(
+                                                        child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        SizedBox(
+                                                          // height:
+                                                          //     size.height * 0.03,
+                                                          // width:
+                                                          //     size.width * 0.06,
+                                                          height: 20,
+                                                          width: 20,
+                                                          child:
+                                                              CircularProgressIndicator(
+                                                                  color: AppColors
+                                                                      .white),
+                                                        ),
+                                                        SizedBox(
+                                                            width: size.width *
+                                                                0.02),
+                                                        Text(
+                                                          "${getTranslated(context, "pleaseWait")}",
                                                           style: TextStyle(
                                                               fontSize:
                                                                   size.width *
@@ -867,20 +638,267 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
                                                               color: AppColors
                                                                   .white),
                                                         ),
+                                                      ],
+                                                    )),
+                                                  )
+                                                : SizedBox()
+                                      ],
+                                    )
+                                  : Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "${getTranslated(context, "Payment")}",
+                                          style: TextStyle(
+                                              fontSize: size.width * 0.045,
+                                              fontFamily: Fonts.dmSansMedium,
+                                              color: AppColors.white),
+                                        ),
+
+                                        SizedBox(
+                                          height: size.height * 0.01,
+                                        ),
+                                        roundedBoxR(
+                                            radius: size.width * 0.02,
+                                            // height: size.height * 0.4,
+                                            width: size.width,
+                                            backgroundColor:
+                                                HexColor("#191512"),
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: size.height * 0.02,
+                                                  horizontal:
+                                                      size.width * 0.04),
+                                              child: Form(
+                                                key: _formKey,
+                                                autovalidateMode:
+                                                    _autoValidateMode,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        Container(
+                                                          child: CardUtils
+                                                              .getCardIcon(
+                                                                  _paymentCard
+                                                                      .type),
+                                                        ),
+                                                        // SvgPicture.asset(
+                                                        //   "assets/images/ticket.svg",
+                                                        //   width: size.width * 0.05,
+                                                        // ),
+                                                        SizedBox(
+                                                          width:
+                                                              size.width * 0.02,
+                                                        ),
+                                                        Text(
+                                                          "${getTranslated(context, "addCreditDebitCard")}",
+                                                          style: TextStyle(
+                                                              fontSize:
+                                                                  size.width *
+                                                                      0.045,
+                                                              fontFamily: Fonts
+                                                                  .dmSansMedium,
+                                                              color: AppColors
+                                                                  .white),
+                                                        ),
+                                                      ],
+                                                    ),
+
+                                                    SizedBox(
+                                                      height:
+                                                          size.height * 0.03,
+                                                    ),
+
+                                                    // input
+
+                                                    cardHolderField(
+                                                        hint:
+                                                            "${getTranslated(context, 'cardHoldername')}",
+                                                        controller:
+                                                            cardHolderNameController),
+
+                                                    SizedBox(
+                                                      height:
+                                                          size.height * 0.015,
+                                                    ),
+
+                                                    cardNumerField(
+                                                        hint:
+                                                            "${getTranslated(context, 'cardNumber')}",
+                                                        controller:
+                                                            cardNumberController),
+
+                                                    SizedBox(
+                                                      height:
+                                                          size.height * 0.03,
+                                                    ),
+
+                                                    //
+
+                                                    Text(
+                                                      "${getTranslated(context, "expireDate")}",
+                                                      style: TextStyle(
+                                                          fontSize: size.width *
+                                                              0.045,
+                                                          fontFamily: Fonts
+                                                              .dmSansMedium,
+                                                          color:
+                                                              AppColors.white),
+                                                    ),
+
+                                                    SizedBox(
+                                                      height:
+                                                          size.height * 0.015,
+                                                    ),
+
+                                                    yearField(
+                                                        hint: "MM/YY",
+                                                        controller:
+                                                            expireDateController),
+
+                                                    SizedBox(
+                                                      height:
+                                                          size.height * 0.015,
+                                                    ),
+
+                                                    Row(
+                                                      children: [
+                                                        Expanded(
+                                                          child: securityField(
+                                                              hint:
+                                                                  "Security Code",
+                                                              controller:
+                                                                  securityController),
+                                                        ),
+                                                        SizedBox(
+                                                            width: size.width *
+                                                                0.03),
+                                                        Expanded(
+                                                          child: Container(),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
-                                            )
-                                          : SizedBox()
-                                    ],
-                                  ),
-                      ],
+                                            )),
+
+                                        SizedBox(
+                                          height: size.height * 0.03,
+                                        ),
+
+                                        // pay button
+
+                                        InkWell(
+                                          onTap: () {
+                                            _validateInputs();
+                                          },
+                                          child: roundedBoxR(
+                                            radius: size.width * 0.02,
+                                            width: size.width,
+                                            height: size.height * 0.07,
+                                            backgroundColor:
+                                                AppColors.siginbackgrond,
+                                            child: Center(
+                                              child: addCardLoading
+                                                  ? Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        SizedBox(
+                                                          height: size.height *
+                                                              0.03,
+                                                          width:
+                                                              size.width * 0.06,
+                                                          child:
+                                                              CircularProgressIndicator(
+                                                                  color: AppColors
+                                                                      .white),
+                                                        ),
+                                                        SizedBox(
+                                                            width: size.width *
+                                                                0.02),
+                                                        Text(
+                                                          "${getTranslated(context, "pleaseWait")}",
+                                                          style: TextStyle(
+                                                              fontSize:
+                                                                  size.width *
+                                                                      0.045,
+                                                              fontFamily: Fonts
+                                                                  .dmSansMedium,
+                                                              color: AppColors
+                                                                  .white),
+                                                        ),
+                                                      ],
+                                                    )
+                                                  : Text(
+                                                      "${getTranslated(context, "continue")}",
+                                                      style: TextStyle(
+                                                          fontSize: size.width *
+                                                              0.045,
+                                                          fontFamily: Fonts
+                                                              .dmSansMedium,
+                                                          color:
+                                                              AppColors.white),
+                                                    ),
+                                            ),
+                                          ),
+                                        ),
+
+                                        SizedBox(
+                                          height: size.height * 0.015,
+                                        ),
+
+                                        // view card button
+                                        cardListP != null &&
+                                                cardListP?.data?.data?.length !=
+                                                    0
+                                            ? InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    cardFormShow = false;
+                                                  });
+                                                },
+                                                child: roundedBoxR(
+                                                  radius: size.width * 0.02,
+                                                  width: size.width,
+                                                  height: size.height * 0.07,
+                                                  backgroundColor:
+                                                      HexColor("#6b604d"),
+                                                  child: Center(
+                                                    child: _loading
+                                                        ? CircularProgressIndicator()
+                                                        : Text(
+                                                            "${getTranslated(context, "viewYourCard")}",
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                    size.width *
+                                                                        0.045,
+                                                                fontFamily: Fonts
+                                                                    .dmSansMedium,
+                                                                color: AppColors
+                                                                    .white),
+                                                          ),
+                                                  ),
+                                                ),
+                                              )
+                                            : SizedBox()
+                                      ],
+                                    ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                // SizedBox(
-                //   height: size.height * 0.01,
-                // )
-              ],
+                  // SizedBox(
+                  //   height: size.height * 0.01,
+                  // )
+                ],
+              ),
             ),
           ),
         ),

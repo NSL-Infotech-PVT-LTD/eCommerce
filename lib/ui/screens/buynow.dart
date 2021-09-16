@@ -191,13 +191,13 @@ class _BuyNowState extends State<BuyNow> {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          Container(
-            margin: EdgeInsets.only(right: size.width * 0.02),
-            child: SvgPicture.asset(
-              "assets/svgicons/hearticon.svg",
-              color: Colors.white,
-            ),
-          )
+          // Container(
+          //   margin: EdgeInsets.only(right: size.width * 0.02),
+          //   child: SvgPicture.asset(
+          //     "assets/svgicons/hearticon.svg",
+          //     color: Colors.white,
+          //   ),
+          // )
         ],
         backgroundColor: AppColors.homeBackground,
         iconTheme: IconThemeData(
@@ -231,52 +231,6 @@ class _BuyNowState extends State<BuyNow> {
                               // mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                // Row(
-                                //   children: [
-                                //     Container(
-                                //       decoration: BoxDecoration(
-                                //         color: AppColors.green,
-                                //         borderRadius: BorderRadius.all(
-                                //             Radius.circular(6)),
-                                //       ),
-                                //       height: SizeConfig.screenHeight * 0.03,
-                                //       width: SizeConfig.screenWidth * 0.15,
-                                //       child: Center(
-                                //           child: Text(
-                                //         "${getTranslated(context, "OPEN")}",
-                                //         //   "OPEN",
-                                //         style: TextStyle(
-                                //           color: AppColors.white,
-                                //           fontFamily: "BabasNeue",
-                                //           fontSize: size.width * 0.043,
-                                //         ),
-                                //       )),
-                                //     ),
-                                //     SizedBox(
-                                //         width: SizeConfig.screenWidth * 0.03),
-                                //     Container(
-                                //       decoration: BoxDecoration(
-                                //         color: AppColors.homeBackground,
-                                //         border:
-                                //             Border.all(color: AppColors.white),
-                                //         borderRadius: BorderRadius.all(
-                                //             Radius.circular(6)),
-                                //       ),
-                                //       height: SizeConfig.screenHeight * 0.03,
-                                //       width: SizeConfig.screenWidth * 0.15,
-                                //       child: Center(
-                                //           child: Text(
-                                //         "${getTranslated(context, "club")}",
-                                //         //    "Club",
-                                //         style: TextStyle(
-                                //           color: AppColors.white,
-                                //           fontFamily: "DM Sans Medium",
-                                //           fontSize: size.width * 0.035,
-                                //         ),
-                                //       )),
-                                //     ),
-                                //   ],
-                                // ),
                                 Container(
                                   // cvfbgtkl;./
                                   width: SizeConfig.screenWidth * 0.60,
@@ -300,8 +254,11 @@ class _BuyNowState extends State<BuyNow> {
                                     size: size.width * 0.06,
                                     ittempading: size.width * 0.005,
                                     color: AppColors.tagBorder,
-                                    rating: double.parse(
-                                        "${widget.fiestasM?.data?.clubRating}"))
+                                    rating: widget.fiestasM?.data?.clubRating !=
+                                            null
+                                        ? double.parse(
+                                            "${widget.fiestasM?.data?.clubRating}")
+                                        : 0.0)
                               ],
                             ),
                           ],
@@ -399,32 +356,10 @@ class _BuyNowState extends State<BuyNow> {
                                   fontFamily: Fonts.dmSansBold),
                             ),
                             onPressed: () {
-                              if (Constants.prefs?.getString("addres") !=
-                                      null &&
-                                  Constants.prefs?.getString("addres") != '' &&
-                                  Constants.prefs?.getString("addressId") !=
-                                      null &&
-                                  Constants.prefs?.getString("addressId") !=
-                                      '') {
-                                navigatorPushFun(
-                                    context,
-                                    CartDetail(
-                                        fiestasId: widget.fiestasM?.data?.id));
-                              } else {
-                                Dialogs.simpleOkAlertDialog(
-                                    context: context,
-                                    content:
-                                        "${getTranslated(context, 'pleaseAddYourLocation')}",
-                                    title:
-                                        "${getTranslated(context, 'alert!')}",
-                                    func: () {
-                                      navigatorPushFun(
-                                          context,
-                                          AddressList(
-                                            navNum: 1,
-                                          ));
-                                    });
-                              }
+                              navigatorPushFun(
+                                  context,
+                                  CartDetail(
+                                      fiestasId: widget.fiestasM?.data?.id));
                             },
                             style: ElevatedButton.styleFrom(
                               padding: EdgeInsets.symmetric(

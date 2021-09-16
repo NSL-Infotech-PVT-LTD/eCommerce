@@ -59,6 +59,8 @@ class Cart {
   Cart({
     this.id,
     this.userId,
+    this.price,
+    this.transferCharge,
     this.totalPrice,
     this.quantityInCart,
     this.cartItems,
@@ -66,6 +68,8 @@ class Cart {
 
   int? id;
   int? userId;
+  String? price;
+  String? transferCharge;
   String? totalPrice;
   int? quantityInCart;
   List<CartItem>? cartItems;
@@ -73,6 +77,8 @@ class Cart {
   factory Cart.fromJson(Map<String, dynamic> json) => Cart(
         id: json["id"],
         userId: json["user_id"],
+        price: json["price"],
+        transferCharge: json["transfer_charge"],
         totalPrice: json["total_price"],
         quantityInCart: json["quantity_in_cart"],
         cartItems: List<CartItem>.from(
@@ -82,6 +88,8 @@ class Cart {
   Map<String, dynamic> toJson() => {
         "id": id,
         "user_id": userId,
+        "price": price,
+        "transfer_charge": transferCharge,
         "total_price": totalPrice,
         "quantity_in_cart": quantityInCart,
         "cart_items": List<dynamic>.from(cartItems!.map((x) => x.toJson())),
@@ -137,6 +145,7 @@ class ParentDetail {
     this.isInMyCartQuantity,
     this.isFavourite,
     this.quantityInCl,
+    this.quantityInCart,
     this.status,
   });
 
@@ -151,6 +160,7 @@ class ParentDetail {
   int? isInMyCartQuantity;
   bool? isFavourite;
   int? quantityInCl;
+  int? quantityInCart;
   String? status;
 
   factory ParentDetail.fromJson(Map<String, dynamic> json) => ParentDetail(
@@ -166,6 +176,7 @@ class ParentDetail {
         isFavourite: json["is_favourite"],
         quantityInCl:
             json["quantity_in_cl"] == null ? null : json["quantity_in_cl"],
+        quantityInCart: json["quantity_in_cart"],
         status: json["status"] == null ? null : json["status"],
       );
 
@@ -181,6 +192,7 @@ class ParentDetail {
         "is_in_my_cart_quantity": isInMyCartQuantity,
         "is_favourite": isFavourite,
         "quantity_in_cl": quantityInCl == null ? null : quantityInCl,
+        "quantity_in_cart": quantityInCart,
         "status": status == null ? null : status,
       };
 }
