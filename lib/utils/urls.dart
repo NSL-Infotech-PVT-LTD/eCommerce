@@ -1,5 +1,6 @@
 class Urls {
-  static String baseUrl = "https://dev.netscapelabs.com/funfy/public/api/";
+  // static String baseUrl = "https://dev.netscapelabs.com/funfy/public/api/";
+  static String baseUrl = "https://app.funfyapp.com/api/";
 
   static String introUrl = baseUrl + "getWalkthrough";
   static String siginUrl = baseUrl + "customer/login";
@@ -55,4 +56,7 @@ class Urls {
   static String addressListUrl = baseUrl + "customer/address/list";
   static String addressDeleteUrl = baseUrl + "customer/address/delete";
   static String logoutUrl = baseUrl + "logout";
+  static String fiestasfilterUrl = baseUrl + "customer/fiesta/filters";
+  static String termsandCondition = baseUrl + "config/terms_and_conditions";
+  static String privacyPolUrl = baseUrl + "config/privacy_policy";
 }

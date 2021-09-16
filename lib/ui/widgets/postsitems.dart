@@ -4,7 +4,7 @@ import 'package:funfy/components/navigation.dart';
 import 'package:funfy/components/shortPrices.dart';
 import 'package:funfy/models/fiestasmodel.dart';
 import 'package:funfy/models/preFiestasModel.dart';
-import 'package:funfy/ui/screens/bookNowBeta.dart';
+import 'package:funfy/ui/screens/fiestasBook.dart';
 import 'package:funfy/ui/screens/preFistaOrderMix.dart';
 import 'package:funfy/ui/widgets/rating.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
@@ -29,7 +29,8 @@ Widget fiestasItem({context, Datum? postModeldata}) {
 
   String month = DateFormat('MMM').format(date);
 
-  String price = k_m_b_generator(int.parse("${postModeldata?.ticketPrice}"));
+  String price =
+      k_m_b_generator(int.parse("${postModeldata?.ticketPriceNormal}"));
 
   double rating = 0.0;
 
@@ -48,7 +49,7 @@ Widget fiestasItem({context, Datum? postModeldata}) {
   return InkWell(
     onTap: () {
       if (available != true) {
-        navigatorPushFun(context, BookNowBeta(fiestasID: postModeldata?.id));
+        navigatorPushFun(context, FiestasBook(fiestasID: postModeldata?.id));
       }
     },
     child: Stack(
@@ -60,7 +61,7 @@ Widget fiestasItem({context, Datum? postModeldata}) {
           decoration: BoxDecoration(
               image: DecorationImage(
                   image: NetworkImage(
-                    "${postModeldata?.clubDetail?.image}",
+                    "${postModeldata?.fiestaImages![0].image}",
                   ),
                   fit: BoxFit.cover)),
           child: Column(
@@ -197,7 +198,7 @@ Widget fiestasItem({context, Datum? postModeldata}) {
                           onTap: () {
                             if (available != true) {
                               navigatorPushFun(context,
-                                  BookNowBeta(fiestasID: postModeldata?.id));
+                                  FiestasBook(fiestasID: postModeldata?.id));
                             }
                           },
                           child: roundedBoxR(
@@ -311,7 +312,7 @@ Widget preFiestasItem({context, ProductInfo? prefiestasdata}) {
                                       fontWeight: FontWeight.w600),
                                 ),
                                 Text(
-                                  "${prefiestasdata?.price?.substring(0, 2) ?? 29}",
+                                  "${prefiestasdata?.price != null && prefiestasdata?.price != '' ? int.parse('${prefiestasdata?.price}') > 2 ? prefiestasdata?.price?.substring(0, 2) : prefiestasdata?.price : 29}",
                                   // overflow: TextOverflow.visible,
                                   style: TextStyle(
                                       fontSize: size.width * 0.06,

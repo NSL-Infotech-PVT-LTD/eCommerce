@@ -1,9 +1,11 @@
 import 'dart:convert';
 
+import 'package:funfy/apis/signinApi.dart';
 import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/models/favourite/fiestasFavouriteModel.dart';
 import 'package:funfy/models/favourite/preFiestasFavModel.dart';
 import 'package:funfy/models/fiestasmodel.dart';
+import 'package:funfy/models/filterModel.dart';
 import 'package:funfy/models/notificationListModel.dart';
 import 'package:funfy/models/preFiestasModel.dart';
 import 'package:funfy/models/prefiestasDetailModel.dart';
@@ -12,41 +14,76 @@ import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/urls.dart';
 import 'package:http/http.dart' as http;
 
-Future<FiestasModel?> fiestasPostGet({String? type, String? dateFilter}) async {
+Future<FiestasModel?> fiestasPostGet(
+    {context,
+    String? type,
+    String? dateFilter,
+    filterDataF,
+    String? pageCount,
+    String? limitCount}) async {
+  print("here is date filter");
+
+  print("$dateFilter");
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
     //  'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   var body = {
-    type == null ? "" : "type": "$type",
-    dateFilter == null || dateFilter == "" ? "" : "filter": "$dateFilter"
+    // type == null ? "" :
+
+    "type": "${type ?? ''}",
+    // dateFilter == null || dateFilter == "" ? "" :
+    "date": "${dateFilter ?? ''}",
+    "local": "${filterDataF['local']}",
+    "environment": "${filterDataF['environment']}",
+    "schedule": "${filterDataF['schedule']}",
+    "music": "${filterDataF['music']}",
+    "clothing": "${filterDataF['clothing']}",
+    "ageGroup": "${filterDataF['ageGroup']}",
+    "limit": "${limitCount ?? ''}",
+    "sort_by": "desc",
+    'page': "${pageCount ?? ''}"
   };
 
-  // print("here is body : $body");
-
-  // print("Token" + "${UserData.userToken}");
   var res = await http.post(Uri.parse(Urls.fiestasPostUrl),
       body: body, headers: headers);
 
-  // print(res.body);
+  print(res.body);
+
+  if (res.statusCode == 401) {
+    userSessionExpired(context);
+  }
 
   if (res.statusCode == 200) {
-    return fiestasModelFromJson(res.body);
+    try {
+      // print("here is data");
+      // print(res.body);
+      return fiestasModelFromJson(res.body);
+    } catch (e) {
+      print("here is filter error........$e");
+    }
   } else if (res.statusCode == 422) {
     print("ERRRO IN THE API in fiestas");
   }
 }
 
-Future<PrefiestasModel?> prefiestasPostGet() async {
+Future<PrefiestasModel?> prefiestasPostGet(
+    {context, String? pageCount, String? limitCount}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
     //  'X-localization': '${Constants.prefs?.getString("language")}'
   };
-  var res =
-      await http.post(Uri.parse(Urls.preFiestasPostsUrl), headers: headers);
+
+  var body = {"limit": "${limitCount ?? ''}", "page": "${pageCount ?? ''}"};
+  var res = await http.post(Uri.parse(Urls.preFiestasPostsUrl),
+      body: body, headers: headers);
 
   // print(res.body);
+
+  if (res.statusCode == 401) {
+    userSessionExpired(context);
+  }
 
   if (res.statusCode == 200) {
     return prefiestasModelFromJson(res.body);
@@ -194,7 +231,7 @@ Future<String?> helpApi() async {
   };
 
   var res = await http.get(
-    Uri.parse(Urls.helpUrl),
+    Uri.parse(Urls.termsandconditionsUrl),
   );
 
   // print(res.body);
@@ -210,6 +247,28 @@ Future<String?> helpApi() async {
   }
 }
 
+Future<String?> privacypol() async {
+  var headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+    //  'X-localization': '${Constants.prefs?.getString("language")}'
+  };
+
+  var res = await http.get(
+    Uri.parse(Urls.privacyPolUrl),
+  );
+
+  // print(res.body);
+
+  var response = jsonDecode(res.body);
+
+  if (res.statusCode == 200) {
+    return response["data"]["config"];
+  } else {
+    print(res.body);
+
+    return "false";
+  }
+}
 // about us Api
 
 Future<String?> aboutApi() async {
@@ -269,7 +328,9 @@ Future<bool?> notificationOffApi({int? notificationNum}) async {
 
 // notification List api
 
-Future<NotificationListModel?> notificatiListApi({int? notificationNum}) async {
+// NotificationListModel?
+
+Future notificatiListApi({int? notificationNum}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
     //  'X-localization': '${Constants.prefs?.getString("language")}'
@@ -281,10 +342,37 @@ Future<NotificationListModel?> notificatiListApi({int? notificationNum}) async {
       ),
       headers: headers);
 
-  print(res.body);
+  // print(res.body);
+
+  var jsonData = json.decode(res.body);
 
   if (res.statusCode == 200) {
-    return notificationListModelFromJson(res.body);
+    return jsonData;
+
+    // return notificationListModelFromJson(res.body);
+  } else {
+    print(res.body);
+  }
+}
+
+//fiestas filter List api
+
+Future<FliterListModel?> filterList() async {
+  var headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+    // 'X-localization': '${Constants.prefs?.getString("language")}'
+  };
+
+  var res = await http.get(
+      Uri.parse(
+        Urls.fiestasfilterUrl,
+      ),
+      headers: headers);
+
+  // print(res.body);
+
+  if (res.statusCode == 200) {
+    return fliterListModelFromJson(res.body);
   } else {
     print(res.body);
   }

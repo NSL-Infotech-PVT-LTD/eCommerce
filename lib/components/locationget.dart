@@ -34,6 +34,9 @@ Future<String> determinePosition() async {
       await placemarkFromCoordinates(position.latitude, position.longitude);
   var placemark = placemarks[0];
 
+  Constants.prefs?.setString("lat", "${position.latitude}");
+  Constants.prefs?.setString("lng", "${position.longitude}");
+
   String address =
       "${placemark.locality},${placemark.administrativeArea}, ${placemark.country}";
 
@@ -41,7 +44,7 @@ Future<String> determinePosition() async {
 
   // print(placemark);
 
-  Constants.prefs?.setString("addres", address);
+  // Constants.prefs?.setString("addres", address);
 
   return address;
 }

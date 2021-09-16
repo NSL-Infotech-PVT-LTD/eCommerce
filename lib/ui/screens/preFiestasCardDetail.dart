@@ -20,6 +20,7 @@ import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:slide_to_confirm/slide_to_confirm.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 
 class PrefiestasCardDetail extends StatefulWidget {
@@ -37,7 +38,7 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
   var _card = new PaymentCard();
   var _formKey = new GlobalKey<FormState>();
   var _autoValidateMode = AutovalidateMode.disabled;
-  CardListModel? cardList;
+  CardListModel? cardListP;
 
   bool _loading = false;
 
@@ -86,12 +87,9 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
         });
         await getPrefiestasCart().then((res) {
           setState(() {
-            _loading = false;
-          });
-          setState(() {
             UserData.myCartModel = res;
 
-            print(res?.toJson());
+            // print(res?.toJson());
           });
         });
       } catch (e) {
@@ -99,7 +97,7 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
           _loading = false;
           UserData.myCartModel = null;
         });
-        print("error in my cart $UserData.myCartModel");
+
         print(e);
       }
     }
@@ -252,18 +250,12 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
       getCardList().then((value) {
         setState(() {
           _loading = false;
+          cardListP = value;
 
-          cardList = value;
-
-          if (value != null) {
+          if (value != null && value.data?.data?.length != 0) {
             cardFormShow = false;
           }
-
-          // cardId = cardList?.data?.data?.id!;
         });
-
-        print("here is value");
-        print(value?.toJson());
       });
     } catch (e) {
       setState(() {
@@ -277,9 +269,9 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
   @override
   void initState() {
     // get card list
+    getMyCart();
 
     getCardListApi();
-    getMyCart();
 
     StripePayment.setOptions(StripeOptions(
         publishableKey: Strings.publishKey,
@@ -310,6 +302,7 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
   // booking api call
 
   prefiestasBookingApi({String? cardid}) async {
+    print("Here is Address - ${Constants.prefs?.getString("addressId")}");
     setState(() {
       payLoading = true;
       swipebuttonShowBool = false;
@@ -321,7 +314,7 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
       } else {
         await makeOrderApi(
           cartId: UserData.myCartModel?.data?.cart?.id.toString(),
-          addressId: "2",
+          addressId: "${Constants.prefs?.getString("addressId")}",
           cardID: "$cardid",
         ).then((res) {
           print(UserData.myCartModel?.data?.cart?.id.toString());
@@ -329,9 +322,6 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
           setState(() {
             payLoading = false;
           });
-          print("here is $res");
-
-          // print("here is ${res?.toJson()}");
 
           if (res["status"] == true &&
               (res["code"] == 201 || res["code"] == 200)) {
@@ -350,7 +340,8 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
             Dialogs.simpleOkAlertDialog(
                 context: context,
                 title: "${getTranslated(context, "alert!")}",
-                content: "${getTranslated(context, "yourPaymentisfailed")}",
+                content: "${getTranslated(context, 'paymentisFailed')}",
+                // content: "${res['error']}",
                 func: () {
                   navigatePopFun(context);
                 });
@@ -532,7 +523,7 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
                                 child:
                                     Center(child: CircularProgressIndicator()),
                               )
-                            : cardList != null && cardFormShow == false
+                            : cardListP != null && cardFormShow == false
                                 ? Column(
                                     children: [
                                       Column(
@@ -540,42 +531,66 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
                                           for (int i = 0;
                                               i <
                                                   int.parse(
-                                                      "${cardList?.data?.data?.length}");
+                                                      "${cardListP?.data?.data?.length}");
                                               i++)
                                             ticket(
                                                 context: context,
-                                                model: cardList?.data?.data![i],
+                                                model:
+                                                    cardListP?.data?.data![i],
                                                 index: i)
                                         ],
                                       ),
                                       groupValue != -1 &&
                                               swipebuttonShowBool &&
                                               int.parse(
-                                                      "${cardList?.data?.data?.length}") >
+                                                      "${cardListP?.data?.data?.length}") >
                                                   0
-                                          ? SwipeButton(
-                                              thumb: SvgPicture.asset(
-                                                Images.swipeButtonSvg,
-                                                fit: BoxFit.cover,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                              activeTrackColor:
+                                          ? ConfirmationSlider(
+                                              backgroundColor:
                                                   AppColors.siginbackgrond,
                                               height: size.height * 0.07,
-                                              child: Text(
+                                              backgroundColorEnd:
+                                                  Colors.red.shade700,
+                                              text:
                                                   "${getTranslated(context, "swipetopay")}",
-                                                  style: TextStyle(
-                                                      color: AppColors.white,
-                                                      fontFamily:
-                                                          Fonts.dmSansBold,
-                                                      fontSize:
-                                                          size.width * 0.05)),
-                                              onSwipeEnd: () {
+                                              backgroundShape:
+                                                  BorderRadius.circular(8),
+                                              foregroundShape:
+                                                  BorderRadius.circular(8),
+                                              foregroundColor:
+                                                  HexColor('#9f150d'),
+                                              textStyle: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold),
+                                              onConfirmation: () {
                                                 prefiestasBookingApi(
                                                     cardid: cardId);
-                                              },
-                                            )
+                                              })
+
+                                          // SwipeButton(
+                                          //     thumb: SvgPicture.asset(
+                                          //       Images.swipeButtonSvg,
+                                          //       fit: BoxFit.cover,
+                                          //     ),
+                                          //     borderRadius:
+                                          //         BorderRadius.circular(8),
+                                          //     activeTrackColor:
+                                          //         AppColors.siginbackgrond,
+                                          //     height: size.height * 0.07,
+                                          //     child: Text(
+                                          //         "${getTranslated(context, "swipetopay")}",
+                                          //         style: TextStyle(
+                                          //             color: AppColors.white,
+                                          //             fontFamily:
+                                          //                 Fonts.dmSansBold,
+                                          //             fontSize:
+                                          //                 size.width * 0.05)),
+                                          //     onSwipeEnd: () {
+                                          //       prefiestasBookingApi(
+                                          //           cardid: cardId);
+                                          //     },
+                                          //   )
+
                                           : payLoading &&
                                                   swipebuttonShowBool == false
                                               ? roundedBoxR(
@@ -622,67 +637,6 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
                                               : SizedBox()
                                     ],
                                   )
-
-                                // Column(
-                                //     children: [
-                                //       Container(
-                                //         height: size.height * 0.2,
-                                //         child: Expanded(
-                                //           child: ListView.builder(
-                                //               itemCount: cardList
-                                //                       ?.data?.data?.length ??
-                                //                   0,
-                                //               itemBuilder: (context, index) {
-                                //                 return ticket(
-                                //                     context: context,
-                                //                     model: cardList
-                                //                         ?.data?.data![index]);
-                                //               }),
-                                //         ),
-                                //       ),
-
-                                //       SizedBox(
-                                //         height: size.height * 0.03,
-                                //       ),
-
-                                //       // swipe to pay with card list
-
-                                //       groupValue != -1
-                                //           ? InkWell(
-                                //               onTap: () {
-                                //                 fiestasBookingApi(
-                                //                     cardid: cardId);
-                                //               },
-                                //               child: roundedBoxR(
-                                //                 radius: size.width * 0.02,
-                                //                 width: size.width,
-                                //                 height: size.height * 0.07,
-                                //                 backgroundColor:
-                                //                     AppColors.siginbackgrond,
-                                //                 child: Center(
-                                //                   child: _loading
-                                //                       ? CircularProgressIndicator(
-                                //                           color:
-                                //                               AppColors.white)
-                                //                       : Text(
-                                //                           "${getTranslated(context, "swipetopay")}",
-                                //                           style: TextStyle(
-                                //                               fontSize:
-                                //                                   size.width *
-                                //                                       0.045,
-                                //                               fontFamily: Fonts
-                                //                                   .dmSansMedium,
-                                //                               color: AppColors
-                                //                                   .white),
-                                //                         ),
-                                //                 ),
-                                //               ),
-                                //             )
-                                //           : SizedBox()
-                                //     ],
-                                //   )
-
-                                // card form
                                 : Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -885,7 +839,8 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
                                       ),
 
                                       // view card button
-                                      cardList != null
+                                      cardListP != null &&
+                                              cardListP?.data?.data?.length != 0
                                           ? InkWell(
                                               onTap: () {
                                                 setState(() {
@@ -922,6 +877,9 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
                     ),
                   ),
                 ),
+                // SizedBox(
+                //   height: size.height * 0.01,
+                // )
               ],
             ),
           ),
@@ -962,7 +920,7 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
       keyboardType: TextInputType.number,
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
-        new LengthLimitingTextInputFormatter(19),
+        new LengthLimitingTextInputFormatter(16),
         new CardNumberInputFormatter()
       ],
       onSaved: (String? value) {

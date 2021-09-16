@@ -7,6 +7,7 @@ import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/components/dialogs.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/components/sizeclass/SizeConfig.dart';
+import 'package:funfy/components/swipeButtons.dart';
 import 'package:funfy/models/cardListmodel.dart';
 import 'package:funfy/ui/screens/bookingSuccess.dart';
 import 'package:funfy/ui/screens/stripe/input_formatters.dart';
@@ -19,6 +20,7 @@ import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:slide_to_confirm/slide_to_confirm.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 
 class CartDetail extends StatefulWidget {
@@ -43,6 +45,7 @@ class _CartDetailState extends State<CartDetail> {
   CardListModel? cardList;
 
   bool _loading = false;
+  bool _swipeTrue = false;
 
   int? groupValue = -1;
   int? initvalue = 0;
@@ -149,8 +152,8 @@ class _CartDetailState extends State<CartDetail> {
     int tot = 0;
 
     for (var i in UserData.ticketcartMap.values) {
-      int price =
-          int.parse("${i['ticketCount']}") * int.parse("${i['ticketPrice']}");
+      int price = int.parse("${i['ticketPrice']}");
+      // int.parse("${i['ticketCount']}") * int.parse("${i['ticketPrice']}");
 
       print(i);
 
@@ -179,12 +182,6 @@ class _CartDetailState extends State<CartDetail> {
           addCardLoading = false;
 
           getCardListApi();
-
-          // cardId = value["data"]["data"]["id"];
-
-          // cardFormShow = false;
-
-          // fiestasBookingApi(cardid: cardId);
         });
 
         print("here is value");
@@ -247,15 +244,10 @@ class _CartDetailState extends State<CartDetail> {
 
           cardList = value;
 
-          if (value != null) {
+          if (value != null && value.data?.data?.length != 0) {
             cardFormShow = false;
           }
-
-          // cardId = cardList?.data?.data?.id!;
         });
-
-        // print("here is value");
-        // print(value?.toJson());
       });
     } catch (e) {
       setState(() {
@@ -322,8 +314,6 @@ class _CartDetailState extends State<CartDetail> {
             payLoading = false;
           });
 
-          // print("here is ${res?.toJson()}");
-
           if (res["status"] == true && res["code"] == 201) {
             setState(() {
               UserData.ticketcartMap.clear();
@@ -344,7 +334,8 @@ class _CartDetailState extends State<CartDetail> {
             Dialogs.simpleOkAlertDialog(
                 context: context,
                 title: "${getTranslated(context, "alert!")}",
-                content: "${getTranslated(context, "yourPaymentisfailed")}",
+                content: "${getTranslated(context, 'paymentisFailed')}",
+                // content: "${res['error']}",
                 func: () {
                   navigatePopFun(context);
                 });
@@ -525,29 +516,58 @@ class _CartDetailState extends State<CartDetail> {
                                 int.parse(
                                     "${cardList?.data?.data?.length}") >
                                     0
-                                ? SwipeButton(
-                              thumb: SvgPicture.asset(
-                                Images.swipeButtonSvg,
-                                fit: BoxFit.cover,
-                              ),
-                              borderRadius:
-                              BorderRadius.circular(8),
-                              activeTrackColor:
-                              AppColors.siginbackgrond,
-                              height: size.height * 0.07,
-                              child: Text(
-                                  "${getTranslated(context, "swipetopay")}",
-                                  style: TextStyle(
-                                      color: AppColors.white,
-                                      fontFamily:
-                                      Fonts.dmSansBold,
-                                      fontSize:
-                                      size.width * 0.05)),
-                              onSwipeEnd: () {
-                                fiestasBookingApi(
-                                    cardid: cardId);
-                              },
-                            )
+                                ?
+
+                            // swipe to pay
+
+                            ConfirmationSlider(
+                                backgroundColor:
+                                AppColors.siginbackgrond,
+                                height: size.height * 0.07,
+                                backgroundColorEnd:
+                                Colors.red.shade700,
+                                text:
+                                "${getTranslated(context, "swipetopay")}",
+                                backgroundShape:
+                                BorderRadius.circular(8),
+                                foregroundShape:
+                                BorderRadius.circular(8),
+                                foregroundColor:
+                                HexColor('#9f150d'),
+                                textStyle: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                                onConfirmation: () {
+                                  print("Swiped.......");
+                                  fiestasBookingApi(
+                                      cardid: cardId);
+                                })
+
+                            //  SwipeButton(
+                            //     thumb: SvgPicture.asset(
+                            //       Images.swipeButtonSvg,
+                            //       fit: BoxFit.cover,
+                            //     ),
+                            //     borderRadius:
+                            //         BorderRadius.circular(8),
+                            //     activeTrackColor:
+                            //         AppColors.siginbackgrond,
+                            //     height: size.height * 0.07,
+                            //     elevation: 10,
+                            //     child: Text(
+                            //         "${getTranslated(context, "swipetopay")}",
+                            //         style: TextStyle(
+                            //             color: AppColors.white,
+                            //             fontFamily:
+                            //                 Fonts.dmSansBold,
+                            //             fontSize:
+                            //                 size.width * 0.05)),
+                            //     onSwipeEnd: () {
+                            //       print("Swipe.........");
+                            //       fiestasBookingApi(
+                            //           cardid: cardId);
+                            //     },
+                            //   )
                                 : payLoading &&
                                 swipebuttonShowBool == false
                                 ? roundedBoxR(
@@ -594,65 +614,6 @@ class _CartDetailState extends State<CartDetail> {
                                 : SizedBox()
                           ],
                         )
-
-                        // Column(
-                        //     children: [
-                        //       Container(
-                        //         height: size.height * 0.2,
-                        //         child: Expanded(
-                        //           child: ListView.builder(
-                        //               itemCount: cardList
-                        //                       ?.data?.data?.length ??
-                        //                   0,
-                        //               itemBuilder: (context, index) {
-                        //                 return ticket(
-                        //                     context: context,
-                        //                     model: cardList
-                        //                         ?.data?.data![index]);
-                        //               }),
-                        //         ),
-                        //       ),
-
-                        //       SizedBox(
-                        //         height: size.height * 0.03,
-                        //       ),
-
-                        //       // swipe to pay with card list
-
-                        //       groupValue != -1
-                        //           ? InkWell(
-                        //               onTap: () {
-                        //                 fiestasBookingApi(
-                        //                     cardid: cardId);
-                        //               },
-                        //               child: roundedBoxR(
-                        //                 radius: size.width * 0.02,
-                        //                 width: size.width,
-                        //                 height: size.height * 0.07,
-                        //                 backgroundColor:
-                        //                     AppColors.siginbackgrond,
-                        //                 child: Center(
-                        //                   child: _loading
-                        //                       ? CircularProgressIndicator(
-                        //                           color:
-                        //                               AppColors.white)
-                        //                       : Text(
-                        //                           "${getTranslated(context, "swipetopay")}",
-                        //                           style: TextStyle(
-                        //                               fontSize:
-                        //                                   size.width *
-                        //                                       0.045,
-                        //                               fontFamily: Fonts
-                        //                                   .dmSansMedium,
-                        //                               color: AppColors
-                        //                                   .white),
-                        //                         ),
-                        //                 ),
-                        //               ),
-                        //             )
-                        //           : SizedBox()
-                        //     ],
-                        //   )
 
                         // card form
                             : Column(
@@ -858,13 +819,13 @@ class _CartDetailState extends State<CartDetail> {
 
                             // view card button
 
-                            cardList != null
+                            cardList != null &&
+                                cardList?.data?.data?.length != 0
                                 ? InkWell(
                               onTap: () {
-                                print(cardList?.toJson());
-                                // setState(() {
-                                //   cardFormShow = false;
-                                // });
+                                setState(() {
+                                  cardFormShow = false;
+                                });
                               },
                               child: roundedBoxR(
                                 radius: size.width * 0.02,
@@ -936,7 +897,7 @@ class _CartDetailState extends State<CartDetail> {
       keyboardType: TextInputType.number,
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
-        new LengthLimitingTextInputFormatter(19),
+        new LengthLimitingTextInputFormatter(16),
         new CardNumberInputFormatter()
       ],
       onSaved: (String? value) {

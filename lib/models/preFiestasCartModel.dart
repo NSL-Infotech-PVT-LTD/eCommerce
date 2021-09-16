@@ -136,6 +136,7 @@ class ParentDetail {
     this.isInMyCart,
     this.isInMyCartQuantity,
     this.isFavourite,
+    this.quantityInCl,
     this.status,
   });
 
@@ -149,6 +150,7 @@ class ParentDetail {
   bool? isInMyCart;
   int? isInMyCartQuantity;
   bool? isFavourite;
+  int? quantityInCl;
   String? status;
 
   factory ParentDetail.fromJson(Map<String, dynamic> json) => ParentDetail(
@@ -162,6 +164,8 @@ class ParentDetail {
         isInMyCart: json["is_in_my_cart"],
         isInMyCartQuantity: json["is_in_my_cart_quantity"],
         isFavourite: json["is_favourite"],
+        quantityInCl:
+            json["quantity_in_cl"] == null ? null : json["quantity_in_cl"],
         status: json["status"] == null ? null : json["status"],
       );
 
@@ -176,6 +180,7 @@ class ParentDetail {
         "is_in_my_cart": isInMyCart,
         "is_in_my_cart_quantity": isInMyCartQuantity,
         "is_favourite": isFavourite,
+        "quantity_in_cl": quantityInCl == null ? null : quantityInCl,
         "status": status == null ? null : status,
       };
 }

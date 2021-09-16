@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <g id="Music" transform="translate(-216 -555)">
+    <rect id="Rectangle_218" data-name="Rectangle 218" width="32" height="32" rx="16" transform="translate(216 555)" fill="rgba(255,239,187,0.09)"/>
+    <g id="Layer_2" data-name="Layer 2" transform="translate(223 562.007)">
+      <path id="Path_58089" data-name="Path 58089" d="M15.841,2.491A.494.494,0,0,0,15.288,2l-7.909.989a.494.494,0,0,0-.435.494v8.265a3.421,3.421,0,0,0-1.977-.6C3.33,11.142,2,12.194,2,13.49s1.33,2.348,2.966,2.348,2.966-1.053,2.966-2.348v-7.1l6.921-.865V9.767a3.421,3.421,0,0,0-1.977-.6c-1.636,0-2.966,1.053-2.966,2.348s1.33,2.348,2.966,2.348,2.966-1.053,2.966-2.348V2.491Z" transform="translate(0 0)" fill="#ffefbb"/>
+    </g>
+  </g>
+</svg>

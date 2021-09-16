@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/components/dialogs.dart';
+import 'package:funfy/components/navigation.dart';
 import 'package:funfy/models/facebookSigninModel.dart';
 import 'package:funfy/models/googleSigninModel.dart';
 import 'package:funfy/models/userModel.dart';
@@ -24,7 +25,7 @@ GoogleSignIn _googleSignIn = GoogleSignIn(
 );
 
 Future<UserModel?> signinUser(
-    {String? email, String? password, String? devicetype}) async {
+    {String? email, String? password, String? devicetype, context}) async {
   String _token = "test";
   var body = {
     "email": email,
@@ -36,15 +37,26 @@ Future<UserModel?> signinUser(
   print("here is device type : $devicetype");
   var res = await http.post(Uri.parse(Urls.siginUrl), body: body);
 
+  var data = json.decode(res.body);
+
   if (res.statusCode == 200) {
     return userModelFromJson(res.body);
+  } else if (res.statusCode == 422) {
+    Dialogs.simpleOkAlertDialog(
+        context: context,
+        title: "${getTranslated(context, 'alert!')}",
+        content: "${data['error']}",
+        func: () {
+          navigatePopFun(context);
+        });
   } else {
     print(res.body);
   }
 }
 
 Future<FacebookSigninModel?> facebookLogin(
-    {String? name,
+    {context,
+    String? name,
     String? email,
     String? fbId,
     String? deviceType,
@@ -71,13 +83,22 @@ Future<FacebookSigninModel?> facebookLogin(
     return facebookSigninModelFromJson(res.body);
   } else if (res.statusCode == 200) {
     return facebookSigninModelFromJson(res.body);
+  } else if (res.statusCode == 422) {
+    Dialogs.simpleOkAlertDialog(
+        context: context,
+        title: "${getTranslated(context, 'alert!')}",
+        content: "${jsondata['error']}",
+        func: () {
+          navigatePopFun(context);
+        });
   } else {
     print("Error in Facebook signin Api");
   }
 }
 
 Future<GoogleSigninModel?> googleLogin(
-    {String? name,
+    {context,
+    String? name,
     String? email,
     String? googleid,
     String? deviceType,
@@ -103,6 +124,14 @@ Future<GoogleSigninModel?> googleLogin(
     return googleSigninModelFromJson(res.body);
   } else if (res.statusCode == 200) {
     return googleSigninModelFromJson(res.body);
+  } else if (res.statusCode == 422) {
+    Dialogs.simpleOkAlertDialog(
+        context: context,
+        title: "${getTranslated(context, 'alert!')}",
+        content: "${jsondata['error']}",
+        func: () {
+          navigatePopFun(context);
+        });
   } else {
     print("Error in Google signin Api");
   }
@@ -223,4 +252,44 @@ Future<bool?> logoutApi() async {
   } else {
     print(jsondata);
   }
+}
+
+// 401
+
+userSessionExpired(context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: new Text("${getTranslated(context, 'alert!')}"),
+        content: new Text("${getTranslated(context, 'theSessionhasexpired')}"),
+      );
+    },
+  );
+
+  Future.delayed(Duration(seconds: 3), () {
+    // token
+    Constants.prefs?.setString("token", "");
+    // name name
+    Constants.prefs?.setString("name", "");
+    // name email
+    Constants.prefs?.setString("email", "");
+    // lacation
+    Constants.prefs?.setString("addres", "");
+
+    //  dob
+    Constants.prefs?.setString("dob", "");
+
+    //  gender
+    Constants.prefs?.setString("gender", "");
+
+    //  social
+    Constants.prefs?.setString("social", "false");
+
+    // profileImage
+    Constants.prefs?.setString("profileImage", "");
+
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => Signin()), (route) => false);
+  });
 }

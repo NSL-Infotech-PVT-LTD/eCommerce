@@ -41,6 +41,9 @@ class Datum {
     this.fiestaId,
     this.totalPrice,
     this.bookingStatus,
+    this.totalTickets,
+    this.grandTotal,
+    this.readyForReview,
     this.fiestaDetail,
   });
 
@@ -48,6 +51,9 @@ class Datum {
   int? fiestaId;
   String? totalPrice;
   String? bookingStatus;
+  int? totalTickets;
+  int? grandTotal;
+  bool? readyForReview;
   FiestaDetail? fiestaDetail;
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
@@ -55,6 +61,9 @@ class Datum {
         fiestaId: json["fiesta_id"],
         totalPrice: json["total_price"],
         bookingStatus: json["booking_status"],
+        totalTickets: json["total_tickets"],
+        grandTotal: json["grand_total"],
+        readyForReview: json["ready_for_review"],
         fiestaDetail: FiestaDetail.fromJson(json["fiesta_detail"]),
       );
 
@@ -63,6 +72,9 @@ class Datum {
         "fiesta_id": fiestaId,
         "total_price": totalPrice,
         "booking_status": bookingStatus,
+        "total_tickets": totalTickets,
+        "grand_total": grandTotal,
+        "ready_for_review": readyForReview,
         "fiesta_detail": fiestaDetail?.toJson(),
       };
 }
@@ -73,19 +85,22 @@ class FiestaDetail {
     this.name,
     this.clubId,
     this.timestamp,
-    this.ticketPrice,
+    this.ticketPriceNormal,
     this.ticketPriceStandard,
     this.ticketPriceVip,
     this.totalMembers,
-    this.dressCode,
-    this.partyMusic,
-    this.distanceKm,
-    this.distanceMiles,
-    this.isFavourite,
+    this.filterLocalId,
+    this.clubRating,
+    this.leftNormalTicket,
     this.leftStandardTicket,
     this.leftVipTicket,
-    this.leftNormalTicket,
-    this.clubRating,
+    this.isFavourite,
+    this.distanceMiles,
+    this.filterLocal,
+    this.filterEnvironment,
+    this.filterMusic,
+    this.filterClothing,
+    this.filterSchedule,
     this.clubDetail,
   });
 
@@ -93,19 +108,22 @@ class FiestaDetail {
   String? name;
   int? clubId;
   DateTime? timestamp;
-  String? ticketPrice;
+  String? ticketPriceNormal;
   String? ticketPriceStandard;
   String? ticketPriceVip;
   String? totalMembers;
-  String? dressCode;
-  String? partyMusic;
-  String? distanceKm;
-  String? distanceMiles;
-  bool? isFavourite;
+  int? filterLocalId;
+  dynamic clubRating;
+  var leftNormalTicket;
   var leftStandardTicket;
   var leftVipTicket;
-  var leftNormalTicket;
-  dynamic clubRating;
+  bool? isFavourite;
+  String? distanceMiles;
+  FilterLocal? filterLocal;
+  dynamic filterEnvironment;
+  dynamic filterMusic;
+  dynamic filterClothing;
+  dynamic filterSchedule;
   ClubDetail? clubDetail;
 
   factory FiestaDetail.fromJson(Map<String, dynamic> json) => FiestaDetail(
@@ -113,19 +131,22 @@ class FiestaDetail {
         name: json["name"],
         clubId: json["club_id"],
         timestamp: DateTime.parse(json["timestamp"]),
-        ticketPrice: json["ticket_price"],
+        ticketPriceNormal: json["ticket_price_normal"],
         ticketPriceStandard: json["ticket_price_standard"],
         ticketPriceVip: json["ticket_price_vip"],
         totalMembers: json["total_members"],
-        dressCode: json["dress_code"],
-        partyMusic: json["party_music"],
-        distanceKm: json["distance_km"],
-        distanceMiles: json["distance_miles"],
-        isFavourite: json["is_favourite"],
+        filterLocalId: json["filter_local_id"],
+        clubRating: json["club_rating"],
+        leftNormalTicket: json["left_normal_ticket"],
         leftStandardTicket: json["left_standard_ticket"],
         leftVipTicket: json["left_vip_ticket"],
-        leftNormalTicket: json["left_normal_ticket"],
-        clubRating: json["club_rating"],
+        isFavourite: json["is_favourite"],
+        distanceMiles: json["distance_miles"],
+        filterLocal: FilterLocal.fromJson(json["filter_local"]),
+        filterEnvironment: json["filter_environment"],
+        filterMusic: json["filter_music"],
+        filterClothing: json["filter_clothing"],
+        filterSchedule: json["filter_schedule"],
         clubDetail: ClubDetail.fromJson(json["club_detail"]),
       );
 
@@ -134,19 +155,22 @@ class FiestaDetail {
         "name": name,
         "club_id": clubId,
         "timestamp": timestamp?.toIso8601String(),
-        "ticket_price": ticketPrice,
+        "ticket_price_normal": ticketPriceNormal,
         "ticket_price_standard": ticketPriceStandard,
         "ticket_price_vip": ticketPriceVip,
         "total_members": totalMembers,
-        "dress_code": dressCode,
-        "party_music": partyMusic,
-        "distance_km": distanceKm,
-        "distance_miles": distanceMiles,
-        "is_favourite": isFavourite,
+        "filter_local_id": filterLocalId,
+        "club_rating": clubRating,
+        "left_normal_ticket": leftNormalTicket,
         "left_standard_ticket": leftStandardTicket,
         "left_vip_ticket": leftVipTicket,
-        "left_normal_ticket": leftNormalTicket,
-        "club_rating": clubRating,
+        "is_favourite": isFavourite,
+        "distance_miles": distanceMiles,
+        "filter_local": filterLocal?.toJson(),
+        "filter_environment": filterEnvironment,
+        "filter_music": filterMusic,
+        "filter_clothing": filterClothing,
+        "filter_schedule": filterSchedule,
         "club_detail": clubDetail?.toJson(),
       };
 }
@@ -169,8 +193,8 @@ class ClubDetail {
   String? capacity;
   String? description;
   String? location;
-  dynamic latitude;
-  dynamic longitude;
+  String? latitude;
+  String? longitude;
 
   factory ClubDetail.fromJson(Map<String, dynamic> json) => ClubDetail(
         id: json["id"],
@@ -192,5 +216,25 @@ class ClubDetail {
         "location": location,
         "latitude": latitude,
         "longitude": longitude,
+      };
+}
+
+class FilterLocal {
+  FilterLocal({
+    this.name,
+    this.nameEs,
+  });
+
+  String? name;
+  String? nameEs;
+
+  factory FilterLocal.fromJson(Map<String, dynamic> json) => FilterLocal(
+        name: json["name"],
+        nameEs: json["name_es"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "name": name,
+        "name_es": nameEs,
       };
 }

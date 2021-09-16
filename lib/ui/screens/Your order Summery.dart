@@ -2,12 +2,10 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:funfy/apis/bookingApi.dart';
 import 'package:funfy/components/dialogs.dart';
-import 'package:funfy/components/navigation.dart';
 import 'package:funfy/components/sizeclass/SizeConfig.dart';
 import 'package:funfy/models/prefiestasOrderDetailModel.dart';
 import 'package:funfy/ui/screens/home.dart';
@@ -15,7 +13,6 @@ import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
-import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 import 'package:intl/intl.dart';
@@ -33,11 +30,8 @@ class YourOrderSum extends StatefulWidget {
 class _YourOrderSumState extends State<YourOrderSum> {
   bool ratting = false;
   double currentRating = 3.0;
-  PrefiestasOrderDetailModel? prefiestasOrderDetailModel =
-  PrefiestasOrderDetailModel();
+  PrefiestasOrderDetailModel? prefiestasOrderDetailModel;
   bool _loading = false;
-
-  double count = 0.0;
 
   String? deliverydate;
   String? deliveryTime;
@@ -56,42 +50,33 @@ class _YourOrderSumState extends State<YourOrderSum> {
       try {
         await prefiestasShowOrderDetail(orderId: widget.orderID.toString())
             .then((res) {
-          print("here is id ------ ${widget.orderID}");
+          print("data is here ");
+
+          // print("here is id ------ ${widget.orderID}");
+
           setState(() {
             _loading = false;
             prefiestasOrderDetailModel = res;
 
-            print("here is lis");
-
-            print(prefiestasOrderDetailModel?.data?.orderDetail![0].toJson());
-
             // Delivery date time
-            DateTime deliverydate1 = DateTime.parse(
-                "${prefiestasOrderDetailModel?.data?.orderDetail![0].date}");
+            // DateTime deliverydate1 = DateTime.parse(
+            //     "${prefiestasOrderDetailModel?.data?.orderDetail![0].date}");
 
-            var time = prefiestasOrderDetailModel?.data?.orderDetail![0].time;
+            // var time = prefiestasOrderDetailModel?.data?.orderDetail![0].time;
 
-            var time2 =
-            DateFormat.jm().format(DateFormat("hh:mm:ss").parse("$time"));
+            // var time2 =
+            //     DateFormat.jm().format(DateFormat("hh:mm:ss").parse("$time"));
 
-            var date2 = DateFormat('d MMMM').format(deliverydate1);
+            // var date2 = DateFormat('d MMMM').format(deliverydate1);
 
-            deliverydate = "$date2";
-            deliveryTime = "${getTranslated(context, "till")} $time2";
+            // deliverydate = "$date2";
+            // deliveryTime = "${getTranslated(context, "till")} $time2";
 
-            if (prefiestasOrderDetailModel
-                ?.data?.orderDetail![0].transferCharge !=
-                null) {
-              var transferCharger = prefiestasOrderDetailModel
-                  ?.data?.orderDetail![0].transferCharge;
-              var totPrice =
-                  prefiestasOrderDetailModel?.data?.orderDetail![0].totalPrice;
+            // grandTotal =
+            //     "${prefiestasOrderDetailModel?.data?.orderDetail![0].grandTotal}";
 
-              grandTotal = (transferCharger + totPrice).toString();
-            } else {
-              grandTotal =
-              "${prefiestasOrderDetailModel?.data?.orderDetail![0].totalPrice}";
-            }
+            print(
+                "here is status ${prefiestasOrderDetailModel?.data?.orderDetail![0].orderStatus}");
 
             if (prefiestasOrderDetailModel?.data?.orderDetail![0].orderStatus ==
                 "completed") {
@@ -103,7 +88,7 @@ class _YourOrderSumState extends State<YourOrderSum> {
         setState(() {
           _loading = false;
         });
-        print(e);
+        print("here is error- $e");
       }
     }
   }
@@ -117,8 +102,9 @@ class _YourOrderSumState extends State<YourOrderSum> {
 
     var data = prefiestasOrderDetailModel?.data?.orderDetail![0];
 
-    prefiestaRatingApi(orderId: "${data?.id}", rating: currentRating)
-        .then((value) {
+    int rat = currentRating.toInt();
+
+    prefiestaRatingApi(orderId: "${data?.id}", rating: rat).then((value) {
       if (value == false) {
       } else {
         setState(() {
@@ -136,6 +122,8 @@ class _YourOrderSumState extends State<YourOrderSum> {
   @override
   void initState() {
     super.initState();
+
+    print("data id : ${widget.orderID}");
 
     getPrefiestasorderItemData();
   }
@@ -244,11 +232,6 @@ class _YourOrderSumState extends State<YourOrderSum> {
     return WillPopScope(
       onWillPop: backCall,
       child: Scaffold(
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: () {},
-        //   child: Icon(Icons.add),
-        // ),
-
           backgroundColor: AppColors.homeBackgroundLite,
           appBar: AppBar(
             leading: IconButton(
@@ -360,7 +343,7 @@ class _YourOrderSumState extends State<YourOrderSum> {
                                         maxWidth: SizeConfig.screenWidth *
                                             0.68),
                                     child: Text(
-                                      "${prefiestasOrderDetailModel?.data?.parentDetail?.description}",
+                                      "${prefiestasOrderDetailModel?.data?.parentDetail?.description ?? getTranslated(context, "description")}",
                                       // "${getTranslated(context, "lorem")}",
                                       // Strings.lorem,
                                       maxLines: 2,
@@ -383,29 +366,6 @@ class _YourOrderSumState extends State<YourOrderSum> {
                                     ))
                               ],
                             ),
-
-                            // ListView.builder(
-                            //     itemCount: 3,
-                            //     itemBuilder: (context, index) {
-                            //       return Container(
-                            //         child: Column(
-                            //           children: [
-                            //             SizedBox(
-                            //               height: size.height * 0.03,
-                            //             ),
-                            //             sameItem3(
-                            //                 size: size,
-                            //                 topTile: "Alcohol",
-                            //                 title: "Ron Bucanero Anejo",
-                            //                 decription: "70 CL",
-                            //                 price: "25.88"),
-                            //           ],
-                            //         ),
-                            //       );
-                            //     }),
-
-                            // prefiestasOrderDetailModel?.data?.orderDetail![0].orderItem?.toList().forEach((element) { })
-
                             Column(
                               children: [
                                 for (OrderItem i
@@ -429,33 +389,6 @@ class _YourOrderSumState extends State<YourOrderSum> {
                                   )
                               ],
                             ),
-                            // SizedBox(
-                            //   height: size.height * 0.03,
-                            // ),
-                            // sameItem3(
-                            //     size: size,
-                            //     topTile: "Alcohol",
-                            //     title: "Ron Bucanero Anejo",
-                            //     decription: "70 CL",
-                            //     price: "25.88"),
-                            // SizedBox(
-                            //   height: size.height * 0.03,
-                            // ),
-                            // sameItem3(
-                            //     size: size,
-                            //     topTile: "Mix",
-                            //     title: "Ron Bucanero Anejo",
-                            //     decription: "70 CL",
-                            //     price: "25.88"),
-                            // SizedBox(
-                            //   height: size.height * 0.03,
-                            // ),
-                            // sameItem3(
-                            //     size: size,
-                            //     topTile: "Extras",
-                            //     title: "Ron Bucanero Anejo",
-                            //     decription: "70 CL",
-                            //     price: "25.88"),
                             SizedBox(
                               height: SizeConfig.screenHeight * 0.05,
                             ),
@@ -486,7 +419,7 @@ class _YourOrderSumState extends State<YourOrderSum> {
                                   ),
                                   Spacer(),
                                   Text(
-                                    "${Strings.euro} ${prefiestasOrderDetailModel?.data?.orderDetail?[0].transferCharge ?? 0.0}",
+                                    "${Strings.euro} ${double.parse('${prefiestasOrderDetailModel?.data?.orderDetail?[0].transferCharge ?? 0.0}').toStringAsFixed(2)}",
                                     style: TextStyle(
                                         color: AppColors.white,
                                         fontSize: size.width * 0.05,
@@ -512,7 +445,9 @@ class _YourOrderSumState extends State<YourOrderSum> {
                                   ),
                                   Spacer(),
                                   Text(
-                                    Strings.euro + " " + grandTotal,
+                                    Strings.euro +
+                                        " " +
+                                        "${prefiestasOrderDetailModel?.data?.orderDetail![0].grandTotal}",
                                     style: TextStyle(
                                         color: AppColors.white,
                                         fontSize: size.width * 0.065,
@@ -564,20 +499,22 @@ class _YourOrderSumState extends State<YourOrderSum> {
                                     SizeConfig.screenHeight * 0.02),
                                 Text(
                                   // "25 JUNE, Today",
+                                  "${prefiestasOrderDetailModel?.data?.orderDetail![0].orderStatus == 'completed' ? getTranslated(context, 'delivered') : getTranslated(context, 'pending')}"
+                                      .toUpperCase(),
 
-                                  "$deliverydate",
+                                  // "$deliverydate",
                                   style: TextStyle(
                                       color: AppColors.itemDescription,
-                                      fontSize: size.width * 0.04,
+                                      fontSize: size.width * 0.05,
                                       fontFamily: Fonts.dmSansMedium),
                                 ),
-                                Text(
-                                  "$deliveryTime",
-                                  style: TextStyle(
-                                      color: AppColors.itemDescription,
-                                      fontSize: size.width * 0.04,
-                                      fontFamily: Fonts.dmSansMedium),
-                                ),
+                                // Text(
+                                //   "$deliveryTime",
+                                //   style: TextStyle(
+                                //       color: AppColors.itemDescription,
+                                //       fontSize: size.width * 0.04,
+                                //       fontFamily: Fonts.dmSansMedium),
+                                // ),
                               ],
                             ),
                           ],

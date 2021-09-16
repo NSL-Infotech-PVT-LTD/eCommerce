@@ -30,6 +30,8 @@ class UserData {
 
   static FiestasModel? fiestasdata;
 
+  static bool loadingFirstime = true;
+
   static List tiketList = [
     {
       "image": Images.ticketImageSvg,

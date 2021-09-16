@@ -1,16 +1,15 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/components/dialogs.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/models/cardListmodel.dart';
-import 'package:funfy/models/fiestasBooking.dart';
 import 'package:funfy/models/fiestasBookingDetailModel.dart';
-import 'package:funfy/models/fiestasBookingListModel.dart';
 import 'package:funfy/models/fiestasDetailmodel.dart';
-import 'package:funfy/models/makePrefiestasmodel.dart';
 import 'package:funfy/models/preFiestasBookingListModel.dart';
 import 'package:funfy/models/preFiestasCartModel.dart';
 import 'package:funfy/models/prefiestasOrderDetailModel.dart';
+import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/urls.dart';
@@ -34,8 +33,9 @@ Future fiestasBooking(
     "ticket_price_standard":
         standardticketcount != null ? "$standardticketcount" : "0",
     "ticket_price_vip": vipticketcount != null ? "$vipticketcount" : "0",
-    "ticket_price": ticketcount != null ? "$ticketcount" : "0",
+    "ticket_price_normal": ticketcount != null ? "$ticketcount" : "0",
     "payment_mode": "card",
+    "addressId": "${Constants.prefs?.getString("addressId")}",
     "card_id": cardId ?? ""
   };
 
@@ -46,17 +46,18 @@ Future fiestasBooking(
 
   // var response = Map<String, dynamic>.from(jsonRes);
 
-  // print("here is res $response");
+  // print(res.body);
 
   if (res.statusCode == 201) {
     return jsonRes;
 
     // FistaBooking.fromJson(response);
   } else {
+    // return jsonRes;
     Dialogs.simpleOkAlertDialog(
         context: context,
         title: "${getTranslated(context, "alert!")}",
-        content: "${getTranslated(context, "sorryTicketsaresold")}",
+        content: "${jsonRes['error']}",
         func: () {
           navigatePopFun(context);
         });
@@ -77,7 +78,7 @@ Future fiestasBookingList() async {
 
   final jsonRes = json.decode(res.body);
 
-  print("here is fiestas body");
+  // print("here is fiestas body");
 
   // print(res.body);
 
@@ -88,7 +89,7 @@ Future fiestasBookingList() async {
     // return fiestasBookingListFromJson(res.body);
     return jsonRes["data"]["data"];
   } else {
-    // print(res.body);
+    print(res.body);
   }
 }
 
@@ -108,7 +109,7 @@ Future addproductinCartPrefiestas(
 
   var jsonBody = json.decode(res.body);
 
-  print("here is json body cart $jsonBody");
+  // print("here is json body cart $jsonBody");
 
   // CreatePrefiestasCartModel jsonBody =
   //     createPrefiestasCartModelFromJson(res.body); // .decode(res.body);
@@ -146,13 +147,19 @@ Future<PreFiestasBookingListModel?> preFiestaBookingListApi() async {
   var res = await http.post(Uri.parse(Urls.preFiestasBookingListUrl),
       headers: headers);
 
-  // print(res.body);
-
   if (res.statusCode == 200) {
-    return preFiestasBookingListModelFromJson(res.body);
-  } else {
+    // print("body Here ---------");
+
     // print(res.body);
 
+    try {
+      return preFiestasBookingListModelFromJson(res.body);
+    } catch (e) {
+      print("e-------------------- $e");
+    }
+  } else {
+    print("else Here ---------");
+    print(res.body);
   }
 }
 
@@ -189,6 +196,7 @@ Future makeOrderApi({String? cartId, String? addressId, String? cardID}) async {
     return resp;
   } else {
     print("here is error ${res.body}");
+    return resp;
   }
 }
 
@@ -198,7 +206,7 @@ Future<PrefiestasOrderDetailModel?> prefiestasShowOrderDetail(
     {String? orderId}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
-    'X-localization': '${Constants.prefs?.getString("language")}'
+    // 'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   // print("token is here - ${UserData.userToken}");
@@ -209,6 +217,10 @@ Future<PrefiestasOrderDetailModel?> prefiestasShowOrderDetail(
 
   var res = await http.post(Uri.parse(Urls.preFiestasOrderItemDetail),
       body: body, headers: headers);
+
+  // print("data is here ");
+
+  // print(res.body);
 
   if (res.statusCode == 200) {
     // print(res.body);
@@ -230,7 +242,6 @@ Future<PrefiestasCartModel?> getPrefiestasCart() async {
       await http.post(Uri.parse(Urls.preFiestasGetCartUrl), headers: headers);
 
   if (res.statusCode == 200) {
-    print("here is cart - ${res.body}");
     return prefiestasCartModelFromJson(res.body);
   } else {
     print("here is error ${res.body}");
@@ -271,11 +282,11 @@ Future storePaymentCard({String? cardToken}) async {
       body: body, headers: headers);
 
   if (res.statusCode == 201) {
+    return json.decode(res.body);
     // print("here is fiestas detail - ${res.body}");
 
-    print("Card added  ${res.body}");
   } else {
-    print("here is error ${res.body}");
+    // print("here is error ${res.body}");
   }
 }
 
@@ -295,7 +306,6 @@ Future<CardListModel?> getCardList({String? cardToken}) async {
   if (res.statusCode == 200) {
     // print("here is fiestas detail - ${res.body}");
 
-    print("Card added  ${res.body}");
     return cardListModelFromJson(res.body);
   } else {
     return null;
@@ -327,7 +337,7 @@ Future deleteCard({String? cardIds}) async {
 // fiestas booking order detail
 
 Future<FiestasBookingDetailModel?> fiestaBookingOrderDetailApi(
-    {String? fiestasId}) async {
+    {String? fiestasId, context}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
     'X-localization': '${Constants.prefs?.getString("language")}'
@@ -339,6 +349,23 @@ Future<FiestasBookingDetailModel?> fiestaBookingOrderDetailApi(
       headers: headers, body: body);
 
   print(res.body);
+  if (res.statusCode == 422) {
+    Dialogs.simpleOkAlertDialog(
+        context: context,
+        content: "${getTranslated(context, 'theSelectedItemIsinvalid')}",
+        title: "${getTranslated(context, 'alert!')}",
+        func: () {
+          navigatePopFun(context);
+        });
+
+    Future.delayed(Duration(seconds: 2), () {
+      navigatorPushFun(
+          context,
+          Home(
+            pageIndexNum: 0,
+          ));
+    });
+  }
 
   if (res.statusCode == 200) {
     // return null;
@@ -351,7 +378,7 @@ Future<FiestasBookingDetailModel?> fiestaBookingOrderDetailApi(
 // fiestas rating Api
 
 Future<bool?> fiestaRatingApi(
-    {String? orderId, String? fiestasId, double? rating}) async {
+    {String? orderId, String? fiestasId, int? rating}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
   };
@@ -381,7 +408,7 @@ Future<bool?> fiestaRatingApi(
 
 // fiestas rating Api
 
-Future<bool?> prefiestaRatingApi({String? orderId, double? rating}) async {
+Future<bool?> prefiestaRatingApi({String? orderId, int? rating}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
   };

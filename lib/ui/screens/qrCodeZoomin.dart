@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:funfy/components/navigation.dart';
-import 'package:funfy/ui/screens/bookNowBeta.dart';
+import 'package:funfy/ui/screens/fiestasBook.dart';
 import 'package:funfy/ui/widgets/rating.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/colors.dart';
@@ -14,8 +14,10 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 class QrCodeZoomIn extends StatefulWidget {
   final qrId;
+  final id;
 
-  const QrCodeZoomIn({Key? key, this.qrId}) : super(key: key);
+  const QrCodeZoomIn({Key? key, this.qrId, @required this.id})
+      : super(key: key);
 
   @override
   _QrCodeZoomInState createState() => _QrCodeZoomInState();
@@ -109,8 +111,8 @@ class _QrCodeZoomInState extends State<QrCodeZoomIn> {
                 onTap: () {
                   navigatorPushFun(
                       context,
-                      BookNowBeta(
-                        fiestasID: widget.qrId,
+                      FiestasBook(
+                        fiestasID: widget.id,
                       ));
                 },
                 child: roundedBoxR(

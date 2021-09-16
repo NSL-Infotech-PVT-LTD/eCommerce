@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -8,45 +7,60 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/screens/splash.dart';
-import 'package:funfy/ui/screens/testingUi.dart';
-import 'package:funfy/ui/screens/translateTesting.dart';
 import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/localizing.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
-
 import 'dart:async';
 
-final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+const AndroidNotificationChannel channel = AndroidNotificationChannel(
+    'high_importance_channel', // id
+    'High Importance Notifications', // title
+    'This channel is used for important notifications.', // description
+    importance: Importance.high,
+    playSound: true);
 
-DateTime date = DateTime(2007, 05, 2);
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  print('Handling a background message ${message.messageId}');
-  // print(message.data);
+  print('IN THE ON Background ===============>>>>>>>>>>> ${message.data}');
+
+  Get.to(Home(
+    pageIndexNum: 2,
+  ));
 }
 
-const AndroidNotificationChannel channel = AndroidNotificationChannel(
-  'high_importance_channel', // id
-  'High Importance Notifications', // title
-  'This channel is used for important notifications.', // description
-  importance: Importance.high,
-);
+String fcmToken = " ";
+// Future<String> getToken() async {
+//   return
+// }
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await FirebaseMessaging.instance.getToken().then((value) {
+    fcmToken = value!;
+  });
+  print("====================> $fcmToken");
+
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
-  WidgetsFlutterBinding.ensureInitialized();
+
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+
   Constants.prefs = await SharedPreferences.getInstance();
 
   runApp(MyApp());
@@ -65,6 +79,9 @@ class MyApp extends StatefulWidget {
 var initializationSettings;
 
 class _MyAppState extends State<MyApp> {
+  var token;
+  var initializationSettings;
+
   Locale? _locale;
   setLocale(Locale locale) {
     setState(() {
@@ -82,97 +99,9 @@ class _MyAppState extends State<MyApp> {
     super.didChangeDependencies();
   }
 
-  getToken() async {
-    var token = await firebaseMessaging.getToken();
-
-    print('here is F token $token');
-
-    UserData.deviceToken = "$token";
-
-    Constants.prefs?.setString("fToken", "$token");
-  }
-
-  @override
-  void initState() {
-    getToken();
-
-    getMe();
-    initializePlatformSpecifics();
-    getMeLocal();
-
-    var initialzationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-    var initializationSettings =
-        InitializationSettings(android: initialzationSettingsAndroid);
-
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      // print('A new onMessageOpenedApp event was published!');
-      RemoteNotification? notification = message.notification;
-
-      AndroidNotification? android = message.notification?.android;
-
-      // if (notification != null && android != null) {
-      //   if (message.data["data_type"] != null && message.data["data_type"] == "Message") {
-      //     print("issue 1");
-      //     reciverName =  "${message.data["sender_name"]}";
-      //     image = "${message.data["profile_img"]}";
-      //     reciverId = "${message.data["target_id"]}";
-      //     navigatorKey.currentState.pushNamed('/notification');
-      //   }
-      // }
-    });
-
-    flutterLocalNotificationsPlugin.initialize(initializationSettings);
-
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      Map<String, dynamic> notification = message.data;
-      if (notification.isNotEmpty) {
-        flutterLocalNotificationsPlugin.show(
-          notification.hashCode,
-          notification['title'],
-          notification['body'],
-          NotificationDetails(
-            android: AndroidNotificationDetails(
-              channel.id,
-              channel.name,
-              channel.description,
-              color: Colors.blue,
-              playSound: true,
-              icon: '@mipmap/ic_launcher',
-            ),
-          ),
-          payload: json.encode(message.data),
-        );
-        if (message.data["data_type"] != null &&
-            message.data["data_type"] == "Message") {
-          print("issue 2");
-          // reciverName =  "${message.data["sender_name"]}";
-          // image = "${message.data["profile_img"]}";
-          // reciverId = "${message.data["target_id"]}";
-          // navigatorKey.currentState.pushNamed('/notification');
-        }
-        print("==============> yashu gautam ${message.data}");
-      }
-    });
-    // TODO: implement initState
-
-    super.initState();
-  }
-
-  getMe() async {
-    RemoteMessage? initialMessage =
-        await FirebaseMessaging.instance.getInitialMessage();
-
-    // if (initialMessage!.data["data_type"] != null && initialMessage!.data["data_type"] == "Message") {
-    //     print("issue 3");
-    // reciverName =  "${initialMessage.data["sender_name"]}";
-    // image = "${initialMessage.data["profile_img"]}";
-    // reciverId = "${initialMessage.data["target_id"]}";
-    // navigatorKey.currentState.pushNamed('/notification');
-    //}
-  }
-
   initializePlatformSpecifics() {
+    // var initializationSettingsAndroid =
+    //     AndroidInitializationSett  ings('app_notf_icon');
     var initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
     var initializationSettingsIOS = IOSInitializationSettings(
@@ -187,30 +116,116 @@ class _MyAppState extends State<MyApp> {
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
   }
 
-  getMeLocal() async {
-    await flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-      // onSelectNotification: (String payload) async {
-      //   print("======LOCAL NOTIFICATION======>0 $payload");
-      //   Map myMap = jsonDecode(payload);
-      //   print("====myMap====>${json.encode(payload)}");
-      //   print("====myMap====>${json.decode(payload)["target_id"]}");
-      //   print("====myMap====>${myMap["target_id"]}");
-      //   print("====myMap====>$payload}");
-      //   if (myMap["data_type"] != null && myMap["data_type"] == "Message") {
-      //     print("issue 4");
-      //     reciverName =  "${myMap["sender_name"]}";
-      //     image = "${myMap["profile_img"]}";
-      //     reciverId = "${myMap["target_id"]}";
-      //     navigatorKey.currentState.pushNamed('/notification');
-      //   }
-      //}
+  getToken() async {
+    // var token = await firebaseMessaging.getToken();
+
+    // print('here is F token $token');
+
+    // print('here is F token ${}');
+
+    UserData.deviceToken = "$fcmToken";
+
+    Constants.prefs?.setString("fToken", "$fcmToken");
+  }
+
+  getMe() async {
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: (String? payload) async {
+      print("======LOCAL NOTIFICATION======> $payload");
+      print("======TOKEN======> $token");
+    });
+  }
+
+  @override
+  void initState() {
+    getToken();
+    initializePlatformSpecifics();
+    getMe();
+    getMeLocal();
+
+    FirebaseMessaging.instance.requestPermission();
+    print("CHECK $token");
+    FirebaseMessaging.onMessage.listen(
+      (RemoteMessage message) {
+        // print("IN THE ON MESSAGE ===============>>>>>>>>>>> ${message.data}");
+        // print(
+        //     "IN THE ON MESSAGE ===============>>>>>>>>>>> ${message.notification}");
+        // print(
+        //     "IN THE ON MESSAGE ===============>>>>>>>>>>> ${message.data["screen"]}");
+        // print("noti ${message.notification}");
+
+        // print("message $message");
+        // var jsonData = json.decode(message.data['data']);
+        // var mid = jsonData['target_id'];
+        print("message ${message.notification?.android}");
+        RemoteNotification? notification = message.notification;
+        AndroidNotification? android = message.notification?.android;
+        if (notification != null && android != null)
+
+        // if (message.data.length != 0)
+        {
+          flutterLocalNotificationsPlugin.show(
+              // mid,
+              // message.data['title'],
+              // message.data['body'],
+
+              notification.hashCode,
+              notification.title,
+              notification.body,
+              NotificationDetails(
+                android: AndroidNotificationDetails(
+                  channel.id,
+                  channel.name,
+                  channel.description,
+                  // color: Colors.blue,
+                  playSound: true,
+                  icon: '@mipmap/ic_launcher',
+                ),
+              ),
+              payload: json.encode(message.data));
+
+          print(
+              "======IN onMessage ========> YYYYYYYYYYYYYYYY ${message.data}");
+        }
+      },
     );
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print("IN THE OPEN MESSAGE  ============>>>>>>>>>>>");
+
+      // on background notification on tap
+      Get.to(Home(
+        pageIndexNum: 1,
+      ));
+
+      // Navigator.of(context).push(MaterialPageRoute(
+      //     builder: (context) => Home(
+      //           pageIndexNum: 1,
+      //         )));
+
+      // on message
+    });
+
+    super.initState();
+  }
+
+  getMeLocal() async {
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: (v) async {
+      print("Here is on select notification --- $v");
+
+      // on fourground notification on tap
+
+      Get.to(Home(
+        pageIndexNum: 1,
+      ));
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    // runApp(GetMaterialApp(home: Home()));
+    return GetMaterialApp(
         debugShowCheckedModeBanner: false,
         title: "funfy",
         theme: ThemeData(
@@ -238,10 +253,7 @@ class _MyAppState extends State<MyApp> {
           return supportedLocales.first;
         },
         darkTheme: ThemeData.dark(), //
-        // home: TranslateTest());
+
         home: Splash());
-    // home: Home(
-    //   pageIndexNum: 0,
-    // ));
   }
 }

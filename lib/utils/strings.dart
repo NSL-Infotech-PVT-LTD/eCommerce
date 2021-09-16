@@ -205,6 +205,8 @@ class Strings {
   static String merChantId =
       "sk_test_51JGPQADcOtdo7kZU4OGSpJg2hPJzccVR1XWI7SQGugKawWWoviXy40Gs2Dqj8XVBOcXXU6MMAImcMscYBphHkR5B00i9JlPtnJ";
   static String androidPayMode = "test_mode";
+
+  static String mapKey = "AIzaSyClclCEKHSt57KvUbgxcjZCwRqrbhpZq5M";
   // dummy
   static String garyadams = "Gary F. Adams";
   static String madridspain = "Madrid, Spain";

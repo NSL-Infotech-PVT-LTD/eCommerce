@@ -1,25 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
+
 import 'package:flutter/services.dart';
+import 'package:funfy/apis/signinApi.dart';
 import 'package:funfy/apis/userdataM.dart';
-import 'package:funfy/components/dialogs.dart';
-import 'package:funfy/models/fiestasmodel.dart';
+import 'package:funfy/ui/screens/pages/HomeFPPage.dart';
+
 import 'package:funfy/ui/screens/pages/bookingpage.dart';
 import 'package:funfy/ui/screens/pages/cartpage.dart';
-import 'package:funfy/ui/screens/pages/fiestaspage.dart';
+
 import 'package:funfy/ui/screens/pages/profilepage.dart';
-import 'package:funfy/ui/screens/testingUi.dart';
-import 'package:funfy/ui/widgets/dateButton.dart';
-import 'package:funfy/ui/widgets/rating.dart';
-import 'package:funfy/ui/widgets/roundContainer.dart';
-import 'package:funfy/ui/widgets/scrollTohideWidget.dart';
-import 'package:funfy/ui/widgets/tagsButton.dart';
+
 import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/colors.dart';
-import 'package:funfy/utils/fontsname.dart';
+
 import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/langauge_constant.dart';
-import 'package:funfy/utils/strings.dart';
+
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Home extends StatefulWidget {
@@ -38,8 +34,8 @@ class _HomeState extends State<Home> {
   PageController? pageController;
 
   List<Widget> tabpages = [
-    FiestasPage(),
-    // Testing(),
+    // FiestasPage(),
+    HomeMPage(),
     Cartpage(),
     BookingPage(),
     Profilepage()
@@ -117,71 +113,19 @@ class _HomeState extends State<Home> {
     return WillPopScope(
       onWillPop: backPress,
       child: Scaffold(
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {
+        //     userSessionExpired(context);
+        //   },
+        //   child: Icon(Icons.add),
+        // ),
         body: PageView(
           physics: NeverScrollableScrollPhysics(),
           controller: pageController,
           children: tabpages,
           onPageChanged: onpageChange,
         ),
-        bottomNavigationBar:
-            //  UserData.sControlller != null
-            //     ? ScrollTohideWidget(
-            //         controller: UserData.sControlller!,
-            //         child: BottomNavigationBar(
-            //           unselectedItemColor: AppColors.white,
-            //           selectedItemColor: AppColors.white,
-            //           type: BottomNavigationBarType.fixed,
-            //           backgroundColor: AppColors.bottomnavBackground,
-            //           currentIndex: pageIndex,
-            //           onTap: (i) {
-            //             ontabTap(page: i);
-            //           },
-            //           items: [
-            //             BottomNavigationBarItem(
-            //               activeIcon: buttomIconImage(
-            //                   size: size, svgimage: Images.fiestasIconActSvg),
-            //               icon: buttomIconImage(
-            //                   size: size, svgimage: Images.fiestasIconUnActSvg),
-            //               label: "${getTranslated(context, "home")}",
-            //               //  Strings.bottomNavFiestas,
-            //             ),
-            //             BottomNavigationBarItem(
-            //               activeIcon: buttomIconImage(
-            //                   size: size, svgimage: Images.cartIconActSvg),
-            //               icon: buttomIconImage(
-            //                   size: size, svgimage: Images.cartIconUnActSvg),
-            //               label: "${getTranslated(context, "bottomNavCart")}",
-            //               //Strings.bottomNavCart,
-            //             ),
-            //             BottomNavigationBarItem(
-            //               activeIcon: Container(
-            //                 padding: EdgeInsets.only(bottom: 2.5),
-            //                 child: buttomIconImage(
-            //                     size: size, svgimage: Images.bookingIconActSvg),
-            //               ),
-            //               icon: Container(
-            //                 padding: EdgeInsets.only(bottom: 2.5),
-            //                 child: buttomIconImage(
-            //                     size: size,
-            //                     // image: Images.bookingIconUnActPng
-            //                     svgimage: Images.bookingIconUnActSvg),
-            //               ),
-            //               label: "${getTranslated(context, "bottomNavBookings")}",
-            //               //Strings.bottomNavBookings,
-            //             ),
-            //             BottomNavigationBarItem(
-            //               activeIcon: buttomIconImage(
-            //                   size: size, svgimage: Images.profileIconActSvg),
-            //               icon: buttomIconImage(
-            //                   size: size, svgimage: Images.profileUnActSvg),
-            //               label: "${getTranslated(context, "bottomNavMyprofile")}",
-            //               //  Strings.bottomNavMyprofile,
-            //             ),
-            //           ],
-            //         ),
-            //       )
-            //     :
-            BottomNavigationBar(
+        bottomNavigationBar: BottomNavigationBar(
           unselectedItemColor: AppColors.white,
           selectedItemColor: AppColors.white,
           type: BottomNavigationBarType.fixed,

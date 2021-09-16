@@ -57,7 +57,7 @@ class Data {
   String? lastPageUrl;
   dynamic nextPageUrl;
   String? path;
-  int? perPage;
+  var perPage;
   dynamic prevPageUrl;
   int? to;
   int? total;
@@ -96,79 +96,94 @@ class Data {
 class Datum {
   Datum({
     this.id,
-    this.name,
     this.type,
     this.clubId,
-    this.description,
+    this.name,
     this.timestamp,
-    this.ticketPrice,
+    this.image,
+    this.description,
+    this.ageGroup,
+    this.filterLocalId,
+    this.filterEnvironmentId,
+    this.filterClothingId,
+    this.filterMusicId,
+    this.filterScheduleId,
+    this.totalMembers,
+    this.ticketPriceNormal,
     this.ticketPriceStandard,
     this.ticketPriceVip,
-    this.totalMembers,
-    this.dressCode,
-    this.partyMusic,
-    this.totalNormalTickets,
-    this.totalStandardTickets,
     this.totalVipTickets,
-    this.distanceKm,
-    this.distanceMiles,
-    this.isFavourite,
+    this.totalStandardTickets,
+    this.totalNormalTickets,
+    this.clubRating,
+    this.leftNormalTicket,
     this.leftStandardTicket,
     this.leftVipTicket,
-    this.leftNormalTicket,
-    this.clubRating,
+    this.isFavourite,
+    this.distanceKm,
+    this.distanceMiles,
     this.clubDetail,
     this.fiestaImages,
   });
 
   int? id;
+  var type;
+  var clubId;
   String? name;
-  String? type;
-  int? clubId;
-  String? description;
   DateTime? timestamp;
-  String? ticketPrice;
+  var image;
+  String? description;
+  String? ageGroup;
+  int? filterLocalId;
+  int? filterEnvironmentId;
+  int? filterClothingId;
+  int? filterMusicId;
+  int? filterScheduleId;
+  String? totalMembers;
+  String? ticketPriceNormal;
   String? ticketPriceStandard;
   String? ticketPriceVip;
-  String? totalMembers;
-  String? dressCode;
-  String? partyMusic;
-  String? totalNormalTickets;
-  String? totalStandardTickets;
   String? totalVipTickets;
-  String? distanceKm;
-  String? distanceMiles;
-  bool? isFavourite;
+  String? totalStandardTickets;
+  String? totalNormalTickets;
+  dynamic clubRating;
+  var leftNormalTicket;
   var leftStandardTicket;
   var leftVipTicket;
-  var leftNormalTicket;
-  dynamic clubRating;
+  bool? isFavourite;
+  String? distanceKm;
+  String? distanceMiles;
   ClubDetail? clubDetail;
   List<FiestaImage>? fiestaImages;
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
         id: json["id"],
-        name: json["name"],
         type: json["type"],
         clubId: json["club_id"],
-        description: json["description"],
+        name: json["name"],
         timestamp: DateTime.parse(json["timestamp"]),
-        ticketPrice: json["ticket_price"],
+        image: json["image"],
+        description: json["description"],
+        ageGroup: json["age_group"],
+        filterLocalId: json["filter_local_id"],
+        filterEnvironmentId: json["filter_environment_id"],
+        filterClothingId: json["filter_clothing_id"],
+        filterMusicId: json["filter_music_id"],
+        filterScheduleId: json["filter_schedule_id"],
+        totalMembers: json["total_members"],
+        ticketPriceNormal: json["ticket_price_normal"],
         ticketPriceStandard: json["ticket_price_standard"],
         ticketPriceVip: json["ticket_price_vip"],
-        totalMembers: json["total_members"],
-        dressCode: json["dress_code"],
-        partyMusic: json["party_music"],
-        totalNormalTickets: json["total_normal_tickets"],
-        totalStandardTickets: json["total_standard_tickets"],
         totalVipTickets: json["total_vip_tickets"],
-        distanceKm: json["distance_km"],
-        distanceMiles: json["distance_miles"],
-        isFavourite: json["is_favourite"],
+        totalStandardTickets: json["total_standard_tickets"],
+        totalNormalTickets: json["total_normal_tickets"],
+        clubRating: json["club_rating"],
+        leftNormalTicket: json["left_normal_ticket"],
         leftStandardTicket: json["left_standard_ticket"],
         leftVipTicket: json["left_vip_ticket"],
-        leftNormalTicket: json["left_normal_ticket"],
-        clubRating: json["club_rating"],
+        isFavourite: json["is_favourite"],
+        distanceKm: json["distance_km"],
+        distanceMiles: json["distance_miles"],
         clubDetail: ClubDetail.fromJson(json["club_detail"]),
         fiestaImages: List<FiestaImage>.from(
             json["fiesta_images"].map((x) => FiestaImage.fromJson(x))),
@@ -176,27 +191,32 @@ class Datum {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "name": name,
         "type": type,
         "club_id": clubId,
-        "description": description,
+        "name": name,
         "timestamp": timestamp?.toIso8601String(),
-        "ticket_price": ticketPrice,
+        "image": image,
+        "description": description,
+        "age_group": ageGroup,
+        "filter_local_id": filterLocalId,
+        "filter_environment_id": filterEnvironmentId,
+        "filter_clothing_id": filterClothingId,
+        "filter_music_id": filterMusicId,
+        "filter_schedule_id": filterScheduleId,
+        "total_members": totalMembers,
+        "ticket_price_normal": ticketPriceNormal,
         "ticket_price_standard": ticketPriceStandard,
         "ticket_price_vip": ticketPriceVip,
-        "total_members": totalMembers,
-        "dress_code": dressCode,
-        "party_music": partyMusic,
-        "total_normal_tickets": totalNormalTickets,
-        "total_standard_tickets": totalStandardTickets,
         "total_vip_tickets": totalVipTickets,
-        "distance_km": distanceKm,
-        "distance_miles": distanceMiles,
-        "is_favourite": isFavourite,
+        "total_standard_tickets": totalStandardTickets,
+        "total_normal_tickets": totalNormalTickets,
+        "club_rating": clubRating,
+        "left_normal_ticket": leftNormalTicket,
         "left_standard_ticket": leftStandardTicket,
         "left_vip_ticket": leftVipTicket,
-        "left_normal_ticket": leftNormalTicket,
-        "club_rating": clubRating,
+        "is_favourite": isFavourite,
+        "distance_km": distanceKm,
+        "distance_miles": distanceMiles,
         "club_detail": clubDetail?.toJson(),
         "fiesta_images":
             List<dynamic>.from(fiestaImages!.map((x) => x.toJson())),

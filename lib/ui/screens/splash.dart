@@ -9,7 +9,6 @@ import 'package:funfy/ui/screens/auth/signin.dart';
 import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/screens/intro.dart';
 import 'package:funfy/ui/screens/languageScreen.dart';
-import 'package:funfy/ui/screens/testingUi.dart';
 import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/imagesIcons.dart';

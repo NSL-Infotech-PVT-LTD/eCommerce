@@ -5,7 +5,7 @@ import 'package:funfy/apis/bookingApi.dart';
 import 'package:funfy/components/dialogs.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/models/fiestasBookingDetailModel.dart';
-import 'package:funfy/ui/screens/bookNowBeta.dart';
+import 'package:funfy/ui/screens/fiestasBook.dart';
 import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/screens/pages/bookingpage.dart';
 import 'package:funfy/ui/screens/qrCodeZoomin.dart';
@@ -63,7 +63,7 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
     } else {
       try {
         await fiestaBookingOrderDetailApi(
-            fiestasId: widget.fiestaBookingId.toString())
+            fiestasId: widget.fiestaBookingId.toString(), context: context)
             .then((value) {
           // print("here is model : ${value?.toJson()}");
           setState(() {
@@ -77,11 +77,14 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
 
             time = DateFormat('hh:mm a').format(dateTime!);
 
-            if (fiestasBookingDetailModel?.data![0].bookingStatus ==
-                "completed") {
+            // if (fiestasBookingDetailModel?.data![0].bookingStatus ==
+            //     "completed") {
+            //   showRatingBottomSheet();
+            // }
+
+            if (fiestasBookingDetailModel?.data![0].readyForReview == true) {
               showRatingBottomSheet();
             }
-
             var ratM =
                 fiestasBookingDetailModel?.data![0].fiestaDetail?.clubRating;
 
@@ -121,10 +124,10 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
     navigatePopFun(context);
     var data = fiestasBookingDetailModel?.data![0];
 
+    int rat = currentRating.toInt();
+
     fiestaRatingApi(
-        orderId: "${data?.id}",
-        fiestasId: "${data?.fiestaId}",
-        rating: currentRating)
+        orderId: "${data?.id}", fiestasId: "${data?.fiestaId}", rating: rat)
         .then((value) {
       if (value == false) {
         showRatingBottomSheet();
@@ -180,7 +183,6 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                                 children: [
                                   Text(
                                     "${getTranslated(context, "doYouLikeOurService")}",
-                                    // Strings.doYouLikeOurService,
                                     style: TextStyle(
                                         color: AppColors.white,
                                         fontFamily: Fonts.dmSansMedium,
@@ -192,11 +194,9 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                                   RatingBar.builder(
                                     itemSize: size.width * 0.125,
                                     initialRating: currentRating,
-                                    // ignoreGestures: true,
                                     minRating: 1,
                                     direction: Axis.horizontal,
                                     allowHalfRating: false,
-                                    itemCount: 5,
                                     unratedColor: AppColors.starUnselect,
                                     itemPadding: EdgeInsets.symmetric(
                                         horizontal: size.width * 0.01),
@@ -268,19 +268,11 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
 
-    // print("Look here" + "$date");
-
     var data = fiestasBookingDetailModel?.data![0].fiestaDetail;
 
     return WillPopScope(
       onWillPop: backCall,
       child: Scaffold(
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: () {
-        //     showRatingBottomSheet();
-        //   },
-        //   child: Icon(Icons.add),
-        // ),
         backgroundColor: AppColors.siginbackgrond,
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -309,8 +301,6 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
           child: Stack(children: [
             Container(
               margin: EdgeInsets.symmetric(horizontal: size.width * 0.05),
-              // padding: EdgeInsets.symmetric(
-              //     vertical: size.height * 0.02, horizontal: size.width * 0.034),
               alignment: Alignment.topCenter,
               width: size.width,
               height: size.height * 0.79,
@@ -318,7 +308,6 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                   color: AppColors.white,
                   borderRadius: BorderRadius.all(
                       Radius.circular(size.width * 0.02))),
-
               child: Column(
                 children: [
                   SizedBox(
@@ -402,8 +391,9 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                                         type: PageTransitionType
                                             .topToBottom,
                                         child: QrCodeZoomIn(
-                                          qrId: fiestasBookingDetailModel
+                                          id: fiestasBookingDetailModel
                                               ?.data![0].fiestaId,
+                                          qrId: widget.fiestaBookingId,
                                         )));
 
                                 // navigatorPushFun(context, QrCodeZoomIn());
@@ -433,8 +423,7 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                           height: size.height * 0.16,
                           // color: Colors.yellow,
                           child: QrImage(
-                            data:
-                            "${fiestasBookingDetailModel?.data![0].fiestaId}",
+                            data: "${widget.fiestaBookingId}",
                             version: QrVersions.auto,
                             size: size.width * 0.5,
                           ),
@@ -560,7 +549,7 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                                   title:
                                   getTranslated(context, "location"),
                                   description:
-                                  "8496 East Thompson Street Birmingham, AL 35209")
+                                  "${fiestasBookingDetailModel?.data![0].fiestaDetail?.clubDetail?.location ?? getTranslated(context, 'location')}")
                             ],
                           ),
                         )
@@ -576,7 +565,7 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                     onTap: () {
                       navigatorPushFun(
                           context,
-                          BookNowBeta(
+                          FiestasBook(
                             fiestasID: fiestasBookingDetailModel
                                 ?.data![0].fiestaId,
                           ));

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/scheduler.dart';
+
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:funfy/apis/homeApis.dart';
@@ -10,9 +10,11 @@ import 'package:funfy/components/locationget.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/components/zeroadd.dart';
 import 'package:funfy/models/fiestasmodel.dart';
+import 'package:funfy/models/filterModel.dart';
 import 'package:funfy/models/preFiestasModel.dart';
+import 'package:funfy/ui/screens/address/addressList.dart';
 import 'package:funfy/ui/screens/fiestasAll.dart';
-import 'package:funfy/ui/screens/home.dart';
+
 import 'package:funfy/ui/screens/notifications.dart';
 import 'package:funfy/ui/widgets/dateButton.dart';
 import 'package:funfy/ui/widgets/postsitems.dart';
@@ -26,16 +28,18 @@ import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:intl/intl.dart';
 
-class Testing extends StatefulWidget {
+class HomeMPage extends StatefulWidget {
   @override
-  _TestingState createState() => _TestingState();
+  _HomeMPageState createState() => _HomeMPageState();
 }
 
-class _TestingState extends State<Testing> {
+class _HomeMPageState extends State<HomeMPage> {
+  static GlobalKey<ScaffoldState> _keyScaffold = GlobalKey();
   TabController? controller;
   bool fiestasButton = true;
 
   PrefiestasModel? prefiestasdata;
+  FliterListModel? filterModel;
   // FiestasModel? fiestasdata;
 
   bool _postLoading = false;
@@ -50,22 +54,81 @@ class _TestingState extends State<Testing> {
   DateTime nowdate = DateTime.now();
   String? filterDate = "";
 
-  fiestasgetPosts({String? date}) async {
+  Map<String, int> groupvalue = {};
+
+  Map<String, String> filterData = {
+    "local": "",
+    "environment": "",
+    "schedule": "",
+    "music": "",
+    "clothing": "",
+    "ageGroup": ""
+  };
+
+  // pagination
+
+  bool fiestasLoadingPage = false;
+  bool prefiestasLoadingPage = false;
+
+  ScrollController _fiestasScrollController = ScrollController();
+  int limitCount = 5;
+  int fiestasPageCount = 1;
+  int prefiestasPageCount = 1;
+
+  _handleRadioValueChange(int? value, String key) {
+    setState(() {
+      groupvalue["$key"] = value!;
+    });
+  }
+
+  getFilterData() async {
+    print("Run");
+    await filterList().then((value) {
+      // print(value?.toJson());
+
+      for (var i in value!.data!.toJson().keys.toList()) {
+        // print(i);
+
+        groupvalue["$i"] = -1;
+        filterData["$i"] = "";
+      }
+
+      setState(() {
+        filterModel = value;
+      });
+    });
+  }
+
+  fiestasgetPosts({
+    String? date,
+  }) async {
     var net = await Internetcheck.check();
     if (net == false) {
       Internetcheck.showdialog(context: context);
     }
     {
-      setState(() {
-        _fiestasPostLoading = true;
-      });
-      await fiestasPostGet(type: tagType, dateFilter: date.toString())
-          .then((FiestasModel? posts) {
+      try {
         setState(() {
-          UserData.fiestasdata = posts;
-          _fiestasPostLoading = false;
+          UserData.fiestasdata = FiestasModel();
+          _fiestasPostLoading = true;
         });
-      });
+        await fiestasPostGet(
+                limitCount: limitCount.toString(),
+                pageCount: "1",
+                context: context,
+                type: tagType,
+                dateFilter: date.toString(),
+                filterDataF: filterData)
+            .then((FiestasModel? posts) {
+          setState(() {
+            print(posts?.toJson());
+            UserData.fiestasdata = posts;
+            _fiestasPostLoading = false;
+          });
+        });
+      } catch (e) {
+        print("fiestas Error $e");
+      }
     }
   }
 
@@ -78,12 +141,40 @@ class _TestingState extends State<Testing> {
       setState(() {
         _prefiestasPostLoading = true;
       });
-      await prefiestasPostGet().then((posts) {
+      await prefiestasPostGet(
+              context: context,
+              pageCount: prefiestasPageCount.toString(),
+              limitCount: limitCount.toString())
+          .then((posts) {
+        // print(posts?.toJson());
         setState(() {
+          prefiestasdata = PrefiestasModel();
           prefiestasdata = posts;
           _prefiestasPostLoading = false;
         });
       });
+    }
+  }
+
+  fiestasFilterListGet() async {
+    var net = await Internetcheck.check();
+    if (net == false) {
+      Internetcheck.showdialog(context: context);
+    }
+    {
+      try {
+        setState(() {
+          _fiestasPostLoading = true;
+        });
+        await filterList().then((res) {
+          setState(() {
+            filterModel = res;
+            _fiestasPostLoading = false;
+          });
+        });
+      } catch (e) {
+        print("fiestas Error $e");
+      }
     }
   }
 
@@ -188,52 +279,140 @@ class _TestingState extends State<Testing> {
       setState(() {
         filterDate = fomatDate;
       });
+      print("Date :- $fomatDate");
 
       fiestasgetPosts(date: fomatDate);
     }
   }
 
-  // ------ //
-
-  // ScrollController? _controller;
-
   @override
   void initState() {
-    // _controller = ScrollController();
-    // _fiestaSscrollController.addListener(_scrollListener);
+    // page
 
-    setState(() {
-      UserData.sControlller = ScrollController();
+    _fiestasScrollController.addListener(() {
+      double maxScroll = _fiestasScrollController.position.maxScrollExtent;
+      double currentScroll = _fiestasScrollController.position.pixels;
+      double delta = MediaQuery.of(context).size.height * 0.20;
+      if (maxScroll - currentScroll <= delta) {
+        fiestasPagination();
+        prefiestasPagination();
+        print("page ...............");
+      }
     });
+
+    // _fiestasScrollController.addListener(() {
+    //   print("here ...............");
+    // });
 
     super.initState();
     fiestasgetPosts(date: filterDate);
+
     preFiestasPostget();
     determinePosition();
-    // print(UserData.userToken);
+    getFilterData();
 
-    // if (UserData.homeTrueOneTime) {
-    //   UserData.homeTrueOneTime = false;
-    //   Navigator.of(context).pushReplacement(MaterialPageRoute(
-    //       builder: (context) => Home(
-    //             pageIndexNum: 0,
-    //           )));
-    // }
+    print("page ..........");
+  }
 
-    // SchedulerBinding.instance?.addPostFrameCallback((_) {
-    //   if (UserData.homeTrueOneTime) {
-    //     UserData.homeTrueOneTime = false;
-    //     Navigator.of(context).pushReplacement(MaterialPageRoute(
-    //         builder: (context) => Home(
-    //               pageIndexNum: 0,
-    //             )));
-    //   }
-    // });
+  //pagination
+  fiestasPagination() async {
+    var net = await Internetcheck.check();
+
+    if (net == false) {
+      Internetcheck.showdialog(context: context);
+    }
+    {
+      if (fiestasLoadingPage) {
+        return;
+      }
+
+      if (fiestasPageCount >
+          int.parse('${UserData.fiestasdata?.data?.total}')) {
+        print('No More Products');
+
+        return;
+      }
+
+      if (UserData.fiestasdata != null) {
+        try {
+          setState(() {
+            fiestasLoadingPage = true;
+          });
+          print("get data ........");
+          fiestasPageCount = fiestasPageCount + 1;
+          await fiestasPostGet(
+                  limitCount: limitCount.toString(),
+                  pageCount: fiestasPageCount.toString(),
+                  context: context,
+                  type: tagType,
+                  dateFilter: filterDate,
+                  filterDataF: filterData)
+              .then((FiestasModel? posts) {
+            setState(() {
+              var fdata = posts?.data?.data;
+              UserData.fiestasdata?.data?.data?.addAll(fdata!);
+              fiestasLoadingPage = false;
+            });
+          });
+        } catch (e) {
+          print("fiestas Error $e");
+          setState(() {
+            fiestasLoadingPage = false;
+          });
+        }
+      }
+    }
+  }
+
+  prefiestasPagination() async {
+    var net = await Internetcheck.check();
+
+    if (net == false) {
+      Internetcheck.showdialog(context: context);
+    }
+    {
+      if (prefiestasLoadingPage) {
+        return;
+      }
+
+      if (prefiestasPageCount > int.parse('${prefiestasdata?.data?.total}')) {
+        print('No More Products');
+
+        return;
+      }
+
+      if (prefiestasdata != null) {
+        try {
+          print("get data pre ........");
+          prefiestasPageCount = prefiestasPageCount + 1;
+          setState(() {
+            prefiestasLoadingPage = true;
+          });
+          await prefiestasPostGet(
+                  context: context,
+                  pageCount: prefiestasPageCount.toString(),
+                  limitCount: limitCount.toString())
+              .then((posts) {
+            // print(posts?.toJson());
+            setState(() {
+              var preData = posts?.data?.data;
+              prefiestasdata?.data?.data?.addAll(preData!); // = posts;
+              prefiestasLoadingPage = false;
+            });
+          });
+        } catch (e) {
+          print("fiestas Error $e");
+          setState(() {
+            prefiestasLoadingPage = false;
+          });
+        }
+      }
+    }
   }
 
   @override
   void dispose() {
-    UserData.sControlller!.dispose();
+    _fiestasScrollController.dispose();
     super.dispose();
   }
 
@@ -262,7 +441,7 @@ class _TestingState extends State<Testing> {
       child: Scaffold(
           // floatingActionButton: FloatingActionButton(
           //   onPressed: () {
-          //     print(UserData.sControlller);
+          //     print(UserData.fiestasdata?.toJson());
 
           //     // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=> Home()));
           //   },
@@ -270,119 +449,135 @@ class _TestingState extends State<Testing> {
           // ),
           backgroundColor: AppColors.blackBackground,
           body: CustomScrollView(
-            controller: UserData.sControlller,
+            controller: _fiestasScrollController,
             slivers: [
               SliverAppBar(
                 automaticallyImplyLeading: false,
                 toolbarHeight: size.height * 0.15,
                 backgroundColor: AppColors.blackBackground,
                 actions: [
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                        vertical: size.height * 0.023,
-                        horizontal: size.width * 0.045),
-                    width: size.width,
-                    height: size.height * 0.155,
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage(Images.homeTopBannerPng),
-                            fit: BoxFit.cover)),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "${getTranslated(context, "hello")}",
-                              //  Strings.hello,
-                              style: TextStyle(
-                                  fontSize: size.width * 0.038,
-                                  fontFamily: Fonts.dmSansRegular,
-                                  color: AppColors.white),
-                            ),
-                            Container(
-                              width: size.width * 0.6,
-                              child: Text(
-                                // Strings.garyadams,
-                                "${Constants.prefs?.getString("name")}",
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
+                  InkWell(
+                    onTap: () {
+                      navigatorPushFun(context, AddressList(navNum: 0));
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                          vertical: size.height * 0.023,
+                          horizontal: size.width * 0.045),
+                      width: size.width,
+                      height: size.height * 0.155,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: AssetImage(Images.homeTopBannerPng),
+                              fit: BoxFit.cover)),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "${getTranslated(context, "hello")}",
+                                //  Strings.hello,
                                 style: TextStyle(
-                                    fontSize: size.width * 0.048,
-                                    fontFamily: Fonts.dmSansBold,
+                                    fontSize: size.width * 0.038,
+                                    fontFamily: Fonts.dmSansRegular,
                                     color: AppColors.white),
                               ),
-                            ),
-                            SizedBox(
-                              height: size.height * 0.01,
-                            ),
-
-                            // location choose
-
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                // Icon(
-                                //   // Icons.fmd_good,
-                                //   Icons.error,
-                                //   size: size.width * 0.04,
-                                //   color: AppColors.white,
-                                // ),
-
-                                Container(
-                                  width: size.width * 0.03,
-                                  child: Image.asset(Images.locationspng),
+                              Container(
+                                width: size.width * 0.6,
+                                child: Text(
+                                  // Strings.garyadams,
+                                  "${Constants.prefs?.getString("name")}",
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                      fontSize: size.width * 0.048,
+                                      fontFamily: Fonts.dmSansBold,
+                                      color: AppColors.white),
                                 ),
-                                SizedBox(
-                                  width: size.width * 0.01,
-                                ),
-                                Container(
-                                  constraints: BoxConstraints(
-                                    maxWidth: size.width * 0.2,
-                                  ),
-                                  child: Text(
-                                    Constants.prefs?.getString("addres") != null
-                                        ? "${Constants.prefs?.getString("addres")}"
-                                        : "${getTranslated(context, "location")}", // Strings.location,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                        fontSize: size.width * 0.034,
-                                        fontFamily: Fonts.dmSansMedium,
-                                        color: AppColors.white),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: size.width * 0.01,
-                                ),
-                                // Icon(
-                                //   Icons.expand_more,
-                                //   size: size.width * 0.042,
-                                //   color: AppColors.white,
-                                // ),
-                              ],
-                            ),
-                          ],
-                        ),
+                              ),
+                              SizedBox(
+                                height: size.height * 0.01,
+                              ),
 
-                        // notification icon
-                        GestureDetector(
-                          onTap: () {
-                            navigatorPushFun(context, Notifications());
-                          },
-                          child: Container(
-                            margin: EdgeInsets.only(right: size.width * 0.03),
-                            child: Icon(
-                              Icons.notifications,
-                              size: size.width * 0.08,
-                              color: AppColors.white,
-                            ),
+                              // location choose
+
+                              InkWell(
+                                onTap: () {
+                                  navigatorPushFun(
+                                      context, AddressList(navNum: 0));
+                                },
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    // Icon(
+                                    //   // Icons.fmd_good,
+                                    //   Icons.error,
+                                    //   size: size.width * 0.04,
+                                    //   color: AppColors.white,
+                                    // ),
+
+                                    Container(
+                                      width: size.width * 0.03,
+                                      child: Image.asset(Images.locationspng),
+                                    ),
+                                    SizedBox(
+                                      width: size.width * 0.01,
+                                    ),
+                                    Container(
+                                      constraints: BoxConstraints(
+                                        maxWidth: size.width * 0.3,
+                                      ),
+                                      child: Text(
+                                        Constants.prefs?.getString("addres") !=
+                                                    null &&
+                                                Constants.prefs
+                                                        ?.getString("addres") !=
+                                                    ''
+                                            ? "${Constants.prefs?.getString("addres")}"
+                                            : "${getTranslated(context, "addLoacation")}", // Strings.location,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        style: TextStyle(
+                                            fontSize: size.width * 0.034,
+                                            fontFamily: Fonts.dmSansMedium,
+                                            color: AppColors.white),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: size.width * 0.01,
+                                    ),
+                                    Icon(
+                                      Icons.expand_more,
+                                      size: size.width * 0.042,
+                                      color: AppColors.white,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                        )
-                      ],
+
+                          // notification icon
+                          InkWell(
+                            onTap: () {
+                              navigatorPushFun(context, Notifications());
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(2),
+                              margin: EdgeInsets.only(right: size.width * 0.03),
+                              child: Icon(
+                                Icons.notifications,
+                                size: size.width * 0.08,
+                                color: AppColors.white,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   )
                 ],
@@ -401,6 +596,7 @@ class _TestingState extends State<Testing> {
                 toolbarHeight: size.height * 0.085,
                 backgroundColor: AppColors.blackBackground,
                 actions: [
+                  //fp
                   Container(
                     padding: EdgeInsets.symmetric(
                         vertical: size.height * 0.01,
@@ -507,76 +703,12 @@ class _TestingState extends State<Testing> {
                                   Expanded(
                                       child: Container(
                                     // color: Colors.blue,
-                                    child: Row(
-                                      children: [
-                                        // club
-
-                                        GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              tagType = "club";
-                                            });
-                                            fiestasgetPosts(date: filterDate);
-                                          },
-                                          child: tagbutton2(
-                                              context: context,
-                                              text:
-                                                  "${getTranslated(context, "club")}", //Strings.club,
-                                              borderColor: tagType == "club"
-                                                  ? AppColors.tagBorder
-                                                  : AppColors.white,
-                                              textColor: tagType == "club"
-                                                  ? AppColors.tagBorder
-                                                  : AppColors.white,
-                                              borderwidth: tagType == "club"
-                                                  ? size.width * 0.003
-                                                  : size.width * 0.002),
-                                        ),
-
-                                        SizedBox(
-                                          width: size.width * 0.02,
-                                        ),
-
-                                        GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              tagType = "open";
-                                            });
-                                            fiestasgetPosts(date: filterDate);
-                                          },
-                                          child: tagbutton2(
-                                              context: context,
-                                              text:
-                                                  "${getTranslated(context, "openS")}", //Strings.club,
-                                              borderColor: tagType == "open"
-                                                  ? AppColors.tagBorder
-                                                  : AppColors.white,
-                                              textColor: tagType == "open"
-                                                  ? AppColors.tagBorder
-                                                  : AppColors.white,
-                                              borderwidth: tagType == "open"
-                                                  ? size.width * 0.003
-                                                  : size.width * 0.002),
-                                        ),
-
-                                        SizedBox(
-                                          width: size.width * 0.02,
-                                        ),
-
-                                        GestureDetector(
-                                          onTap: () {
-                                            clearFilter();
-                                            fiestasgetPosts(date: filterDate);
-                                          },
-                                          child: tagbutton2(
-                                              context: context,
-                                              text:
-                                                  "${getTranslated(context, "clearfilter")}", //Strings.club,
-                                              borderColor: AppColors.white,
-                                              textColor: AppColors.white,
-                                              borderwidth: size.width * 0.002),
-                                        ),
-                                      ],
+                                    child: Text(
+                                      "Filter",
+                                      style: TextStyle(
+                                          color: AppColors.white,
+                                          fontFamily: Fonts.dmSansBold,
+                                          fontSize: size.width * 0.055),
                                     ),
                                   )),
 
@@ -585,11 +717,16 @@ class _TestingState extends State<Testing> {
                                   ),
 
                                   // right button -------------- //
-                                  // Container(
-                                  //     margin: EdgeInsets.only(
-                                  //         right: size.width * 0.01),
-                                  //     alignment: Alignment.centerRight,
-                                  //     child: Image.asset(Images.filterPng))
+                                  InkWell(
+                                    onTap: () {
+                                      filterBottomSheet();
+                                    },
+                                    child: Container(
+                                        margin: EdgeInsets.only(
+                                            right: size.width * 0.01),
+                                        alignment: Alignment.centerRight,
+                                        child: Image.asset(Images.filterPng)),
+                                  )
                                 ]),
                           ),
                           SizedBox(
@@ -670,22 +807,6 @@ class _TestingState extends State<Testing> {
                                                           DateTime currentDate =
                                                               DateTime.now();
 
-                                                          if (currentDate
-                                                                  .isAfter(
-                                                                      picked) ||
-                                                              currentDate
-                                                                  .isAtSameMomentAs(
-                                                                      picked)) {
-                                                            print(
-                                                                "$currentDate");
-                                                            print(
-                                                                "$picked on Momemt");
-                                                          } else {
-                                                            print(
-                                                                "date is before today");
-                                                          }
-                                                          print(picked);
-
                                                           setState(() {
                                                             nowdate = picked;
                                                             daysInMonth(picked);
@@ -704,6 +825,9 @@ class _TestingState extends State<Testing> {
 
                                                           fiestasgetPosts(
                                                               date: fomatDate);
+
+                                                          print(
+                                                              "date is here - $fomatDate");
                                                         },
                                                         child: Container(
                                                           margin: EdgeInsets.only(
@@ -833,22 +957,28 @@ class _TestingState extends State<Testing> {
                                       fontFamily: Fonts.dmSansBold,
                                       color: AppColors.white),
                                 ),
-                                GestureDetector(
-                                  onTap: () {
-                                    navigatorPushFun(context, FiestasAll());
-                                  },
-                                  child: Container(
-                                    // color: Colors.blue,
-                                    child: Text(
-                                      "${getTranslated(context, "seeall")}",
-                                      //   Strings.seeall,
-                                      style: TextStyle(
-                                          fontSize: size.width * 0.04,
-                                          fontFamily: Fonts.dmSansBold,
-                                          color: AppColors.siginbackgrond),
-                                    ),
-                                  ),
-                                ),
+                                (UserData.fiestasdata?.data?.data?.length ==
+                                            0 &&
+                                        _postLoading == false)
+                                    ? SizedBox()
+                                    : GestureDetector(
+                                        onTap: () {
+                                          navigatorPushFun(
+                                              context, FiestasAll());
+                                        },
+                                        child: Container(
+                                          // color: Colors.blue,
+                                          child: Text(
+                                            "${getTranslated(context, "seeall")}",
+                                            //   Strings.seeall,
+                                            style: TextStyle(
+                                                fontSize: size.width * 0.04,
+                                                fontFamily: Fonts.dmSansBold,
+                                                color:
+                                                    AppColors.siginbackgrond),
+                                          ),
+                                        ),
+                                      )
                               ],
                             ),
                             SizedBox(
@@ -876,7 +1006,8 @@ class _TestingState extends State<Testing> {
                           ),
                         )
                       : UserData.fiestasdata?.data?.data?.length == 0 &&
-                              _postLoading == false
+                                  _postLoading == false ||
+                              UserData.fiestasdata == null
                           ? SliverToBoxAdapter(
                               child: Container(
                                 margin:
@@ -895,6 +1026,26 @@ class _TestingState extends State<Testing> {
                           : SliverList(
                               delegate: SliverChildBuilderDelegate(
                               (context, index) {
+                                if (index ==
+                                        int.parse(
+                                            '${UserData.fiestasdata?.data?.data?.length}') &&
+                                    fiestasLoadingPage) {
+                                  return Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    padding: EdgeInsets.all(5),
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        CircularProgressIndicator(
+                                          color: AppColors.white,
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }
+
                                 return Padding(
                                   padding: EdgeInsets.symmetric(
                                       horizontal: size.width * 0.04),
@@ -905,8 +1056,12 @@ class _TestingState extends State<Testing> {
                                           ?.elementAt(index)),
                                 );
                               },
-                              childCount:
-                                  UserData.fiestasdata?.data?.data?.length ?? 0,
+                              childCount: fiestasLoadingPage
+                                  ? int.parse(
+                                          '${UserData.fiestasdata?.data?.data?.length}') +
+                                      1
+                                  : int.parse(
+                                      '${UserData.fiestasdata?.data?.data?.length}'),
                             ))
                   : SliverToBoxAdapter(
                       child: SizedBox(),
@@ -968,8 +1123,9 @@ class _TestingState extends State<Testing> {
                                         AppColors.white))),
                           ),
                         )
-                      : UserData.fiestasdata?.data?.data?.length == 0 &&
-                              _prefiestasPostLoading == false
+                      : prefiestasdata?.data?.data?.length == 0 &&
+                                  _prefiestasPostLoading == false ||
+                              prefiestasdata == null
                           ? SliverToBoxAdapter(
                               child: Container(
                                 margin:
@@ -988,6 +1144,27 @@ class _TestingState extends State<Testing> {
                           : SliverList(
                               delegate: SliverChildBuilderDelegate(
                               (context, index) {
+                                // print(prefiestasdata?.toJson());
+
+                                if (index ==
+                                        int.parse(
+                                            "${prefiestasdata?.data?.data?.length ?? 0}") &&
+                                    prefiestasLoadingPage) {
+                                  return Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    padding: EdgeInsets.all(5),
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        CircularProgressIndicator(
+                                          color: AppColors.white,
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }
                                 return Padding(
                                   padding: EdgeInsets.symmetric(
                                       horizontal: size.width * 0.04),
@@ -997,14 +1174,233 @@ class _TestingState extends State<Testing> {
                                           prefiestasdata?.data?.data?[index]),
                                 );
                               },
-                              childCount:
-                                  prefiestasdata?.data?.data?.length ?? 0,
+                              childCount: prefiestasLoadingPage
+                                  ? int.parse(
+                                          "${prefiestasdata?.data?.data?.length ?? 0}") +
+                                      1
+                                  : int.parse(
+                                      "${prefiestasdata?.data?.data?.length ?? 0}"),
                             ))
                   : SliverToBoxAdapter(
                       child: SizedBox(),
                     ),
             ],
           )),
+    );
+  }
+
+  // filter box
+
+  filterBottomSheet() {
+    var size = MediaQuery.of(context).size;
+    return showModalBottomSheet(
+        isDismissible: false,
+        enableDrag: false,
+        isScrollControlled: true,
+        backgroundColor: AppColors.blackBackground,
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+              key: _keyScaffold,
+              builder: (context, setstate) {
+                return Container(
+                  // margin: EdgeInsets.only(top: size.height * 0.04),
+                  height: size.height * 0.98,
+                  padding: EdgeInsets.symmetric(
+                      horizontal: size.width * 0.04,
+                      vertical: size.height * 0.034),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              navigatePopFun(context);
+
+                              setstate(() {
+                                for (var i in filterData.keys.toList()) {
+                                  groupvalue["$i"] = -1;
+                                }
+
+                                filterData = {
+                                  "local": "",
+                                  "environment": "",
+                                  "schedule": "",
+                                  "music": "",
+                                  "clothing": "",
+                                  "ageGroup": ""
+                                };
+                              });
+                            },
+                            child: Container(
+                              child: Icon(
+                                Icons.clear,
+                                color: AppColors.white,
+                              ),
+                            ),
+                          ),
+                          // Text(
+                          //   "${getTranslated(context, 'clear')}",
+                          //   style: TextStyle(
+                          //       fontSize: size.width * 0.05,
+                          //       fontFamily: Fonts.dmSansBold,
+                          //       color: AppColors.white),
+                          // ),
+
+                          SizedBox(
+                            // width: size.width * 0.22,
+                            child: MaterialButton(
+                              onPressed: () {
+                                setstate(() {
+                                  for (var i in filterData.keys.toList()) {
+                                    groupvalue["$i"] = -1;
+                                  }
+
+                                  filterData = {
+                                    "local": "",
+                                    "environment": "",
+                                    "schedule": "",
+                                    "music": "",
+                                    "clothing": "",
+                                    "ageGroup": ""
+                                  };
+                                });
+
+                                Dialogs.showBasicsFlash(
+                                    duration: Duration(seconds: 1),
+                                    context: context,
+                                    content:
+                                        "${getTranslated(context, 'filterSuccessfullycleared')}",
+                                    color: Colors.green);
+
+                                fiestasgetPosts(date: filterDate);
+
+                                navigatePopFun(context);
+                              },
+                              child: Text(
+                                "${getTranslated(context, 'reset')}",
+                                style: TextStyle(
+                                    fontSize: size.width * 0.05,
+                                    fontFamily: Fonts.dmSansBold,
+                                    color: AppColors.white),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: size.height * 0.03,
+                      ),
+                      Expanded(
+                          child: Container(
+                        child: ListView.builder(
+                            itemCount: filterModel?.data?.toJson().length ?? 0,
+                            itemBuilder: (context, index) {
+                              return itemFilter(
+                                  context,
+                                  filterModel?.data
+                                      ?.toJson()
+                                      .keys
+                                      .toList()[index],
+                                  filterModel?.data
+                                      ?.toJson()
+                                      .values
+                                      .toList()[index],
+                                  setstate);
+                            }),
+                      )),
+                      SizedBox(
+                        height: size.height * 0.01,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          MaterialButton(
+                            color: AppColors.siginbackgrond,
+                            textColor: AppColors.white,
+                            onPressed: () {
+                              navigatePopFun(context);
+                              fiestasgetPosts(date: filterDate);
+                            },
+                            child: Text(
+                                "${getTranslated(context, 'applyFilter')}"),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                );
+              });
+        });
+  }
+
+  itemFilter(context, key, value, state) {
+    // print(value);
+    var size = MediaQuery.of(context).size;
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: size.height * 0.03,
+          ),
+          Text(
+            "${key.toUpperCase()}",
+            style: TextStyle(
+                fontSize: size.width * 0.06,
+                fontFamily: Fonts.dmSansBold,
+                color: AppColors.siginbackgrond),
+          ),
+          SizedBox(
+            height: size.height * 0.01,
+          ),
+          Column(
+            children: [
+              for (int i = 0; i < value.length; i++)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "${key == 'ageGroup' ? value[i] : value[i]['name']}",
+                      style: TextStyle(
+                          fontSize: size.width * 0.05,
+                          fontFamily: Fonts.dmSansMedium,
+                          color: AppColors.white),
+                    ),
+                    Theme(
+                      data: Theme.of(context).copyWith(
+                        unselectedWidgetColor: AppColors.white,
+                      ),
+                      child: Radio<int?>(
+                          value: i,
+                          groupValue: groupvalue["$key"],
+                          onChanged: (_v) {
+                            // print(filterData);
+                            // print("Here is  i ${value[i]['id']}  $key");
+                            // print(filterData['$key']);
+
+                            if (key == 'ageGroup') {
+                              filterData['$key'] = value[i].toString();
+                            } else {
+                              filterData['$key'] = value[i]['id'].toString();
+                            }
+
+                            _handleRadioValueChange(i, key);
+
+                            print(filterData);
+                            state(() {});
+
+                            // setState(() {});
+                          }),
+                    ),
+                  ],
+                )
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

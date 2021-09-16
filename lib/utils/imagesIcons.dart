@@ -18,6 +18,7 @@ class Images {
   static String bokkingIconActPng = "assets/pngicons/booking_ac.png";
   static String bookingIconUnActPng = "assets/pngicons/booking_unac.png";
   static String googleIconActPng = "assets/pngicons/googleIcon.png";
+  static String cartEmtySvg = "assets/svgicons/cartEmpty.svg";
 
   static String bookingIconActSvg = "assets/svgicons/bookingactive.svg";
   static String bookingIconUnActSvg = "assets/svgicons/bookingunActive.svg";

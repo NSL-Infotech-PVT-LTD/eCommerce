@@ -4,16 +4,25 @@ import 'package:funfy/apis/introApi.dart';
 import 'package:funfy/components/dialogs.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/models/addressLsitModel.dart';
+import 'package:funfy/ui/screens/address/addressList.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/langauge_constant.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 class AddressEdit extends StatefulWidget {
   final Addressdata? addressmodel;
+  final double? lat;
+  final double? lng;
 
-  const AddressEdit({Key? key, @required this.addressmodel}) : super(key: key);
+  const AddressEdit(
+      {Key? key,
+      @required this.addressmodel,
+      @required this.lat,
+      @required this.lng})
+      : super(key: key);
 
   @override
   _AddressEditState createState() => _AddressEditState();
@@ -39,7 +48,7 @@ class _AddressEditState extends State<AddressEdit> {
   String countryError = "";
 
   bool _loading = false;
-  bool _edit = false;
+  bool _edit = true;
 
   editFunc() {
     setState(() {
@@ -87,6 +96,33 @@ class _AddressEditState extends State<AddressEdit> {
     });
   }
 
+  // set address in input fieds
+
+  setinputValues() async {
+    print("address ---------------");
+
+    print("lat ${widget.lat} lng ${widget.lng}");
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(widget.lat!, widget.lng!);
+    var placemark = placemarks[0];
+
+    print(placemark);
+
+    String address =
+        "${placemark.locality},${placemark.administrativeArea}, ${placemark.country}";
+
+    print(address);
+
+    setState(() {
+      nameController.text = "${widget.addressmodel?.name}";
+      streetController.text = placemark.street.toString();
+      cityController.text = placemark.locality.toString();
+      stateController.text = placemark.administrativeArea.toString();
+      zipController.text = placemark.postalCode.toString();
+      countryController.text = placemark.country.toString();
+    });
+  }
+
   addAddressApiCall() async {
     FocusScope.of(context).requestFocus(FocusNode());
     var net = await Internetcheck.check();
@@ -97,7 +133,6 @@ class _AddressEditState extends State<AddressEdit> {
         _loading = true;
       });
       try {
-        var introdata = await getIntrodata();
         await updateaddAddressApi(
                 id: "${widget.addressmodel?.id}",
                 addresname: nameController.text.toString(),
@@ -106,8 +141,8 @@ class _AddressEditState extends State<AddressEdit> {
                 state: stateController.text.toString(),
                 zip: zipController.text.toString(),
                 country: countryController.text.toString(),
-                latitude: "18.89",
-                longitude: "19.23")
+                latitude: widget.lat.toString(),
+                longitude: widget.lng.toString())
             .then((value) {
           setState(() {
             _loading = false;
@@ -122,7 +157,11 @@ class _AddressEditState extends State<AddressEdit> {
                     "${getTranslated(context, 'addresssuccessfullyUpdated')}");
 
             clearFeilds();
-            navigatePopFun(context);
+            navigatorPushFun(
+                context,
+                AddressList(
+                  navNum: 0,
+                ));
           } else {
             Dialogs.showBasicsFlash(
                 context: context,
@@ -157,13 +196,14 @@ class _AddressEditState extends State<AddressEdit> {
   void initState() {
     super.initState();
     // set value in input
+    setinputValues();
 
-    nameController.text = "${widget.addressmodel?.name}";
-    streetController.text = "${widget.addressmodel?.streetAddress}";
-    cityController.text = "${widget.addressmodel?.city}";
-    stateController.text = "${widget.addressmodel?.state}";
-    zipController.text = "${widget.addressmodel?.zip}";
-    countryController.text = "${widget.addressmodel?.country}";
+    // nameController.text = "${widget.addressmodel?.name}";
+    // streetController.text = "${widget.addressmodel?.streetAddress}";
+    // cityController.text = "${widget.addressmodel?.city}";
+    // stateController.text = "${widget.addressmodel?.state}";
+    // zipController.text = "${widget.addressmodel?.zip}";
+    // countryController.text = "${widget.addressmodel?.country}";
   }
 
   @override
@@ -180,13 +220,13 @@ class _AddressEditState extends State<AddressEdit> {
         title: Text(
             "${_edit ? getTranslated(context, 'addressEdit') : getTranslated(context, 'address')}"),
         actions: [
-          _edit
-              ? SizedBox()
-              : IconButton(
-                  onPressed: () {
-                    editFunc();
-                  },
-                  icon: Icon(Icons.edit))
+          // _edit
+          //     ? SizedBox()
+          //     : IconButton(
+          //         onPressed: () {
+          //           editFunc();
+          //         },
+          //         icon: Icon(Icons.edit))
         ],
       ),
       body: SingleChildScrollView(
@@ -227,13 +267,13 @@ class _AddressEditState extends State<AddressEdit> {
                         securityField(
                             context: context,
                             controller: zipController,
-                            error: stateError,
+                            error: zipError,
                             title: "${getTranslated(context, 'zipcode')}",
                             hint: "${getTranslated(context, 'enterZipCode')}"),
                         securityField(
                             context: context,
                             controller: countryController,
-                            error: stateError,
+                            error: countryError,
                             title: "${getTranslated(context, 'country')}",
                             hint: "${getTranslated(context, 'enterCountry')}"),
                         _edit
@@ -274,7 +314,12 @@ class _AddressEditState extends State<AddressEdit> {
   // input field
 
   Widget securityField(
-      {context, String? title, String? hint, String? error, controller}) {
+      {context,
+      String? title,
+      String? hint,
+      String? error,
+      controller,
+      bool enable = true}) {
     var size = MediaQuery.of(context).size;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -288,7 +333,7 @@ class _AddressEditState extends State<AddressEdit> {
         TextFormField(
           style: TextStyle(color: AppColors.white),
           cursorColor: AppColors.white,
-          enabled: _edit,
+          enabled: enable,
           controller: controller,
           keyboardType: TextInputType.text,
           decoration: InputDecoration(
