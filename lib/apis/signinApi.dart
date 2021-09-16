@@ -249,7 +249,7 @@ Future<bool?> logoutApi() async {
     Constants.prefs?.setString("gender", "");
 
     // language
-    Constants.prefs?.setString(Strings.radioValue, 'null');
+    Constants.prefs?.setString(Strings.radioValue, 'en');
 
     Constants.prefs?.setString('es', 'null');
 

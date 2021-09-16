@@ -43,8 +43,10 @@ Widget fiestasItem({context, Datum? postModeldata}) {
       postModeldata?.leftVipTicket.toString() == "0") {
     available = true;
   }
-
-  if (postModeldata?.clubRating == null || postModeldata?.clubRating == 0) {
+  print("postModeldata?.clubRating ${postModeldata?.clubRating}");
+  if (postModeldata?.clubRating == null ||
+      postModeldata?.clubRating == 0 ||
+      postModeldata?.clubRating == "null") {
     rating = 0.0;
   } else {
     rating = double.parse("${postModeldata?.clubRating}");

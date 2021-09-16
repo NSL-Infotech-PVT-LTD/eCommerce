@@ -326,7 +326,7 @@ class _HomeMPageState extends State<HomeMPage> {
       }
 
       if (fiestasPageCount >
-          int.parse('${UserData.fiestasdata?.data?.lastPage}')) {
+          int.parse('${UserData.fiestasdata?.data?.lastPage ?? 0}')) {
         print('No More Products');
 
         return;
@@ -375,7 +375,7 @@ class _HomeMPageState extends State<HomeMPage> {
       }
 
       if (prefiestasPageCount >
-          int.parse('${prefiestasdata?.data?.lastPage}')) {
+          int.parse('${prefiestasdata?.data?.lastPage ?? 0}')) {
         print('No More Products');
 
         return;
@@ -413,6 +413,7 @@ class _HomeMPageState extends State<HomeMPage> {
   @override
   void dispose() {
     _fiestasScrollController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -1035,7 +1036,7 @@ class _HomeMPageState extends State<HomeMPage> {
                               (context, index) {
                                 if (index ==
                                         int.parse(
-                                            '${UserData.fiestasdata?.data?.data?.length}') &&
+                                            '${UserData.fiestasdata?.data?.data?.length ?? 0}') &&
                                     fiestasLoadingPage) {
                                   return Container(
                                     width: MediaQuery.of(context).size.width,
@@ -1065,10 +1066,10 @@ class _HomeMPageState extends State<HomeMPage> {
                               },
                               childCount: fiestasLoadingPage
                                   ? int.parse(
-                                          '${UserData.fiestasdata?.data?.data?.length}') +
+                                          '${UserData.fiestasdata?.data?.data?.length ?? 0}') +
                                       1
                                   : int.parse(
-                                      '${UserData.fiestasdata?.data?.data?.length}'),
+                                      '${UserData.fiestasdata?.data?.data?.length ?? 0}'),
                             ))
                   : SliverToBoxAdapter(
                       child: SizedBox(),

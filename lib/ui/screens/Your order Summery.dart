@@ -89,7 +89,7 @@ class _YourOrderSumState extends State<YourOrderSum> {
         setState(() {
           _loading = false;
         });
-        print("here is error- $e");
+        // print("here is error- $e");
       }
     }
   }

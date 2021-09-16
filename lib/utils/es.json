@@ -261,7 +261,7 @@
     "myOrders": "Mis pedidos",
     "CheckyourordersyouboughtforPrefiestas": "Comprueba los pedidos de pre-fiesta",
     "theSessionhasexpired": "La sesión ha expirado, loggin de nuevo!",
-    "selectAtMost": "Seleccionar como mínimo",
+    "selectAtMost": "Seleccione al menos",
     "one": "uno",
     "paymentisFailed": "Pago fallido",
     "peopleAttendinginthisevent": "Personas que asistirán a este evento",
@@ -274,5 +274,6 @@
     "termsAndConditions": "Términos y condiciones",
     "privacyPolicy": "Políticas de privacidad",
     "AllowPermissionFromYourMobilesettings": "Permitir permiso desde la configuración de su dispositivo móvil",
-    "goToPhoneSettings": "Ir a la configuración del teléfono"
+    "goToPhoneSettings": "Ir a la configuración del teléfono",
+    "Pleasewaittransactionisinprogress": "Espere que la transacción esté en curso"
 }

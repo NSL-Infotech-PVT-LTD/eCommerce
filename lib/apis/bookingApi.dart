@@ -139,7 +139,8 @@ Future cartResetPrefiestas({
   return jsonBody;
 }
 
-Future<PreFiestasBookingListModel?> preFiestaBookingListApi() async {
+// PreFiestasBookingListModel?
+Future preFiestaBookingListApi() async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
   };
@@ -150,10 +151,11 @@ Future<PreFiestasBookingListModel?> preFiestaBookingListApi() async {
   if (res.statusCode == 200) {
     // print("body Here ---------");
 
-    // print(res.body);
+    print(res.body);
 
     try {
-      return preFiestasBookingListModelFromJson(res.body);
+      return json.decode(res.body);
+      // return preFiestasBookingListModelFromJson(res.body);
     } catch (e) {
       print("e-------------------- $e");
     }
@@ -224,8 +226,12 @@ Future<PrefiestasOrderDetailModel?> prefiestasShowOrderDetail(
   // print(res.body);
 
   if (res.statusCode == 200) {
-    // print(res.body);
-    return prefiestasOrderDetailModelFromJson(res.body);
+    print(res.body);
+    try {
+      return prefiestasOrderDetailModelFromJson(res.body);
+    } catch (e) {
+      print("here is error api $e");
+    }
   } else if (res.statusCode == 422) {
     Dialogs.simpleOkAlertDialog(
         context: context,
