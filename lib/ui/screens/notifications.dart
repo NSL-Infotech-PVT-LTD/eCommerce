@@ -258,15 +258,15 @@ Widget notificationItem(
   var size = MediaQuery.of(context).size;
   return InkWell(
     onTap: () {
-      print(jsonData);
+      print(jsonData["booking_detail"]["target_id"]);
 
-      if (jsonData["booking_detail"]["data_type"] == "order") {
+      if (jsonData["booking_detail"]["target_model"] == "PreFiestaOrder") {
         navigatorPushFun(
             context,
             YourOrderSum(
                 orderID: jsonData["booking_detail"]["target_id"].toString()));
       }
-      if (jsonData["booking_detail"]["data_type"] == "Booking") {
+      if (jsonData["booking_detail"]["target_model"] == "FiestaBooking") {
         print(jsonData["booking_detail"]["target_id"]);
         navigatorPushFun(
             context,

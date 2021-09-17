@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:funfy/apis/userdataM.dart';
+import 'package:funfy/ui/screens/fiestasMoreOrderDetails.dart';
 import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/screens/splash.dart';
+import 'package:funfy/ui/screens/yourOrderSummery.dart';
 import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/localizing.dart';
@@ -220,17 +222,19 @@ class _MyAppState extends State<MyApp> {
 
       // on background notification on tap
 
-      print(message.data);
+      // print(message.data);
 
-      // if(message.)
-      Get.to(Home(
-        pageIndexNum: 1,
-      ));
+      var messageData2 = json.decode(message.data['data']);
 
-      // Navigator.of(context).push(MaterialPageRoute(
-      //     builder: (context) => Home(
-      //           pageIndexNum: 1,
-      //         )));
+      if (messageData2["target_model"] == "FiestaBooking") {
+        Get.off(FiestasMoreOrderDetail(
+            nav: 1, fiestaBookingId: messageData2["target_id"]));
+      } else if (messageData2["target_model"] == "PreFiestaOrder") {
+        Get.off(YourOrderSum(
+          nav: 1,
+          orderID: messageData2["target_id"],
+        ));
+      }
 
       // on message
     });
@@ -243,20 +247,22 @@ class _MyAppState extends State<MyApp> {
         onSelectNotification: (v) async {
       print("Here is on select notification --- $v");
 
+      // on fourground notification on tap
+
       var messageData = json.decode(v!);
 
       var messageData2 = json.decode(messageData["data"]!);
 
       print("model ${messageData2["target_model"]}");
 
-      // on fourground notification on tap
-
       if (messageData2["target_model"] == "FiestaBooking") {
-        Get.to(Home(
-          pageIndexNum: 1,
+        Get.off(FiestasMoreOrderDetail(
+            nav: 1, fiestaBookingId: messageData2["target_id"]));
+      } else if (messageData2["target_model"] == "PreFiestaOrder") {
+        Get.off(YourOrderSum(
+          nav: 1,
+          orderID: messageData2["target_id"],
         ));
-
-        // Get.off(NextScreen());
       }
     });
   }
