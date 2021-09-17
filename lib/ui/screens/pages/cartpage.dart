@@ -1107,16 +1107,38 @@ class _CartpageState extends State<Cartpage> {
                                                 ),
                                               )),
                                           SizedBox(height: size.height * 0.02),
-                                          Text(
-                                              "${getTranslated(context, "thisisFinalstepafteryouTouchingpaynowbuttonthepaymentwillbetransation")}",
-                                              // Strings.thisisFinalstepafteryouTouchingpaynowbuttonthepaymentwillbetransation,
-                                              textAlign: TextAlign.center,
+                                          Text.rich(TextSpan(
+                                              text:
+                                                  " ${getTranslated(context, "thisisthefinalstepOnceyoupressOnceyouPress")} ", // Strings.byContinuingYouAgreetoOur,
                                               style: TextStyle(
-                                                  color:
-                                                      AppColors.itemDescription,
                                                   fontFamily:
-                                                      Fonts.dmSansRegular,
-                                                  fontSize: size.width * 0.03)),
+                                                      Fonts.dmSansMedium,
+                                                  color: AppColors
+                                                      .descriptionfirst,
+                                                  fontSize: size.width * 0.038),
+                                              children: <InlineSpan>[
+                                                TextSpan(
+                                                  text:
+                                                      " ${getTranslated(context, "Proceedtopay")} ", //"${Strings.termsOfService}",
+                                                  style: TextStyle(
+                                                      fontFamily:
+                                                          Fonts.dmSansBold,
+                                                      color: Colors.white,
+                                                      fontSize:
+                                                          size.width * 0.04),
+                                                ),
+                                                TextSpan(
+                                                  text:
+                                                      " ${getTranslated(context, "buttonthetransactionWillbeProceed.")} ", //"${Strings.termsOfService}",
+                                                  style: TextStyle(
+                                                      fontFamily:
+                                                          Fonts.dmSansMedium,
+                                                      color: AppColors
+                                                          .descriptionfirst,
+                                                      fontSize:
+                                                          size.width * 0.038),
+                                                ),
+                                              ])),
                                           SizedBox(height: size.height * 0.03),
 
                                           // button

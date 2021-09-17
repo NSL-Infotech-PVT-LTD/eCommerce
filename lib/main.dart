@@ -157,9 +157,14 @@ class _MyAppState extends State<MyApp> {
         // print("message $message");
         // var jsonData = json.decode(message.data['data']);
         // var mid = jsonData['target_id'];
-        print("message ${message.notification?.android}");
+        // print("message ${message.notification?.android}");
+
         RemoteNotification? notification = message.notification;
         AndroidNotification? android = message.notification?.android;
+        print("message data ${message.data.entries}");
+
+        print("notification - $notification");
+        print("android - $android");
         if (notification != null && android != null)
 
         // if (message.data.length != 0)
@@ -186,6 +191,26 @@ class _MyAppState extends State<MyApp> {
 
           print(
               "======IN onMessage ========> YYYYYYYYYYYYYYYY ${message.data}");
+        } else if (message.data.isNotEmpty) {
+          flutterLocalNotificationsPlugin.show(
+              // mid,
+              // message.data['title'],
+              // message.data['body'],
+
+              notification.hashCode,
+              message.data['title'],
+              message.data['body'],
+              NotificationDetails(
+                android: AndroidNotificationDetails(
+                  channel.id,
+                  channel.name,
+                  channel.description,
+                  // color: Colors.blue,
+                  playSound: true,
+                  icon: '@mipmap/ic_launcher',
+                ),
+              ),
+              payload: json.encode(message.data));
         }
       },
     );
@@ -194,6 +219,10 @@ class _MyAppState extends State<MyApp> {
       print("IN THE OPEN MESSAGE  ============>>>>>>>>>>>");
 
       // on background notification on tap
+
+      print(message.data);
+
+      // if(message.)
       Get.to(Home(
         pageIndexNum: 1,
       ));
@@ -214,11 +243,21 @@ class _MyAppState extends State<MyApp> {
         onSelectNotification: (v) async {
       print("Here is on select notification --- $v");
 
+      var messageData = json.decode(v!);
+
+      var messageData2 = json.decode(messageData["data"]!);
+
+      print("model ${messageData2["target_model"]}");
+
       // on fourground notification on tap
 
-      Get.to(Home(
-        pageIndexNum: 1,
-      ));
+      if (messageData2["target_model"] == "FiestaBooking") {
+        Get.to(Home(
+          pageIndexNum: 1,
+        ));
+
+        // Get.off(NextScreen());
+      }
     });
   }
 
@@ -229,8 +268,9 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         title: "funfy",
         theme: ThemeData(
-          primarySwatch: Colors.red,
-        ),
+            primarySwatch: Colors.red,
+            accentColor: Colors.red,
+            primaryColor: Colors.red),
         locale: _locale,
         localizationsDelegates: const [
           MyLocalization.delegate,

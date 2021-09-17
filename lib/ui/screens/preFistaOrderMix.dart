@@ -275,11 +275,29 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                 color: AppColors.white,
                 fontFamily: Fonts.dmSansBold,
                 fontSize: SizeConfig.screenWidth * 0.045)),
-        subtitle: Text("${data![index].quantityInCl} CL",
-            style: TextStyle(
-                color: AppColors.grayFont,
-                fontFamily: Fonts.dmSansBold,
-                fontSize: SizeConfig.screenWidth * 0.040)),
+        subtitle: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text("${Strings.euro}${data![index].price}",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: Fonts.dmSansBold,
+                    fontSize: SizeConfig.screenWidth * 0.045)),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: size.width * 0.01),
+              padding: EdgeInsets.all(1.5),
+              alignment: Alignment.center,
+              decoration:
+                  BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+            ),
+            Text("${data![index].quantityInCl} CL",
+                style: TextStyle(
+                    fontStyle: FontStyle.italic,
+                    color: AppColors.grayFont,
+                    fontFamily: Fonts.dmSansBold,
+                    fontSize: SizeConfig.screenWidth * 0.0350)),
+          ],
+        ),
         trailing:
 
             // numCount != true
@@ -347,11 +365,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
 
             // video
             _controller = VideoPlayerController.network(
-                // "https://www.youtube.com/watch?v=637wpikrN7s")
-
                 "${prefiestasDetailModel!.data!.parentData!.videoUrl}")
-              // "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_20mb.mp4")
-              // "${prefiestasDetailModel!.data!.parentData!.videoUrl ?? 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_20mb.mp4'}")
               ..initialize().then((_) {
                 setState(() {});
               });
@@ -1017,7 +1031,8 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                                                                     .value
                                                                     .aspectRatio,
                                                             child: VideoPlayer(
-                                                                _controller!),
+                                                              _controller!,
+                                                            ),
                                                           )
                                                         : Container()),
                                                 Center(

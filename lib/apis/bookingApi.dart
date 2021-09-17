@@ -67,14 +67,16 @@ Future fiestasBooking(
 
 // booking list show
 // <FiestasBookingList?>
-Future fiestasBookingList() async {
+Future fiestasBookingList({int? pageCount}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
     'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
-  var res =
-      await http.post(Uri.parse(Urls.fiestasBookingListUrl), headers: headers);
+  var body = {"limit": "10", "page": "${pageCount ?? ''}", "sort_by": "desc"};
+
+  var res = await http.post(Uri.parse(Urls.fiestasBookingListUrl),
+      body: body, headers: headers);
 
   final jsonRes = json.decode(res.body);
 
@@ -87,7 +89,7 @@ Future fiestasBookingList() async {
   if (res.statusCode == 200) {
     // print("newModle" + res.body);
     // return fiestasBookingListFromJson(res.body);
-    return jsonRes["data"]["data"];
+    return jsonRes;
   } else {
     print(res.body);
   }
@@ -140,13 +142,15 @@ Future cartResetPrefiestas({
 }
 
 // PreFiestasBookingListModel?
-Future preFiestaBookingListApi() async {
+Future preFiestaBookingListApi({int? pageCount}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
   };
 
+  var body = {"limit": '10', "page": "${pageCount ?? ''}", "sort_by": "desc"};
+
   var res = await http.post(Uri.parse(Urls.preFiestasBookingListUrl),
-      headers: headers);
+      body: body, headers: headers);
 
   if (res.statusCode == 200) {
     // print("body Here ---------");

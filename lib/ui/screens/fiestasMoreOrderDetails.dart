@@ -92,7 +92,7 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
             if (ratM == null || ratM == 0) {
               ratingF = 0.0;
             } else {
-              ratingF = double.parse("$ratM");
+              ratingF = double.parse("$ratM ");
             }
           });
         });

@@ -115,7 +115,7 @@ class FiestaDetail {
   String? totalMembers;
   int? filterMusicId;
   int? filterClothingId;
-  int? clubRating;
+  var clubRating;
   var leftNormalTicket;
   var leftStandardTicket;
   var leftVipTicket;

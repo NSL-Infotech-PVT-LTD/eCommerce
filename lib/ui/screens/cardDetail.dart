@@ -429,26 +429,7 @@ class _CartDetailState extends State<CartDetail> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // top content
-                          Row(
-                            children: [
-                              SvgPicture.asset(
-                                "assets/svgicons/cartsvg.svg",
-                                width: size.width * 0.07,
-                              ),
-                              SizedBox(
-                                // width: SizeConfig.screenWidth * 0.03,
-                                width: size.width * 0.03,
-                              ),
-                              Text(
-                                "${getTranslated(context, "yourCart")}",
-                                style: TextStyle(
-                                    fontSize: size.width * 0.045,
-                                    fontFamily: Fonts.dmSansMedium,
-                                    color: AppColors.white),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: size.height * 0.02),
+
                           roundedBoxR(
                             radius: size.width * 0.02,
                             // height: size.height * 0.08,
@@ -514,10 +495,45 @@ class _CartDetailState extends State<CartDetail> {
                               ),
                             ),
                           ),
+                          //tax
+
+                          SizedBox(height: size.height * 0.02),
+
+                          Container(
+                            margin: EdgeInsets.symmetric(
+                                horizontal: size.width * 0.01),
+                            // width: SizeConfig.screenWidth * 0.80,
+                            child: Row(
+                              children: [
+                                Text(
+                                  "${getTranslated(context, "bookingCharges")}",
+                                  //   "Other Taxes",
+                                  style: TextStyle(
+                                      color: AppColors.white,
+                                      fontSize: size.width * 0.04,
+                                      fontFamily: Fonts.dmSansMedium),
+                                ),
+                                Spacer(),
+                                Text(
+                                  "  ${Strings.euro} ${((double.parse(tottalAmount.toString()) * 2.9) / 100 + 0.30).toStringAsFixed(2)}",
+                                  style: TextStyle(
+                                      color: AppColors.white,
+                                      fontSize: size.width * 0.045,
+                                      fontFamily: Fonts.dmSansBold),
+                                )
+                              ],
+                            ),
+                          ),
 
                           SizedBox(
-                            height: size.height * 0.05,
+                            height: SizeConfig.screenHeight * 0.04,
                           ),
+
+                          SizedBox(
+                            height: SizeConfig.screenHeight * 0.015,
+                          ),
+
+                          //tax
 
                           //center content
 
@@ -564,7 +580,7 @@ class _CartDetailState extends State<CartDetail> {
                                                 backgroundColorEnd:
                                                     Colors.red.shade700,
                                                 text:
-                                                    "${getTranslated(context, "swipetopay")}",
+                                                    "${getTranslated(context, "swipetopay")}   ${Strings.euro} ${(double.parse(tottalAmount.toString()) + ((double.parse(tottalAmount.toString()) * 2.9) / 100 + 0.30)).toStringAsFixed(2)}",
                                                 backgroundShape:
                                                     BorderRadius.circular(8),
                                                 foregroundShape:

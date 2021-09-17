@@ -75,7 +75,7 @@ class OrderDetail {
 
   int? orderBy;
   String? transferCharge;
-  int? totalPrice;
+  var totalPrice;
   OrderDetailAddress? address;
   var orderStatus;
   PaymentParams? paymentParams;

@@ -44,7 +44,10 @@ Future<FiestasModel?> fiestasPostGet(
     "ageGroup": "${filterDataF['ageGroup']}",
     "limit": "${limitCount ?? ''}",
     "sort_by": "desc",
-    'page': "${pageCount ?? ''}"
+    'page': "${pageCount ?? ''}",
+
+    "latitude": "${Constants.prefs?.getString("lat") ?? ''}",
+    "longitude": "${Constants.prefs?.getString("lng") ?? ''}"
   };
 
   var res = await http.post(Uri.parse(Urls.fiestasPostUrl),
@@ -178,14 +181,16 @@ Future prefiestasAddfavouriteApi({
 
 // favourite list fiestas
 
-Future<FiestasFavouriteModel?> fiestasFavouriteListApi() async {
+Future<FiestasFavouriteModel?> fiestasFavouriteListApi({int? pageCount}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
     //  'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
-  var res =
-      await http.post(Uri.parse(Urls.fiestasfavoriteListUrl), headers: headers);
+  var body = {"limit": "3", "page": "${pageCount ?? ''}", "sort_by": "desc"};
+
+  var res = await http.post(Uri.parse(Urls.fiestasfavoriteListUrl),
+      body: body, headers: headers);
 
   // print(res.body);
 

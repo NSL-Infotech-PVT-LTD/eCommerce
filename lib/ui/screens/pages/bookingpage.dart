@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:funfy/apis/bookingApi.dart';
 import 'package:funfy/components/navigation.dart';
 import 'package:funfy/models/preFiestasBookingListModel.dart';
-import 'package:funfy/ui/screens/Your%20order%20Summery.dart';
+import 'package:funfy/ui/screens/yourOrderSummery.dart';
 import 'package:funfy/ui/screens/fiestasMoreOrderDetails.dart';
 import 'package:funfy/ui/widgets/rating.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
@@ -31,12 +31,24 @@ class _BookingPageState extends State<BookingPage> {
   // FiestasBookingList? fiestasBookingListModel = FiestasBookingList();
 
   List fiestasBookingListRes = [];
+  var fiestasData;
 
   List prifiestasBookingList = [];
+  var preFiestasData;
   // PreFiestasBookingListModel? preFiestasBookingList;
   bool _loading = false;
 
   bool _preFiestasLoading = false;
+
+  //pagination
+
+  ScrollController _fiestasScrollController = ScrollController();
+  bool fiestasPageLoading = false;
+  int fiestasPage = 1;
+
+  ScrollController _prefiestasScrollController = ScrollController();
+  bool preFiestasPageLoading = false;
+  int preFiestasPage = 1;
 
   bookingListget() async {
     var net = await Internetcheck.check();
@@ -55,12 +67,14 @@ class _BookingPageState extends State<BookingPage> {
           // print(res[0]["id"]);
           // print(res.body);
 
-          Iterable data = res.reversed.toList();
+          // Iterable data = res["data"]["data"].reversed.toList();
 
           // print(data);
 
           setState(() {
-            fiestasBookingListRes = data.toList();
+            // fiestasBookingListRes = data.toList();
+            fiestasBookingListRes = res["data"]["data"];
+            fiestasData = res;
             _loading = false;
           });
         });
@@ -83,23 +97,11 @@ class _BookingPageState extends State<BookingPage> {
         });
 
         if (res["code"] == 200 && res["status"] == true) {
-          // print("res data ----------- ");
-          // print("after return  ${res?.toJson().toString()}");
-
-          var resRevData = res["data"]["data"];
-
           setState(() {
-            prifiestasBookingList = resRevData.reversed.toList();
+            prifiestasBookingList = res["data"]["data"];
+            preFiestasData = res;
             _preFiestasLoading = false;
           });
-
-          // setState(() {
-          //   preFiestasBookingList = res;
-
-          //   var rlist = preFiestasBookingList?.data?.data?.reversed.toList();
-          //   preFiestasBookingList?.data?.data = rlist;
-          //   _preFiestasLoading = false;
-          // });
         }
       });
     } catch (e) {
@@ -112,9 +114,127 @@ class _BookingPageState extends State<BookingPage> {
 
   @override
   void initState() {
+    _fiestasScrollController.addListener(() {
+      double maxScroll = _fiestasScrollController.position.maxScrollExtent;
+      double currentScroll = _fiestasScrollController.position.pixels;
+      double delta = MediaQuery.of(context).size.height * 0.20;
+      if (maxScroll - currentScroll <= delta) {
+        print("Fiestas page ...............");
+        fiestasPagination();
+      }
+    });
+
+    _prefiestasScrollController.addListener(() {
+      double maxScroll = _prefiestasScrollController.position.maxScrollExtent;
+      double currentScroll = _prefiestasScrollController.position.pixels;
+      double delta = MediaQuery.of(context).size.height * 0.20;
+      if (maxScroll - currentScroll <= delta) {
+        print("preFiestas page ...............");
+        prefiestasPagination();
+        // notificationPagination();
+      }
+    });
     super.initState();
     bookingListget();
     priFiestasBookings();
+  }
+
+  //pagination
+  fiestasPagination() async {
+    var net = await Internetcheck.check();
+
+    print("notification data ${fiestasData["data"]["last_page"]}");
+
+    if (net == false) {
+      Internetcheck.showdialog(context: context);
+    }
+    {
+      if (fiestasPageLoading) {
+        return;
+      }
+
+      if (fiestasPage > int.parse('${fiestasData["data"]["last_page"]}')) {
+        print('No More Products');
+
+        return;
+      }
+
+      try {
+        setState(() {
+          fiestasPageLoading = true;
+        });
+        print("get data ........");
+        fiestasPage = fiestasPage + 1;
+
+        await fiestasBookingList(pageCount: fiestasPage).then((res) {
+          setState(() {
+            fiestasBookingListRes.addAll(res["data"]["data"]);
+            fiestasData = res;
+            fiestasPageLoading = false;
+          });
+        });
+      } catch (e) {
+        print("fiestasbooking page Error $e");
+        setState(() {
+          fiestasPageLoading = false;
+        });
+      }
+    }
+  }
+
+  // prefiestas pagination
+  prefiestasPagination() async {
+    var net = await Internetcheck.check();
+
+    if (net == false) {
+      Internetcheck.showdialog(context: context);
+    }
+    {
+      if (preFiestasPageLoading) {
+        return;
+      }
+
+      if (preFiestasPage >
+          int.parse('${preFiestasData["data"]["last_page"]}')) {
+        print('No More Products');
+
+        return;
+      }
+
+      try {
+        setState(() {
+          preFiestasPageLoading = true;
+        });
+        print("get data ........");
+        preFiestasPage = preFiestasPage + 1;
+
+        await preFiestaBookingListApi(pageCount: preFiestasPage).then((res) {
+          setState(() {
+            preFiestasPageLoading = false;
+          });
+
+          if (res["code"] == 200 && res["status"] == true) {
+            setState(() {
+              prifiestasBookingList.addAll(preFiestasData["data"]["data"]);
+              preFiestasData = preFiestasData;
+              // preFiestasPageLoading = false;
+            });
+          }
+        });
+      } catch (e) {
+        print("fiestasbooking page Error $e");
+        setState(() {
+          preFiestasPageLoading = false;
+        });
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _fiestasScrollController.dispose();
+    _prefiestasScrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -278,12 +398,36 @@ class _BookingPageState extends State<BookingPage> {
                                           fontSize: size.width * 0.05),
                                     ))
                                   : ListView.builder(
+                                      controller: _fiestasScrollController,
                                       // itemCount: fiestasBookingListModel
                                       //         ?.data?.data?.length ??
                                       // 0,
 
                                       itemCount: fiestasBookingListRes.length,
                                       itemBuilder: (context, index) {
+                                        if (index ==
+                                                fiestasBookingListRes.length -
+                                                    1 &&
+                                            fiestasPageLoading == true) {
+                                          return Container(
+                                            height: size.height * 0.08,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            padding: EdgeInsets.all(5),
+                                            child: Column(
+                                              children: [
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                CircularProgressIndicator(
+                                                  color: AppColors.white,
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        }
+
                                         return fiestasOrdersItem(
                                             context: context,
                                             index: index,
@@ -308,11 +452,35 @@ class _BookingPageState extends State<BookingPage> {
                                           fontSize: size.width * 0.05),
                                     ))
                                   : ListView.builder(
+                                      controller: _prefiestasScrollController,
                                       // itemCount: preFiestasBookingList
                                       //         ?.data?.data?.length ??
                                       //     0,
+
                                       itemCount: prifiestasBookingList.length,
                                       itemBuilder: (context, index) {
+                                        if (index ==
+                                                prifiestasBookingList.length -
+                                                    1 &&
+                                            preFiestasPageLoading) {
+                                          return Container(
+                                            height: size.height * 0.08,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            padding: EdgeInsets.all(5),
+                                            child: Column(
+                                              children: [
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                CircularProgressIndicator(
+                                                  color: AppColors.white,
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        }
                                         return preFiestasOrderItemsNew(
                                             context: context,
                                             index: index,
@@ -490,22 +658,22 @@ Widget fiestasOrdersItem(
         // mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          roundedBoxR(
-              width: size.width * 0.16,
-              height: size.height * 0.03,
-              backgroundColor: AppColors.green,
-              radius: size.width * 0.01,
-              child: Align(
-                alignment: Alignment.center,
-                child: Text(
-                  "${getTranslated(context, "open")}",
-                  // Strings.open,
-                  style: TextStyle(
-                      fontFamily: Fonts.dmSansBold,
-                      color: AppColors.white,
-                      fontSize: size.width * 0.035),
-                ),
-              )),
+          // roundedBoxR(
+          //     width: size.width * 0.16,
+          //     height: size.height * 0.03,
+          //     backgroundColor: AppColors.green,
+          //     radius: size.width * 0.01,
+          //     child: Align(
+          //       alignment: Alignment.center,
+          //       child: Text(
+          //         "${getTranslated(context, "open")}",
+          //         // Strings.open,
+          //         style: TextStyle(
+          //             fontFamily: Fonts.dmSansBold,
+          //             color: AppColors.white,
+          //             fontSize: size.width * 0.035),
+          //       ),
+          //     )),
           SizedBox(
             height: size.height * 0.003,
           ),

@@ -33,8 +33,21 @@ class _FavouriteState extends State<Favourite> {
   FiestasFavouriteModel? fiestasFavModel;
   PrefiestasFavouriteModel? preFiestasFavModel;
 
+  ScrollController _fiestasScrollController = ScrollController();
+  bool fiestasPageLoading = false;
+  int fiestasPage = 1;
+
   @override
   void initState() {
+    _fiestasScrollController.addListener(() {
+      double maxScroll = _fiestasScrollController.position.maxScrollExtent;
+      double currentScroll = _fiestasScrollController.position.pixels;
+      double delta = MediaQuery.of(context).size.height * 0.20;
+      if (maxScroll - currentScroll <= delta) {
+        print("Fiestas page ...............");
+        fiestasPagination();
+      }
+    });
     super.initState();
     prifiestaFavList();
 
@@ -42,6 +55,7 @@ class _FavouriteState extends State<Favourite> {
   }
 
   getFavouriteList() async {
+    fiestasPage = 1;
     var net = await Internetcheck.check();
 
     if (net != true) {
@@ -86,6 +100,56 @@ class _FavouriteState extends State<Favourite> {
 
       print("error in prefiestas - $e");
     }
+  }
+
+  // fiestas pagination
+
+  //pagination
+  fiestasPagination() async {
+    var net = await Internetcheck.check();
+
+    if (net == false) {
+      Internetcheck.showdialog(context: context);
+    } else {
+      if (fiestasPageLoading) {
+        return;
+      }
+
+      if (fiestasPage > int.parse('${fiestasFavModel?.data?.lastPage}')) {
+        print('No More Products');
+
+        return;
+      }
+
+      try {
+        setState(() {
+          fiestasPageLoading = true;
+        });
+
+        fiestasPage = fiestasPage + 1;
+
+        fiestasFavouriteListApi(pageCount: fiestasPage).then((res) {
+          setState(() {
+            var data = res?.data?.data?.toList();
+            // fiestasFavModel = res;
+            fiestasFavModel?.data?.data?.addAll(data!);
+            fiestasPageLoading = false;
+          });
+        });
+      } catch (e) {
+        print("fiestasbooking page Error $e");
+        setState(() {
+          fiestasPageLoading = false;
+        });
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _fiestasScrollController.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -206,9 +270,34 @@ class _FavouriteState extends State<Favourite> {
                                       fontSize: size.width * 0.05),
                                 ))
                               : ListView.builder(
+                                  controller: _fiestasScrollController,
                                   itemCount:
                                       fiestasFavModel?.data?.data?.length ?? 0,
                                   itemBuilder: (context, index) {
+                                    // fiestasPageLoading
+
+                                    if (index ==
+                                            int.parse(
+                                                    "${fiestasFavModel?.data?.data?.length}") -
+                                                1 &&
+                                        fiestasPageLoading) {
+                                      return Container(
+                                        height: size.height * 0.08,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        padding: EdgeInsets.all(5),
+                                        child: Column(
+                                          children: [
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            CircularProgressIndicator(
+                                              color: AppColors.white,
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    }
                                     return fiestasItemFav(
                                       context: context,
                                       index: index,

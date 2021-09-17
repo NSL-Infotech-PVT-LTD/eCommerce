@@ -233,7 +233,7 @@ class _BuyNowState extends State<BuyNow> {
                               children: [
                                 Container(
                                   // cvfbgtkl;./
-                                  width: SizeConfig.screenWidth * 0.60,
+                                  width: SizeConfig.screenWidth * 0.80,
 
                                   margin:
                                       EdgeInsets.only(top: size.height * 0.01),
@@ -339,6 +339,8 @@ class _BuyNowState extends State<BuyNow> {
                               }),
                         ),
 
+                        // tax
+
                         // proceed to pay
 
                         SizedBox(
@@ -376,15 +378,31 @@ class _BuyNowState extends State<BuyNow> {
                             constraints: BoxConstraints(
                               maxWidth: SizeConfig.screenWidth * 0.80,
                             ),
-                            child: Text(
-                              "${getTranslated(context, "thisisthefinalstepafteryoutouchingPayNowbuttonthepaymentwillbetransaction")}",
-                              //     Strings.thisisthefinalstepafteryoutouchingPayNowbuttonthepaymentwillbetransaction,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: AppColors.descriptionfirst,
-                                  fontSize: size.width * 0.035,
-                                  fontFamily: Fonts.dmSansMedium),
-                            )),
+                            child: Text.rich(TextSpan(
+                                text:
+                                    " ${getTranslated(context, "thisisthefinalstepOnceyoupressOnceyouPress")} ", // Strings.byContinuingYouAgreetoOur,
+                                style: TextStyle(
+                                    fontFamily: Fonts.dmSansMedium,
+                                    color: AppColors.descriptionfirst,
+                                    fontSize: size.width * 0.038),
+                                children: <InlineSpan>[
+                                  TextSpan(
+                                    text:
+                                        " ${getTranslated(context, "Proceedtopay")} ", //"${Strings.termsOfService}",
+                                    style: TextStyle(
+                                        fontFamily: Fonts.dmSansBold,
+                                        color: Colors.white,
+                                        fontSize: size.width * 0.04),
+                                  ),
+                                  TextSpan(
+                                    text:
+                                        " ${getTranslated(context, "buttonthetransactionWillbeProceed.")} ", //"${Strings.termsOfService}",
+                                    style: TextStyle(
+                                        fontFamily: Fonts.dmSansMedium,
+                                        color: AppColors.descriptionfirst,
+                                        fontSize: size.width * 0.038),
+                                  ),
+                                ]))),
 
                         SizedBox(
                           height: SizeConfig.screenHeight * 0.02,

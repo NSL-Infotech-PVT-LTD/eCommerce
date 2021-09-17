@@ -101,21 +101,22 @@ class _AddressListState extends State<AddressList> {
 
   // addAddress
 
-  getLatLong() {
-    if (Constants.prefs?.getString("lat") != '' &&
-        Constants.prefs?.getString("addres") != null) {
-      lats = double.parse('${Constants.prefs?.getString("lat")}');
-      lngs = double.parse('${Constants.prefs?.getString("lng")}');
-    } else {
-      determinePosition();
-    }
-  }
+  // getLatLong() {
+
+  //   if (Constants.prefs?.getString("lat") != '' &&
+  //       Constants.prefs?.getString("addres") != null) {
+  //     lats = double.parse('${Constants.prefs?.getString("lat")}');
+  //     lngs = double.parse('${Constants.prefs?.getString("lng")}');
+  //   } else {
+  //     determinePosition();
+  //   }
+  // }
 
   @override
   void initState() {
     super.initState();
     getAddresApiCall();
-    getLatLong();
+    // getLatLong();
   }
 
   @override
