@@ -163,7 +163,7 @@
   "buyNow": "Buy Now",
   "OtherTaxes": "Other Taxes",
   "GrandTotal": "Grand Total",
-  "DeliveryStatus": "Delivery Status",
+  "DeliveryStatus": "Order Status",
   "PackLaHavana": "Pack La Havana",
   "YourOrderSummery": "Your Order Summery",
   "garyadams": "Gary F. Adams",
@@ -276,5 +276,7 @@
   "PleaseselectanyPreFiestas": "Please select any Pre-Fiestas",
   "AllowPermissionFromYourMobilesettings": "Allow permission from your mobile settings",
   "goToPhoneSettings": "Go to phone's settings",
-  "Pleasewaittransactionisinprogress": "Please wait transaction is in progress"
+  "Pleasewaittransactionisinprogress": "Please wait transaction is in progress",
+  "pleaseEnterValidName": "Please Enter valid name",
+  "pleaseEnterRating": "Please give us rating"
 }

@@ -38,7 +38,7 @@ class FiestasMoreOrderDetail extends StatefulWidget {
 class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
   bool _loading = false;
   bool ratting = false;
-  double currentRating = 3.0;
+  double currentRating = 0.0;
 
   FiestasBookingDetailModel? fiestasBookingDetailModel;
   static GlobalKey<ScaffoldState> _keyScaffold = GlobalKey();

@@ -29,7 +29,7 @@ class YourOrderSum extends StatefulWidget {
 
 class _YourOrderSumState extends State<YourOrderSum> {
   bool ratting = false;
-  double currentRating = 3.0;
+  double currentRating = 0.0;
   PrefiestasOrderDetailModel? prefiestasOrderDetailModel;
   bool _loading = false;
 
@@ -49,7 +49,7 @@ class _YourOrderSumState extends State<YourOrderSum> {
       });
       try {
         await prefiestasShowOrderDetail(
-                context: context, orderId: widget.orderID.toString())
+            context: context, orderId: widget.orderID.toString())
             .then((res) {
           print("data is here ");
 
@@ -97,27 +97,37 @@ class _YourOrderSumState extends State<YourOrderSum> {
   // rating Api
   rating() {
     // navigatePopFun(context);
-    setState(() {
-      ratting = false;
-    });
 
-    var data = prefiestasOrderDetailModel?.data?.orderDetail![0];
+    if (currentRating == 0.0) {
+      Dialogs.showBasicsFlash(
+          context: context,
+          content: "${getTranslated(context, "pleaseEnterRating")}",
+          duration: Duration(seconds: 1));
+    } else {
+      setState(() {
+        ratting = false;
+      });
 
-    int rat = currentRating.toInt();
+      var data = prefiestasOrderDetailModel?.data?.orderDetail![0];
 
-    prefiestaRatingApi(orderId: "${data?.id}", rating: rat).then((value) {
-      if (value == false) {
-      } else {
-        setState(() {
-          ratting = true;
-        });
-        // print("here is else part");
-        Dialogs.showBasicsFlash(
-            context: context,
-            content: "${getTranslated(context, "successfullyRated")}",
-            duration: Duration(seconds: 1));
-      }
-    });
+      int rat = currentRating.toInt();
+
+      prefiestaRatingApi(orderId: "${data?.id}", rating: rat).then((value) {
+        if (value == false) {
+          setState(() {
+            ratting = true;
+          });
+        } else {
+          // print("here is else part");
+          Dialogs.showBasicsFlash(
+              context: context,
+              content: "${getTranslated(context, "successfullyRated")}",
+              duration: Duration(seconds: 1));
+
+          getPrefiestasorderItemData();
+        }
+      });
+    }
   }
 
   @override
@@ -448,7 +458,7 @@ class _YourOrderSumState extends State<YourOrderSum> {
                                   Text(
                                     Strings.euro +
                                         " " +
-                                        "${prefiestasOrderDetailModel?.data?.orderDetail![0].grandTotal}",
+                                        "${prefiestasOrderDetailModel?.data?.orderDetail![0].totalPrice}",
                                     style: TextStyle(
                                         color: AppColors.white,
                                         fontSize: size.width * 0.065,
@@ -500,12 +510,14 @@ class _YourOrderSumState extends State<YourOrderSum> {
                                     SizeConfig.screenHeight * 0.02),
                                 Text(
                                   // "25 JUNE, Today",
-                                  "${prefiestasOrderDetailModel?.data?.orderDetail![0].orderStatus == 'completed' ? getTranslated(context, 'delivered') : getTranslated(context, 'pending')}"
+                                  // "${prefiestasOrderDetailModel?.data?.orderDetail![0].orderStatus == 'completed' ? getTranslated(context, 'delivered') : getTranslated(context, 'pending')}"
+                                  "${prefiestasOrderDetailModel?.data?.orderDetail![0].orderStatus}"
                                       .toUpperCase(),
 
                                   // "$deliverydate",
                                   style: TextStyle(
-                                      color: AppColors.itemDescription,
+                                    // color: AppColors.itemDescription,
+                                      color: Colors.green,
                                       fontSize: size.width * 0.05,
                                       fontFamily: Fonts.dmSansMedium),
                                 ),

@@ -163,7 +163,7 @@
     "buyNow": "Compra ahora",
     "OtherTaxes": "Otros impuestos",
     "GrandTotal": "Gran total",
-    "DeliveryStatus": "Estado de entrega",
+    "DeliveryStatus": "Estado de la orden",
     "PackLaHavana": "Pack La Havana",
     "YourOrderSummery": "Su resumen del pedido",
     "garyadams": "Gary F. Adams",
@@ -275,5 +275,7 @@
     "privacyPolicy": "Políticas de privacidad",
     "AllowPermissionFromYourMobilesettings": "Permitir permiso desde la configuración de su dispositivo móvil",
     "goToPhoneSettings": "Ir a la configuración del teléfono",
-    "Pleasewaittransactionisinprogress": "Espere que la transacción esté en curso"
+    "Pleasewaittransactionisinprogress": "Espere que la transacción esté en curso",
+    "pleaseEnterValidName": "Ingrese un nombre válido",
+    "pleaseEnterRating": "Por favor, dénos una calificación"
 }
