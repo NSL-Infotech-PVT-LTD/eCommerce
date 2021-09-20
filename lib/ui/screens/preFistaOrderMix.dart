@@ -1019,7 +1019,8 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                                       height: size.height,
                                       width: size.width),
                                   Positioned.fill(
-                                      child: _controller!.value.isInitialized
+                                      child: _controller?.value.isInitialized ??
+                                              false
                                           ? Stack(
                                               children: [
                                                 Center(

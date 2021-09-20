@@ -13,6 +13,7 @@ import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
+import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 import 'package:intl/intl.dart';
@@ -75,9 +76,6 @@ class _YourOrderSumState extends State<YourOrderSum> {
 
             // grandTotal =
             //     "${prefiestasOrderDetailModel?.data?.orderDetail![0].grandTotal}";
-
-            print(
-                "here is status ${prefiestasOrderDetailModel?.data?.orderDetail![0].orderStatus}");
 
             if (prefiestasOrderDetailModel?.data?.orderDetail![0].orderStatus ==
                 "completed") {
@@ -328,148 +326,145 @@ class _YourOrderSumState extends State<YourOrderSum> {
                             color: AppColors.homeBackground,
                           ),
                           //  height: SizeConfig.screenHeight * 0.10,
-                          child: Row(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              Text(
+                                "${prefiestasOrderDetailModel?.data?.parentDetail?.name}",
+                                // "${getTranslated(context, "PackLaHavana")}",
+                                //"Pack La Havana",
+                                style: TextStyle(
+                                    color: AppColors.white,
+                                    fontSize: size.width * 0.05,
+                                    fontFamily: Fonts.dmSansBold),
+                              ),
+                              SizedBox(
+                                height: SizeConfig.screenHeight * 0.02,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    "${prefiestasOrderDetailModel?.data?.parentDetail?.name}",
-                                    // "${getTranslated(context, "PackLaHavana")}",
-                                    //"Pack La Havana",
-                                    style: TextStyle(
-                                        color: AppColors.white,
-                                        fontSize: size.width * 0.05,
-                                        fontFamily: Fonts.dmSansBold),
-                                  ),
-                                  SizedBox(
-                                    height: SizeConfig.screenHeight * 0.02,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      ConstrainedBox(
-                                          constraints: BoxConstraints(
-                                              maxWidth: SizeConfig.screenWidth *
-                                                  0.68),
-                                          child: Text(
-                                            "${prefiestasOrderDetailModel?.data?.parentDetail?.description ?? getTranslated(context, "description")}",
-                                            // "${getTranslated(context, "lorem")}",
-                                            // Strings.lorem,
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                color:
-                                                    AppColors.itemDescription,
-                                                fontSize: size.width * 0.04,
-                                                fontFamily:
-                                                    Fonts.dmSansRegular),
-                                          )),
-                                      // Spacer(),
-                                      Container(
-                                          height: size.height * 0.08,
-                                          width: size.width * 0.18,
-                                          // color: Colors.blue,
-                                          child: Image.network(
-                                            "${prefiestasOrderDetailModel?.data?.parentDetail?.image}",
-                                            // Images.beerNetwork,
-                                          ))
-                                    ],
-                                  ),
-                                  Column(
-                                    children: [
-                                      for (OrderItem i
-                                          in prefiestasOrderDetailModel!
-                                              .data!.orderDetail![0].orderItem!
-                                              .toList())
-                                        Column(
-                                          children: [
-                                            SizedBox(
-                                              height: size.height * 0.03,
-                                            ),
-                                            sameItem3(
-                                                size: size,
-                                                topTile:
-                                                    "${i.preFiesta?.categories}",
-                                                title: "${i.preFiesta?.name}",
-                                                decription:
-                                                    "${i.preFiesta?.quantity} CL",
-                                                price: "${i.price}"),
-                                          ],
-                                        )
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: SizeConfig.screenHeight * 0.05,
-                                  ),
                                   Container(
-                                    width: SizeConfig.screenWidth * 0.82,
-                                    child: DottedLine(
-                                      dashLength: 10,
-                                      dashGapLength: 13,
-                                      lineThickness: 2,
-                                      dashColor: Colors.grey,
-                                      dashGapColor: AppColors.homeBackground,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: SizeConfig.screenHeight * 0.04,
-                                  ),
+                                      constraints: BoxConstraints(
+                                          maxWidth:
+                                              SizeConfig.screenWidth * 0.68),
+                                      child: Text(
+                                        // "${Strings.lorem}",
+                                        "${prefiestasOrderDetailModel?.data?.parentDetail?.description ?? getTranslated(context, "description")}",
+
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            color: AppColors.itemDescription,
+                                            fontSize: size.width * 0.04,
+                                            fontFamily: Fonts.dmSansRegular),
+                                      )),
+                                  // Spacer(),
                                   Container(
-                                    width: SizeConfig.screenWidth * 0.80,
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          "${getTranslated(context, "transferCharges")}",
-                                          //   "Other Taxes",
-                                          style: TextStyle(
-                                              color: AppColors.white,
-                                              fontSize: size.width * 0.05,
-                                              fontFamily: Fonts.dmSansMedium),
-                                        ),
-                                        Spacer(),
-                                        Text(
-                                          "${Strings.euro} ${double.parse('${prefiestasOrderDetailModel?.data?.orderDetail?[0].transferCharge ?? 0.0}').toStringAsFixed(2)}",
-                                          style: TextStyle(
-                                              color: AppColors.white,
-                                              fontSize: size.width * 0.05,
-                                              fontFamily: Fonts.dmSansBold),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: SizeConfig.screenHeight * 0.04,
-                                  ),
-                                  Container(
-                                    width: SizeConfig.screenWidth * 0.80,
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          "${getTranslated(context, "GrandTotal")}",
-                                          //   "Grand Total",
-                                          style: TextStyle(
-                                              color: AppColors.white,
-                                              fontSize: size.width * 0.06,
-                                              fontFamily: Fonts.dmSansMedium),
-                                        ),
-                                        Spacer(),
-                                        Text(
-                                          Strings.euro +
-                                              " " +
-                                              "${prefiestasOrderDetailModel?.data?.orderDetail![0].totalPrice}",
-                                          style: TextStyle(
-                                              color: AppColors.white,
-                                              fontSize: size.width * 0.065,
-                                              fontFamily: Fonts.dmSansBold),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                      height: size.height * 0.08,
+                                      width: size.width * 0.18,
+                                      // color: Colors.blue,
+                                      child: prefiestasOrderDetailModel
+                                                  ?.data?.parentDetail?.image ==
+                                              null
+                                          ? Image.asset(Images.appLogo)
+                                          : Image.network(
+                                              "${prefiestasOrderDetailModel?.data?.parentDetail?.image}",
+                                              // Images.beerNetwork,
+                                            ))
                                 ],
                               ),
-                              //Image.asset(name)
+                              Column(
+                                children: [
+                                  for (OrderItem i in prefiestasOrderDetailModel
+                                          ?.data?.orderDetail?[0].orderItem
+                                          ?.toList() ??
+                                      [])
+                                    Column(
+                                      children: [
+                                        SizedBox(
+                                          height: size.height * 0.03,
+                                        ),
+                                        sameItem3(
+                                            size: size,
+                                            topTile:
+                                                "${i.preFiesta?.categories}",
+                                            title: "${i.preFiesta?.name}",
+                                            decription:
+                                                "${i.preFiesta?.quantity} CL",
+                                            price: "${i.price}"),
+                                      ],
+                                    )
+                                ],
+                              ),
+                              SizedBox(
+                                height: SizeConfig.screenHeight * 0.05,
+                              ),
+                              Container(
+                                width: SizeConfig.screenWidth * 0.82,
+                                child: DottedLine(
+                                  dashLength: 10,
+                                  dashGapLength: 13,
+                                  lineThickness: 2,
+                                  dashColor: Colors.grey,
+                                  dashGapColor: AppColors.homeBackground,
+                                ),
+                              ),
+                              SizedBox(
+                                height: SizeConfig.screenHeight * 0.04,
+                              ),
+                              Container(
+                                width: SizeConfig.screenWidth * 0.80,
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      "${getTranslated(context, "transferCharges")}",
+                                      //   "Other Taxes",
+                                      style: TextStyle(
+                                          color: AppColors.white,
+                                          fontSize: size.width * 0.05,
+                                          fontFamily: Fonts.dmSansMedium),
+                                    ),
+                                    Spacer(),
+                                    Text(
+                                      "${Strings.euro} ${double.parse('${prefiestasOrderDetailModel?.data?.orderDetail?[0].transferCharge ?? 0.0}').toStringAsFixed(2)}",
+                                      style: TextStyle(
+                                          color: AppColors.white,
+                                          fontSize: size.width * 0.05,
+                                          fontFamily: Fonts.dmSansBold),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: SizeConfig.screenHeight * 0.04,
+                              ),
+                              Container(
+                                width: SizeConfig.screenWidth * 0.80,
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      "${getTranslated(context, "GrandTotal")}",
+                                      //   "Grand Total",
+                                      style: TextStyle(
+                                          color: AppColors.white,
+                                          fontSize: size.width * 0.06,
+                                          fontFamily: Fonts.dmSansMedium),
+                                    ),
+                                    Spacer(),
+                                    Text(
+                                      Strings.euro +
+                                          " " +
+                                          "${prefiestasOrderDetailModel?.data?.orderDetail![0].totalPrice ?? 0}",
+                                      style: TextStyle(
+                                          color: AppColors.white,
+                                          fontSize: size.width * 0.065,
+                                          fontFamily: Fonts.dmSansBold),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
                         ),
