@@ -52,7 +52,7 @@ class Datum {
   String? totalPrice;
   String? bookingStatus;
   int? totalTickets;
-  int? grandTotal;
+  var grandTotal;
   bool? readyForReview;
   FiestaDetail? fiestaDetail;
 

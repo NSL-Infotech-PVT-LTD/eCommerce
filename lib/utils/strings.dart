@@ -198,13 +198,26 @@ class Strings {
   static String listEmpty = "List is Empty";
   static String empty = "Empty";
 
+  // "prefiesta_minimum_booking_price": "17",
+  //   "fiesta_standard_ticket_booking_charge": "2.7",
+  //   "fiesta_vip_ticket_booking_charge": "3.1",
+  //   "fiesta_basic_ticket_booking_charge": "0.45",
+  //   "fiesta_transfer_charge": 0,
+
+  // booking
+
+  static String prefiestaMinimumBookingPrice = "";
+  static String prefiestaTransferCharge = "0";
+  static String fiestaStandardTicketBookingCharge = "";
+  static String fiestaVipTicketBookingCharge = "";
+  static String fiestaBasicTicketBookingCharge = "";
+  static String fiestaTransferCharge = "";
+
   // payment detail
 
-  static String publishKey =
-      "pk_test_51JGPQADcOtdo7kZUXLf0gPlnvzIw8bXoyjwh0fzHLwEyUHcoXXJcjtRU96CEODZdvr7TcjVUVod9KKSGyBR5bdWH00CNB60WE1";
-  static String merChantId =
-      "sk_test_51JGPQADcOtdo7kZU4OGSpJg2hPJzccVR1XWI7SQGugKawWWoviXy40Gs2Dqj8XVBOcXXU6MMAImcMscYBphHkR5B00i9JlPtnJ";
-  static String androidPayMode = "test_mode";
+  static String publishKey = "";
+  static String merChantId = "";
+  static String androidPayMode = "";
 
   static String mapKey = "AIzaSyClclCEKHSt57KvUbgxcjZCwRqrbhpZq5M";
   // dummy

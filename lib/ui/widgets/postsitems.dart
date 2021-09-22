@@ -252,7 +252,7 @@ Widget fiestasItem({context, Datum? postModeldata}) {
   );
 }
 
-Widget preFiestasItem({context, ProductInfo? prefiestasdata}) {
+Widget preFiestasItem({context, int? index, ProductInfo? prefiestasdata}) {
   var size = MediaQuery.of(context).size;
 
   return InkWell(
@@ -292,63 +292,63 @@ Widget preFiestasItem({context, ProductInfo? prefiestasdata}) {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 //left Image
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Positioned(
-                      child: SvgPicture.asset(
-                        Images.offeryellowBackgroundSvg,
-                        fit: BoxFit.cover,
-                        width: size.width * 0.11,
-                      ),
-                    ),
-                    Container(
-                      height: size.height * 0.055,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Container(
-                            child: Text(
-                              "${getTranslated(context, 'from')}",
-                              style: TextStyle(
-                                  fontSize: size.width * 0.027,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                          Container(
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                  Strings.euro,
-                                  style: TextStyle(
-                                      fontSize: size.width * 0.03,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                                Text(
-                                  "${prefiestasdata?.price != null && prefiestasdata?.price != '' ? '${prefiestasdata?.price}'.length > 2 ? prefiestasdata?.price?.substring(0, 2) : prefiestasdata?.price : 29}",
-                                  // overflow: TextOverflow.visible,
-                                  style: TextStyle(
-                                      fontSize: size.width * 0.054,
-                                      fontWeight: FontWeight.w700),
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                // Stack(
+                //   alignment: Alignment.center,
+                //   children: [
+                //     Positioned(
+                //       child: SvgPicture.asset(
+                //         Images.offeryellowBackgroundSvg,
+                //         fit: BoxFit.cover,
+                //         width: size.width * 0.11,
+                //       ),
+                //     ),
+                //     Container(
+                //       height: size.height * 0.055,
+                //       child: Column(
+                //         mainAxisAlignment: MainAxisAlignment.center,
+                //         crossAxisAlignment: CrossAxisAlignment.end,
+                //         children: [
+                //           Container(
+                //             child: Text(
+                //               "${getTranslated(context, 'from')}",
+                //               style: TextStyle(
+                //                   fontSize: size.width * 0.027,
+                //                   fontWeight: FontWeight.w600),
+                //             ),
+                //           ),
+                //           Container(
+                //             child: Row(
+                //               crossAxisAlignment: CrossAxisAlignment.start,
+                //               mainAxisAlignment: MainAxisAlignment.end,
+                //               children: [
+                //                 Text(
+                //                   Strings.euro,
+                //                   style: TextStyle(
+                //                       fontSize: size.width * 0.03,
+                //                       fontWeight: FontWeight.w600),
+                //                 ),
+                //                 Text(
+                //                   "${prefiestasdata?.price != null && prefiestasdata?.price != '' ? '${prefiestasdata?.price}'.length > 2 ? prefiestasdata?.price?.substring(0, 2) : prefiestasdata?.price : 29}",
+                //                   // overflow: TextOverflow.visible,
+                //                   style: TextStyle(
+                //                       fontSize: size.width * 0.054,
+                //                       fontWeight: FontWeight.w700),
+                //                 )
+                //               ],
+                //             ),
+                //           )
+                //         ],
+                //       ),
+                //     ),
+                //   ],
+                // ),
 
                 // center content
                 Container(
-                    width: size.width * 0.5,
+                    width: size.width * 0.6,
                     padding: EdgeInsets.symmetric(
                         vertical: size.height * 0.01,
-                        horizontal: size.width * 0.02),
+                        horizontal: size.width * 0.03),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -403,18 +403,23 @@ Widget preFiestasItem({context, ProductInfo? prefiestasdata}) {
                 // right image
 
                 Container(
-                  margin: EdgeInsets.only(right: size.width * 0.01),
+                  margin: EdgeInsets.only(right: size.width * 0.02),
                   padding: EdgeInsets.only(
                       top: size.height * 0.02, bottom: size.height * 0.013),
                   width: size.width * 0.25,
                   decoration: BoxDecoration(),
-                  child: Image.network(
-                    // Images.beerNetwork
-                    prefiestasdata?.image != "" && prefiestasdata?.image != null
-                        ? "${prefiestasdata?.image}"
-                        : Images.beerNetwork,
+                  child: Image.asset(
+                    "${index == 0 ? 'assets/pngicons/pre1.png' : index == 1 ? 'assets/pngicons/pre2.png' : 'assets/pngicons/pre3.png'}",
                     fit: BoxFit.cover,
                   ),
+
+                  // Image.network(
+                  //   // Images.beerNetwork
+                  //   prefiestasdata?.image != "" && prefiestasdata?.image != null
+                  //       ? "${prefiestasdata?.image}"
+                  //       : Images.beerNetwork,
+                  //   fit: BoxFit.cover,
+                  // ),
                 )
               ],
             ),

@@ -25,7 +25,6 @@ import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:intl/intl.dart';
-import 'package:location_permissions/location_permissions.dart';
 
 class HomeMPage extends StatefulWidget {
   @override
@@ -120,7 +119,7 @@ class _HomeMPageState extends State<HomeMPage> {
                 filterDataF: filterData)
             .then((FiestasModel? posts) {
           setState(() {
-            print(posts?.toJson());
+            // print(posts?.toJson());
             UserData.fiestasdata = posts;
             _fiestasPostLoading = false;
           });
@@ -184,12 +183,12 @@ class _HomeMPageState extends State<HomeMPage> {
 
   var dates = [
     {
-      "date": 2,
+      "date": 1,
       "month": "Jun",
       "year": "2021",
       "active": false,
       "dateTime": DateTime
-    }
+    },
   ];
 
   // Getting the total number of days of the month
@@ -278,7 +277,7 @@ class _HomeMPageState extends State<HomeMPage> {
       setState(() {
         filterDate = fomatDate;
       });
-      print("Date :- $fomatDate");
+      // print("Date :- $fomatDate");
 
       fiestasgetPosts(date: fomatDate);
     }
@@ -295,22 +294,16 @@ class _HomeMPageState extends State<HomeMPage> {
       if (maxScroll - currentScroll <= delta) {
         fiestasPagination();
         prefiestasPagination();
-        print("page ...............");
       }
     });
 
-    // _fiestasScrollController.addListener(() {
-    //   print("here ...............");
-    // });
-
     super.initState();
+    paymentconfigApi(context: context);
     fiestasgetPosts(date: filterDate);
 
     preFiestasPostget();
     determinePosition();
     getFilterData();
-
-    print("page ..........");
   }
 
   //pagination
@@ -337,7 +330,7 @@ class _HomeMPageState extends State<HomeMPage> {
           setState(() {
             fiestasLoadingPage = true;
           });
-          print("get data ........");
+          // print("get data ........");
           fiestasPageCount = fiestasPageCount + 1;
           await fiestasPostGet(
                   limitCount: limitCount.toString(),
@@ -440,21 +433,6 @@ class _HomeMPageState extends State<HomeMPage> {
 
     return SafeArea(
       child: Scaffold(
-          // floatingActionButton: FloatingActionButton(
-          //   onPressed: () async {
-
-          //     //PermissionStatus.denied
-
-          //     // ServiceStatus serviceStatus =
-          //     //     await LocationPermissions().checkServiceStatus();
-
-          //     // print("here is status $serviceStatus");
-
-          //     // PermissionStatus permission =
-          //     //     await LocationPermissions().checkPermissionStatus();
-          //   },
-          //   child: Icon(Icons.add),
-          // ),
           backgroundColor: AppColors.blackBackground,
           body: CustomScrollView(
             controller: _fiestasScrollController,
@@ -1092,7 +1070,7 @@ class _HomeMPageState extends State<HomeMPage> {
                                   image: DecorationImage(
                                       // image: NetworkImage(bannerImage),
                                       image: AssetImage(
-                                          "assets/images/prefiestasBanner.png"),
+                                          'assets/pngicons/banner.png'),
                                       fit: BoxFit.cover))),
                           SizedBox(
                             height: size.height * 0.03,
@@ -1152,8 +1130,6 @@ class _HomeMPageState extends State<HomeMPage> {
                           : SliverList(
                               delegate: SliverChildBuilderDelegate(
                               (context, index) {
-                                // print(prefiestasdata?.toJson());
-
                                 if (index ==
                                         int.parse(
                                             "${prefiestasdata?.data?.data?.length ?? 0}") &&
@@ -1178,6 +1154,7 @@ class _HomeMPageState extends State<HomeMPage> {
                                       horizontal: size.width * 0.04),
                                   child: preFiestasItem(
                                       context: context,
+                                      index: index,
                                       prefiestasdata:
                                           prefiestasdata?.data?.data?[index]),
                                 );
@@ -1345,7 +1322,6 @@ class _HomeMPageState extends State<HomeMPage> {
   }
 
   itemFilter(context, key, value, state) {
-    // print(value);
     var size = MediaQuery.of(context).size;
     return Container(
       child: Column(
@@ -1385,10 +1361,6 @@ class _HomeMPageState extends State<HomeMPage> {
                           value: i,
                           groupValue: groupvalue["$key"],
                           onChanged: (_v) {
-                            // print(filterData);
-                            // print("Here is  i ${value[i]['id']}  $key");
-                            // print(filterData['$key']);
-
                             if (key == 'ageGroup') {
                               filterData['$key'] = value[i].toString();
                             } else {
@@ -1397,7 +1369,7 @@ class _HomeMPageState extends State<HomeMPage> {
 
                             _handleRadioValueChange(i, key);
 
-                            print(filterData);
+                            // print(filterData);
                             state(() {});
 
                             // setState(() {});

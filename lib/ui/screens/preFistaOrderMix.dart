@@ -22,6 +22,7 @@ import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 import 'package:video_player/video_player.dart';
 import 'package:funfy/models/prefiestasDetailModel.dart';
+import 'package:flutter/gestures.dart';
 
 String bannerImage =
     "https://png.pngtree.com/thumb_back/fw800/back_our/20190621/ourmid/pngtree-tmall-beer-festival-e-commerce-carnival-banner-image_193689.jpg";
@@ -40,6 +41,8 @@ class PreFistaOrder extends StatefulWidget {
 class _PreFistaOrderState extends State<PreFistaOrder> {
   int? groupValue = -1;
   int? initvalue = 0;
+
+  bool showMore = false;
 
   CarouselController _carouselController = CarouselController();
   List<Widget> cardList = [];
@@ -988,29 +991,14 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                           return [
                             SliverAppBar(
                               // backgroundColor: AppColors.white,
-                              collapsedHeight: 150.0,
-                              expandedHeight: 200.0,
+                              collapsedHeight: size.height * 0.3,
+                              expandedHeight: size.height * 0.3,
+
                               floating: true,
-                              pinned: true,
+                              // pinned: true,
                               snap: true,
                               automaticallyImplyLeading: false,
-                              // actions: [
-                              //   GestureDetector(
-                              //     onTap: () {
-                              //       addFavorite();
-                              //     },
-                              //     child: Container(
-                              //       margin: EdgeInsets.only(
-                              //           right: size.width * 0.04),
-                              //       child: SvgPicture.asset(
-                              //         "assets/svgicons/hearticon.svg",
-                              //         color: _favoriteBool
-                              //             ? Colors.red
-                              //             : Colors.white,
-                              //       ),
-                              //     ),
-                              //   )
-                              // ],
+
                               actionsIconTheme: IconThemeData(opacity: 0.0),
                               flexibleSpace: Stack(
                                 children: <Widget>[
@@ -1081,26 +1069,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                                                                 )
                                                               : SizedBox(),
                                                         ],
-                                                      )
-
-                                                      // child: _controller!.value.isPlaying
-                                                      //     ?  Icon(
-                                                      //         Icons.pause,
-                                                      //         color: AppColors.white,
-                                                      //         size: size.width * 0.11,
-                                                      //       )
-                                                      //     :  Container(
-                                                      //         child: SvgPicture.asset(
-                                                      //           Images.playSvg,
-                                                      //           width: size.width * 0.11,
-                                                      //         ),
-                                                      //       )
-
-                                                      //  Icon(
-                                                      //     Icons.play_arrow,
-                                                      //     color: Colors.white,
-                                                      //   ),
-                                                      ),
+                                                      )),
                                                 )
                                               ],
                                             )
@@ -1156,20 +1125,57 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                                               // cvfbgtkl;./
                                               width:
                                                   SizeConfig.screenWidth * 0.85,
-                                              //   height: SizeConfig.screenHeight,
+
+                                              // height: size.height * 0.08,
                                               child: Padding(
                                                 padding: EdgeInsets.only(
                                                     // left: SizeConfig.screenWidth * 0.02,
                                                     top: size.width * 0.01),
-                                                child: topHeadingContent(
-                                                    description:
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
                                                         "${prefiestasDetailModel?.data?.parentData?.description}",
-
-                                                    // widget
-                                                    //         .prefiestasdataMap![
-                                                    //     "description"],
-                                                    textEnd:
-                                                        " ${Strings.muchMore}"),
+                                                        maxLines:
+                                                            showMore ? 100 : 3,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: TextStyle(
+                                                          fontSize: SizeConfig
+                                                                  .screenWidth *
+                                                              0.04,
+                                                          color: AppColors
+                                                              .descriptionfirst,
+                                                        )),
+                                                    "${prefiestasDetailModel?.data?.parentData?.description}"
+                                                                .length >
+                                                            100
+                                                        ? InkWell(
+                                                            onTap: () {
+                                                              setState(() {
+                                                                showMore
+                                                                    ? showMore =
+                                                                        false
+                                                                    : showMore =
+                                                                        true;
+                                                              });
+                                                            },
+                                                            child: Text(
+                                                                "${showMore ? getTranslated(context, 'readLess') : getTranslated(context, 'readMode')}",
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        Fonts
+                                                                            .dmSansBold,
+                                                                    fontSize:
+                                                                        SizeConfig.screenWidth *
+                                                                            0.04,
+                                                                    color: AppColors
+                                                                        .white)),
+                                                          )
+                                                        : SizedBox(),
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                             SizedBox(

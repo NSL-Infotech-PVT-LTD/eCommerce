@@ -87,6 +87,22 @@ class _FiestasBookState extends State<FiestasBook> {
                   UserData.ticketcartMap[index]["ticketCount"].toString()) *
               int.parse(UserData.tiketList[index]["price"].toString());
 
+          // new
+
+          if (index == 0) {
+            UserData.ticketcartMap[index]["ticketBookingCharge"] = int.parse(
+                    UserData.ticketcartMap[index]["ticketCount"].toString()) *
+                double.parse(Strings.fiestaBasicTicketBookingCharge);
+          } else if (index == 1) {
+            UserData.ticketcartMap[index]["ticketBookingCharge"] = int.parse(
+                    UserData.ticketcartMap[index]["ticketCount"].toString()) *
+                double.parse(Strings.fiestaStandardTicketBookingCharge);
+          } else if (index == 2) {
+            UserData.ticketcartMap[index]["ticketBookingCharge"] = int.parse(
+                    UserData.ticketcartMap[index]["ticketCount"].toString()) *
+                double.parse(Strings.fiestaVipTicketBookingCharge);
+          }
+
           totalTicket();
         } else {
           // print("new add $index");
@@ -95,11 +111,18 @@ class _FiestasBookState extends State<FiestasBook> {
             "ticketCount": 1,
             "ticketPrice": price,
             "ticketimage": image,
-            "index": index
+            "index": index,
+            "ticketBookingCharge": index == 0
+                ? double.parse(Strings.fiestaBasicTicketBookingCharge)
+                : index == 1
+                    ? double.parse(Strings.fiestaStandardTicketBookingCharge)
+                    : double.parse(Strings.fiestaVipTicketBookingCharge)
           };
 
           totalTicket();
         }
+
+        print(UserData.ticketcartMap);
       });
     }
   }

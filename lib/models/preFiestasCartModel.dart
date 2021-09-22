@@ -60,6 +60,7 @@ class Cart {
     this.id,
     this.userId,
     this.price,
+    this.shippingCharge,
     this.transferCharge,
     this.totalPrice,
     this.quantityInCart,
@@ -69,6 +70,7 @@ class Cart {
   int? id;
   int? userId;
   String? price;
+  String? shippingCharge;
   String? transferCharge;
   String? totalPrice;
   int? quantityInCart;
@@ -78,6 +80,7 @@ class Cart {
         id: json["id"],
         userId: json["user_id"],
         price: json["price"],
+        shippingCharge: json["shipping_charge"],
         transferCharge: json["transfer_charge"],
         totalPrice: json["total_price"],
         quantityInCart: json["quantity_in_cart"],
@@ -89,6 +92,7 @@ class Cart {
         "id": id,
         "user_id": userId,
         "price": price,
+        "shipping_charge": shippingCharge,
         "transfer_charge": transferCharge,
         "total_price": totalPrice,
         "quantity_in_cart": quantityInCart,

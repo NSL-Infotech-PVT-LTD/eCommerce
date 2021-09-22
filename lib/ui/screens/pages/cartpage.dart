@@ -37,6 +37,8 @@ class _CartpageState extends State<Cartpage> {
   String _totalPrice = "0";
   String _transferCharge = "0";
 
+  String _shippingCharge = "0";
+
   // double count = 0.0;
 
   getMyCart() async {
@@ -158,6 +160,17 @@ class _CartpageState extends State<Cartpage> {
     setState(() {
       cartCount = cartCount - 1;
     });
+
+    if (cartCount == 0) {
+      // print("now value is 0");
+      ticketremoveFromList(
+          id: id,
+          type: itemType == 1
+              ? 'alcohol'
+              : itemType == 2
+                  ? 'mix'
+                  : 'extras');
+    }
 
     if (cartCount > 0) {
       await addToCart(id: id, cont: cartCount.toString()).then((value) {
@@ -398,6 +411,8 @@ class _CartpageState extends State<Cartpage> {
 
             _totalPrice = "${res["data"]["cart"]["total_price"]}";
             _transferCharge = "${res["data"]["cart"]["transfer_charge"]}";
+
+            _shippingCharge = "${res["data"]["cart"]["shipping_charge"]}";
 
             if (res["data"]["message"] != "You're cart is empty!") {
               UserData.preFiestasCartid = res["data"]["cart"]["id"].toString();
@@ -1002,94 +1017,165 @@ class _CartpageState extends State<Cartpage> {
                                                             ],
                                                           ),
 
-                                                        // Total Price
+                                                        // transfer charges
 
-                                                        SizedBox(
-                                                          height: size.height *
-                                                              0.03,
+                                                        Column(
+                                                          children: [
+                                                            SizedBox(
+                                                              height:
+                                                                  size.height *
+                                                                      0.03,
+                                                            ),
+                                                            Strings.prefiestaTransferCharge !=
+                                                                        '0' &&
+                                                                    Strings.prefiestaTransferCharge !=
+                                                                        "null"
+                                                                ? Container(
+                                                                    // width: SizeConfig
+                                                                    //         .screenWidth *
+                                                                    //     0.80,
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .centerLeft,
+                                                                    child: Row(
+                                                                      children: [
+                                                                        Text(
+                                                                          "${getTranslated(context, "transferCharges")}",
+                                                                          //   "Other Taxes",
+                                                                          style: TextStyle(
+                                                                              color: AppColors.white,
+                                                                              fontSize: size.width * 0.04,
+                                                                              fontFamily: Fonts.dmSansMedium),
+                                                                        ),
+                                                                        // Spacer(),
+
+                                                                        SizedBox(
+                                                                          width:
+                                                                              size.width * 0.03,
+                                                                        ),
+                                                                        Text(
+                                                                          "${Strings.euro} ${_transferCharge != '0' && _transferCharge != "null" ? double.parse(_transferCharge).toStringAsFixed(2) : double.parse('${UserData.myCartModel?.data?.cart?.transferCharge ?? 0}').toStringAsFixed(2)}",
+                                                                          style: TextStyle(
+                                                                              color: AppColors.white,
+                                                                              fontSize: size.width * 0.04,
+                                                                              fontFamily: Fonts.dmSansBold),
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                  )
+                                                                : SizedBox(),
+                                                          ],
                                                         ),
 
-                                                        Container(
-                                                          // width: SizeConfig
-                                                          //         .screenWidth *
-                                                          //     0.80,
-                                                          alignment: Alignment
-                                                              .centerLeft,
-                                                          child: Row(
-                                                            children: [
-                                                              Text(
-                                                                "${getTranslated(context, "transferCharges")}",
-                                                                //   "Other Taxes",
-                                                                style: TextStyle(
-                                                                    color: AppColors
-                                                                        .white,
-                                                                    fontSize:
-                                                                        size.width *
-                                                                            0.04,
-                                                                    fontFamily:
-                                                                        Fonts
-                                                                            .dmSansMedium),
-                                                              ),
-                                                              // Spacer(),
+                                                        // Shipping charges
 
-                                                              SizedBox(
-                                                                width:
-                                                                    size.width *
+                                                        Column(
+                                                          children: [
+                                                            SizedBox(
+                                                              height:
+                                                                  size.height *
+                                                                      0.015,
+                                                            ),
+                                                            Container(
+                                                              // width: SizeConfig
+                                                              //         .screenWidth *
+                                                              //     0.80,
+                                                              alignment: Alignment
+                                                                  .centerLeft,
+                                                              child: Row(
+                                                                children: [
+                                                                  Text(
+                                                                    "${getTranslated(context, "ShippingCharges")}",
+                                                                    //   "Other Taxes",
+                                                                    style: TextStyle(
+                                                                        color: AppColors
+                                                                            .white,
+                                                                        fontSize:
+                                                                            size.width *
+                                                                                0.04,
+                                                                        fontFamily:
+                                                                            Fonts.dmSansMedium),
+                                                                  ),
+                                                                  // Spacer(),
+
+                                                                  SizedBox(
+                                                                    width: size
+                                                                            .width *
                                                                         0.03,
+                                                                  ),
+                                                                  Text(
+                                                                    "${Strings.euro} ${_shippingCharge != '0' && _shippingCharge != "null" ? double.parse(_shippingCharge).toStringAsFixed(2) : double.parse('${UserData.myCartModel?.data?.cart?.shippingCharge ?? 0}').toStringAsFixed(2)}",
+                                                                    style: TextStyle(
+                                                                        color: AppColors
+                                                                            .white,
+                                                                        fontSize:
+                                                                            size.width *
+                                                                                0.04,
+                                                                        fontFamily:
+                                                                            Fonts.dmSansBold),
+                                                                  )
+                                                                ],
                                                               ),
-                                                              Text(
-                                                                "${Strings.euro} ${_transferCharge != '0' && _transferCharge != "null" ? double.parse(_transferCharge).toStringAsFixed(2) : double.parse('${UserData.myCartModel?.data?.cart?.transferCharge ?? 0}').toStringAsFixed(2)}",
-                                                                style: TextStyle(
-                                                                    color: AppColors
-                                                                        .white,
-                                                                    fontSize:
-                                                                        size.width *
-                                                                            0.04,
-                                                                    fontFamily:
-                                                                        Fonts
-                                                                            .dmSansBold),
-                                                              )
-                                                            ],
-                                                          ),
+                                                            ),
+                                                          ],
                                                         ),
 
                                                         SizedBox(
                                                           height: size.height *
-                                                              0.012,
+                                                              0.0008,
                                                         ),
                                                         Container(
                                                           // width: size.width,
                                                           alignment: Alignment
                                                               .centerLeft,
-                                                          child: Text.rich(
-                                                              TextSpan(
-                                                                  text:
-                                                                      "${getTranslated(context, 'totalPrice')} :", // Strings.byContinuingYouAgreetoOur,
-                                                                  style: TextStyle(
-                                                                      fontFamily:
-                                                                          Fonts
+                                                          child: Row(
+                                                            children: [
+                                                              Text.rich(
+                                                                  TextSpan(
+                                                                      text:
+                                                                          "${getTranslated(context, 'totalPrice')} :", // Strings.byContinuingYouAgreetoOur,
+                                                                      style: TextStyle(
+                                                                          fontFamily: Fonts
                                                                               .dmSansMedium,
-                                                                      color: AppColors
-                                                                          .white,
-                                                                      fontSize:
-                                                                          size.width *
+                                                                          color: AppColors
+                                                                              .white,
+                                                                          fontSize: size.width *
                                                                               0.06),
-                                                                  children: <
-                                                                      InlineSpan>[
-                                                                TextSpan(
-                                                                  text:
-                                                                      " ${Strings.euro} ${_totalPrice != "0" && _totalPrice != "null" ? _totalPrice : UserData.myCartModel?.data?.cart?.totalPrice}", //"${Strings.termsOfService}",
-                                                                  style: TextStyle(
-                                                                      fontFamily:
-                                                                          Fonts
+                                                                      children: <
+                                                                          InlineSpan>[
+                                                                    TextSpan(
+                                                                      text:
+                                                                          " ${Strings.euro} ${_totalPrice != "0" && _totalPrice != "null" ? _totalPrice : UserData.myCartModel?.data?.cart?.totalPrice}", //"${Strings.termsOfService}",
+                                                                      style: TextStyle(
+                                                                          fontFamily: Fonts
                                                                               .dmSansBold,
-                                                                      color: AppColors
-                                                                          .white,
-                                                                      fontSize:
-                                                                          size.width *
-                                                                              0.06),
+                                                                          color: AppColors
+                                                                              .white,
+                                                                          fontSize:
+                                                                              size.width * 0.06),
+                                                                    ),
+                                                                  ])),
+
+                                                              // Show about price
+                                                              IconButton(
+                                                                onPressed: () {
+                                                                  Dialogs.simpleOkAlertDialog(
+                                                                      context: context,
+                                                                      title: "${getTranslated(context, 'totalPrice')}",
+                                                                      content: "${getTranslated(context, 'youHaveTopayOnlyCategoryPriceForTheFirstPurchaseOfAlcoholMix')}",
+                                                                      func: () {
+                                                                        navigatePopFun(
+                                                                            context);
+                                                                      });
+                                                                },
+                                                                icon: Icon(
+                                                                  Icons.help,
+                                                                  color: AppColors
+                                                                      .tagBorder,
                                                                 ),
-                                                              ])),
+                                                              )
+                                                            ],
+                                                          ),
                                                           // child: Text(
                                                           //   "${getTranslated(context, 'totalPrice')} : ${Strings.euro} 100",
                                                           //   style: TextStyle(
@@ -1109,7 +1195,7 @@ class _CartpageState extends State<Cartpage> {
                                           SizedBox(height: size.height * 0.02),
                                           Text.rich(TextSpan(
                                               text:
-                                                  " ${getTranslated(context, "thisisthefinalstepOnceyoupressOnceyouPress")} ", // Strings.byContinuingYouAgreetoOur,
+                                                  "${getTranslated(context, "thisisthefinalstepOnceyoupressOnceyouPress")} ", // Strings.byContinuingYouAgreetoOur,
                                               style: TextStyle(
                                                   fontFamily:
                                                       Fonts.dmSansMedium,
@@ -1145,33 +1231,50 @@ class _CartpageState extends State<Cartpage> {
 
                                           GestureDetector(
                                             onTap: () {
-                                              UserData
-                                                              .myCartModel!
-                                                              .data!
-                                                              .cart!
-                                                              .cartItems!
-                                                              .length >
-                                                          0 &&
-                                                      alcoholTrue == true
-                                                  ?
-                                                  // makeOrder();
+                                              if (UserData
+                                                          .myCartModel!
+                                                          .data!
+                                                          .cart!
+                                                          .cartItems!
+                                                          .length >
+                                                      0 &&
+                                                  alcoholTrue == true) {
+                                                // makeOrder();
+
+                                                if (int.parse(Strings
+                                                        .prefiestaMinimumBookingPrice) <
+                                                    double.parse(
+                                                        "${UserData.myCartModel?.data?.cart?.totalPrice ?? 0}")) {
                                                   Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
                                                           builder: (context) =>
                                                               PrefiestasCardDetail())).then(
                                                       (value) {
-                                                      initState();
-                                                    })
-                                                  : Dialogs.showBasicsFlash(
+                                                    initState();
+                                                  });
+                                                } else {
+                                                  Dialogs.simpleOkAlertDialog(
                                                       context: context,
-                                                      color: AppColors
-                                                          .siginbackgrond,
-                                                      duration:
-                                                          Duration(seconds: 3),
-                                                      content: getTranslated(
-                                                          context,
-                                                          "pleaseSelectAlcohol"));
+                                                      title:
+                                                          "${getTranslated(context, 'alert!')}",
+                                                      content:
+                                                          "${getTranslated(context, 'YourTotalPriceshouldbemorethan')} ${Strings.euro}${Strings.prefiestaMinimumBookingPrice} ",
+                                                      func: () {
+                                                        navigatePopFun(context);
+                                                      });
+                                                }
+                                              } else {
+                                                Dialogs.showBasicsFlash(
+                                                    context: context,
+                                                    color: AppColors
+                                                        .siginbackgrond,
+                                                    duration:
+                                                        Duration(seconds: 3),
+                                                    content: getTranslated(
+                                                        context,
+                                                        "pleaseSelectAlcohol"));
+                                              }
                                             },
                                             child: roundedBoxR(
                                               width: size.width,
