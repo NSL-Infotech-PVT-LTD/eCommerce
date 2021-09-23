@@ -25,8 +25,15 @@ import 'package:stripe_payment/stripe_payment.dart';
 
 class CartDetail extends StatefulWidget {
   final fiestasId;
+  final totalCount;
+  final totalPrice;
 
-  const CartDetail({Key? key, this.fiestasId}) : super(key: key);
+  const CartDetail(
+      {Key? key,
+      @required this.fiestasId,
+      @required this.totalCount,
+      @required this.totalPrice})
+      : super(key: key);
 
   @override
   _CartDetailState createState() => _CartDetailState();
@@ -471,7 +478,7 @@ class _CartDetailState extends State<CartDetail> {
                                             height: size.height * 0.004,
                                           ),
                                           Text(
-                                              "${getTranslated(context, "Qty")} : ${UserData.totalTicketNum}",
+                                              "${getTranslated(context, "Qty")} : ${widget.totalCount}",
                                               style: TextStyle(
                                                   fontSize: size.width * 0.035,
                                                   fontFamily:
@@ -484,7 +491,8 @@ class _CartDetailState extends State<CartDetail> {
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text("${Strings.euro} $tottalAmount",
+                                      Text(
+                                          "${Strings.euro} ${widget.totalPrice}",
                                           style: TextStyle(
                                               fontSize: size.width * 0.07,
                                               fontFamily: Fonts.dmSansMedium,
@@ -497,40 +505,40 @@ class _CartDetailState extends State<CartDetail> {
                           ),
                           //tax
 
-                          SizedBox(height: size.height * 0.02),
+                          // SizedBox(height: size.height * 0.02),
 
-                          Container(
-                            margin: EdgeInsets.symmetric(
-                                horizontal: size.width * 0.01),
-                            // width: SizeConfig.screenWidth * 0.80,
-                            child: Row(
-                              children: [
-                                Text(
-                                  "${getTranslated(context, "bookingCharges")}",
-                                  //   "Other Taxes",
-                                  style: TextStyle(
-                                      color: AppColors.white,
-                                      fontSize: size.width * 0.04,
-                                      fontFamily: Fonts.dmSansMedium),
-                                ),
-                                Spacer(),
-                                Text(
-                                  "  ${Strings.euro} ${((double.parse(tottalAmount.toString()) * 2.9) / 100 + 0.30).toStringAsFixed(2)}",
-                                  style: TextStyle(
-                                      color: AppColors.white,
-                                      fontSize: size.width * 0.045,
-                                      fontFamily: Fonts.dmSansBold),
-                                )
-                              ],
-                            ),
-                          ),
+                          // Container(
+                          //   margin: EdgeInsets.symmetric(
+                          //       horizontal: size.width * 0.01),
+                          //   // width: SizeConfig.screenWidth * 0.80,
+                          //   child: Row(
+                          //     children: [
+                          //       Text(
+                          //         "${getTranslated(context, "bookingCharges")}",
+                          //         //   "Other Taxes",
+                          //         style: TextStyle(
+                          //             color: AppColors.white,
+                          //             fontSize: size.width * 0.04,
+                          //             fontFamily: Fonts.dmSansMedium),
+                          //       ),
+                          //       Spacer(),
+                          //       Text(
+                          //         "  ${Strings.euro} ${((double.parse(tottalAmount.toString()) * 2.9) / 100 + 0.30).toStringAsFixed(2)}",
+                          //         style: TextStyle(
+                          //             color: AppColors.white,
+                          //             fontSize: size.width * 0.045,
+                          //             fontFamily: Fonts.dmSansBold),
+                          //       )
+                          //     ],
+                          //   ),
+                          // ),
+
+                          // SizedBox(
+                          //   height: SizeConfig.screenHeight * 0.04,
+                          // ),
 
                           SizedBox(
-                            height: SizeConfig.screenHeight * 0.04,
-                          ),
-
-                          SizedBox(
-                            height: SizeConfig.screenHeight * 0.015,
+                            height: SizeConfig.screenHeight * 0.03,
                           ),
 
                           //tax
@@ -580,7 +588,8 @@ class _CartDetailState extends State<CartDetail> {
                                                 backgroundColorEnd:
                                                     Colors.red.shade700,
                                                 text:
-                                                    "${getTranslated(context, "swipetopay")}   ${Strings.euro} ${(double.parse(tottalAmount.toString()) + ((double.parse(tottalAmount.toString()) * 2.9) / 100 + 0.30)).toStringAsFixed(2)}",
+                                                    // "${getTranslated(context, "swipetopay")}   ${Strings.euro} ${(double.parse(tottalAmount.toString()) + ((double.parse(tottalAmount.toString()) * 2.9) / 100 + 0.30)).toStringAsFixed(2)}",
+                                                    "${getTranslated(context, "swipetopay")} ",
                                                 backgroundShape:
                                                     BorderRadius.circular(8),
                                                 foregroundShape:

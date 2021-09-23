@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:funfy/apis/addressApi.dart';
 import 'package:funfy/components/dialogs.dart';
 import 'package:funfy/components/navigation.dart';
@@ -91,9 +92,12 @@ class PlacePickerBState extends State<PlacePickerB> {
   String addressError = "";
   String addressNameError = "";
 
+  String zipCodeError = "";
+
   bool moovingTrue = false;
 
   TextEditingController addressNameController = TextEditingController();
+  TextEditingController zipController = TextEditingController();
   PanelController _pc = new PanelController();
 
   // constructor
@@ -108,6 +112,43 @@ class PlacePickerBState extends State<PlacePickerB> {
   void setState(fn) {
     if (this.mounted) {
       super.setState(fn);
+    }
+  }
+
+  // Zip validation ---------- //
+
+  onTypeZipCode(v) {
+    if (v.length > 3) {
+      print("Zip Code $v");
+      Future.delayed(
+          Duration(milliseconds: 700), zipApiCall(zip: v.toString()));
+    }
+  }
+
+  zipApiCall({String? zip}) async {
+    try {
+      setState(() {
+        _loadingL = true;
+      });
+      await checkValidZipApi(zipcode: zip).then((res) {
+        setState(() {
+          _loadingL = false;
+
+          if (res == "true") {
+            zipCodeError = "";
+
+            zip = zipController.text;
+          } else {
+            zipCodeError = res!;
+          }
+        });
+        print("Res - $res");
+      });
+    } catch (e) {
+      setState(() {
+        _loadingL = false;
+      });
+      print("error in zip $e");
     }
   }
 
@@ -149,7 +190,7 @@ class PlacePickerBState extends State<PlacePickerB> {
 
   // validation
 
-  formValid() {
+  formValid() async {
     addressError = "";
     addressNameError = "";
 
@@ -161,14 +202,26 @@ class PlacePickerBState extends State<PlacePickerB> {
         addressNameError =
             "${getTranslated(context, "pleaseEnterAddressname")}";
       }
+
+      if (zipController.text.length == 0) {
+        zipCodeError = "${getTranslated(context, "pleaseenterzipcode")}";
+      }
     });
 
     if (addressController.text.length != 0 &&
-        addressNameController.text.length != 0) {
+        addressNameController.text.length != 0 &&
+        zipCodeError == "" &&
+        zipController.text.length != 0) {
       if (widget.typeAE == 1) {
-        addLocationFunc();
+        await zipApiCall(zip: zipController.text);
+        if (zipCodeError == "") {
+          addLocationFunc();
+        }
       } else {
-        editLocationFunc();
+        await zipApiCall(zip: zipController.text);
+        if (zipCodeError == "") {
+          editLocationFunc();
+        }
       }
     }
   }
@@ -188,7 +241,7 @@ class PlacePickerBState extends State<PlacePickerB> {
                 street: street,
                 city: city,
                 state: stateA,
-                zip: zip,
+                zip: zipController.text.toString(),
                 country: country,
                 latitude: latL.toString(),
                 longitude: lngL.toString())
@@ -245,7 +298,7 @@ class PlacePickerBState extends State<PlacePickerB> {
                 street: street,
                 city: city,
                 state: stateA,
-                zip: zip,
+                zip: zipController.text.toString(),
                 country: country,
                 latitude: widget.latE.toString(),
                 longitude: widget.lngE.toString())
@@ -285,9 +338,12 @@ class PlacePickerBState extends State<PlacePickerB> {
     }
   }
 
+  bool drage = false;
+
   // set Address from lat lng
 
   setAddressFromLatLng(double ln, double lo) async {
+    // if (widget.typeAE == 2) {
     List<locationG.Placemark> placemarks =
         await locationG.placemarkFromCoordinates(ln, lo);
     var placemark = placemarks[0];
@@ -298,23 +354,34 @@ class PlacePickerBState extends State<PlacePickerB> {
         "${placemark.street}, ${placemark.locality},${placemark.administrativeArea}, ${placemark.country}";
 
     setState(() {
-      widget.typeAE == 2
-          ? addressNameController.text = widget.address!.name.toString()
-          : print("Edit");
+      if (widget.typeAE == 2) {
+        addressNameController.text = widget.address!.name.toString();
+
+        zipController.text = widget.address!.zip.toString();
+      } else {
+        print("Edit");
+      }
+
+      if (drage == true || widget.typeAE != 2) {
+        zipController.text = placemark.postalCode.toString();
+      }
       street = placemark.street.toString();
       city = placemark.locality.toString();
       stateA = placemark.administrativeArea.toString();
-      zip = placemark.postalCode.toString();
+      // zip = placemark.postalCode.toString();
+      // zipController.text = "000000";
       country = placemark.country.toString();
 
       _pc.open();
       addressController.text = address;
     });
+    // }
   }
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+
     return WillPopScope(
       onWillPop: () async {
         if (_pc.isPanelOpen) {
@@ -326,6 +393,12 @@ class PlacePickerBState extends State<PlacePickerB> {
         return false;
       },
       child: Scaffold(
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {
+        //     _pc.open();
+        //   },
+        //   child: Icon(Icons.map),
+        // ),
         appBar: AppBar(
           backgroundColor: AppColors.blackBackground,
           key: this.appBarKey,
@@ -356,6 +429,11 @@ class PlacePickerBState extends State<PlacePickerB> {
                 // });
               },
               onCameraMove: (v) {
+                if (drage == false) {
+                  setState(() {
+                    drage = true;
+                  });
+                }
                 // setState(() {
                 //   moovingTrue = true;
                 // });
@@ -393,7 +471,7 @@ class PlacePickerBState extends State<PlacePickerB> {
                   topLeft: Radius.circular(size.width * 0.05),
                   topRight: Radius.circular(size.width * 0.05)),
               minHeight: size.height * 0.05,
-              maxHeight: size.height * 0.5,
+              maxHeight: size.height * 0.6,
               panel: Stack(
                 alignment: Alignment.center,
                 children: [
@@ -419,14 +497,32 @@ class PlacePickerBState extends State<PlacePickerB> {
                         ),
                         inputF(
                           context: context,
+                          type: TextInputType.text,
+                          ontype: null,
                           controller: addressController,
                           title: "${getTranslated(context, 'yourLocation')}",
                           hint:
                               "${getTranslated(context, 'hereisYourLocation')}",
                           error: addressError,
                         ),
+
+                        // pincode
                         inputF(
                           context: context,
+                          type: TextInputType.number,
+                          controller: zipController,
+                          inputFormatterss: [
+                            LengthLimitingTextInputFormatter(12),
+                          ],
+                          ontype: onTypeZipCode,
+                          title: "${getTranslated(context, 'zipcode')}",
+                          hint: "${getTranslated(context, 'enterZipCode')}",
+                          error: zipCodeError,
+                        ),
+                        inputF(
+                          type: TextInputType.text,
+                          context: context,
+                          ontype: null,
                           controller: addressNameController,
                           title: "${getTranslated(context, 'addressName')}",
                           hint: "${getTranslated(context, 'enterAddressname')}",
@@ -867,6 +963,9 @@ class PlacePickerBState extends State<PlacePickerB> {
       String? title,
       String? hint,
       String? error,
+      ontype,
+      inputFormatterss,
+      type,
       controller,
       bool enable = true}) {
     var size = MediaQuery.of(context).size;
@@ -884,7 +983,13 @@ class PlacePickerBState extends State<PlacePickerB> {
           cursorColor: AppColors.white,
           controller: controller,
           enabled: enable,
-          keyboardType: TextInputType.text,
+          onChanged: (v) {
+            if (ontype != null) {
+              ontype(v);
+            } else {}
+          },
+          keyboardType: type,
+          inputFormatters: inputFormatterss ?? [],
           decoration: InputDecoration(
               fillColor: HexColor("#3e332b"),
               filled: true,

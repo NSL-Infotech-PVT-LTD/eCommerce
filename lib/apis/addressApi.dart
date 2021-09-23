@@ -35,7 +35,7 @@ Future<bool?> addAddressApi(
   var res = await http.post(Uri.parse(Urls.addresscreateUrl),
       headers: headers, body: body);
 
-  print(res.body);
+  print("add Address body ${res.body}");
 
   var jsonRes = json.decode(res.body);
 
@@ -139,5 +139,28 @@ Future<bool?> deleteAddress({
     return true;
   } else {
     return false;
+  }
+}
+
+Future<String?> checkValidZipApi({String? zipcode}) async {
+  var headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+    'X-localization': '${Constants.prefs?.getString("language")}'
+  };
+
+  Map body = {
+    "zip": "${zipcode ?? ''}",
+  };
+  var res = await http.post(Uri.parse(Urls.zipCodeChackUrl),
+      headers: headers, body: body);
+
+  var jsonRes = json.decode(res.body);
+
+  print(res.body);
+
+  if (res.statusCode == 200) {
+    return "true";
+  } else if (res.statusCode == 422) {
+    return "${jsonRes["error"]}";
   }
 }

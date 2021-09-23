@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:funfy/apis/signinApi.dart';
 import 'package:funfy/apis/userdataM.dart';
+import 'package:funfy/components/dialogs.dart';
 import 'package:funfy/models/favourite/fiestasFavouriteModel.dart';
 import 'package:funfy/models/favourite/preFiestasFavModel.dart';
 import 'package:funfy/models/fiestasmodel.dart';
@@ -12,7 +14,9 @@ import 'package:funfy/models/preFiestasModel.dart';
 import 'package:funfy/models/prefiestasDetailModel.dart';
 import 'package:funfy/models/prifiestasAlMxEx.dart';
 import 'package:funfy/utils/Constants.dart';
+import 'package:funfy/utils/strings.dart';
 import 'package:funfy/utils/urls.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 Future<FiestasModel?> fiestasPostGet(
@@ -22,9 +26,9 @@ Future<FiestasModel?> fiestasPostGet(
     filterDataF,
     String? pageCount,
     String? limitCount}) async {
-  print("here is date filter");
+  // print("here is date filter");
 
-  print("$dateFilter");
+  // print("$dateFilter");
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
     //  'X-localization': '${Constants.prefs?.getString("language")}'
@@ -53,7 +57,7 @@ Future<FiestasModel?> fiestasPostGet(
   var res = await http.post(Uri.parse(Urls.fiestasPostUrl),
       body: body, headers: headers);
 
-  print(res.body);
+  // print(res.body);
 
   if (res.statusCode == 401) {
     userSessionExpired(context);
@@ -217,7 +221,7 @@ Future<PrefiestasFavouriteModel?> prefiestasFavouriteListApi() async {
   var res = await http.post(Uri.parse(Urls.preFiestasfavoriteListUrl),
       headers: headers);
 
-  print(res.body);
+  // print(res.body);
 
   if (res.statusCode == 200) {
     try {
@@ -292,7 +296,7 @@ Future<String?> aboutApi() async {
     Uri.parse(Urls.aboutUsUrl),
   );
 
-  print(res.body);
+  // print(res.body);
 
   var reponse = jsonDecode(res.body);
 
@@ -308,7 +312,7 @@ Future<String?> aboutApi() async {
 // notification on off api
 
 Future<bool?> notificationOffApi({int? notificationNum}) async {
-  print("notiBoolNum $notificationNum");
+  // print("notiBoolNum $notificationNum");
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
   };
@@ -324,7 +328,7 @@ Future<bool?> notificationOffApi({int? notificationNum}) async {
 
   var response = jsonDecode(res.body);
 
-  print("here is ${response["data"]}");
+  // print("here is ${response["data"]}");
 
   bool notif = response["data"]["user"]["is_notify"] == "1" ? true : false;
 
@@ -356,7 +360,7 @@ Future notificatiListApi({int? notificationNum, int? pageCount}) async {
       body: body,
       headers: headers);
 
-  print(res.body);
+  // print(res.body);
 
   var jsonData = json.decode(res.body);
 
@@ -365,7 +369,7 @@ Future notificatiListApi({int? notificationNum, int? pageCount}) async {
 
     // return notificationListModelFromJson(res.body);
   } else {
-    print(res.body);
+    // print(res.body);
   }
 }
 
@@ -389,5 +393,75 @@ Future<FliterListModel?> filterList() async {
     return fliterListModelFromJson(res.body);
   } else {
     print(res.body);
+  }
+}
+
+//payment config
+
+Future paymentconfigApi({context}) async {
+  var headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+    // 'X-localization': '${Constants.prefs?.getString("language")}'
+  };
+
+  var res = await http.get(
+      Uri.parse(
+        Urls.paymentConfig,
+      ),
+      headers: headers);
+
+  // print(res.body);
+  try {
+    if (res.statusCode == 200) {
+      var paymentRes = json.decode(res.body);
+
+      // print("Euro ${paymentRes["data"]}");
+
+      Strings.euro = paymentRes["data"]["currency_symbol"].toString();
+
+      Strings.publishKey = paymentRes["data"]["public_key"].toString();
+
+      Strings.androidPayMode = paymentRes["data"]["payment_mode"].toString();
+
+      Strings.prefiestaMinimumBookingPrice =
+          paymentRes["data"]["prefiesta_minimum_booking_price"].toString();
+
+      Strings.fiestaBasicTicketBookingCharge =
+          paymentRes["data"]["fiesta_basic_ticket_booking_charge"].toString();
+
+      Strings.fiestaStandardTicketBookingCharge = paymentRes["data"]
+              ["fiesta_standard_ticket_booking_charge"]
+          .toString();
+
+      Strings.fiestaVipTicketBookingCharge =
+          paymentRes["data"]["fiesta_vip_ticket_booking_charge"].toString();
+
+      Strings.fiestaTransferCharge =
+          paymentRes["data"]["fiesta_transfer_charge"].toString();
+
+      Strings.prefiestaTransferCharge =
+          paymentRes["data"]["prefiesta_transfer_charge"].toString();
+
+      return true;
+    } else {
+      print("Error is here in Config........");
+
+      Dialogs.simpleOkAlertDialog(
+          context: context,
+          title: "Erro!",
+          content: "Server Config Error. Please Reset App",
+          func: () {
+            exit(0);
+          });
+    }
+  } catch (e) {
+    print("Error is here in Config........");
+    Dialogs.simpleOkAlertDialog(
+        context: context,
+        title: "Erro!",
+        content: "Server Config Error. Please Reset App",
+        func: () {
+          exit(0);
+        });
   }
 }
