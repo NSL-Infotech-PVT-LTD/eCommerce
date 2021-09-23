@@ -236,6 +236,7 @@ class _HomeMPageState extends State<HomeMPage> {
       if (dates[i]['date'] == itemSelected['date']) {
         // print("fhskhfkh-===" + dates[i].toString());
         dates[i]['active'] = filterDate == "" ? false : true;
+        if(_scrollController.hasClients)
         _scrollController.animateTo(
             i * MediaQuery.of(context).size.width * 0.13,
             duration: new Duration(seconds: 2),
@@ -438,8 +439,11 @@ class _HomeMPageState extends State<HomeMPage> {
       ),
     );
 
-    return SafeArea(
-      child: Scaffold(
+    return Scaffold(
+      backgroundColor: AppColors.blackBackground,
+
+      body: SafeArea(
+
           // floatingActionButton: FloatingActionButton(
           //   onPressed: () async {
 
@@ -455,8 +459,7 @@ class _HomeMPageState extends State<HomeMPage> {
           //   },
           //   child: Icon(Icons.add),
           // ),
-          backgroundColor: AppColors.blackBackground,
-          body: CustomScrollView(
+          child: CustomScrollView(
             controller: _fiestasScrollController,
             slivers: [
               SliverAppBar(

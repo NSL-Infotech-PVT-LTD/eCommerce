@@ -388,19 +388,19 @@ class _EditProfileState extends State<EditProfile> {
     if (Constants.prefs?.getString('gender') != "null") {
       _genderController.text = "${Constants.prefs?.getString('gender')}";
     } else {
-      _genderController.text =
-          "${getTranslated(context, "genderHint")}"; //Strings.genderHint;
+        _genderController.text = "${getTranslated(context, "genderHint")}"; //Strings.genderHint;
     }
-
-    // print('this is date $dobDateTime');
-
-    //_dobController.text = "0000-00-00";
   }
 
   @override
   void initState() {
     super.initState();
+  }
+  @override
+  void didChangeDependencies() {
+
     setdataolddata();
+    super.didChangeDependencies();
   }
 
   @override
