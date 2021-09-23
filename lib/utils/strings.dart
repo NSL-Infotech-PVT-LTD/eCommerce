@@ -65,11 +65,11 @@ class Strings {
   static String Success = "Success";
   static String hello = "Hello,";
   static String fiestas = "Fiestas";
-  static String preFiestas = "Pre-Fiestas";
+  static String preFiestas = "Delivery";
   static String club = "Club";
   static String specialEvent = "Special Events";
   static String pickfiestasday = "Pick Fiesta's day";
-  static String nearbyfiestas = "Nearby Fiestassssssssss";
+  static String nearbyfiestas = "Nearby Fiestas";
   static String seeall = "SEE ALL";
   static String startingfrom = "STARTING FROM";
   static String booknow = "Book Now";

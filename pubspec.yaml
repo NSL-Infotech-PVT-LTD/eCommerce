@@ -61,12 +61,12 @@ dependencies:
   flash: ^2.0.1
   google_maps_flutter: ^2.0.6
   google_maps_place_picker: ^2.0.0-nullsafety.3
-  flutter_glow: ^0.2.0
   place_picker: ^0.9.19-nullsafety
   sliding_up_panel: ^2.0.0+1
   get: ^4.3.8
   slide_to_confirm: ^1.1.0
   location_permissions: ^4.0.0
+  chewie: ^1.2.2
   
   
 

@@ -330,7 +330,7 @@ class _YourOrderSumState extends State<YourOrderSum> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "${prefiestasOrderDetailModel?.data?.parentDetail?.name}",
+                                "${prefiestasOrderDetailModel?.data?.parentDetail?.name ?? ''}",
                                 // "${getTranslated(context, "PackLaHavana")}",
                                 //"Pack La Havana",
                                 style: TextStyle(
@@ -419,7 +419,7 @@ class _YourOrderSumState extends State<YourOrderSum> {
                                 child: Row(
                                   children: [
                                     Text(
-                                      "${getTranslated(context, "transferCharges")}",
+                                      "${getTranslated(context, "ShippingCharges")}",
                                       //   "Other Taxes",
                                       style: TextStyle(
                                           color: AppColors.white,
@@ -428,7 +428,7 @@ class _YourOrderSumState extends State<YourOrderSum> {
                                     ),
                                     Spacer(),
                                     Text(
-                                      "${Strings.euro} ${double.parse('${prefiestasOrderDetailModel?.data?.orderDetail?[0].transferCharge ?? 0.0}').toStringAsFixed(2)}",
+                                      "${Strings.euro} ${double.parse('${prefiestasOrderDetailModel?.data?.orderDetail?[0].shippingCharge ?? 0.0}').toStringAsFixed(2)}",
                                       style: TextStyle(
                                           color: AppColors.white,
                                           fontSize: size.width * 0.05,
@@ -437,6 +437,35 @@ class _YourOrderSumState extends State<YourOrderSum> {
                                   ],
                                 ),
                               ),
+                              SizedBox(
+                                height: SizeConfig.screenHeight * 0.015,
+                              ),
+                              Strings.prefiestaTransferCharge != '0' &&
+                                      Strings.prefiestaTransferCharge != "null"
+                                  ? Container(
+                                      width: SizeConfig.screenWidth * 0.80,
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            "${getTranslated(context, "transferCharges")}",
+                                            //   "Other Taxes",
+                                            style: TextStyle(
+                                                color: AppColors.white,
+                                                fontSize: size.width * 0.05,
+                                                fontFamily: Fonts.dmSansMedium),
+                                          ),
+                                          Spacer(),
+                                          Text(
+                                            "${Strings.euro} ${double.parse('${prefiestasOrderDetailModel?.data?.orderDetail?[0].transferCharge ?? 0.0}').toStringAsFixed(2)}",
+                                            style: TextStyle(
+                                                color: AppColors.white,
+                                                fontSize: size.width * 0.05,
+                                                fontFamily: Fonts.dmSansBold),
+                                          )
+                                        ],
+                                      ),
+                                    )
+                                  : SizedBox(),
                               SizedBox(
                                 height: SizeConfig.screenHeight * 0.04,
                               ),
@@ -456,7 +485,7 @@ class _YourOrderSumState extends State<YourOrderSum> {
                                     Text(
                                       Strings.euro +
                                           " " +
-                                          "${prefiestasOrderDetailModel?.data?.orderDetail![0].totalPrice ?? 0}",
+                                          "${double.parse('${prefiestasOrderDetailModel?.data?.orderDetail![0].totalPrice ?? 0}').toStringAsFixed(2)}",
                                       style: TextStyle(
                                           color: AppColors.white,
                                           fontSize: size.width * 0.065,
@@ -475,58 +504,82 @@ class _YourOrderSumState extends State<YourOrderSum> {
                           child: DottedBorder(
                             radius: Radius.elliptical(100, 100),
                             color: AppColors.borderColor,
+
                             // gap: 3,
                             strokeWidth: 1,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                // crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Icon(
-                                    Icons.access_time,
-                                    color: AppColors.white,
-                                  ),
-                                  SizedBox(
-                                    width: SizeConfig.screenWidth * 0.03,
-                                  ),
-                                  Text(
-                                    "${getTranslated(context, "DeliveryStatus")}",
-                                    //"Delivery Status",
-                                    style: TextStyle(
-                                        color: AppColors.white,
-                                        fontSize: size.width * 0.05,
-                                        fontFamily: Fonts.dmSansMedium),
-                                  ),
-                                  Spacer(),
-                                  Column(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  // color: Colors.blue,
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
-                                      SizedBox(
-                                          height:
-                                              SizeConfig.screenHeight * 0.02),
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.access_time,
+                                            color: AppColors.white,
+                                          ),
+                                          SizedBox(
+                                            width:
+                                                SizeConfig.screenWidth * 0.03,
+                                          ),
+                                          Text(
+                                            "${getTranslated(context, "DeliveryStatus")}",
+                                            //"Delivery Status",
+                                            style: TextStyle(
+                                                color: AppColors.white,
+                                                fontSize: size.width * 0.05,
+                                                fontFamily: Fonts.dmSansMedium),
+                                          ),
+                                        ],
+                                      ),
+
                                       Text(
-                                        // "25 JUNE, Today",
-                                        // "${prefiestasOrderDetailModel?.data?.orderDetail![0].orderStatus == 'completed' ? getTranslated(context, 'delivered') : getTranslated(context, 'pending')}"
                                         "${prefiestasOrderDetailModel?.data?.orderDetail![0].orderStatus}"
                                             .toUpperCase(),
-
-                                        // "$deliverydate",
                                         style: TextStyle(
-                                            // color: AppColors.itemDescription,
                                             color: Colors.green,
                                             fontSize: size.width * 0.05,
                                             fontFamily: Fonts.dmSansMedium),
                                       ),
-                                      // Text(
-                                      //   "$deliveryTime",
-                                      //   style: TextStyle(
-                                      //       color: AppColors.itemDescription,
-                                      //       fontSize: size.width * 0.04,
-                                      //       fontFamily: Fonts.dmSansMedium),
+                                      // Spacer(),
+                                      // Column(
+                                      //   children: [
+                                      //     // SizedBox(
+                                      //     //     height:
+                                      //     //         SizeConfig.screenHeight * 0.02),
+                                      //     Text(
+                                      //       // "25 JUNE, Today",
+                                      //       // "${prefiestasOrderDetailModel?.data?.orderDetail![0].orderStatus == 'completed' ? getTranslated(context, 'delivered') : getTranslated(context, 'pending')}"
+                                      //       "${prefiestasOrderDetailModel?.data?.orderDetail![0].orderStatus}"
+                                      //           .toUpperCase(),
+
+                                      //       // "$deliverydate",
+                                      //       style: TextStyle(
+                                      //           // color: AppColors.itemDescription,
+                                      //           color: Colors.green,
+                                      //           fontSize: size.width * 0.05,
+                                      //           fontFamily: Fonts.dmSansMedium),
+                                      //     ),
+                                      //     // Text(
+                                      //     //   "$deliveryTime",
+                                      //     //   style: TextStyle(
+                                      //     //       color: AppColors.itemDescription,
+                                      //     //       fontSize: size.width * 0.04,
+                                      //     //       fontFamily: Fonts.dmSansMedium),
+                                      //     // ),
+                                      //   ],
                                       // ),
                                     ],
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
                         ),

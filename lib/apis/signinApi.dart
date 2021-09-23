@@ -113,6 +113,8 @@ Future<GoogleSigninModel?> googleLogin(
     "device_token": UserData.deviceToken,
     "image": profileImage
   };
+
+  print("Body is Here $body");
   var res = await http.post(Uri.parse(Urls.googleSiginUrl), body: body);
   var jsondata = json.decode(res.body);
   print(jsondata);

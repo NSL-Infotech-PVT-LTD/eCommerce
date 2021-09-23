@@ -950,7 +950,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
           // ),
           appBar: AppBar(
             backgroundColor: AppColors.blackBackground,
-            title: Text("Pre-Fiestas"),
+            title: Text("${getTranslated(context, "preFiestas")}"),
             centerTitle: true,
             actions: [
               GestureDetector(
@@ -1225,9 +1225,9 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                               (prefiestasDetailModel
                                               ?.data?.childData?.alcohol ==
                                           null ||
-                                      prefiestasDetailModel
-                                              ?.data?.childData?.alcohol ==
-                                          [])
+                                      prefiestasDetailModel?.data?.childData
+                                              ?.alcohol?.length ==
+                                          0)
                                   ? Center(
                                       child: Text(
                                         "${getTranslated(context, "nodataFound")}",
@@ -1292,8 +1292,8 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                               (prefiestasDetailModel?.data?.childData?.mix ==
                                           null ||
                                       prefiestasDetailModel
-                                              ?.data?.childData?.mix ==
-                                          [])
+                                              ?.data?.childData?.mix?.length ==
+                                          0)
                                   ? Center(
                                       child: Text(
                                         "${getTranslated(context, "nodataFound")}",
@@ -1351,12 +1351,11 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                                     ),
 
                               // extras
-
                               (prefiestasDetailModel?.data?.childData?.extras ==
                                           null ||
-                                      prefiestasDetailModel
-                                              ?.data?.childData?.extras ==
-                                          [])
+                                      prefiestasDetailModel?.data?.childData
+                                              ?.extras?.length ==
+                                          0)
                                   ? Center(
                                       child: Text(
                                         "${getTranslated(context, "nodataFound")}",

@@ -59,6 +59,8 @@ class Data {
 class OrderDetail {
   OrderDetail({
     this.id,
+    this.date,
+    this.time,
     this.orderBy,
     this.transferCharge,
     this.totalPrice,
@@ -66,26 +68,31 @@ class OrderDetail {
     this.orderStatus,
     this.paymentParams,
     this.paymentMode,
+    this.shippingCharge,
     this.categoryDetail,
     this.grandTotal,
     this.orderItem,
   });
 
   int? id;
-
+  dynamic date;
+  dynamic time;
   int? orderBy;
   String? transferCharge;
   var totalPrice;
   OrderDetailAddress? address;
-  var orderStatus;
+  String? orderStatus;
   PaymentParams? paymentParams;
   String? paymentMode;
+  String? shippingCharge;
   ParentDetail? categoryDetail;
-  double? grandTotal;
+  var grandTotal;
   List<OrderItem>? orderItem;
 
   factory OrderDetail.fromJson(Map<String, dynamic> json) => OrderDetail(
         id: json["id"],
+        date: json["date"],
+        time: json["time"],
         orderBy: json["order_by"],
         transferCharge: json["transfer_charge"],
         totalPrice: json["total_price"],
@@ -93,6 +100,7 @@ class OrderDetail {
         orderStatus: json["order_status"],
         paymentParams: PaymentParams.fromJson(json["payment_params"]),
         paymentMode: json["payment_mode"],
+        shippingCharge: json["shipping_charge"],
         categoryDetail: ParentDetail.fromJson(json["category_detail"]),
         grandTotal: json["grand_total"].toDouble(),
         orderItem: List<OrderItem>.from(
@@ -101,6 +109,8 @@ class OrderDetail {
 
   Map<String, dynamic> toJson() => {
         "id": id,
+        "date": date,
+        "time": time,
         "order_by": orderBy,
         "transfer_charge": transferCharge,
         "total_price": totalPrice,
@@ -108,6 +118,7 @@ class OrderDetail {
         "order_status": orderStatus,
         "payment_params": paymentParams?.toJson(),
         "payment_mode": paymentMode,
+        "shipping_charge": shippingCharge,
         "category_detail": categoryDetail?.toJson(),
         "grand_total": grandTotal,
         "order_item": List<dynamic>.from(orderItem!.map((x) => x.toJson())),
@@ -201,7 +212,7 @@ class ParentDetail {
   int? quantityInCart;
   int? quantity;
   String? categories;
-  String? price;
+  var price;
   String? status;
 
   factory ParentDetail.fromJson(Map<String, dynamic> json) => ParentDetail(
@@ -254,7 +265,7 @@ class OrderItem {
   int? orderId;
   int? preFiestaId;
   int? quantity;
-  int? price;
+  var price;
   ParentDetail? preFiesta;
 
   factory OrderItem.fromJson(Map<String, dynamic> json) => OrderItem(

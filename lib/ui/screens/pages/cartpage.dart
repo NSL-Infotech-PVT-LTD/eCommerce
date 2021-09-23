@@ -1244,7 +1244,7 @@ class _CartpageState extends State<Cartpage> {
                                                 if (int.parse(Strings
                                                         .prefiestaMinimumBookingPrice) <
                                                     double.parse(
-                                                        "${UserData.myCartModel?.data?.cart?.totalPrice ?? 0}")) {
+                                                        "${_totalPrice != "0" && _totalPrice != "null" ? _totalPrice : UserData.myCartModel?.data?.cart?.totalPrice}")) {
                                                   Navigator.push(
                                                       context,
                                                       MaterialPageRoute(

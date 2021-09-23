@@ -511,6 +511,7 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                                             children: [
                                               content(
                                                   size: size,
+                                                  context: context,
                                                   title: getTranslated(
                                                       context, "date"),
                                                   description: "$date"),
@@ -519,6 +520,7 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                                               ),
                                               content(
                                                   size: size,
+                                                  context: context,
                                                   title: getTranslated(
                                                       context, "checkinType"),
                                                   description: Strings.ticket),
@@ -533,6 +535,7 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                                             children: [
                                               content(
                                                   size: size,
+                                                  context: context,
                                                   title: getTranslated(
                                                       context, "time"),
                                                   description: "$time"),
@@ -541,6 +544,7 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                                               ),
                                               content(
                                                   size: size,
+                                                  context: context,
                                                   title: getTranslated(
                                                       context, "orderId"),
                                                   description:
@@ -554,12 +558,44 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
                                         height: size.height * 0.025,
                                       ),
 
-                                      content(
-                                          size: size,
-                                          title: getTranslated(
-                                              context, "location"),
-                                          description:
-                                              "${fiestasBookingDetailModel?.data![0].fiestaDetail?.clubDetail?.location ?? getTranslated(context, 'location')}")
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "${getTranslated(context, "location")}",
+                                            style: TextStyle(
+                                                fontFamily: Fonts.dmSansBold,
+                                                fontSize: size.width * 0.05,
+                                                color:
+                                                    AppColors.blackBackground),
+                                          ),
+                                          SizedBox(
+                                            height: size.height * 0.005,
+                                          ),
+                                          Container(
+                                            width: size.width * 0.8,
+                                            child: Text(
+                                              "${fiestasBookingDetailModel?.data![0].fiestaDetail?.clubDetail?.location ?? getTranslated(context, 'location')}",
+                                              // maxLines: 3,
+                                              // overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                  fontFamily:
+                                                      Fonts.dmSansMedium,
+                                                  fontSize: size.width * 0.045,
+                                                  color: AppColors.inputTitle),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+
+                                      // content(
+                                      //     size: size,
+                                      //     context: context,
+                                      //     title: getTranslated(
+                                      //         context, "location"),
+                                      //     description:
+                                      //         "${fiestasBookingDetailModel?.data![0].fiestaDetail?.clubDetail?.location ?? getTranslated(context, 'location')}")
                                     ],
                                   ),
                                 )
@@ -610,7 +646,8 @@ class _FiestasMoreOrderDetailState extends State<FiestasMoreOrderDetail> {
   }
 }
 
-Widget content({size, String? title, String? description}) {
+Widget content({size, context, String? title, String? description}) {
+  var size = MediaQuery.of(context).size;
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -624,14 +661,16 @@ Widget content({size, String? title, String? description}) {
       SizedBox(
         height: size.height * 0.005,
       ),
-      Text(
-        "$description",
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis,
-        style: TextStyle(
-            fontFamily: Fonts.dmSansMedium,
-            fontSize: size.width * 0.045,
-            color: AppColors.inputTitle),
+      Container(
+        child: Text(
+          "$description",
+          // maxLines: 3,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+              fontFamily: Fonts.dmSansMedium,
+              fontSize: size.width * 0.045,
+              color: AppColors.inputTitle),
+        ),
       ),
     ],
   );
