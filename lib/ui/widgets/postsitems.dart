@@ -34,7 +34,7 @@ Widget fiestasItem({context, Datum? postModeldata}) {
   String month = DateFormat('MMM').format(date);
 
   String price =
-      k_m_b_generator(int.parse("${postModeldata?.ticketPriceNormal}"));
+      k_m_b_generator(double.parse("${postModeldata?.ticketPriceNormal}"));
 
   double rating = 0.0;
 

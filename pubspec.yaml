@@ -67,6 +67,7 @@ dependencies:
   slide_to_confirm: ^1.1.0
   location_permissions: ^4.0.0
   chewie: ^1.2.2
+  flick_video_player: ^0.3.1
   
   
 
