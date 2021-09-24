@@ -13,6 +13,7 @@ import 'package:funfy/components/navigation.dart';
 import 'package:funfy/components/sizeclass/SizeConfig.dart';
 import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/widgets/basic%20function.dart';
+import 'package:funfy/ui/widgets/videoPlay.dart';
 import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/colors.dart';
@@ -44,10 +45,10 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
 
   bool showMore = false;
 
-  CarouselController _carouselController = CarouselController();
+  // CarouselController _carouselController = CarouselController();
   List<Widget> cardList = [];
   List<Widget> alcoholList = [];
-  VideoPlayerController? _controller;
+  // VideoPlayerController? _controller;
   bool pauseBool = false;
   bool _loadingMainCenter = false;
 
@@ -141,22 +142,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
       UserData.preFiestasExtrasTicketCart.clear();
       UserData.preFiestasMixesTicketCart.clear();
     });
-
-    // video
-    // _controller = VideoPlayerController.network(
-    //     'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_20mb.mp4')
-    //   ..initialize().then((_) {
-    //     setState(() {});
-    //   });
   }
-
-  // pauseButtonHide() {
-  //   Timer(Duration(seconds: 3), () {
-  //     setState(() {
-  //       pauseBool = false;
-  //     });
-  //   });
-  // }
 
   // + - count button
   Widget insdecButton(
@@ -301,23 +287,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                     fontSize: SizeConfig.screenWidth * 0.0350)),
           ],
         ),
-        trailing:
-
-            // numCount != true
-            //     ? Theme(
-            //         data: Theme.of(context).copyWith(
-            //           unselectedWidgetColor: AppColors.white,
-            //         ),
-            //         child: Radio<int?>(
-            //             value: index,
-            //             groupValue: groupValue != -1
-            //                 ? groupValue
-            //                 : count, //count == 1 && groupValue != -1 ? count : groupValue,
-            //             onChanged: _handleRadioValueChange),
-            //       )
-            //     :
-
-            Container(
+        trailing: Container(
           // color: Colors.blue,
           width: size.width * 0.3,
           child: Row(
@@ -367,11 +337,11 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                 "video Url : ${prefiestasDetailModel!.data!.parentData!.videoUrl}");
 
             // video
-            _controller = VideoPlayerController.network(
-                "${prefiestasDetailModel!.data!.parentData!.videoUrl}")
-              ..initialize().then((_) {
-                setState(() {});
-              });
+            // _controller = VideoPlayerController.network(
+            //     "${prefiestasDetailModel!.data!.parentData!.videoUrl}")
+            //   ..initialize().then((_) {
+            //     setState(() {});
+            //   });
 
             _loadingBack = false;
           });
@@ -630,8 +600,6 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                       Container(
                         child: Text(
                           "$totalCountInCart",
-                          // "${int.parse(totalNum)}  ${getTranslated(context, "item")}",
-                          // "${Strings.ticket} * ${UserData.totalTicketNum}",
                           style: TextStyle(
                             color: AppColors.white,
                             fontSize: size.width * 0.05,
@@ -683,10 +651,6 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
 
   setItemValue({int? type, bool? valueTureFalse}) {
     setState(() {
-      // if (type == 1) {
-      //   Constants.prefs?.setString("alcohol", "${valueTureFalse! ? type : ''}");
-      // }
-
       if (type == 2) {
         Constants.prefs?.setString("mix", "${valueTureFalse! ? type : ''}");
       }
@@ -854,11 +818,6 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
 
         if (res?.status == true && res?.code == 201) {
           clearCart();
-          // Navigator.pushAndRemoveUntil(
-          //     context,
-          //     MaterialPageRoute(
-          //         builder: (BuildContext context) => BookingSuccess()),
-          //     (route) => false);
         }
       });
     } catch (e) {
@@ -941,13 +900,6 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
     return SafeArea(
       child: Scaffold(
           key: _scaffoldKey,
-          // floatingActionButton: FloatingActionButton(
-          //   onPressed: () {
-          //     print("here is ");
-          //     print(Constants.prefs?.getString("alcohol"));
-          //   },
-          //   child: Icon(Icons.add),
-          // ),
           appBar: AppBar(
             backgroundColor: AppColors.blackBackground,
             title: Text("${getTranslated(context, "preFiestas")}"),
@@ -972,9 +924,6 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
           ),
           backgroundColor: AppColors.homeBackground,
           bottomSheet: _loadingBack == false && totalCountInCart != 0
-              // (Constants.prefs?.getString("alcohol") != null &&
-              //     Constants.prefs?.getString("alcohol") != "" &&
-              //     Constants.prefs?.getString("alcohol") != "0")
               ? bottomSheet()
               : SizedBox(),
           body: _loadingBack == true
@@ -990,98 +939,22 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                             (BuildContext context, bool innerBoxIsScrolled) {
                           return [
                             SliverAppBar(
-                              // backgroundColor: AppColors.white,
-                              collapsedHeight: size.height * 0.3,
-                              expandedHeight: size.height * 0.3,
+                                // backgroundColor: AppColors.white,
+                                collapsedHeight: size.height * 0.3,
+                                expandedHeight: size.height * 0.3,
+                                floating: true,
+                                // pinned: true,
+                                snap: true,
+                                automaticallyImplyLeading: false,
+                                actionsIconTheme: IconThemeData(opacity: 0.0),
+                                flexibleSpace: SamplePlayer(
+                                  videoUrl: prefiestasDetailModel!
+                                      .data!.parentData!.videoUrl,
+                                )
 
-                              floating: true,
-                              // pinned: true,
-                              snap: true,
-                              automaticallyImplyLeading: false,
+                                //
 
-                              actionsIconTheme: IconThemeData(opacity: 0.0),
-                              flexibleSpace: Stack(
-                                children: <Widget>[
-                                  Container(
-                                      color: AppColors.blackBackground,
-                                      height: size.height,
-                                      width: size.width),
-                                  Positioned.fill(
-                                      child: _controller?.value.isInitialized ??
-                                              false
-                                          ? Stack(
-                                              children: [
-                                                Center(
-                                                    child: _controller!
-                                                            .value.isInitialized
-                                                        ? AspectRatio(
-                                                            aspectRatio:
-                                                                _controller!
-                                                                    .value
-                                                                    .aspectRatio,
-                                                            child: VideoPlayer(
-                                                              _controller!,
-                                                            ),
-                                                          )
-                                                        : Container()),
-                                                Center(
-                                                  child: InkWell(
-                                                      onTap: () {
-                                                        setState(() {
-                                                          _controller!.value
-                                                                  .isPlaying
-                                                              ? _controller
-                                                                  ?.pause()
-                                                              : _controller
-                                                                  ?.play();
-                                                        });
-                                                      },
-                                                      child: Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          _controller!.value
-                                                                  .isPlaying
-                                                              ? Icon(
-                                                                  Icons.pause,
-                                                                  color:
-                                                                      AppColors
-                                                                          .white,
-                                                                  size:
-                                                                      size.width *
-                                                                          0.11,
-                                                                )
-                                                              : SizedBox(),
-                                                          _controller!.value
-                                                                      .isPlaying ==
-                                                                  false
-                                                              ? Container(
-                                                                  child:
-                                                                      SvgPicture
-                                                                          .asset(
-                                                                    Images
-                                                                        .playSvg,
-                                                                    width: size
-                                                                            .width *
-                                                                        0.11,
-                                                                  ),
-                                                                )
-                                                              : SizedBox(),
-                                                        ],
-                                                      )),
-                                                )
-                                              ],
-                                            )
-                                          : Center(
-                                              child: CircularProgressIndicator(
-                                                color: AppColors.white,
-                                              ),
-                                            )),
-                                  Positioned(bottom: 0.0, child: Text(""))
-                                ],
-                              ),
-                            ),
+                                ),
                             SliverPadding(
                               padding: EdgeInsets.all(16.0),
                               sliver: SliverList(
@@ -1150,7 +1023,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                                                         )),
                                                     "${prefiestasDetailModel?.data?.parentData?.description}"
                                                                 .length >
-                                                            100
+                                                            160
                                                         ? InkWell(
                                                             onTap: () {
                                                               setState(() {

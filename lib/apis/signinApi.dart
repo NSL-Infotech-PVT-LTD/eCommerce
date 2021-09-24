@@ -140,6 +140,48 @@ Future<GoogleSigninModel?> googleLogin(
   }
 }
 
+Future<GoogleSigninModel?> appleLogin(
+    {context,
+    String? name,
+    String? email,
+    String? googleid,
+    String? deviceType,
+    String? profileImage}) async {
+  var body = {
+    "name": name,
+    "email": email,
+    "apple_id": googleid,
+    "device_type": deviceType,
+    "device_token": UserData.deviceToken,
+    "image": profileImage
+  };
+
+  print("Body is Here $body");
+  var res = await http.post(Uri.parse(Urls.appleSiginUrl), body: body);
+  var jsondata = json.decode(res.body);
+  print(jsondata);
+
+  // var model = facebookSigninModelFromJson(res.body);
+
+  // print(model.data?.user?.name);
+
+  if (res.statusCode == 201) {
+    return googleSigninModelFromJson(res.body);
+  } else if (res.statusCode == 200) {
+    return googleSigninModelFromJson(res.body);
+  } else if (res.statusCode == 422) {
+    Dialogs.simpleOkAlertDialog(
+        context: context,
+        title: "${getTranslated(context, 'alert!')}",
+        content: "${jsondata['error']}",
+        func: () {
+          navigatePopFun(context);
+        });
+  } else {
+    print("Error in Google signin Api");
+  }
+}
+
 saveDataInshareP(
     {String? name,
     String? email,

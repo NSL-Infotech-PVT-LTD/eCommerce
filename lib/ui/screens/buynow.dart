@@ -69,15 +69,15 @@ class _BuyNowState extends State<BuyNow> {
                   UserData.tiketList[index!]["price"];
 
           if (index == 0) {
-            UserData.ticketcartMap[index]["ticketBookingCharge"] = int.parse(
+            UserData.ticketcartMap[index]["ticketBookingCharge"] = double.parse(
                     UserData.ticketcartMap[index]["ticketCount"].toString()) *
                 double.parse(Strings.fiestaBasicTicketBookingCharge);
           } else if (index == 1) {
-            UserData.ticketcartMap[index]["ticketBookingCharge"] = int.parse(
+            UserData.ticketcartMap[index]["ticketBookingCharge"] = double.parse(
                     UserData.ticketcartMap[index]["ticketCount"].toString()) *
                 double.parse(Strings.fiestaStandardTicketBookingCharge);
           } else if (index == 2) {
-            UserData.ticketcartMap[index]["ticketBookingCharge"] = int.parse(
+            UserData.ticketcartMap[index]["ticketBookingCharge"] = double.parse(
                     UserData.ticketcartMap[index]["ticketCount"].toString()) *
                 double.parse(Strings.fiestaVipTicketBookingCharge);
           }
@@ -443,7 +443,9 @@ class _BuyNowState extends State<BuyNow> {
                                   width: size.width * 0.03,
                                 ),
                                 Text(
-                                  "${Strings.euro}$grandTotal",
+                                  "${Strings.euro}" +
+                                      double.parse("$grandTotal")
+                                          .toStringAsFixed(2),
                                   style: TextStyle(
                                       color: AppColors.white,
                                       fontSize: size.width * 0.052,

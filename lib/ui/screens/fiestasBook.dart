@@ -62,7 +62,12 @@ class _FiestasBookState extends State<FiestasBook> {
   // - + funtion
 
   addTicket({int? index, String? name, var count, var price, String? image}) {
-    print("add button press  $count  $index");
+    print(
+        "add button press  $count  $index  ${Strings.fiestaBasicTicketBookingCharge}");
+
+    print(Strings.fiestaBasicTicketBookingCharge);
+    print(Strings.fiestaStandardTicketBookingCharge);
+    print(Strings.fiestaVipTicketBookingCharge);
 
     var oldCount = 0;
     try {
@@ -90,15 +95,15 @@ class _FiestasBookState extends State<FiestasBook> {
           // new
 
           if (index == 0) {
-            UserData.ticketcartMap[index]["ticketBookingCharge"] = int.parse(
+            UserData.ticketcartMap[index]["ticketBookingCharge"] = double.parse(
                     UserData.ticketcartMap[index]["ticketCount"].toString()) *
                 double.parse(Strings.fiestaBasicTicketBookingCharge);
           } else if (index == 1) {
-            UserData.ticketcartMap[index]["ticketBookingCharge"] = int.parse(
+            UserData.ticketcartMap[index]["ticketBookingCharge"] = double.parse(
                     UserData.ticketcartMap[index]["ticketCount"].toString()) *
                 double.parse(Strings.fiestaStandardTicketBookingCharge);
           } else if (index == 2) {
-            UserData.ticketcartMap[index]["ticketBookingCharge"] = int.parse(
+            UserData.ticketcartMap[index]["ticketBookingCharge"] = double.parse(
                     UserData.ticketcartMap[index]["ticketCount"].toString()) *
                 double.parse(Strings.fiestaVipTicketBookingCharge);
           }
@@ -233,7 +238,7 @@ class _FiestasBookState extends State<FiestasBook> {
   setPriceToList() {
     setState(() {
       UserData.tiketList[0]["price"] =
-          int.parse('${fiestasDetailModel?.data!.ticketPriceNormal}');
+          double.parse('${fiestasDetailModel?.data!.ticketPriceNormal}');
 
       UserData.tiketList[0]["max"] =
           int.parse('${fiestasDetailModel?.data!.leftNormalTicket}');
@@ -242,7 +247,7 @@ class _FiestasBookState extends State<FiestasBook> {
           int.parse('${fiestasDetailModel?.data!.totalNormalTickets}');
 
       UserData.tiketList[1]["price"] =
-          int.parse('${fiestasDetailModel?.data!.ticketPriceStandard}');
+          double.parse('${fiestasDetailModel?.data!.ticketPriceStandard}');
 
       UserData.tiketList[1]["max"] =
           int.parse('${fiestasDetailModel?.data!.leftStandardTicket}');
@@ -251,7 +256,7 @@ class _FiestasBookState extends State<FiestasBook> {
           int.parse('${fiestasDetailModel?.data!.totalStandardTickets}');
 
       UserData.tiketList[2]["price"] =
-          int.parse('${fiestasDetailModel?.data!.ticketPriceVip}');
+          double.parse('${fiestasDetailModel?.data!.ticketPriceVip}');
 
       UserData.tiketList[2]["max"] =
           int.parse('${fiestasDetailModel?.data!.leftVipTicket}');
@@ -279,15 +284,16 @@ class _FiestasBookState extends State<FiestasBook> {
 
         await getFiestasbyId(fiestasID: "${widget.fiestasID}").then((res) {
           setState(() {
+            // print("here is Res .........");
+
             // print(res?.toJson());
 
             fiestasDetailModel = res;
 
             setPriceToList();
             setFavoriteBool();
-
-            price = k_m_b_generator(
-                int.parse("${fiestasDetailModel?.data!.ticketPriceNormal}"));
+            k_m_b_generator(double.parse(
+                "${fiestasDetailModel?.data!.ticketPriceNormal ?? 0}"));
 
             dateTime = DateTime.parse("${fiestasDetailModel?.data!.timestamp}");
 
@@ -295,6 +301,7 @@ class _FiestasBookState extends State<FiestasBook> {
 
             month = DateFormat('MMMM').format(dateTime!);
             time = DateFormat('hh:mm a').format(dateTime!);
+
             onlyTime = time?.split(" ")[0];
             amPm = time?.split(" ")[1];
 
@@ -629,7 +636,7 @@ class _FiestasBookState extends State<FiestasBook> {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    "${fiestasDetailModel?.data!.name}",
+                                                    "${fiestasDetailModel?.data!.name ?? ''}",
                                                     style: TextStyle(
                                                         fontSize:
                                                             size.width * 0.08,
