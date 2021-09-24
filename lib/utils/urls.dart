@@ -1,6 +1,6 @@
 class Urls {
-  // static String baseUrl = "https://dev.netscapelabs.com/funfy/public/api/";
-  static String baseUrl = "https://app.funfyapp.com/api/";
+  static String baseUrl = "https://dev.netscapelabs.com/funfy/public/api/";
+  // static String baseUrl = "https://app.funfyapp.com/api/";
 
   static String introUrl = baseUrl + "getWalkthrough";
   static String siginUrl = baseUrl + "customer/login";

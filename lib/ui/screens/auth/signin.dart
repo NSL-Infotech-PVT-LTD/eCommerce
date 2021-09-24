@@ -16,6 +16,7 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:io' show Platform;
 import 'package:http/http.dart' as http;
+
 class Signin extends StatefulWidget {
   const Signin({Key? key}) : super(key: key);
 
@@ -86,6 +87,7 @@ class _SigninState extends State<Signin> {
                 name: response?.data?.user?.name,
                 email: response?.data?.user?.email,
                 token: response?.data?.token,
+                mobile: response?.data?.user?.mobile,
                 dob: response?.data?.user?.dob.toString(),
                 profileImage: response?.data?.user?.image,
                 gender: response?.data?.user?.gender,
@@ -354,12 +356,12 @@ class _SigninState extends State<Signin> {
         _loading = true;
       });
       appleLogin(
-          context: context,
-          name: acc.givenName ?? "",
-          email: acc.email ?? "",
-          googleid: acc.identityToken ?? "",
-          deviceType: Platform.isAndroid ? "android" : "ios",
-          profileImage: "")
+              context: context,
+              name: acc.givenName ?? "",
+              email: acc.email ?? "",
+              googleid: acc.identityToken ?? "",
+              deviceType: Platform.isAndroid ? "android" : "ios",
+              profileImage: "")
           .then((res) {
         if (res?.code == 200 || res?.code == 201) {
           print("userToken google - ${res?.data?.token}");
@@ -374,7 +376,7 @@ class _SigninState extends State<Signin> {
               context,
               MaterialPageRoute(
                   builder: (BuildContext context) => Home(pageIndexNum: 0)),
-                  (route) => false);
+              (route) => false);
         } else {
           setState(() {
             _loading = false;
@@ -386,7 +388,6 @@ class _SigninState extends State<Signin> {
         _loading = false;
       });
     }
-
   }
 
   // google sigin
@@ -610,7 +611,7 @@ class _SigninState extends State<Signin> {
                             title:
                                 "${getTranslated(context, "signinwithApple")}", // Strings.signinwithApple,
                             iconImage: Images.appleIcon,
-                            func: () async{
+                            func: () async {
                               appleSignin();
                             })
                         : SizedBox(),

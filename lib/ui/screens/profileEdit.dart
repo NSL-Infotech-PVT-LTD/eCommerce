@@ -1,12 +1,11 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:funfy/apis/signinApi.dart';
 import 'package:funfy/apis/signupApi.dart';
-import 'package:funfy/apis/userdataM.dart';
+
 import 'package:funfy/components/inputvalid.dart';
 import 'package:funfy/components/zeroadd.dart';
-import 'package:funfy/ui/screens/auth/signin.dart';
+
 import 'package:funfy/ui/widgets/inputtype.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/Constants.dart';
@@ -15,7 +14,7 @@ import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/langauge_constant.dart';
-import 'package:funfy/utils/strings.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -34,6 +33,7 @@ class _EditProfileState extends State<EditProfile> {
 
   TextEditingController _fullnameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
+  TextEditingController _mobileController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _dobController = TextEditingController();
   TextEditingController _genderController = TextEditingController();
@@ -46,6 +46,7 @@ class _EditProfileState extends State<EditProfile> {
 
   String _fullnameError = "";
   String _dobError = "";
+  String _mobileError = "";
   String _genderError = "";
   String _signupError = "";
 
@@ -56,6 +57,7 @@ class _EditProfileState extends State<EditProfile> {
       _fullnameError = "";
       _dobError = "";
       _genderError = "";
+      _mobileError = "";
 // fullname
       if (_fullnameController.text == "") {
         _fullnameError =
@@ -75,6 +77,13 @@ class _EditProfileState extends State<EditProfile> {
         } else if (calculateAge(dobDateTime) != "") {
           _dobError =
               "${getTranslated(context, "agemustbe18")}"; //Strings.agemustbe18;
+        }
+
+        // mobile
+
+        if (_mobileController.text == "") {
+          _mobileError =
+              "${getTranslated(context, 'pleaseEnterYourMobileNumber')}";
         }
 
 // gender
@@ -131,6 +140,7 @@ class _EditProfileState extends State<EditProfile> {
                   email: response?.data?.user?.email,
                   profileImage: response?.data?.user?.image,
                   gender: response?.data?.user?.gender,
+                  mobile: response?.data?.user?.mobile.toString(),
                   dob: response?.data?.user?.dob
                       .toString()
                       .split(" ")[0]
@@ -373,6 +383,8 @@ class _EditProfileState extends State<EditProfile> {
     _fullnameController.text = "${Constants.prefs?.getString('name')}";
     _emailController.text = "${Constants.prefs?.getString('email')}";
 
+    _mobileController.text = "${Constants.prefs?.getString('mobile')}";
+
     print("------------------------ ${Constants.prefs?.getString('dob')}");
     if (Constants.prefs?.getString('dob') != "null") {
       _dobController.text =
@@ -388,7 +400,8 @@ class _EditProfileState extends State<EditProfile> {
     if (Constants.prefs?.getString('gender') != "null") {
       _genderController.text = "${Constants.prefs?.getString('gender')}";
     } else {
-        _genderController.text = "${getTranslated(context, "genderHint")}"; //Strings.genderHint;
+      _genderController.text =
+          "${getTranslated(context, "genderHint")}"; //Strings.genderHint;
     }
   }
 
@@ -396,9 +409,9 @@ class _EditProfileState extends State<EditProfile> {
   void initState() {
     super.initState();
   }
+
   @override
   void didChangeDependencies() {
-
     setdataolddata();
     super.didChangeDependencies();
   }
@@ -544,6 +557,20 @@ class _EditProfileState extends State<EditProfile> {
                             inputError: "",
                             ontapFun: null,
                             readonly: true),
+
+                        // mobile
+
+                        inputs(
+                            context: context,
+                            controller: _mobileController,
+                            obscureTextBool: false,
+                            titletxt:
+                                "${getTranslated(context, "email")}", // Strings.email,
+                            hinttxt:
+                                "${getTranslated(context, "emailHint")}", // Strings.emailHint,
+                            inputError: "",
+                            ontapFun: null,
+                            readonly: false),
 
                         // Container(
                         //     margin: EdgeInsets.only(top: size.height * 0.015),
