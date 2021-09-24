@@ -143,6 +143,7 @@ flutter:
     - assets/pngicons/googleIcon.png
     - assets/pngicons/aboutCalender.png
     - assets/pngicons/fiestasBackground.png
+    - assets/pngicons/filter.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -415,7 +415,7 @@ Future paymentconfigApi({context}) async {
     if (res.statusCode == 200) {
       var paymentRes = json.decode(res.body);
 
-      print("Euro ${paymentRes["data"]}");
+      // print("Euro ${paymentRes["data"]}");
 
       Strings.euro = paymentRes["data"]["currency_symbol"].toString();
 

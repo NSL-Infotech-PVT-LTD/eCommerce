@@ -578,6 +578,7 @@ class _EditProfileState extends State<EditProfile> {
                             hinttxt:
                                 "${getTranslated(context, "enterYourMobileNumber")}", // Strings.emailHint,
                             inputError: "",
+                            number: true,
                             ontapFun: null,
                             readonly: false),
 

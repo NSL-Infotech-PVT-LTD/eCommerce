@@ -713,12 +713,15 @@ class _HomeMPageState extends State<HomeMPage> {
                                     onTap: () {
                                       filterBottomSheet();
                                     },
+                                    // child: Icon(Icons.filter_alt_outlined,
+                                    //     color: Colors.white)
                                     child: Container(
                                         margin: EdgeInsets.only(
                                             right: size.width * 0.01),
                                         alignment: Alignment.centerRight,
                                         child: Image.asset(
-                                            "assets/pngicons/filter.png")),
+                                            "assets/pngicons/filterImage.png",
+                                            width: size.width * 0.058)),
                                   )
                                 ]),
                           ),

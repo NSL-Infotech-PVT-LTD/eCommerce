@@ -36,8 +36,11 @@ Future<UserModel?> signinUser(
     "device_token": UserData.deviceToken
   };
 
+  var headers = {'X-localization': '${Constants.prefs?.getString("language")}'};
+
   print("here is device type : $devicetype");
-  var res = await http.post(Uri.parse(Urls.siginUrl), body: body);
+  var res =
+      await http.post(Uri.parse(Urls.siginUrl), headers: headers, body: body);
 
   var data = json.decode(res.body);
 
@@ -66,6 +69,7 @@ Future facebookLogin(
     String? deviceToken,
     String? profileImage,
     phoneBody}) async {
+  var headers = {'X-localization': '${Constants.prefs?.getString("language")}'};
   Map body = {};
 
   if (phoneBody == null) {
@@ -81,9 +85,10 @@ Future facebookLogin(
     body = phoneBody;
   }
 
-  var res = await http.post(Uri.parse(Urls.faceBookSigninUrl), body: body);
+  var res = await http.post(Uri.parse(Urls.faceBookSigninUrl),
+      headers: headers, body: body);
+
   var jsondata = json.decode(res.body);
-  print(jsondata);
 
   // var model = facebookSigninModelFromJson(res.body);
 
@@ -125,6 +130,8 @@ Future googleLogin(
     String? deviceToken,
     String? profileImage,
     Map? phoneBody}) async {
+  var headers = {'X-localization': '${Constants.prefs?.getString("language")}'};
+
   Map body = {};
 
   if (phoneBody == null) {
@@ -141,7 +148,8 @@ Future googleLogin(
   }
 
   print("Body is Here $body");
-  var res = await http.post(Uri.parse(Urls.googleSiginUrl), body: body);
+  var res = await http.post(Uri.parse(Urls.googleSiginUrl),
+      headers: headers, body: body);
   var jsondata = json.decode(res.body);
   print(jsondata);
 
@@ -196,6 +204,7 @@ Future<GoogleSigninModel?> appleLogin(
     String? googleid,
     String? deviceType,
     String? profileImage}) async {
+  var headers = {'X-localization': '${Constants.prefs?.getString("language")}'};
   var body = {
     "name": name,
     "email": email,
@@ -206,7 +215,8 @@ Future<GoogleSigninModel?> appleLogin(
   };
 
   print("Body is Here $body");
-  var res = await http.post(Uri.parse(Urls.appleSiginUrl), body: body);
+  var res = await http.post(Uri.parse(Urls.appleSiginUrl),
+      headers: headers, body: body);
   var jsondata = json.decode(res.body);
   print(jsondata);
 

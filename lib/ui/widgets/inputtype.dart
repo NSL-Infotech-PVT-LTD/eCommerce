@@ -62,6 +62,7 @@ Widget inputs(
                     : TextInputType.emailAddress,
                 inputFormatters: number != false
                     ? [
+                        FilteringTextInputFormatter.digitsOnly,
                         LengthLimitingTextInputFormatter(15),
                       ]
                     : [],

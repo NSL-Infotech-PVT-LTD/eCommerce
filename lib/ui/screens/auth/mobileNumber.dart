@@ -286,6 +286,7 @@ class _MobileNumberScreenState extends State<MobileNumberScreen> {
                         keyboardType: TextInputType.number,
                         cursorColor: AppColors.white,
                         inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
                           LengthLimitingTextInputFormatter(15),
                         ],
                         decoration: InputDecoration(

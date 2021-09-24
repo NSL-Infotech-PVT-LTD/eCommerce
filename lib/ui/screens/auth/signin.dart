@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:funfy/apis/signinApi.dart';
+import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/components/inputvalid.dart';
 import 'package:funfy/ui/screens/auth/forgotpassword.dart';
 import 'package:funfy/ui/screens/auth/signup.dart';
@@ -148,7 +149,7 @@ class _SigninState extends State<Signin> {
                   email: userdata["email"].toString(),
                   fbId: userdata["picture"]["data"]["id"].toString(),
                   profileImage: userdata["picture"]["data"]["url"].toString(),
-                  deviceToken: "Token",
+                  deviceToken: "${UserData.deviceToken}",
                   deviceType: Platform.isAndroid ? "android" : "ios");
 
               print(userdata["email"]);
@@ -184,6 +185,8 @@ class _SigninState extends State<Signin> {
       setState(() {
         _loading = true;
       });
+
+      // print("$name $email $fbId $devicetype $profileImage");
       await facebookLogin(
               context: context,
               name: name,
@@ -191,23 +194,24 @@ class _SigninState extends State<Signin> {
               fbId: fbId,
               deviceToken: deviceToken,
               deviceType: deviceType,
+              phoneBody: null,
               profileImage: profileImage)
           .then((response) {
         setState(() {
           _loading = false;
         });
         if (response?.status == true) {
-          print(response?.data?.user?.name);
+          // print(response?.data?.toString());
 
           print(response.toJson());
-          print(response?.data?.user?.mobile);
+          // print(response?.data?.user?.mobile);
           saveDataInshareP(
               name: response?.data?.user?.name,
               email: response?.data?.user?.email,
               token: response?.data?.token,
-              mobile: response?.data?.user?.mobile,
-              gender: response?.data?.user?.gender,
-              profileImage: response?.data?.user?.image,
+              mobile: response?.data?.user?.mobile ?? "",
+              gender: response?.data?.user?.gender ?? "",
+              profileImage: response?.data?.user?.image ?? "",
               social: "true");
           Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => Home(pageIndexNum: 0)));
