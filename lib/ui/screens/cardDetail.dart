@@ -57,7 +57,7 @@ class _CartDetailState extends State<CartDetail> {
   int? groupValue = -1;
   int? initvalue = 0;
 
-  int tottalAmount = 0;
+  double tottalAmount = 0;
 
   String cardId = "";
 
@@ -156,13 +156,10 @@ class _CartDetailState extends State<CartDetail> {
 
   totalAmount() {
     print("running........... ");
-    int tot = 0;
+    double tot = 0.0;
 
     for (var i in UserData.ticketcartMap.values) {
-      int price = int.parse("${i['ticketPrice']}");
-      // int.parse("${i['ticketCount']}") * int.parse("${i['ticketPrice']}");
-
-      print(i);
+      double price = double.parse("${i['ticketPrice']}");
 
       tot = tot + price;
     }
