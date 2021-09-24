@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
@@ -10,6 +11,7 @@ Widget inputs(
     String? titletxt,
     String? hinttxt,
     String? inputError,
+    bool number = false,
     readonly,
     ontapFun}) {
   var size = MediaQuery.of(context).size;
@@ -55,7 +57,14 @@ Widget inputs(
                   fontFamily: Fonts.dmSansRegular,
                   color: AppColors.inputHint,
                 ),
-                keyboardType: TextInputType.emailAddress,
+                keyboardType: number != false
+                    ? TextInputType.number
+                    : TextInputType.emailAddress,
+                inputFormatters: number != false
+                    ? [
+                        LengthLimitingTextInputFormatter(15),
+                      ]
+                    : [],
                 cursorColor: AppColors.white,
                 decoration: InputDecoration(
                   hintText: hinttxt,

@@ -7,6 +7,7 @@ import 'package:funfy/components/navigation.dart';
 import 'package:funfy/models/facebookSigninModel.dart';
 import 'package:funfy/models/googleSigninModel.dart';
 import 'package:funfy/models/userModel.dart';
+import 'package:funfy/ui/screens/auth/mobileNumber.dart';
 import 'package:funfy/ui/screens/auth/signin.dart';
 import 'package:funfy/ui/screens/languageScreen.dart';
 import 'package:funfy/utils/Constants.dart';
@@ -55,22 +56,30 @@ Future<UserModel?> signinUser(
   }
 }
 
-Future<FacebookSigninModel?> facebookLogin(
+// <FacebookSigninModel?>
+Future facebookLogin(
     {context,
     String? name,
     String? email,
     String? fbId,
     String? deviceType,
     String? deviceToken,
-    String? profileImage}) async {
-  var body = {
-    "name": name,
-    "email": email,
-    "fb_id": fbId,
-    "device_type": deviceType,
-    "device_token": UserData.deviceToken,
-    "image": profileImage
-  };
+    String? profileImage,
+    phoneBody}) async {
+  Map body = {};
+
+  if (phoneBody == null) {
+    body = {
+      "name": name,
+      "email": email,
+      "fb_id": fbId,
+      "device_type": deviceType,
+      "device_token": UserData.deviceToken,
+      "image": profileImage
+    };
+  } else {
+    body = phoneBody;
+  }
 
   var res = await http.post(Uri.parse(Urls.faceBookSigninUrl), body: body);
   var jsondata = json.decode(res.body);
@@ -84,35 +93,52 @@ Future<FacebookSigninModel?> facebookLogin(
     return facebookSigninModelFromJson(res.body);
   } else if (res.statusCode == 200) {
     return facebookSigninModelFromJson(res.body);
+  } else if (res.statusCode == 222) {
+    print("Status.......222 ${res.body}");
+
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => MobileNumberScreen(bodyData: body, type: 1)));
   } else if (res.statusCode == 422) {
-    Dialogs.simpleOkAlertDialog(
-        context: context,
-        title: "${getTranslated(context, 'alert!')}",
-        content: "${jsondata['error']}",
-        func: () {
-          navigatePopFun(context);
-        });
+    try {
+      Dialogs.simpleOkAlertDialog(
+          context: context,
+          title: "${getTranslated(context, 'alert!')}",
+          content: "${jsondata['error']}",
+          func: () {
+            navigatePopFun(context);
+          });
+    } catch (e) {
+      return json.decode(res.body);
+    }
   } else {
     print("Error in Facebook signin Api");
   }
 }
 
-Future<GoogleSigninModel?> googleLogin(
+// <GoogleSigninModel?>
+Future googleLogin(
     {context,
     String? name,
     String? email,
     String? googleid,
     String? deviceType,
     String? deviceToken,
-    String? profileImage}) async {
-  var body = {
-    "name": name,
-    "email": email,
-    "google_id": googleid,
-    "device_type": deviceType,
-    "device_token": UserData.deviceToken,
-    "image": profileImage
-  };
+    String? profileImage,
+    Map? phoneBody}) async {
+  Map body = {};
+
+  if (phoneBody == null) {
+    body = {
+      "name": name,
+      "email": email,
+      "google_id": googleid,
+      "device_type": deviceType,
+      "device_token": UserData.deviceToken,
+      "image": profileImage
+    };
+  } else {
+    body = phoneBody;
+  }
 
   print("Body is Here $body");
   var res = await http.post(Uri.parse(Urls.googleSiginUrl), body: body);
@@ -127,16 +153,39 @@ Future<GoogleSigninModel?> googleLogin(
     return googleSigninModelFromJson(res.body);
   } else if (res.statusCode == 200) {
     return googleSigninModelFromJson(res.body);
+  } else if (res.statusCode == 222) {
+    print("Status.......222 ${res.body}");
+
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => MobileNumberScreen(
+              bodyData: body,
+              type: 2,
+            )));
   } else if (res.statusCode == 422) {
-    Dialogs.simpleOkAlertDialog(
-        context: context,
-        title: "${getTranslated(context, 'alert!')}",
-        content: "${jsondata['error']}",
-        func: () {
-          navigatePopFun(context);
-        });
+    try {
+      Dialogs.simpleOkAlertDialog(
+          context: context,
+          title: "${getTranslated(context, 'alert!')}",
+          content: "${jsondata['error']}",
+          func: () {
+            navigatePopFun(context);
+          });
+    } catch (e) {
+      return json.decode(res.body);
+    }
   } else {
     print("Error in Google signin Api");
+
+    // Dialogs.simpledialogshow(
+    //     context: context,
+    //     title: "${getTranslated(context, "alert!")}",
+    //     // Strings.Success,
+    //     description: "${getTranslated(context, "errortoSignUp")}",
+    //     // Strings.wehavesentlinkonyouemail,
+    //     okfunc: () {
+    //       Navigator.of(context).pushReplacement(
+    //           MaterialPageRoute(builder: (context) => Signin()));
+    //     });
   }
 }
 
@@ -188,6 +237,7 @@ saveDataInshareP(
     String? token,
     String? profileImage,
     String? dob,
+    String? mobile,
     String? social,
     String? gender}) {
   // token
@@ -196,8 +246,10 @@ saveDataInshareP(
   Constants.prefs?.setString("name", "$name");
   //  email
   Constants.prefs?.setString("email", "$email");
+  //  mobile
+  Constants.prefs?.setString("mobile", "$mobile");
 
-  //  email
+  //  dob
   Constants.prefs?.setString("dob", "$dob");
 
   // profileImage

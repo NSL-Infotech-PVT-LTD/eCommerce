@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:funfy/apis/userdataM.dart';
+import 'package:funfy/ui/screens/auth/mobileNumber.dart';
 import 'package:funfy/ui/screens/fiestasMoreOrderDetails.dart';
 import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/screens/splash.dart';
@@ -301,5 +302,6 @@ class _MyAppState extends State<MyApp> {
         darkTheme: ThemeData.dark(), //
 
         home: Splash());
+    // home: MobileNumberScreen());
   }
 }
