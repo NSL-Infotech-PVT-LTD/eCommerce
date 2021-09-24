@@ -14,7 +14,6 @@ import 'package:funfy/ui/widgets/roundContainer.dart';
 import 'package:funfy/utils/InternetCheck.dart';
 import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
-import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -88,9 +87,9 @@ class _FiestasBookState extends State<FiestasBook> {
           UserData.ticketcartMap[index]["ticketCount"] =
               UserData.ticketcartMap[index]["ticketCount"] + 1;
 
-          UserData.ticketcartMap[index]["ticketPrice"] = int.parse(
+          UserData.ticketcartMap[index]["ticketPrice"] = double.parse(
                   UserData.ticketcartMap[index]["ticketCount"].toString()) *
-              int.parse(UserData.tiketList[index]["price"].toString());
+              double.parse(UserData.tiketList[index]["price"].toString());
 
           // new
 
