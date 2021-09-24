@@ -74,7 +74,7 @@ class Data {
   int? id;
   var clubId;
   String? name;
-  DateTime? timestamp;
+  var timestamp;
   dynamic image;
   String? description;
   String? ageGroup;

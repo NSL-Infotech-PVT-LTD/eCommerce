@@ -116,7 +116,7 @@ class Dialogs {
       Duration? duration,
       flashStyle = FlashBehavior.floating,
       String? content,
-      Color? color}) {
+      Color? color}) async {
     showFlash(
       context: context,
       duration: duration,

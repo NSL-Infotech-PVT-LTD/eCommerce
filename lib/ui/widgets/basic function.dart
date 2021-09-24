@@ -249,7 +249,7 @@ Widget ticket({context, index, mapdata, addFunc, removeFunc}) {
                                                           index: index,
                                                           name: mapdata["name"],
                                                           count: 1,
-                                                          price: int.parse(
+                                                          price: double.parse(
                                                               mapdata["price"]
                                                                   .toString()),
                                                           image:
@@ -292,7 +292,7 @@ Widget ticket({context, index, mapdata, addFunc, removeFunc}) {
                                                       index: index,
                                                       name: mapdata["name"],
                                                       count: 1,
-                                                      price: int.parse(
+                                                      price: double.parse(
                                                           mapdata["price"]
                                                               .toString()),
                                                       image: mapdata["image"]);

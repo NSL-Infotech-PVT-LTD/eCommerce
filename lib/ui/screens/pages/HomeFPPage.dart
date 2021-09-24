@@ -949,8 +949,16 @@ class _HomeMPageState extends State<HomeMPage> {
                                     ? SizedBox()
                                     : GestureDetector(
                                         onTap: () {
-                                          navigatorPushFun(
-                                              context, FiestasAll());
+                                          if (_postLoading) {
+                                            Dialogs.showBasicsFlash(
+                                                context: context,
+                                                duration: Duration(seconds: 1),
+                                                content:
+                                                    "${getTranslated(context, 'pleaseWait')}");
+                                          } else {
+                                            navigatorPushFun(
+                                                context, FiestasAll());
+                                          }
                                         },
                                         child: Container(
                                           // color: Colors.blue,

@@ -14,6 +14,7 @@ import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/urls.dart';
 import 'package:http/http.dart' as http;
+import 'dart:developer' as dev;
 import 'package:intl/intl.dart';
 
 // <FistaBooking?>
@@ -304,8 +305,13 @@ Future<FiestasDetailModel?> getFiestasbyId({String? fiestasID}) async {
       body: body, headers: headers);
 
   if (res.statusCode == 200) {
+    // dev.log(res.body);
     // print("here is fiestas detail - ${res.body}");
-    return fiestasDetailModelFromJson(res.body);
+    try {
+      return fiestasDetailModelFromJson(res.body);
+    } catch (e) {
+      print("Error in Fiestas Detail Res ---$e");
+    }
   } else {
     print("here is error ${res.body}");
   }
