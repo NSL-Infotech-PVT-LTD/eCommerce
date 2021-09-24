@@ -169,6 +169,8 @@ Future<GoogleSigninModel?> appleLogin(
     return googleSigninModelFromJson(res.body);
   } else if (res.statusCode == 200) {
     return googleSigninModelFromJson(res.body);
+  }else if(res.statusCode == 222){
+
   } else if (res.statusCode == 422) {
     Dialogs.simpleOkAlertDialog(
         context: context,
