@@ -61,40 +61,112 @@ class Data {
 
 class User {
   User({
-    this.name,
-    this.email,
-    this.fbId,
-    this.image,
-    this.updatedAt,
-    this.createdAt,
     this.id,
+    this.name,
+    this.isClubAdmin,
+    this.mobile,
+    this.email,
+    this.gender,
+    this.image,
+    this.dob,
+    this.radius,
+    this.isAvailable,
+    this.appleId,
+    this.fbId,
+    this.googleId,
+    this.isNotify,
+    this.stripeAccountId,
+    this.params,
+    this.status,
+    this.createdAt,
+    this.updatedAt,
+    this.deletedAt,
+    this.stripeId,
+    this.cardBrand,
+    this.cardLastFour,
+    this.trialEndsAt,
+    this.role,
   });
 
-  String? name;
-  String? email;
-  String? fbId;
-  String? image;
-  DateTime? updatedAt;
-  DateTime? createdAt;
   int? id;
+  String? name;
+  String? isClubAdmin;
+  String? mobile;
+  String? email;
+  String? gender;
+  String? image;
+  String? dob;
+  dynamic radius;
+  String? isAvailable;
+  dynamic appleId;
+  String? fbId;
+  dynamic googleId;
+  String? isNotify;
+  dynamic stripeAccountId;
+  dynamic params;
+  String? status;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  dynamic deletedAt;
+  dynamic stripeId;
+  dynamic cardBrand;
+  dynamic cardLastFour;
+  dynamic trialEndsAt;
+  List<dynamic>? role;
 
   factory User.fromJson(Map<String, dynamic> json) => User(
-        name: json["name"],
-        email: json["email"],
-        fbId: json["fb_id"],
-        image: json["image"],
-        updatedAt: DateTime.parse(json["updated_at"]),
-        createdAt: DateTime.parse(json["created_at"]),
         id: json["id"],
+        name: json["name"],
+        isClubAdmin: json["is_clubAdmin"],
+        mobile: json["mobile"],
+        email: json["email"],
+        gender: json["gender"],
+        image: json["image"],
+        dob: json["dob"],
+        radius: json["radius"],
+        isAvailable: json["is_available"],
+        appleId: json["apple_id"],
+        fbId: json["fb_id"],
+        googleId: json["google_id"],
+        isNotify: json["is_notify"],
+        stripeAccountId: json["stripe_account_id"],
+        params: json["params"],
+        status: json["status"],
+        createdAt: DateTime.parse(json["created_at"]),
+        updatedAt: DateTime.parse(json["updated_at"]),
+        deletedAt: json["deleted_at"],
+        stripeId: json["stripe_id"],
+        cardBrand: json["card_brand"],
+        cardLastFour: json["card_last_four"],
+        trialEndsAt: json["trial_ends_at"],
+        role: List<dynamic>.from(json["role"].map((x) => x)),
       );
 
   Map<String, dynamic> toJson() => {
-        "name": name,
-        "email": email,
-        "fb_id": fbId,
-        "image": image,
-        "updated_at": updatedAt.toString(),
-        "created_at": createdAt.toString(),
         "id": id,
+        "name": name,
+        "is_clubAdmin": isClubAdmin,
+        "mobile": mobile,
+        "email": email,
+        "gender": gender,
+        "image": image,
+        "dob": dob,
+        "radius": radius,
+        "is_available": isAvailable,
+        "apple_id": appleId,
+        "fb_id": fbId,
+        "google_id": googleId,
+        "is_notify": isNotify,
+        "stripe_account_id": stripeAccountId,
+        "params": params,
+        "status": status,
+        "created_at": createdAt?.toIso8601String(),
+        "updated_at": updatedAt?.toIso8601String(),
+        "deleted_at": deletedAt,
+        "stripe_id": stripeId,
+        "card_brand": cardBrand,
+        "card_last_four": cardLastFour,
+        "trial_ends_at": trialEndsAt,
+        "role": List<dynamic>.from(role!.map((x) => x)),
       };
 }

@@ -198,10 +198,15 @@ class _SigninState extends State<Signin> {
         });
         if (response?.status == true) {
           print(response?.data?.user?.name);
+
+          print(response.toJson());
+          print(response?.data?.user?.mobile);
           saveDataInshareP(
               name: response?.data?.user?.name,
               email: response?.data?.user?.email,
               token: response?.data?.token,
+              mobile: response?.data?.user?.mobile,
+              gender: response?.data?.user?.gender,
               profileImage: response?.data?.user?.image,
               social: "true");
           Navigator.of(context).pushReplacement(
@@ -369,6 +374,7 @@ class _SigninState extends State<Signin> {
               name: res?.data?.user?.name,
               email: res?.data?.user?.email,
               token: res?.data?.token,
+              mobile: res?.data?.user?.mobile,
               profileImage: res?.data?.user?.image,
               social: "true");
 
@@ -440,6 +446,7 @@ class _SigninState extends State<Signin> {
             saveDataInshareP(
                 name: res?.data?.user?.name,
                 email: res?.data?.user?.email,
+                mobile: res?.data?.user?.mobile,
                 token: res?.data?.token,
                 profileImage: res?.data?.user?.image,
                 social: "true");

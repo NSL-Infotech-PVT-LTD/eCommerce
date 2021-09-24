@@ -61,7 +61,11 @@ var headers = {
 };
 
 Future<UpdateProfileDataModel?> updateProfile(
-    {String? name, String? gender, File? imageFile, String? dob}) async {
+    {String? name,
+    String? gender,
+    File? imageFile,
+    String? dob,
+    String? mobile}) async {
   print("update profile");
   Map<String, String>? body;
 
@@ -70,6 +74,7 @@ Future<UpdateProfileDataModel?> updateProfile(
       "name": name!,
       "dob": dob.toString(),
       "gender": gender!,
+      "mobile": "$mobile",
       "is_social": "0"
     };
   } else {

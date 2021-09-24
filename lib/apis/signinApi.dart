@@ -357,6 +357,35 @@ Future<bool?> logoutApi() async {
 
     _googleSignIn.signOut();
     return true;
+  } else if (jsondata["code"] == 401) {
+    // token
+    Constants.prefs?.setString("token", "");
+    // name name
+    Constants.prefs?.setString("name", "");
+    // name email
+    Constants.prefs?.setString("email", "");
+    // lacation
+    Constants.prefs?.setString("addres", "");
+
+    //  dob
+    Constants.prefs?.setString("dob", "");
+
+    //  gender
+    Constants.prefs?.setString("gender", "");
+
+    // language
+    Constants.prefs?.setString(Strings.radioValue, 'en');
+
+    Constants.prefs?.setString('es', 'null');
+
+    //  social
+    Constants.prefs?.setString("social", "false");
+
+    // profileImage
+    Constants.prefs?.setString("profileImage", "");
+
+    _googleSignIn.signOut();
+    return true;
   } else {
     print(jsondata);
   }

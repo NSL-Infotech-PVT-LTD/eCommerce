@@ -75,6 +75,7 @@ class _MobileNumberScreenState extends State<MobileNumberScreen> {
                     email: res?.data?.user?.email,
                     token: res?.data?.token,
                     profileImage: res?.data?.user?.image,
+                    mobile: res?.data?.user?.mobile.toString(),
                     social: "true");
 
                 Navigator.pushAndRemoveUntil(
@@ -117,6 +118,7 @@ class _MobileNumberScreenState extends State<MobileNumberScreen> {
                     email: res?.data?.user?.email,
                     token: res?.data?.token,
                     profileImage: res?.data?.user?.image,
+                    mobile: res?.data?.user?.mobile.toString(),
                     social: "true");
 
                 Navigator.pushAndRemoveUntil(
