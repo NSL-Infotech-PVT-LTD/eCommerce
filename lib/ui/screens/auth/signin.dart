@@ -15,7 +15,7 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:io' show Platform;
-
+import 'package:http/http.dart' as http;
 class Signin extends StatefulWidget {
   const Signin({Key? key}) : super(key: key);
 
@@ -341,14 +341,52 @@ class _SigninState extends State<Signin> {
   // apple Signin --------------- //
 
   appleSignin() async {
-    final credential = await SignInWithApple.getAppleIDCredential(
+    final acc = await SignInWithApple.getAppleIDCredential(
       scopes: [
         AppleIDAuthorizationScopes.email,
         AppleIDAuthorizationScopes.fullName,
       ],
     );
 
-    print(credential);
+    print(acc);
+    try {
+      setState(() {
+        _loading = true;
+      });
+      appleLogin(
+          context: context,
+          name: acc.givenName ?? "",
+          email: acc.email ?? "",
+          googleid: acc.identityToken ?? "",
+          deviceType: Platform.isAndroid ? "android" : "ios",
+          profileImage: "")
+          .then((res) {
+        if (res?.code == 200 || res?.code == 201) {
+          print("userToken google - ${res?.data?.token}");
+          saveDataInshareP(
+              name: res?.data?.user?.name,
+              email: res?.data?.user?.email,
+              token: res?.data?.token,
+              profileImage: res?.data?.user?.image,
+              social: "true");
+
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => Home(pageIndexNum: 0)),
+                  (route) => false);
+        } else {
+          setState(() {
+            _loading = false;
+          });
+        }
+      });
+    } catch (e) {
+      setState(() {
+        _loading = false;
+      });
+    }
+
   }
 
   // google sigin
@@ -357,7 +395,7 @@ class _SigninState extends State<Signin> {
     setState(() {
       _loading = true;
     });
-    print("google signin ---------------------");
+    // print("google signin ---------------------");
     GoogleSignIn _googleSignIn = GoogleSignIn(
       scopes: [
         'email',
@@ -572,7 +610,9 @@ class _SigninState extends State<Signin> {
                             title:
                                 "${getTranslated(context, "signinwithApple")}", // Strings.signinwithApple,
                             iconImage: Images.appleIcon,
-                            func: () {})
+                            func: () async{
+                              appleSignin();
+                            })
                         : SizedBox(),
 
                     SizedBox(

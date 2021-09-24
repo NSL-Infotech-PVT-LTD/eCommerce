@@ -188,7 +188,7 @@ class _FiestasBookState extends State<FiestasBook> {
         _loadingMainCenter = true;
       });
       try {
-        await fiestasAddfavouriteApi(id: "${fiestasDetailModel?.data!.id}")
+        await fiestasAddfavouriteApi(id: "${fiestasDetailModel?.data?.id}")
             .then((res) {
           print(res);
           setState(() {
@@ -219,7 +219,7 @@ class _FiestasBookState extends State<FiestasBook> {
 
   setFavoriteBool() {
     setState(() {
-      _fiestasfavoriteBool = fiestasDetailModel!.data!.isFavourite!;
+      _fiestasfavoriteBool = fiestasDetailModel!.data?.isFavourite ?? false;
 
       _onAddMarkerButtonPressed();
     });
@@ -237,31 +237,31 @@ class _FiestasBookState extends State<FiestasBook> {
   setPriceToList() {
     setState(() {
       UserData.tiketList[0]["price"] =
-          double.parse('${fiestasDetailModel?.data!.ticketPriceNormal}');
+          double.parse('${fiestasDetailModel?.data?.ticketPriceNormal}');
 
       UserData.tiketList[0]["max"] =
-          int.parse('${fiestasDetailModel?.data!.leftNormalTicket}');
+          int.parse('${fiestasDetailModel?.data?.leftNormalTicket}');
 
       UserData.tiketList[0]["tickets"] =
-          int.parse('${fiestasDetailModel?.data!.totalNormalTickets}');
+          int.parse('${fiestasDetailModel?.data?.totalNormalTickets}');
 
       UserData.tiketList[1]["price"] =
-          double.parse('${fiestasDetailModel?.data!.ticketPriceStandard}');
+          double.parse('${fiestasDetailModel?.data?.ticketPriceStandard}');
 
       UserData.tiketList[1]["max"] =
-          int.parse('${fiestasDetailModel?.data!.leftStandardTicket}');
+          int.parse('${fiestasDetailModel?.data?.leftStandardTicket}');
 
       UserData.tiketList[1]["tickets"] =
-          int.parse('${fiestasDetailModel?.data!.totalStandardTickets}');
+          int.parse('${fiestasDetailModel?.data?.totalStandardTickets}');
 
       UserData.tiketList[2]["price"] =
-          double.parse('${fiestasDetailModel?.data!.ticketPriceVip}');
+          double.parse('${fiestasDetailModel?.data?.ticketPriceVip}');
 
       UserData.tiketList[2]["max"] =
-          int.parse('${fiestasDetailModel?.data!.leftVipTicket}');
+          int.parse('${fiestasDetailModel?.data?.leftVipTicket}');
 
       UserData.tiketList[2]["tickets"] =
-          int.parse('${fiestasDetailModel?.data!.totalVipTickets}');
+          int.parse('${fiestasDetailModel?.data?.totalVipTickets}');
     });
   }
 
@@ -292,9 +292,9 @@ class _FiestasBookState extends State<FiestasBook> {
             setPriceToList();
             setFavoriteBool();
             k_m_b_generator(double.parse(
-                "${fiestasDetailModel?.data!.ticketPriceNormal ?? 0}"));
+                "${fiestasDetailModel?.data?.ticketPriceNormal ?? 0}"));
 
-            dateTime = DateTime.parse("${fiestasDetailModel?.data!.timestamp}");
+            dateTime = DateTime.parse("${fiestasDetailModel?.data?.timestamp}");
 
             day = DateFormat('dd').format(dateTime!);
 
@@ -304,11 +304,11 @@ class _FiestasBookState extends State<FiestasBook> {
             onlyTime = time?.split(" ")[0];
             amPm = time?.split(" ")[1];
 
-            if (fiestasDetailModel?.data!.fiestaImages?.length != 0 &&
-                fiestasDetailModel?.data!.fiestaImages != null) {
+            if (fiestasDetailModel?.data?.fiestaImages?.length != 0 &&
+                fiestasDetailModel?.data?.fiestaImages != null) {
               cardList = [];
               print("images 1 -------");
-              for (var i in fiestasDetailModel!.data!.fiestaImages!) {
+              for (var i in fiestasDetailModel!.data?.fiestaImages ?? []) {
                 // print(i);
                 cardList.add(SlidingBannerProviderDetails(image: "${i.image}"));
               }
@@ -318,7 +318,7 @@ class _FiestasBookState extends State<FiestasBook> {
               for (int i = 1; i < 4; i++) {
                 print("here is i $i");
                 cardList.add(SlidingBannerProviderDetails(
-                    image: "${fiestasDetailModel?.data!.clubDetail?.image}"));
+                    image: "${fiestasDetailModel?.data?.clubDetail?.image}"));
               }
             }
 
@@ -635,7 +635,7 @@ class _FiestasBookState extends State<FiestasBook> {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    "${fiestasDetailModel?.data!.name ?? ''}",
+                                                    "${fiestasDetailModel?.data?.name ?? ''}",
                                                     style: TextStyle(
                                                         fontSize:
                                                             size.width * 0.08,
@@ -669,7 +669,7 @@ class _FiestasBookState extends State<FiestasBook> {
                                                 icon:
                                                     "assets/partydetail/peopplecoming.png",
                                                 content:
-                                                    "${fiestasDetailModel?.data!.totalMembers} ${getTranslated(context, 'peopleAttendinginthisevent')}"),
+                                                    "${fiestasDetailModel?.data?.totalMembers} ${getTranslated(context, 'peopleAttendinginthisevent')}"),
                                             SizedBox(
                                               height: size.height * 0.03,
                                             ),
@@ -776,7 +776,7 @@ class _FiestasBookState extends State<FiestasBook> {
                                                           0.01),
                                                   Text(
                                                       // "${getTranslated(context, "lorem")}",
-                                                      "${fiestasDetailModel?.data!.description ?? getTranslated(context, "nodataFound")}",
+                                                      "${fiestasDetailModel?.data?.description ?? getTranslated(context, "nodataFound")}",
                                                       style: TextStyle(
                                                           fontFamily: "Product",
                                                           fontSize: 14,
@@ -867,7 +867,7 @@ class _FiestasBookState extends State<FiestasBook> {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    "${fiestasDetailModel?.data!.name}",
+                                                    "${fiestasDetailModel?.data?.name}",
                                                     style: TextStyle(
                                                         fontSize:
                                                             size.width * 0.08,

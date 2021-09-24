@@ -13,6 +13,7 @@ class Urls {
   static String faceBookSigninUrl = baseUrl + "customer/register/fb";
   static String updateProfileUrl = baseUrl + "customer/update";
   static String googleSiginUrl = baseUrl + "customer/register/google";
+  static String appleSiginUrl = baseUrl + "customer/register/apple";
   static String preFiestachildlistUrl =
       baseUrl + "customer/preFiesta/child/list";
   static String preFiestasBookingListUrl = baseUrl + "customer/order/list";

@@ -235,6 +235,7 @@ class _HomeMPageState extends State<HomeMPage> {
       if (dates[i]['date'] == itemSelected['date']) {
         // print("fhskhfkh-===" + dates[i].toString());
         dates[i]['active'] = filterDate == "" ? false : true;
+        if(_scrollController.hasClients)
         _scrollController.animateTo(
             i * MediaQuery.of(context).size.width * 0.13,
             duration: new Duration(seconds: 2),

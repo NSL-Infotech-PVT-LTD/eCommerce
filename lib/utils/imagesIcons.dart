@@ -27,7 +27,7 @@ class Images {
 
   static String calenderSvg = "assets/svgicons/calender.svg";
   static String filterSvg = "assets/svgicons/Filter.svg";
-  static String filterPng = "assets/pngicons/filter.png";
+  static String filterPng = "assets/pngicons/Filter.png";
   static String orderIIconpng = "assets/pngicons/orderIc.png";
   static String paymentIconpng = "assets/pngicons/paymentMethod.png";
   static String notificationspng = "assets/pngicons/notificationPrfile.png";
