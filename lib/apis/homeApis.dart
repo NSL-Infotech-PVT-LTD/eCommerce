@@ -348,7 +348,7 @@ Future<bool?> notificationOffApi({int? notificationNum}) async {
 Future notificatiListApi({int? notificationNum, int? pageCount}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
-    //  'X-localization': '${Constants.prefs?.getString("language")}'
+    'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   var body = {"limit": "10", "page": "${pageCount ?? ''}"};
@@ -378,7 +378,7 @@ Future notificatiListApi({int? notificationNum, int? pageCount}) async {
 Future<FliterListModel?> filterList() async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
-    // 'X-localization': '${Constants.prefs?.getString("language")}'
+    'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   var res = await http.get(
@@ -401,7 +401,7 @@ Future<FliterListModel?> filterList() async {
 Future paymentconfigApi({context}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
-    // 'X-localization': '${Constants.prefs?.getString("language")}'
+    'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   var res = await http.get(

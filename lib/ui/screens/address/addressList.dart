@@ -360,15 +360,13 @@ class _AddressListState extends State<AddressList> {
                           } else {
                             print("here is permission $permission");
 
-                            // return Navigator.of(context)
-                            //     .push(MaterialPageRoute(builder: (context) {
-                            //   // return .
-                            //
-                            //   return PlacePickerB(
-                            //     Strings.mapKey,
-                            //     typeAE: 1,
-                            //   );
-                            // }));
+                            return Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (context) {
+                              return PlacePickerB(
+                                Strings.mapKey,
+                                typeAE: 1,
+                              );
+                            }));
                           }
                           return permission;
                         });
