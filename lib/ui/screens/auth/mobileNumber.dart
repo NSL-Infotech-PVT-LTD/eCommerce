@@ -75,6 +75,7 @@ class _MobileNumberScreenState extends State<MobileNumberScreen> {
                     email: res?.data?.user?.email,
                     token: res?.data?.token,
                     profileImage: res?.data?.user?.image,
+                    mobile: res?.data?.user?.mobile.toString(),
                     social: "true");
 
                 Navigator.pushAndRemoveUntil(
@@ -100,7 +101,8 @@ class _MobileNumberScreenState extends State<MobileNumberScreen> {
 
           // print(res?.toJson());
         });
-      } else if (widget.type == 1) {
+      }
+      else if (widget.type == 1) {
         await facebookLogin(phoneBody: data).then((res) {
           setState(() {
             _loading = false;
@@ -117,6 +119,7 @@ class _MobileNumberScreenState extends State<MobileNumberScreen> {
                     email: res?.data?.user?.email,
                     token: res?.data?.token,
                     profileImage: res?.data?.user?.image,
+                    mobile: res?.data?.user?.mobile.toString(),
                     social: "true");
 
                 Navigator.pushAndRemoveUntil(
@@ -125,6 +128,53 @@ class _MobileNumberScreenState extends State<MobileNumberScreen> {
                         builder: (BuildContext context) =>
                             Home(pageIndexNum: 0)),
                     (route) => false);
+              } else {
+                Dialogs.simpledialogshow(
+                    context: context,
+                    title: "${getTranslated(context, "alert!")}",
+                    // Strings.Success,
+                    description: "${getTranslated(context, "errortoSignUp")}",
+                    // Strings.wehavesentlinkonyouemail,
+                    okfunc: () {
+                      Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) => Signin()));
+                    });
+              }
+            }
+          });
+
+          // print(res?.toJson());
+        });
+      }
+      else if (widget.type == 3) {
+        print("IN THE CODE");
+        await appleLogin( context: context, phoneBody: data).then((res) {
+          setState(() {
+            _loading = false;
+
+            try {
+              if (res!["code"] == 422) {
+                _mobileError = res["error"].toString();
+              }
+            } catch (e) {
+              if (res?.code == 200 || res?.code == 201) {
+                // print("userToken google - ${res?.data?.name}");
+                // print("userToken google - ${res?.data?.email}");
+
+                saveDataInshareP(
+                    name: res?.data?.user?.name ?? "",
+                    email: res?.data?.user?.email??"",
+                    token: res?.data?.token,
+                    profileImage: res?.data?.user?.image??"",
+                    mobile: res?.data?.user?.mobile.toString(),
+                    social: "true");
+
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            Home(pageIndexNum: 0)),
+                        (route) => false);
               } else {
                 Dialogs.simpledialogshow(
                     context: context,
@@ -284,6 +334,7 @@ class _MobileNumberScreenState extends State<MobileNumberScreen> {
                         keyboardType: TextInputType.number,
                         cursorColor: AppColors.white,
                         inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
                           LengthLimitingTextInputFormatter(15),
                         ],
                         decoration: InputDecoration(

@@ -235,11 +235,11 @@ class _HomeMPageState extends State<HomeMPage> {
       if (dates[i]['date'] == itemSelected['date']) {
         // print("fhskhfkh-===" + dates[i].toString());
         dates[i]['active'] = filterDate == "" ? false : true;
-        if(_scrollController.hasClients)
-        _scrollController.animateTo(
-            i * MediaQuery.of(context).size.width * 0.13,
-            duration: new Duration(seconds: 2),
-            curve: Curves.ease);
+        if (_scrollController.hasClients)
+          _scrollController.animateTo(
+              i * MediaQuery.of(context).size.width * 0.13,
+              duration: new Duration(seconds: 2),
+              curve: Curves.ease);
 
         break;
       }
@@ -434,6 +434,11 @@ class _HomeMPageState extends State<HomeMPage> {
 
     return SafeArea(
       child: Scaffold(
+          // floatingActionButton: FloatingActionButton(
+          //     onPressed: () {
+          //       print(Constants.prefs?.getString("language"));
+          //     },
+          //     child: Icon(Icons.add)),
           backgroundColor: AppColors.blackBackground,
           body: CustomScrollView(
             controller: _fiestasScrollController,
@@ -691,7 +696,7 @@ class _HomeMPageState extends State<HomeMPage> {
                                       child: Container(
                                     // color: Colors.blue,
                                     child: Text(
-                                      "Filter",
+                                      "${getTranslated(context, 'filter')}",
                                       style: TextStyle(
                                           color: AppColors.white,
                                           fontFamily: Fonts.dmSansBold,
@@ -708,11 +713,15 @@ class _HomeMPageState extends State<HomeMPage> {
                                     onTap: () {
                                       filterBottomSheet();
                                     },
+                                    // child: Icon(Icons.filter_alt_outlined,
+                                    //     color: Colors.white)
                                     child: Container(
                                         margin: EdgeInsets.only(
                                             right: size.width * 0.01),
                                         alignment: Alignment.centerRight,
-                                        child: Image.asset(Images.filterPng)),
+                                        child: Image.asset(
+                                            "assets/pngicons/filterImage.png",
+                                            width: size.width * 0.058)),
                                   )
                                 ]),
                           ),

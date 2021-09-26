@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:funfy/apis/signinApi.dart';
+import 'package:funfy/apis/userdataM.dart';
 import 'package:funfy/components/inputvalid.dart';
 import 'package:funfy/ui/screens/auth/forgotpassword.dart';
 import 'package:funfy/ui/screens/auth/signup.dart';
@@ -148,7 +149,7 @@ class _SigninState extends State<Signin> {
                   email: userdata["email"].toString(),
                   fbId: userdata["picture"]["data"]["id"].toString(),
                   profileImage: userdata["picture"]["data"]["url"].toString(),
-                  deviceToken: "Token",
+                  deviceToken: "${UserData.deviceToken}",
                   deviceType: Platform.isAndroid ? "android" : "ios");
 
               print(userdata["email"]);
@@ -184,6 +185,8 @@ class _SigninState extends State<Signin> {
       setState(() {
         _loading = true;
       });
+
+      // print("$name $email $fbId $devicetype $profileImage");
       await facebookLogin(
               context: context,
               name: name,
@@ -191,18 +194,24 @@ class _SigninState extends State<Signin> {
               fbId: fbId,
               deviceToken: deviceToken,
               deviceType: deviceType,
+              phoneBody: null,
               profileImage: profileImage)
           .then((response) {
         setState(() {
           _loading = false;
         });
         if (response?.status == true) {
-          print(response?.data?.user?.name);
+          // print(response?.data?.toString());
+
+          print(response.toJson());
+          // print(response?.data?.user?.mobile);
           saveDataInshareP(
               name: response?.data?.user?.name,
               email: response?.data?.user?.email,
               token: response?.data?.token,
-              profileImage: response?.data?.user?.image,
+              mobile: response?.data?.user?.mobile ?? "",
+              gender: response?.data?.user?.gender ?? "",
+              profileImage: response?.data?.user?.image ?? "",
               social: "true");
           Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => Home(pageIndexNum: 0)));
@@ -269,10 +278,11 @@ class _SigninState extends State<Signin> {
                                 context: context,
                                 controller: facebookEmailController,
                                 obscureTextBool: false,
-                                titletxt:
-                                    "${getTranslated(context, "email")}", // Strings.email,
+                                titletxt: "${getTranslated(context, "email")}",
+                                // Strings.email,
                                 hinttxt:
-                                    "${getTranslated(context, "emailHint")}", // Strings.emailHint,
+                                    "${getTranslated(context, "emailHint")}",
+                                // Strings.emailHint,
                                 inputError: facebookEmailError,
                                 ontapFun: null,
                                 height: size.height * 0.06,
@@ -369,6 +379,7 @@ class _SigninState extends State<Signin> {
               name: res?.data?.user?.name,
               email: res?.data?.user?.email,
               token: res?.data?.token,
+              mobile: res?.data?.user?.mobile,
               profileImage: res?.data?.user?.image,
               social: "true");
 
@@ -400,23 +411,14 @@ class _SigninState extends State<Signin> {
     GoogleSignIn _googleSignIn = GoogleSignIn(
       scopes: [
         'email',
-
-        // you can add extras if you require
       ],
+      clientId: "562684267034-lo5hhs0b77fs21p2973q5qr01gr05q31.apps.googleuserconten.com"
     );
 
     _googleSignIn.signIn().then((GoogleSignInAccount? acc) async {
       setState(() {
         _loading = false;
       });
-      GoogleSignInAuthentication auth = await acc!.authentication;
-
-      print("data ---------------------");
-      print(acc.id);
-      print(acc.displayName);
-      print(acc.email);
-      print(acc.displayName);
-      print(acc.photoUrl);
 
       setState(() {
         _loading = false;
@@ -428,18 +430,19 @@ class _SigninState extends State<Signin> {
         });
         googleLogin(
                 context: context,
-                name: acc.displayName,
-                email: acc.email,
-                googleid: acc.id,
+                name: acc?.displayName ?? "",
+                email: acc?.email ?? "",
+                googleid: acc?.id ?? "",
                 deviceType: Platform.isAndroid ? "android" : "ios",
-                deviceToken: acc.id,
-                profileImage: acc.photoUrl)
+                deviceToken: acc?.id ?? "",
+                profileImage: acc?.photoUrl ?? "")
             .then((res) {
           if (res?.code == 200 || res?.code == 201) {
             print("userToken google - ${res?.data?.token}");
             saveDataInshareP(
                 name: res?.data?.user?.name,
                 email: res?.data?.user?.email,
+                mobile: res?.data?.user?.mobile,
                 token: res?.data?.token,
                 profileImage: res?.data?.user?.image,
                 social: "true");
@@ -461,7 +464,7 @@ class _SigninState extends State<Signin> {
         });
       }
 
-      acc.authentication.then((GoogleSignInAuthentication auth) async {
+      acc?.authentication.then((GoogleSignInAuthentication auth) async {
         print(auth.idToken);
         print(auth.accessToken);
       });
@@ -531,15 +534,16 @@ class _SigninState extends State<Signin> {
                           //
 
                           Text.rich(TextSpan(
-                              text:
-                                  "${getTranslated(context, "welcometo")}", // Strings.byContinuingYouAgreetoOur,
+                              text: "${getTranslated(context, "welcometo")}",
+                              // Strings.byContinuingYouAgreetoOur,
                               style: TextStyle(
                                   fontSize: size.width * 0.048,
                                   color: AppColors.inputTitle),
                               children: <InlineSpan>[
                                 TextSpan(
                                   text:
-                                      " ${getTranslated(context, "funfypartyapp")} ", //"${Strings.termsOfService}",
+                                      " ${getTranslated(context, "funfypartyapp")} ",
+                                  //"${Strings.termsOfService}",
                                   style: TextStyle(
                                       fontSize: size.width * 0.048,
                                       color: AppColors.white),
@@ -583,7 +587,8 @@ class _SigninState extends State<Signin> {
                     socialSigninButton(
                         context: context,
                         title:
-                            "${getTranslated(context, "signinwithfacebook")}", //Strings.signinwithfacebook,
+                            "${getTranslated(context, "signinwithfacebook")}",
+                        //Strings.signinwithfacebook,
                         iconImage: Images.fbIcon,
                         func: _facebookSignin),
 
@@ -594,8 +599,8 @@ class _SigninState extends State<Signin> {
                     // Google signup
                     socialSigninButton(
                         context: context,
-                        title:
-                            "${getTranslated(context, "signinwithgoogle")}", // Strings.signinwithgoogle,
+                        title: "${getTranslated(context, "signinwithgoogle")}",
+                        // Strings.signinwithgoogle,
                         iconImage: Images.googleIconActPng,
                         func: _googleSignin),
 
@@ -609,7 +614,8 @@ class _SigninState extends State<Signin> {
                         ? socialSigninButton(
                             context: context,
                             title:
-                                "${getTranslated(context, "signinwithApple")}", // Strings.signinwithApple,
+                                "${getTranslated(context, "signinwithApple")}",
+                            // Strings.signinwithApple,
                             iconImage: Images.appleIcon,
                             func: () async {
                               appleSignin();
@@ -691,7 +697,8 @@ class _SigninState extends State<Signin> {
                                       cursorColor: AppColors.white,
                                       decoration: InputDecoration(
                                         hintText:
-                                            "${getTranslated(context, "emailHint")}", //Strings.emailHint,
+                                            "${getTranslated(context, "emailHint")}",
+                                        //Strings.emailHint,
                                         border: InputBorder.none,
                                         // contentPadding: EdgeInsets.only(
                                         //     left: size.width * 0.04,
@@ -772,7 +779,8 @@ class _SigninState extends State<Signin> {
                                           cursorColor: AppColors.white,
                                           decoration: InputDecoration(
                                             hintText:
-                                                "${getTranslated(context, "passwordhint")}", //Strings.passwordhint,
+                                                "${getTranslated(context, "passwordhint")}",
+                                            //Strings.passwordhint,
                                             border: InputBorder.none,
                                             // contentPadding: EdgeInsets.only(
                                             //     left: size.width * 0.04,

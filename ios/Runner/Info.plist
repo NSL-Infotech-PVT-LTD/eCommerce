@@ -16,23 +16,25 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>fb1172640286493101</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>com.googleusercontent.apps.185114239019-jcu4r52m34kj2q12s0mki41n6np2aja2</string>
-			</array>
-		</dict>
-	</array>
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+              <key>CFBundleTypeRole</key>
+              <string>Editor</string>
+              <key>CFBundleURLSchemes</key>
+              <array>
+                  <string>com.app.funfy</string>
+              </array>
+          </dict>
+	    <dict>
+		    <key>CFBundleTypeRole</key>
+		    <string>Editor</string>
+		    <key>CFBundleURLSchemes</key>
+		    <array>
+			     <string>com.googleusercontent.app.562684267034-lo5hhs0b77fs21p2973q5qr01gr05q31</string>
+	        </array>
+	    </dict>
+    </array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>FacebookAppID</key>
@@ -63,20 +65,32 @@
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>NSAppTransportSecurity</key>
 	<string>CFBundleDevelopmentRegion</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Needed to access apple emmusic to work properly</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Needed to use always on bluetooth to work properly</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Needed to access Bluetooth to work properly</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Needed to access calender to do the bookings</string>
 	<key>NSCameraUsageDescription</key>
 	<string>This app requires access to the camera to click the image for profile.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Needed to access contacts to work properly</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Needed to access location</string>
 	<key>NSLocationUsageDescription</key>
 	<string>This app need location permission to get the current location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Needed to access location</string>
-    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>Always and when in use!</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This app does not require access to the microphone.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Needed to access motion to work properly</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app requires access to the photo library to set the profile picture.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Needed to access Speech to work properly</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

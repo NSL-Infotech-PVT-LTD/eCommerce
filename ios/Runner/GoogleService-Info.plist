@@ -3,34 +3,32 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>185114239019-jcu4r52m34kj2q12s0mki41n6np2aja2.apps.googleusercontent.com</string>
+	<string>562684267034-lo5hhs0b77fs21p2973q5qr01gr05q31.apps.googleuserconten.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.185114239019-jcu4r52m34kj2q12s0mki41n6np2aja2</string>
-	<key>ANDROID_CLIENT_ID</key>
-	<string>185114239019-97dbhfv877gt8qj8kv42oc53vu8ldb2t.apps.googleusercontent.com</string>
+	<string>com.googleusercontent.app.562684267034-lo5hhs0b77fs21p2973q5qr01gr05q31</string>
 	<key>API_KEY</key>
-	<string>AIzaSyCqBpjEyieC57zwRMUqCKGtQe1Rn_nOCpY</string>
+	<string>AIzaSyC8RvY96hm7l5MnPJdCq6b0wCPv4GLDGHo</string>
 	<key>GCM_SENDER_ID</key>
-	<string>185114239019</string>
+	<string>562684267034</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>funfy</string>
+	<string>com.app.funfy</string>
 	<key>PROJECT_ID</key>
-	<string>funfy-app</string>
+	<string>funfy-324609</string>
 	<key>STORAGE_BUCKET</key>
-	<string>funfy-app.appspot.com</string>
+	<string>funfy-324609.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<false/>
+	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false/>
+	<false></false>
 	<key>IS_APPINVITE_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>IS_GCM_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:185114239019:ios:86c3e230711dea479fca6e</string>
+	<string>1:562684267034:ios:8ff8c03dcef8def3a8dfa3</string>
 </dict>
 </plist>

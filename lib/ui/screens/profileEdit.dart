@@ -50,6 +50,8 @@ class _EditProfileState extends State<EditProfile> {
   String _genderError = "";
   String _signupError = "";
 
+  bool firstcall = false;
+
   update() {
     print("update");
 // input validation ----------- //
@@ -130,6 +132,7 @@ class _EditProfileState extends State<EditProfile> {
                 name: _fullnameController.text,
                 gender: "${_genderController.text}",
                 dob: "$dob",
+                mobile: "${_mobileController.text}",
                 imageFile: _image)
             .then((response) {
           setState(() {
@@ -412,7 +415,13 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   void didChangeDependencies() {
-    setdataolddata();
+    if (firstcall) {
+    } else {
+      firstcall = true;
+
+      setdataolddata();
+    }
+
     super.didChangeDependencies();
   }
 
@@ -565,10 +574,11 @@ class _EditProfileState extends State<EditProfile> {
                             controller: _mobileController,
                             obscureTextBool: false,
                             titletxt:
-                                "${getTranslated(context, "email")}", // Strings.email,
+                                "${getTranslated(context, "mobile")}", // Strings.email,
                             hinttxt:
-                                "${getTranslated(context, "emailHint")}", // Strings.emailHint,
+                                "${getTranslated(context, "enterYourMobileNumber")}", // Strings.emailHint,
                             inputError: "",
+                            number: true,
                             ontapFun: null,
                             readonly: false),
 

@@ -14,9 +14,9 @@ import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 
-import 'package:internet_speed_test/internet_speed_test.dart';
+// import 'package:internet_speed_test/internet_speed_test.dart';
 
-final internetSpeedTest = InternetSpeedTest();
+// final internetSpeedTest = InternetSpeedTest();
 
 class BookingPage extends StatefulWidget {
   const BookingPage({Key? key}) : super(key: key);

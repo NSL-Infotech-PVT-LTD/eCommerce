@@ -36,8 +36,11 @@ Future<UserModel?> signinUser(
     "device_token": UserData.deviceToken
   };
 
+  var headers = {'X-localization': '${Constants.prefs?.getString("language")}'};
+
   print("here is device type : $devicetype");
-  var res = await http.post(Uri.parse(Urls.siginUrl), body: body);
+  var res =
+      await http.post(Uri.parse(Urls.siginUrl), headers: headers, body: body);
 
   var data = json.decode(res.body);
 
@@ -66,6 +69,7 @@ Future facebookLogin(
     String? deviceToken,
     String? profileImage,
     phoneBody}) async {
+  var headers = {'X-localization': '${Constants.prefs?.getString("language")}'};
   Map body = {};
 
   if (phoneBody == null) {
@@ -81,9 +85,10 @@ Future facebookLogin(
     body = phoneBody;
   }
 
-  var res = await http.post(Uri.parse(Urls.faceBookSigninUrl), body: body);
+  var res = await http.post(Uri.parse(Urls.faceBookSigninUrl),
+      headers: headers, body: body);
+
   var jsondata = json.decode(res.body);
-  print(jsondata);
 
   // var model = facebookSigninModelFromJson(res.body);
 
@@ -125,6 +130,8 @@ Future googleLogin(
     String? deviceToken,
     String? profileImage,
     Map? phoneBody}) async {
+  var headers = {'X-localization': '${Constants.prefs?.getString("language")}'};
+
   Map body = {};
 
   if (phoneBody == null) {
@@ -141,7 +148,8 @@ Future googleLogin(
   }
 
   print("Body is Here $body");
-  var res = await http.post(Uri.parse(Urls.googleSiginUrl), body: body);
+  var res = await http.post(Uri.parse(Urls.googleSiginUrl),
+      headers: headers, body: body);
   var jsondata = json.decode(res.body);
   print(jsondata);
 
@@ -189,24 +197,42 @@ Future googleLogin(
   }
 }
 
-Future<GoogleSigninModel?> appleLogin(
+Future<dynamic> appleLogin(
     {context,
     String? name,
     String? email,
     String? googleid,
     String? deviceType,
-    String? profileImage}) async {
-  var body = {
-    "name": name,
-    "email": email,
-    "apple_id": googleid,
-    "device_type": deviceType,
-    "device_token": UserData.deviceToken,
-    "image": profileImage
-  };
+    String? profileImage,
+      Map? phoneBody
+    }) async {
+  var headers = {'X-localization': '${Constants.prefs?.getString("language")}'};
+  Map body = {};
+
+  if (phoneBody == null) {
+    body = {
+      "name": name,
+      "email": email,
+      "apple_id": googleid,
+      "device_type": deviceType,
+      "device_token": UserData.deviceToken,
+      "image": profileImage
+    };
+  } else {
+    body = phoneBody;
+  }
+  // var body = {
+  //   "name": name,
+  //   "email": email,
+  //   "apple_id": googleid,
+  //   "device_type": deviceType,
+  //   "device_token": UserData.deviceToken,
+  //   "image": profileImage
+  // };
 
   print("Body is Here $body");
-  var res = await http.post(Uri.parse(Urls.appleSiginUrl), body: body);
+  var res = await http.post(Uri.parse(Urls.appleSiginUrl),
+      headers: headers, body: body);
   var jsondata = json.decode(res.body);
   print(jsondata);
 
@@ -218,6 +244,11 @@ Future<GoogleSigninModel?> appleLogin(
     return googleSigninModelFromJson(res.body);
   } else if (res.statusCode == 200) {
     return googleSigninModelFromJson(res.body);
+  } else if (res.statusCode == 222) {
+    print("Status.......222 ${res.body}");
+
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => MobileNumberScreen(bodyData: body, type: 3)));
   } else if (res.statusCode == 422) {
     Dialogs.simpleOkAlertDialog(
         context: context,
@@ -329,6 +360,35 @@ Future<bool?> logoutApi() async {
   var jsondata = json.decode(res.body);
 
   if (res.statusCode == 200) {
+    // token
+    Constants.prefs?.setString("token", "");
+    // name name
+    Constants.prefs?.setString("name", "");
+    // name email
+    Constants.prefs?.setString("email", "");
+    // lacation
+    Constants.prefs?.setString("addres", "");
+
+    //  dob
+    Constants.prefs?.setString("dob", "");
+
+    //  gender
+    Constants.prefs?.setString("gender", "");
+
+    // language
+    Constants.prefs?.setString(Strings.radioValue, 'en');
+
+    Constants.prefs?.setString('es', 'null');
+
+    //  social
+    Constants.prefs?.setString("social", "false");
+
+    // profileImage
+    Constants.prefs?.setString("profileImage", "");
+
+    _googleSignIn.signOut();
+    return true;
+  } else if (jsondata["code"] == 401) {
     // token
     Constants.prefs?.setString("token", "");
     // name name
