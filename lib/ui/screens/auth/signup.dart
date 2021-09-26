@@ -35,6 +35,7 @@ class _SignUpState extends State<SignUp> {
 
   TextEditingController _fullnameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
+  TextEditingController _mobileController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _dobController = TextEditingController();
   TextEditingController _genderController = TextEditingController();
@@ -49,6 +50,7 @@ class _SignUpState extends State<SignUp> {
   String _passwordError = "";
   String _dobError = "";
   String _genderError = "";
+  String _mobileError = "";
   String _signupError = "";
 
   signupUser() {
@@ -58,46 +60,62 @@ class _SignUpState extends State<SignUp> {
       _emailError = "";
       _passwordError = "";
       _dobError = "";
+      _mobileError = "";
       _genderError = "";
 
 // fullname
       if (_fullnameController.text == "") {
-        _fullnameError = Strings.pleaseEnterYourfullname;
+        _fullnameError = "${getTranslated(context, 'pleaseEnterYourfullname')}";
       } else if (_fullnameController.text.length < 3) {
-        _fullnameError = Strings.yourNameMustBeAbove3Characters;
+        _fullnameError =
+            "${getTranslated(context, 'yourNameMustBeAbove3Characters')}";
       } else if (validateName(_fullnameController.text) != "") {
         _fullnameError = validateName(_fullnameController.text);
       }
 // email
       if (_emailController.text == "") {
-        _emailError = Strings.pleaseEnterYourEmail;
+        _emailError = "${getTranslated(context, 'pleaseEnterYourEmail')}";
       } else if (emailvalid(_emailController.text) == false) {
-        _emailError = Strings.pleaseEnterValidEmail;
+        _emailError = "${getTranslated(context, 'pleaseEnterValidEmail')}";
       }
+
+// mobile
+
+      if (_mobileController.text == "") {
+        _mobileError =
+            "${getTranslated(context, 'pleaseEnterYourMobileNumber')}";
+      }
+
+      //  else if (emailvalid(_emailController.text) == false) {
+      //   _mobileError =
+      //       "${getTranslated(context, 'enterYourValidMobileNumber')}";
+      // }
 
 // password
       if (_passwordController.text == "") {
-        _passwordError = Strings.pleaseEnterYourpassword;
+        _passwordError = "${getTranslated(context, 'pleaseEnterYourpassword')}";
       } else if (_passwordController.text.length < 8) {
-        _passwordError = Strings.yourPasswordMustBeAbove8Characters;
+        _passwordError =
+            "${getTranslated(context, 'yourPasswordMustBeAbove8Characters')}";
       }
 
 // dob
       if (_dobController.text == "") {
-        _dobError = Strings.dateofbirthhint;
+        _dobError = "${getTranslated(context, 'dateofbirthhint')}";
       } else if (calculateAge(dobDateTime) != "") {
-        _dobError = Strings.agemustbe18;
+        _dobError = "${getTranslated(context, 'agemustbe18')}";
       }
 
 // gender
       if (_genderController.text == "") {
-        _genderError = Strings.pleaseEnterYourGender;
+        _genderError = "${getTranslated(context, 'pleaseEnterYourGender')}";
       }
       if (_fullnameError == "" &&
           _emailError == "" &&
           _passwordError == "" &&
           dob != "" &&
-          _genderError == "") {
+          _genderError == "" &&
+          _mobileError == "") {
         _signupApicall();
       }
     });
@@ -126,6 +144,7 @@ class _SignUpState extends State<SignUp> {
           email: _emailController.text,
           password: _passwordController.text,
           dob: dob,
+          mobile: _mobileController.text,
           gender: gender.toLowerCase(),
           devicetype: Platform.isAndroid ? "android" : "ios",
         ).then((value) {
@@ -148,9 +167,9 @@ class _SignUpState extends State<SignUp> {
 
             setState(() {
               if (value["res"]["error"] == Strings.emailError) {
-                _emailError = Strings.emailError;
+                _emailError = "${getTranslated(context, 'emailError')}";
               } else if (value["res"]["error"] == Strings.dobError) {
-                _dobError = Strings.dobError;
+                _dobError = "${getTranslated(context, 'dobError')}";
               }
             });
           }
@@ -492,29 +511,46 @@ class _SignUpState extends State<SignUp> {
 
                     // description
 
-                    Row(
-                      children: [
-                        Text(
-                          "${getTranslated(context, "quicklyOnboardto")}",
-                          // Strings.quicklyOnboardto,
-                          style: TextStyle(
-                              fontSize: size.width * 0.045,
-                              color: AppColors.descriptionfirst),
+                    Text.rich(TextSpan(
+                        text:
+                            "${getTranslated(context, "quicklyOnboardto")}", // Strings.byContinuingYouAgreetoOur,
+                        style: TextStyle(
+                          fontSize: size.width * 0.045,
+                          color: AppColors.descriptionfirst,
                         ),
-                        SizedBox(
-                          width: size.width * 0.015,
-                        ),
-                        Flexible(
-                          child: Text(
-                            "${getTranslated(context, "funfypartyApp")}",
-                            // Strings.funfypartyApp,
-                            style: TextStyle(
+                        children: <InlineSpan>[
+                          TextSpan(
+                              text:
+                                  " ${getTranslated(context, "funfypartyApp")}", //"${Strings.and}",
+                              style: TextStyle(
                                 fontSize: size.width * 0.045,
-                                color: Colors.white),
-                          ),
-                        ),
-                      ],
-                    ),
+                                color: Colors.white,
+                              )),
+                        ])),
+
+                    // Row(
+                    //   children: [
+                    //     Text(
+                    //       "${getTranslated(context, "quicklyOnboardto")}",
+                    //       // Strings.quicklyOnboardto,
+                    //       style: TextStyle(
+                    //           fontSize: size.width * 0.045,
+                    //           color: AppColors.descriptionfirst),
+                    //     ),
+                    //     SizedBox(
+                    //       width: size.width * 0.015,
+                    //     ),
+                    //     Flexible(
+                    //       child: Text(
+                    //         "${getTranslated(context, "funfypartyApp")}",
+                    //         // Strings.funfypartyApp,
+                    //         style: TextStyle(
+                    //             fontSize: size.width * 0.045,
+                    //             color: Colors.white),
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
 
                     // inputs
 
@@ -548,6 +584,20 @@ class _SignUpState extends State<SignUp> {
                             inputError: _emailError,
                             ontapFun: null,
                             readonly: false),
+
+                        inputs(
+                            context: context,
+                            controller: _mobileController,
+                            obscureTextBool: false,
+                            titletxt:
+                                "${getTranslated(context, "mobile")}", // Strings.email,
+                            hinttxt:
+                                "${getTranslated(context, "enterYourMobileNumber")}", // Strings.emailHint,
+                            inputError: _mobileError,
+                            ontapFun: null,
+                            number: true,
+                            readonly: false),
+
                         // inputs(
                         //     context: context,
                         //     controller: _passwordController,

@@ -16,11 +16,13 @@ Future<Map> signApiCall(
     String? email,
     String? password,
     String? dob,
+    String? mobile,
     String? gender,
     String? devicetype}) async {
   var body = {
     "name": fullname,
     "email": email,
+    "mobile": mobile,
     "password": password,
     "dob": dob,
     "gender": gender,
@@ -35,9 +37,11 @@ Future<Map> signApiCall(
 
   if (response["status"] == true && response["code"] == 201) {
     var resp = response["data"]["user"];
+    // print("userData $resp");
     saveDataInshareP(
       name: resp["name"],
       email: resp["email"],
+      mobile: resp["mobile"].toString(),
       dob: resp["dob"].toString(),
       gender: resp["gender"],
       profileImage: "",
@@ -57,7 +61,11 @@ var headers = {
 };
 
 Future<UpdateProfileDataModel?> updateProfile(
-    {String? name, String? gender, File? imageFile, String? dob}) async {
+    {String? name,
+    String? gender,
+    File? imageFile,
+    String? dob,
+    String? mobile}) async {
   print("update profile");
   Map<String, String>? body;
 
@@ -66,6 +74,7 @@ Future<UpdateProfileDataModel?> updateProfile(
       "name": name!,
       "dob": dob.toString(),
       "gender": gender!,
+      "mobile": "$mobile",
       "is_social": "0"
     };
   } else {

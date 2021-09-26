@@ -55,7 +55,7 @@ dependencies:
   firebase_messaging: ^10.0.4
   firebase_core: ^1.4.0
   flutter_local_notifications: ^5.0.0+4
-  internet_speed_test: ^1.5.0
+#  internet_speed_test: ^1.5.0
   stripe_payment: ^1.1.4
   flutter_swipe_button: ^1.1.0
   flash: ^2.0.1
@@ -143,6 +143,7 @@ flutter:
     - assets/pngicons/googleIcon.png
     - assets/pngicons/aboutCalender.png
     - assets/pngicons/fiestasBackground.png
+    - assets/pngicons/filter.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -7,6 +7,7 @@ import 'package:funfy/components/navigation.dart';
 import 'package:funfy/models/facebookSigninModel.dart';
 import 'package:funfy/models/googleSigninModel.dart';
 import 'package:funfy/models/userModel.dart';
+import 'package:funfy/ui/screens/auth/mobileNumber.dart';
 import 'package:funfy/ui/screens/auth/signin.dart';
 import 'package:funfy/ui/screens/languageScreen.dart';
 import 'package:funfy/utils/Constants.dart';
@@ -35,8 +36,11 @@ Future<UserModel?> signinUser(
     "device_token": UserData.deviceToken
   };
 
+  var headers = {'X-localization': '${Constants.prefs?.getString("language")}'};
+
   print("here is device type : $devicetype");
-  var res = await http.post(Uri.parse(Urls.siginUrl), body: body);
+  var res =
+      await http.post(Uri.parse(Urls.siginUrl), headers: headers, body: body);
 
   var data = json.decode(res.body);
 
@@ -55,26 +59,36 @@ Future<UserModel?> signinUser(
   }
 }
 
-Future<FacebookSigninModel?> facebookLogin(
+// <FacebookSigninModel?>
+Future facebookLogin(
     {context,
     String? name,
     String? email,
     String? fbId,
     String? deviceType,
     String? deviceToken,
-    String? profileImage}) async {
-  var body = {
-    "name": name,
-    "email": email,
-    "fb_id": fbId,
-    "device_type": deviceType,
-    "device_token": UserData.deviceToken,
-    "image": profileImage
-  };
+    String? profileImage,
+    phoneBody}) async {
+  var headers = {'X-localization': '${Constants.prefs?.getString("language")}'};
+  Map body = {};
 
-  var res = await http.post(Uri.parse(Urls.faceBookSigninUrl), body: body);
+  if (phoneBody == null) {
+    body = {
+      "name": name,
+      "email": email,
+      "fb_id": fbId,
+      "device_type": deviceType,
+      "device_token": UserData.deviceToken,
+      "image": profileImage
+    };
+  } else {
+    body = phoneBody;
+  }
+
+  var res = await http.post(Uri.parse(Urls.faceBookSigninUrl),
+      headers: headers, body: body);
+
   var jsondata = json.decode(res.body);
-  print(jsondata);
 
   // var model = facebookSigninModelFromJson(res.body);
 
@@ -84,38 +98,58 @@ Future<FacebookSigninModel?> facebookLogin(
     return facebookSigninModelFromJson(res.body);
   } else if (res.statusCode == 200) {
     return facebookSigninModelFromJson(res.body);
+  } else if (res.statusCode == 222) {
+    print("Status.......222 ${res.body}");
+
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => MobileNumberScreen(bodyData: body, type: 1)));
   } else if (res.statusCode == 422) {
-    Dialogs.simpleOkAlertDialog(
-        context: context,
-        title: "${getTranslated(context, 'alert!')}",
-        content: "${jsondata['error']}",
-        func: () {
-          navigatePopFun(context);
-        });
+    try {
+      Dialogs.simpleOkAlertDialog(
+          context: context,
+          title: "${getTranslated(context, 'alert!')}",
+          content: "${jsondata['error']}",
+          func: () {
+            navigatePopFun(context);
+          });
+    } catch (e) {
+      return json.decode(res.body);
+    }
   } else {
     print("Error in Facebook signin Api");
   }
 }
 
-Future<GoogleSigninModel?> googleLogin(
+// <GoogleSigninModel?>
+Future googleLogin(
     {context,
     String? name,
     String? email,
     String? googleid,
     String? deviceType,
     String? deviceToken,
-    String? profileImage}) async {
-  var body = {
-    "name": name,
-    "email": email,
-    "google_id": googleid,
-    "device_type": deviceType,
-    "device_token": UserData.deviceToken,
-    "image": profileImage
-  };
+    String? profileImage,
+    Map? phoneBody}) async {
+  var headers = {'X-localization': '${Constants.prefs?.getString("language")}'};
+
+  Map body = {};
+
+  if (phoneBody == null) {
+    body = {
+      "name": name,
+      "email": email,
+      "google_id": googleid,
+      "device_type": deviceType,
+      "device_token": UserData.deviceToken,
+      "image": profileImage
+    };
+  } else {
+    body = phoneBody;
+  }
 
   print("Body is Here $body");
-  var res = await http.post(Uri.parse(Urls.googleSiginUrl), body: body);
+  var res = await http.post(Uri.parse(Urls.googleSiginUrl),
+      headers: headers, body: body);
   var jsondata = json.decode(res.body);
   print(jsondata);
 
@@ -127,37 +161,78 @@ Future<GoogleSigninModel?> googleLogin(
     return googleSigninModelFromJson(res.body);
   } else if (res.statusCode == 200) {
     return googleSigninModelFromJson(res.body);
+  } else if (res.statusCode == 222) {
+    print("Status.......222 ${res.body}");
+
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => MobileNumberScreen(
+              bodyData: body,
+              type: 2,
+            )));
   } else if (res.statusCode == 422) {
-    Dialogs.simpleOkAlertDialog(
-        context: context,
-        title: "${getTranslated(context, 'alert!')}",
-        content: "${jsondata['error']}",
-        func: () {
-          navigatePopFun(context);
-        });
+    try {
+      Dialogs.simpleOkAlertDialog(
+          context: context,
+          title: "${getTranslated(context, 'alert!')}",
+          content: "${jsondata['error']}",
+          func: () {
+            navigatePopFun(context);
+          });
+    } catch (e) {
+      return json.decode(res.body);
+    }
   } else {
     print("Error in Google signin Api");
+
+    // Dialogs.simpledialogshow(
+    //     context: context,
+    //     title: "${getTranslated(context, "alert!")}",
+    //     // Strings.Success,
+    //     description: "${getTranslated(context, "errortoSignUp")}",
+    //     // Strings.wehavesentlinkonyouemail,
+    //     okfunc: () {
+    //       Navigator.of(context).pushReplacement(
+    //           MaterialPageRoute(builder: (context) => Signin()));
+    //     });
   }
 }
 
-Future<GoogleSigninModel?> appleLogin(
+Future<dynamic> appleLogin(
     {context,
     String? name,
     String? email,
     String? googleid,
     String? deviceType,
-    String? profileImage}) async {
-  var body = {
-    "name": name,
-    "email": email,
-    "apple_id": googleid,
-    "device_type": deviceType,
-    "device_token": UserData.deviceToken,
-    "image": profileImage
-  };
+    String? profileImage,
+      Map? phoneBody
+    }) async {
+  var headers = {'X-localization': '${Constants.prefs?.getString("language")}'};
+  Map body = {};
+
+  if (phoneBody == null) {
+    body = {
+      "name": name,
+      "email": email,
+      "apple_id": googleid,
+      "device_type": deviceType,
+      "device_token": UserData.deviceToken,
+      "image": profileImage
+    };
+  } else {
+    body = phoneBody;
+  }
+  // var body = {
+  //   "name": name,
+  //   "email": email,
+  //   "apple_id": googleid,
+  //   "device_type": deviceType,
+  //   "device_token": UserData.deviceToken,
+  //   "image": profileImage
+  // };
 
   print("Body is Here $body");
-  var res = await http.post(Uri.parse(Urls.appleSiginUrl), body: body);
+  var res = await http.post(Uri.parse(Urls.appleSiginUrl),
+      headers: headers, body: body);
   var jsondata = json.decode(res.body);
   print(jsondata);
 
@@ -169,8 +244,11 @@ Future<GoogleSigninModel?> appleLogin(
     return googleSigninModelFromJson(res.body);
   } else if (res.statusCode == 200) {
     return googleSigninModelFromJson(res.body);
-  }else if(res.statusCode == 222){
+  } else if (res.statusCode == 222) {
+    print("Status.......222 ${res.body}");
 
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => MobileNumberScreen(bodyData: body, type: 3)));
   } else if (res.statusCode == 422) {
     Dialogs.simpleOkAlertDialog(
         context: context,
@@ -190,6 +268,7 @@ saveDataInshareP(
     String? token,
     String? profileImage,
     String? dob,
+    String? mobile,
     String? social,
     String? gender}) {
   // token
@@ -198,8 +277,10 @@ saveDataInshareP(
   Constants.prefs?.setString("name", "$name");
   //  email
   Constants.prefs?.setString("email", "$email");
+  //  mobile
+  Constants.prefs?.setString("mobile", "$mobile");
 
-  //  email
+  //  dob
   Constants.prefs?.setString("dob", "$dob");
 
   // profileImage
@@ -279,6 +360,35 @@ Future<bool?> logoutApi() async {
   var jsondata = json.decode(res.body);
 
   if (res.statusCode == 200) {
+    // token
+    Constants.prefs?.setString("token", "");
+    // name name
+    Constants.prefs?.setString("name", "");
+    // name email
+    Constants.prefs?.setString("email", "");
+    // lacation
+    Constants.prefs?.setString("addres", "");
+
+    //  dob
+    Constants.prefs?.setString("dob", "");
+
+    //  gender
+    Constants.prefs?.setString("gender", "");
+
+    // language
+    Constants.prefs?.setString(Strings.radioValue, 'en');
+
+    Constants.prefs?.setString('es', 'null');
+
+    //  social
+    Constants.prefs?.setString("social", "false");
+
+    // profileImage
+    Constants.prefs?.setString("profileImage", "");
+
+    _googleSignIn.signOut();
+    return true;
+  } else if (jsondata["code"] == 401) {
     // token
     Constants.prefs?.setString("token", "");
     // name name
