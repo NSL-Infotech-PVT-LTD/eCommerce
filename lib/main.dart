@@ -30,7 +30,6 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 
 Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  print('IN THE ON Background ===============>>>>>>>>>>> ${message.data}');
 
   Get.to(Home(
     pageIndexNum: 2,
@@ -43,12 +42,12 @@ String fcmToken = " ";
 // }
 
 Future<void> main() async {
+  runApp(MyApp());
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await FirebaseMessaging.instance.getToken().then((value) {
     fcmToken = value!;
   });
-  print("====================> $fcmToken");
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   await flutterLocalNotificationsPlugin
@@ -65,8 +64,6 @@ Future<void> main() async {
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   Constants.prefs = await SharedPreferences.getInstance();
-
-  runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -86,6 +83,7 @@ class _MyAppState extends State<MyApp> {
   var initializationSettings;
 
   Locale? _locale;
+
   setLocale(Locale locale) {
     setState(() {
       _locale = locale;
@@ -133,10 +131,7 @@ class _MyAppState extends State<MyApp> {
 
   getMe() async {
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: (String? payload) async {
-      print("======LOCAL NOTIFICATION======> $payload");
-      print("======TOKEN======> $token");
-    });
+        onSelectNotification: (String? payload) async {});
   }
 
   @override
@@ -147,31 +142,15 @@ class _MyAppState extends State<MyApp> {
     getMeLocal();
 
     FirebaseMessaging.instance.requestPermission();
-    print("CHECK $token");
     FirebaseMessaging.onMessage.listen(
       (RemoteMessage message) {
-        // print("IN THE ON MESSAGE ===============>>>>>>>>>>> ${message.data}");
-        // print(
-        //     "IN THE ON MESSAGE ===============>>>>>>>>>>> ${message.notification}");
-        // print(
-        //     "IN THE ON MESSAGE ===============>>>>>>>>>>> ${message.data["screen"]}");
-        // print("noti ${message.notification}");
-
-        // print("message $message");
-        // var jsonData = json.decode(message.data['data']);
-        // var mid = jsonData['target_id'];
-        // print("message ${message.notification?.android}");
-
         RemoteNotification? notification = message.notification;
         AndroidNotification? android = message.notification?.android;
         print("message data ${message.data.entries}");
 
         print("notification - $notification");
         print("android - $android");
-        if (notification != null && android != null)
-
-        // if (message.data.length != 0)
-        {
+        if (notification != null && android != null) {
           flutterLocalNotificationsPlugin.show(
               // mid,
               // message.data['title'],
@@ -296,10 +275,10 @@ class _MyAppState extends State<MyApp> {
               return supportedLocale;
             }
           }
-          print("hello + ${supportedLocales.first}");
           return supportedLocales.first;
         },
-        darkTheme: ThemeData.dark(), //
+        darkTheme: ThemeData.dark(),
+        //
 
         home: Splash());
     // home: MobileNumberScreen());
