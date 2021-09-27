@@ -938,25 +938,24 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                         headerSliverBuilder:
                             (BuildContext context, bool innerBoxIsScrolled) {
                           return [
-                            SliverAppBar(
-                                // backgroundColor: AppColors.white,
-                                collapsedHeight: size.height * 0.3,
-                                expandedHeight: size.height * 0.3,
-                                floating: true,
-                                // pinned: true,
-                                snap: true,
-                                automaticallyImplyLeading: false,
-                                actionsIconTheme: IconThemeData(opacity: 0.0),
-                                flexibleSpace: SamplePlayer(
-                                  videoUrl: prefiestasDetailModel!
-                                      .data!.parentData!.videoUrl,
-                                )
-
-                                //
-
-                                ),
+                            // SliverAppBar(
+                            //     // backgroundColor: AppColors.white,
+                            //
+                            //     // floating: true,
+                            //     // pinned: true,
+                            //     // snap: true,
+                            //     // automaticallyImplyLeading: false,
+                            //     // actionsIconTheme: IconThemeData(opacity: 0.0),
+                            //     // flexibleSpace: SamplePlayer(
+                            //     //   videoUrl: prefiestasDetailModel!
+                            //     //       .data!.parentData!.videoUrl,
+                            //     // )
+                            //
+                            //     //
+                            //
+                            //     ),
                             SliverPadding(
-                              padding: EdgeInsets.all(16.0),
+                              padding: EdgeInsets.only(left:16.0,right: 16.0,bottom:16.0),
                               sliver: SliverList(
                                 delegate: SliverChildListDelegate([
                                   Container(
