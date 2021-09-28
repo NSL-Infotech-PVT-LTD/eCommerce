@@ -14,6 +14,38 @@
       },
       "oauth_client": [
         {
+          "client_id": "562684267034-je2ju4mklnbfq4qskqb3a8su4r8cnl5j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.funfy.funfy",
+            "certificate_hash": "1cc19aa0934a4355d55b2aeadb5fde2229b3c850"
+          }
+        },
+        {
+          "client_id": "562684267034-jggf4uog05margn8gjq3jq01qghd3rv1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.funfy.funfy",
+            "certificate_hash": "0241515a2c14e6ddf2f846b0f10d0a21c2c2caa7"
+          }
+        },
+        {
+          "client_id": "562684267034-jlsre8ckcd80i5vholjpue1gn1nagsha.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.funfy.funfy",
+            "certificate_hash": "0c1f6e982a4549620c431d9fc904354d67f33e84"
+          }
+        },
+        {
+          "client_id": "562684267034-jpeu0t1724cjbg6ifvrgajpthuu1f040.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.funfy.funfy",
+            "certificate_hash": "f899d1e93e55eb03aa2c97cd146fd5368e61646c"
+          }
+        },
+        {
           "client_id": "562684267034-suqn5sqae76ikaopjupiu1qbhbpbrguc.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,6 +61,13 @@
             {
               "client_id": "562684267034-suqn5sqae76ikaopjupiu1qbhbpbrguc.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "562684267034-lo5hhs0b77fs21p2973q5qr01gr05q31.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.app.funfy"
+              }
             }
           ]
         }

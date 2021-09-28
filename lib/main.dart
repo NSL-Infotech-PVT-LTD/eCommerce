@@ -42,11 +42,14 @@ String fcmToken = " ";
 // }
 
 Future<void> main() async {
-  runApp(MyApp());
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
   await FirebaseMessaging.instance.getToken().then((value) {
     fcmToken = value!;
+    print('here is F tokensss $fcmToken');
+
   });
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -64,6 +67,7 @@ Future<void> main() async {
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   Constants.prefs = await SharedPreferences.getInstance();
+  runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -120,7 +124,7 @@ class _MyAppState extends State<MyApp> {
   getToken() async {
     // var token = await firebaseMessaging.getToken();
 
-    // print('here is F token $token');
+    print('here is F token $fcmToken');
 
     // print('here is F token ${}');
 
@@ -140,7 +144,6 @@ class _MyAppState extends State<MyApp> {
     initializePlatformSpecifics();
     getMe();
     getMeLocal();
-
     FirebaseMessaging.instance.requestPermission();
     FirebaseMessaging.onMessage.listen(
       (RemoteMessage message) {

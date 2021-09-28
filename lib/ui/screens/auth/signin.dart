@@ -412,7 +412,6 @@ class _SigninState extends State<Signin> {
       scopes: [
         'email',
       ],
-      clientId: "562684267034-lo5hhs0b77fs21p2973q5qr01gr05q31.apps.googleuserconten.com"
     );
 
     _googleSignIn.signIn().then((GoogleSignInAccount? acc) async {
