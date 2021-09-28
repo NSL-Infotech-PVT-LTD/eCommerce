@@ -1240,11 +1240,19 @@ class _CartpageState extends State<Cartpage> {
                                                       0 &&
                                                   alcoholTrue == true) {
                                                 // makeOrder();
+                                                // int.parse(Strings
+                                                //         .prefiestaMinimumBookingPrice)
 
-                                                if (int.parse(Strings
-                                                        .prefiestaMinimumBookingPrice) <
+                                                if (double.parse(
+                                                            "${UserData.myCartModel?.data?.parentDetail?.price ?? 0}") <
+                                                        double.parse(
+                                                            "${_totalPrice != "0" && _totalPrice != "null" ? _totalPrice : UserData.myCartModel?.data?.cart?.totalPrice}") ||
                                                     double.parse(
-                                                        "${_totalPrice != "0" && _totalPrice != "null" ? _totalPrice : UserData.myCartModel?.data?.cart?.totalPrice}")) {
+                                                            "${UserData.myCartModel?.data?.parentDetail?.price ?? 0}") ==
+                                                        double.parse(
+                                                            "${_totalPrice != "0" && _totalPrice != "null" ? _totalPrice : UserData.myCartModel?.data?.cart?.totalPrice}")) {
+                                                  print(UserData.myCartModel
+                                                      ?.data?.cart?.price);
                                                   Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
@@ -1259,7 +1267,7 @@ class _CartpageState extends State<Cartpage> {
                                                       title:
                                                           "${getTranslated(context, 'alert!')}",
                                                       content:
-                                                          "${getTranslated(context, 'YourTotalPriceshouldbemorethan')} ${Strings.euro}${Strings.prefiestaMinimumBookingPrice} ",
+                                                          "${getTranslated(context, 'YourTotalPriceshouldbemorethan')} ${Strings.euro}${double.parse("${UserData.myCartModel?.data?.parentDetail?.price ?? 0}")} ",
                                                       func: () {
                                                         navigatePopFun(context);
                                                       });

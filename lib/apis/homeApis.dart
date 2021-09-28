@@ -9,14 +9,12 @@ import 'package:funfy/models/favourite/fiestasFavouriteModel.dart';
 import 'package:funfy/models/favourite/preFiestasFavModel.dart';
 import 'package:funfy/models/fiestasmodel.dart';
 import 'package:funfy/models/filterModel.dart';
-import 'package:funfy/models/notificationListModel.dart';
 import 'package:funfy/models/preFiestasModel.dart';
 import 'package:funfy/models/prefiestasDetailModel.dart';
 import 'package:funfy/models/prifiestasAlMxEx.dart';
 import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/strings.dart';
 import 'package:funfy/utils/urls.dart';
-import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 Future<FiestasModel?> fiestasPostGet(
@@ -30,9 +28,12 @@ Future<FiestasModel?> fiestasPostGet(
 
   // print("$dateFilter");
   var headers = {
-    'Authorization': 'Bearer ${UserData.userToken}',
-    'X-localization': '${Constants.prefs?.getString("language")}'
+    "X-localization": "es",
+    "Authorization": "Bearer ${UserData.userToken}",
   };
+
+  print("Res $headers");
+  print("Res ${Urls.fiestasPostUrl}");
 
   var body = {
     // type == null ? "" :
@@ -55,9 +56,13 @@ Future<FiestasModel?> fiestasPostGet(
   };
 
   var res = await http.post(Uri.parse(Urls.fiestasPostUrl),
-      body: body, headers: headers);
-
-  // print(res.body);
+      headers: headers,
+      // headers: {
+      //   // 'Content-Type': 'application/json; charset=UTF-8',
+      //   'X-localization': 'es',
+      //   'Authorization': 'Bearer ${UserData.userToken}',
+      // },
+      body: body);
 
   if (res.statusCode == 401) {
     userSessionExpired(context);
@@ -381,7 +386,7 @@ Future notificatiListApi({int? notificationNum, int? pageCount}) async {
 Future<FliterListModel?> filterList() async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
-    'X-localization': '${Constants.prefs?.getString("language")}'
+    'X-localization': 'es'
   };
 
   var res = await http.get(
@@ -390,7 +395,7 @@ Future<FliterListModel?> filterList() async {
       ),
       headers: headers);
 
-  // print(res.body);
+  print("Here ${Constants.prefs?.getString("language")}");
 
   if (res.statusCode == 200) {
     return fliterListModelFromJson(res.body);
