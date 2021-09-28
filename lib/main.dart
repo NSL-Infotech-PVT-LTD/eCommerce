@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:funfy/apis/userdataM.dart';
-import 'package:funfy/ui/screens/auth/mobileNumber.dart';
 import 'package:funfy/ui/screens/fiestasMoreOrderDetails.dart';
 import 'package:funfy/ui/screens/home.dart';
 import 'package:funfy/ui/screens/splash.dart';
@@ -24,48 +23,43 @@ const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'This channel is used for important notifications.', // description
     importance: Importance.high,
     playSound: true);
-
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-
+  print('IN THE ON Background ===============>>>>>>>>>>> ${message.data}');
   Get.to(Home(
     pageIndexNum: 2,
   ));
 }
 
-String fcmToken = "iOS_token";
-// Future<String> getToken() async {
-//   return
-// }
+String fcmToken = "";
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   try {
-    await Firebase.initializeApp();
-    FirebaseMessaging.instance.getToken().then((value) {
-      if (value == null) {
-        value = "iOS_token";
-      }
-      fcmToken = value;
-    });
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-    await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(channel);
-
-    await FirebaseMessaging.instance
-        .setForegroundNotificationPresentationOptions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
+    fcmToken = (await FirebaseMessaging.instance.getToken())!;
+    UserData.deviceToken = fcmToken;
+    Constants.prefs?.setString("fToken", "$fcmToken");
   } catch (e) {
-    print("Check Exception ${e.reactive.value}");
+    fcmToken = "Demo-Token";
+    UserData.deviceToken = fcmToken;
+    Constants.prefs?.setString("fToken", "$fcmToken");
   }
+  print("====================> $fcmToken");
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(channel);
+
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
 
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
@@ -84,11 +78,25 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
-var initializationSettings;
-
 class _MyAppState extends State<MyApp> {
   var token;
   var initializationSettings;
+  initializePlatformSpecifics() {
+    // var initializationSettingsAndroid =
+    //     AndroidInitializationSett  ings('app_notf_icon');
+    var initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initializationSettingsIOS = IOSInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: false,
+      onDidReceiveLocalNotification: (id, title, body, payload) async {
+        // your call back to the UI
+      },
+    );
+    initializationSettings = InitializationSettings(
+        android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+  }
 
   Locale? _locale;
 
@@ -108,34 +116,41 @@ class _MyAppState extends State<MyApp> {
     super.didChangeDependencies();
   }
 
-  initializePlatformSpecifics() {
-    // var initializationSettingsAndroid =
-    //     AndroidInitializationSett  ings('app_notf_icon');
-    var initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-    var initializationSettingsIOS = IOSInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: false,
-      onDidReceiveLocalNotification: (id, title, body, payload) async {
-        // your call back to the UI
-      },
-    );
-    initializationSettings = InitializationSettings(
-        android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
-  }
+  // initializePlatformSpecifics() {
+  //   // var initializationSettingsAndroid =
+  //   //     AndroidInitializationSett  ings('app_notf_icon');
+  //   var initializationSettingsAndroid =
+  //       AndroidInitializationSettings('@mipmap/ic_launcher');
+  //   var initializationSettingsIOS = IOSInitializationSettings(
+  //     requestAlertPermission: true,
+  //     requestBadgePermission: true,
+  //     requestSoundPermission: false,
+  //     onDidReceiveLocalNotification: (id, title, body, payload) async {
+  //       // your call back to the UI
+  //     },
+  //   );
+  //   initializationSettings = InitializationSettings(
+  //       android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+  // }
 
-  getToken() async {
-    // var token = await firebaseMessaging.getToken();
+  // getToken() async {
+  //   // var token = await firebaseMessaging.getToken();
 
-    print('here is F token $fcmToken');
+  //   FirebaseMessaging.instance.getToken().then((value) {
+  //     if (value == null) {
+  //       fcmToken = "iOS_token";
+  //     }
+  //     fcmToken = value!;
+  //   });
 
-    // print('here is F token ${}');
+  //   print('here is F token $fcmToken');
 
-    UserData.deviceToken = "$fcmToken";
+  //   // print('here is F token ${}');
 
-    Constants.prefs?.setString("fToken", "$fcmToken");
-  }
+  //   UserData.deviceToken = "$fcmToken";
+
+  //   Constants.prefs?.setString("fToken", "$fcmToken");
+  // }
 
   getMe() async {
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
@@ -144,7 +159,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    getToken();
+    // getToken();
     initializePlatformSpecifics();
     getMe();
     getMeLocal();

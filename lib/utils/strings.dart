@@ -220,7 +220,8 @@ class Strings {
   static String androidPayMode = "";
 
   static String mapKey = "AIzaSyClclCEKHSt57KvUbgxcjZCwRqrbhpZq5M";
-  // dummy
+  // AIzaSyA2iadvyR7AR1DkKN2m_PalouJJpP35v8M
+  // dummy AIzaSyClclCEKHSt57KvUbgxcjZCwRqrbhpZq5M
   static String garyadams = "Gary F. Adams";
   static String madridspain = "Madrid, Spain";
   static const String appName = 'Payment Card Demo';
