@@ -346,38 +346,39 @@ class PlacePickerBState extends State<PlacePickerB> {
   setAddressFromLatLng(double ln, double lo) async {
     // if (widget.typeAE == 2) {
     // print("latlng==> $ln : $lo");
-    // if(ln != 0.0){
-    // List<locationG.Placemark> placemarks = await locationG.placemarkFromCoordinates(ln, lo);
-    // print("place marke $placemarks");
-    //
-    // var placemark = placemarks[0];
-    //
-    //
-    // String address =
-    //     "${placemark.street}, ${placemark.locality},${placemark.administrativeArea}, ${placemark.country}";
-    //
-    // setState(() {
-    //   if (widget.typeAE == 2) {
-    //     addressNameController.text = widget.address!.name.toString();
-    //
-    //     zipController.text = widget.address!.zip.toString();
-    //   } else {
-    //     print("Edit");
-    //   }
-    //
-    //   if (drage == true || widget.typeAE != 2) {
-    //     zipController.text = placemark.postalCode.toString();
-    //   }
-    //   street = placemark.street.toString();
-    //   city = placemark.locality.toString();
-    //   stateA = placemark.administrativeArea.toString();
-    //   // zip = placemark.postalCode.toString();
-    //   // zipController.text = "000000";
-    //   country = placemark.country.toString();
-    //
-    //   _pc.open();
-    //   addressController.text = address;
-    // });
+    if (ln != 0.0) {
+      List<locationG.Placemark> placemarks =
+          await locationG.placemarkFromCoordinates(ln, lo);
+      print("place marke $placemarks");
+
+      var placemark = placemarks[0];
+
+      String address =
+          "${placemark.street}, ${placemark.locality},${placemark.administrativeArea}, ${placemark.country}";
+
+      setState(() {
+        if (widget.typeAE == 2) {
+          addressNameController.text = widget.address!.name.toString();
+
+          zipController.text = widget.address!.zip.toString();
+        } else {
+          print("Edit");
+        }
+
+        if (drage == true || widget.typeAE != 2) {
+          zipController.text = placemark.postalCode.toString();
+        }
+        street = placemark.street.toString();
+        city = placemark.locality.toString();
+        stateA = placemark.administrativeArea.toString();
+        // zip = placemark.postalCode.toString();
+        // zipController.text = "000000";
+        country = placemark.country.toString();
+
+        _pc.open();
+        addressController.text = address;
+      });
+    }
     // }
   }
 
