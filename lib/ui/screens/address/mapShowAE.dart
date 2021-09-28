@@ -37,8 +37,9 @@ class PlacePickerB extends StatefulWidget {
 
   final int? typeAE;
 
-  final double? latE;
-  final double? lngE;
+  double? latE = 0.0;
+  double? lngE = 0.0;
+
   final Addressdata? address;
 
   /// Location to be displayed when screen is showed. If this is set or not null, the
@@ -157,13 +158,13 @@ class PlacePickerBState extends State<PlacePickerB> {
     super.initState();
     markers.add(Marker(
       position: widget.typeAE == 2
-          ? LatLng(widget.latE!, widget.lngE!)
+          ? LatLng(widget.latE ?? 0.0, widget.lngE ?? 0.0)
           : widget.displayLocation ?? LatLng(5.6037, 0.1870),
       markerId: MarkerId("selected-location"),
     ));
 
     if (widget.typeAE == 2) {
-      setAddressFromLatLng(widget.latE!, widget.lngE!);
+      setAddressFromLatLng(widget.latE ?? 0.0, widget.lngE ?? 0.0);
     }
   }
 
@@ -416,7 +417,7 @@ class PlacePickerBState extends State<PlacePickerB> {
             GoogleMap(
               initialCameraPosition: CameraPosition(
                 target: widget.typeAE == 2
-                    ? LatLng(widget.latE!, widget.lngE!)
+                    ? LatLng(widget.latE ?? 0.0, widget.lngE ?? 0.0)
                     : widget.displayLocation ?? LatLng(5.6037, 0.1870),
                 zoom: 15,
               ),
@@ -474,7 +475,6 @@ class PlacePickerBState extends State<PlacePickerB> {
                   topLeft: Radius.circular(size.width * 0.05),
                   topRight: Radius.circular(size.width * 0.05)),
               minHeight: size.height * 0.05,
-              maxHeight: size.height * 0.6,
               panel: Stack(
                 alignment: Alignment.center,
                 children: [
