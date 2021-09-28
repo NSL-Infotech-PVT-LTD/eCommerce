@@ -1133,7 +1133,6 @@ class _FiestasBookState extends State<FiestasBook> {
     var _currentMapPosition = LatLng(
         double.parse(fiestasDetailModel?.data?.clubDetail?.latitude ?? "0.0"),
         double.parse(fiestasDetailModel?.data?.clubDetail?.longitude ?? "0.0"));
-    print("CUrrent ==> ${fiestasDetailModel?.data?.clubDetail?.toJson()}");
     setState(() {
       _markers.add(Marker(
         markerId: MarkerId(fiestasDetailModel?.data?.clubId?.toString() ?? "1"),
