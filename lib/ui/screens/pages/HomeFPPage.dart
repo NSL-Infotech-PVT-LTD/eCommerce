@@ -432,15 +432,16 @@ class _HomeMPageState extends State<HomeMPage> {
       ),
     );
 
-    return SafeArea(
-      child: Scaffold(
+    return Scaffold(
+      backgroundColor: AppColors.blackBackground,
+
+      body: SafeArea(
           // floatingActionButton: FloatingActionButton(
           //     onPressed: () {
           //       print(Constants.prefs?.getString("language"));
           //     },
           //     child: Icon(Icons.add)),
-          backgroundColor: AppColors.blackBackground,
-          body: CustomScrollView(
+          child: CustomScrollView(
             controller: _fiestasScrollController,
             slivers: [
               SliverAppBar(
