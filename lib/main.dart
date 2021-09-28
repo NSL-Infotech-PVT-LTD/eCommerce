@@ -36,28 +36,37 @@ Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   ));
 }
 
-String fcmToken = " ";
+String fcmToken = "iOS_token";
 // Future<String> getToken() async {
 //   return
 // }
 
 Future<void> main() async {
-
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  try {
+    await Firebase.initializeApp();
+    FirebaseMessaging.instance.getToken().then((value) {
+      if (value == null) {
+        value = "iOS_token";
+      }
+      fcmToken = value;
+    });
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
 
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+  } catch (e) {
+    print("Check Exception ${e.reactive.value}");
+  }
 
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(channel);
-
-  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-    alert: true,
-    badge: true,
-    sound: true,
-  );
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
@@ -118,7 +127,6 @@ class _MyAppState extends State<MyApp> {
 
   getToken() async {
     // var token = await firebaseMessaging.getToken();
-    fcmToken= (await FirebaseMessaging.instance.getToken())!;
 
     print('here is F token $fcmToken');
 

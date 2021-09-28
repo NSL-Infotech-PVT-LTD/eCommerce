@@ -404,6 +404,7 @@ class _SigninState extends State<Signin> {
   // google sigin
 
   Future _googleSignin() async {
+
     setState(() {
       _loading = true;
     });
