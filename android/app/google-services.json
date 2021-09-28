@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "562684267034-8v649m4d0j3ekq20k0gnphq1hcuu79p6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.funfy.funfy",
+            "certificate_hash": "1cc19aa0934a4355d55b2aeadb5fde2229b3c850"
+          }
+        },
+        {
           "client_id": "562684267034-g6i1cr1iam545cvljquparmt8s6go1mk.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
