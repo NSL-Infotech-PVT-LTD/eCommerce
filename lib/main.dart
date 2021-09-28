@@ -46,11 +46,6 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  await FirebaseMessaging.instance.getToken().then((value) {
-    fcmToken = value!;
-    print('here is F tokensss $fcmToken');
-
-  });
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   await flutterLocalNotificationsPlugin
@@ -123,6 +118,7 @@ class _MyAppState extends State<MyApp> {
 
   getToken() async {
     // var token = await firebaseMessaging.getToken();
+    fcmToken= (await FirebaseMessaging.instance.getToken())!;
 
     print('here is F token $fcmToken');
 
