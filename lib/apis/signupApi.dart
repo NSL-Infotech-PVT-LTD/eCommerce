@@ -30,7 +30,13 @@ Future<Map> signApiCall(
     "device_type": devicetype
   };
 
-  var res = await http.post(Uri.parse(Urls.signUpUrl), body: body);
+  var headers = {
+    // 'Authorization': 'Bearer ${UserData.userToken}',
+    'X-localization': '${Constants.prefs?.getString("language")}'
+  };
+
+  var res =
+      await http.post(Uri.parse(Urls.signUpUrl), headers: headers, body: body);
 
   var response = json.decode(res.body);
   print(response);
@@ -87,6 +93,10 @@ Future<UpdateProfileDataModel?> updateProfile(
 
 Future<UpdateProfileDataModel?> updateUserApi(
     {File? file, String? auth, Map<String, String>? params}) async {
+  //       var headers = {
+  //   // 'Authorization': 'Bearer ${UserData.userToken}',
+  //   'X-localization': '${Constants.prefs?.getString("language")}'
+  // };
   print(auth);
   final postUri = Uri.parse(Urls.updateProfileUrl);
   UpdateProfileDataModel dataModel;

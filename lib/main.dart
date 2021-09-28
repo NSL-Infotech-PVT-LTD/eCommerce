@@ -160,6 +160,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     // getToken();
+
     initializePlatformSpecifics();
     getMe();
     getMeLocal();

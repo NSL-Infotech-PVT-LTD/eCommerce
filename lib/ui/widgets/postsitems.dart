@@ -167,7 +167,8 @@ Widget fiestasItem({context, Datum? postModeldata}) {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          Strings.startingfrom,
+                          "${getTranslated(context, 'startingfrom')}",
+                          //  Strings.startingfrom,
                           style: TextStyle(
                               fontSize: size.width * 0.025,
                               fontFamily: Fonts.dmSansMedium,

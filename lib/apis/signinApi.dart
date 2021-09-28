@@ -28,7 +28,6 @@ GoogleSignIn _googleSignIn = GoogleSignIn(
 
 Future<UserModel?> signinUser(
     {String? email, String? password, String? devicetype, context}) async {
-  String _token = "test";
   var body = {
     "email": email,
     "password": password,
@@ -36,7 +35,10 @@ Future<UserModel?> signinUser(
     "device_token": UserData.deviceToken
   };
 
-  var headers = {'X-localization': '${Constants.prefs?.getString("language")}'};
+  var headers = {
+    // 'Authorization': 'Bearer ${UserData.userToken}',
+    'X-localization': '${Constants.prefs?.getString("language")}'
+  };
 
   print("here is device type : $devicetype");
   var res =
@@ -69,7 +71,10 @@ Future facebookLogin(
     String? deviceToken,
     String? profileImage,
     phoneBody}) async {
-  var headers = {'X-localization': '${Constants.prefs?.getString("language")}'};
+  var headers = {
+    // 'Authorization': 'Bearer ${UserData.userToken}',
+    'X-localization': '${Constants.prefs?.getString("language")}'
+  };
   Map body = {};
 
   if (phoneBody == null) {
@@ -130,7 +135,10 @@ Future googleLogin(
     String? deviceToken,
     String? profileImage,
     Map? phoneBody}) async {
-  var headers = {'X-localization': '${Constants.prefs?.getString("language")}'};
+  var headers = {
+    // 'Authorization': 'Bearer ${UserData.userToken}',
+    'X-localization': '${Constants.prefs?.getString("language")}'
+  };
 
   Map body = {};
 
@@ -204,9 +212,11 @@ Future<dynamic> appleLogin(
     String? googleid,
     String? deviceType,
     String? profileImage,
-      Map? phoneBody
-    }) async {
-  var headers = {'X-localization': '${Constants.prefs?.getString("language")}'};
+    Map? phoneBody}) async {
+  var headers = {
+    // 'Authorization': 'Bearer ${UserData.userToken}',
+    'X-localization': '${Constants.prefs?.getString("language")}'
+  };
   Map body = {};
 
   if (phoneBody == null) {

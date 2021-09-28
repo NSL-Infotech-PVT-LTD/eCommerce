@@ -322,8 +322,8 @@ Future<FiestasDetailModel?> getFiestasbyId({String? fiestasID}) async {
 Future storePaymentCard({String? cardToken}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
+    'X-localization': '${Constants.prefs?.getString("language")}'
   };
-
   var body = {"token": "$cardToken"};
 
   var res = await http.post(Uri.parse(Urls.addPaymentCardUrl),
@@ -366,6 +366,7 @@ Future<CardListModel?> getCardList({String? cardToken}) async {
 Future deleteCard({String? cardIds}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
+    'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   var body = {"card_id": "$cardIds"};
@@ -429,6 +430,7 @@ Future<bool?> fiestaRatingApi(
     {String? orderId, String? fiestasId, int? rating}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
+    'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   var body = {
@@ -459,8 +461,8 @@ Future<bool?> fiestaRatingApi(
 Future<bool?> prefiestaRatingApi({String? orderId, int? rating}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
+    'X-localization': '${Constants.prefs?.getString("language")}'
   };
-
   var body = {"order_id": orderId, "rate": "$rating", "review": "Rating"};
 
   print("here is $body");

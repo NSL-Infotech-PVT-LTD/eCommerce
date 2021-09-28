@@ -20,6 +20,7 @@ Future<bool?> addAddressApi(
     String? longitude}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
+    'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   Map body = {
@@ -60,6 +61,7 @@ Future<bool?> addAddressApi(
 Future<AddressListModel?> getAddressList() async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
+    'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   var res = await http.get(
@@ -88,6 +90,7 @@ Future<bool?> updateaddAddressApi(
     String? longitude}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
+    'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   Map body = {
@@ -125,6 +128,7 @@ Future<bool?> deleteAddress({
 }) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
+    'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   Map body = {

@@ -59,6 +59,11 @@ class UserData {
     }
   ];
 
+  static Map headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+    'X-localization': '${Constants.prefs?.getString("language")}'
+  };
+
   //test
 
   static ScrollController? sControlller;

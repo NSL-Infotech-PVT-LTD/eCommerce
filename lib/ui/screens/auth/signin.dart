@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:funfy/apis/signinApi.dart';
 import 'package:funfy/apis/userdataM.dart';
@@ -404,7 +405,6 @@ class _SigninState extends State<Signin> {
   // google sigin
 
   Future _googleSignin() async {
-
     setState(() {
       _loading = true;
     });
@@ -433,7 +433,6 @@ class _SigninState extends State<Signin> {
                 deviceToken: acc?.id ?? "",
                 profileImage: acc?.photoUrl ?? "")
             .then((res) {
-
           setState(() {
             _loading = false;
           });
@@ -476,6 +475,14 @@ class _SigninState extends State<Signin> {
     var size = MediaQuery.of(context).size;
     return SafeArea(
         child: Scaffold(
+            // floatingActionButton: FloatingActionButton(
+            //   onPressed: () {
+            //     FirebaseMessaging.instance.getToken().then((value) {
+            //       print("Fcm Token is Here - $value ");
+            //     });
+            //   },
+            //   child: Icon(Icons.add),
+            // ),
             resizeToAvoidBottomInset: true,
             key: _scaffoldKey,
             body: Stack(children: [
