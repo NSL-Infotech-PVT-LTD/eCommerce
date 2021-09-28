@@ -1,12 +1,18 @@
 import 'dart:convert';
 
 import 'package:funfy/apis/userdataM.dart';
+import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/urls.dart';
 import 'package:http/http.dart' as http;
 
 class Configurations {
   static termsofservice() async {
-    var res = await http.get(Uri.parse(Urls.termsandconditionsUrl));
+    var headers = {
+      'Authorization': 'Bearer ${UserData.userToken}',
+      'X-localization': '${Constants.prefs?.getString("language")}'
+    };
+    var res =
+        await http.get(Uri.parse(Urls.termsandconditionsUrl), headers: headers);
 
     var response = json.decode(res.body);
 

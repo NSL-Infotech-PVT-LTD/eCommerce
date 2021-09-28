@@ -31,7 +31,7 @@ Future<FiestasModel?> fiestasPostGet(
   // print("$dateFilter");
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
-    //  'X-localization': '${Constants.prefs?.getString("language")}'
+    'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   var body = {
@@ -80,7 +80,7 @@ Future<PrefiestasModel?> prefiestasPostGet(
     {context, String? pageCount, String? limitCount}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
-    //  'X-localization': '${Constants.prefs?.getString("language")}'
+    'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   var body = {"limit": "${limitCount ?? ''}", "page": "${pageCount ?? ''}"};
@@ -107,7 +107,7 @@ Future<PrefiestasDetailModel?> prefiestasDetailApi({
 }) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
-    //  'X-localization': '${Constants.prefs?.getString("language")}'
+    'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   Map body = {"id": id, "categories": "0"};
@@ -127,7 +127,7 @@ Future<PrefiestasAlMxExModel?> prefiestasAlMxExApi(
     {String? id, String? categoriesName}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
-    //  'X-localization': '${Constants.prefs?.getString("language")}'
+    'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   Map body = {"id": id, "categories": categoriesName};
@@ -150,6 +150,7 @@ Future fiestasAddfavouriteApi({
 }) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
+    'X-localization': '${Constants.prefs?.getString("language")}'
   };
   Map body = {"fiesta_id": id};
 
@@ -170,6 +171,7 @@ Future prefiestasAddfavouriteApi({
 }) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
+    'X-localization': '${Constants.prefs?.getString("language")}'
   };
   Map body = {"pre_fiesta_id": id};
 
@@ -188,7 +190,7 @@ Future prefiestasAddfavouriteApi({
 Future<FiestasFavouriteModel?> fiestasFavouriteListApi({int? pageCount}) async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
-    //  'X-localization': '${Constants.prefs?.getString("language")}'
+    'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   var body = {"limit": "3", "page": "${pageCount ?? ''}", "sort_by": "desc"};
@@ -215,7 +217,7 @@ Future<FiestasFavouriteModel?> fiestasFavouriteListApi({int? pageCount}) async {
 Future<PrefiestasFavouriteModel?> prefiestasFavouriteListApi() async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
-    //  'X-localization': '${Constants.prefs?.getString("language")}'
+    'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   var res = await http.post(Uri.parse(Urls.preFiestasfavoriteListUrl),
@@ -242,7 +244,7 @@ Future<PrefiestasFavouriteModel?> prefiestasFavouriteListApi() async {
 Future<String?> helpApi() async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
-    //  'X-localization': '${Constants.prefs?.getString("language")}'
+    'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   var res = await http.get(
@@ -265,7 +267,7 @@ Future<String?> helpApi() async {
 Future<String?> privacypol() async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
-    //  'X-localization': '${Constants.prefs?.getString("language")}'
+    'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   var res = await http.get(
@@ -289,7 +291,7 @@ Future<String?> privacypol() async {
 Future<String?> aboutApi() async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
-    // 'X-localization': '${Constants.prefs?.getString("language")}'
+    'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   var res = await http.get(
@@ -315,6 +317,7 @@ Future<bool?> notificationOffApi({int? notificationNum}) async {
   // print("notiBoolNum $notificationNum");
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
+    'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   var body = {"is_notify": "$notificationNum"};
