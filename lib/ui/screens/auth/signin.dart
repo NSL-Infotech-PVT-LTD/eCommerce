@@ -419,10 +419,6 @@ class _SigninState extends State<Signin> {
         _loading = false;
       });
 
-      setState(() {
-        _loading = false;
-      });
-
       try {
         setState(() {
           _loading = true;
@@ -436,6 +432,10 @@ class _SigninState extends State<Signin> {
                 deviceToken: acc?.id ?? "",
                 profileImage: acc?.photoUrl ?? "")
             .then((res) {
+
+          setState(() {
+            _loading = false;
+          });
           if (res?.code == 200 || res?.code == 201) {
             print("userToken google - ${res?.data?.token}");
             saveDataInshareP(
