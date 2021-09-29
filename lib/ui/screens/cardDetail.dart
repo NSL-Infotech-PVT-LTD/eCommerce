@@ -71,6 +71,7 @@ class _CartDetailState extends State<CartDetail> {
 
   // card detail
   CreditCard? testCard;
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   _handleRadioValueChange(int? value) {
     setState(() {
@@ -148,7 +149,16 @@ class _CartDetailState extends State<CartDetail> {
 
       addCard(cardToken: token.tokenId);
     }).catchError((setError) {
-      print("Here is Error $setError");
+      setState(() {
+        addCardLoading = false;
+      });
+      _scaffoldKey.currentState?.showSnackBar(SnackBar(
+        content: Text('${(setError as PlatformException).message}'),
+        backgroundColor: Colors.red.withOpacity(.5),
+        duration: Duration(seconds: 5),
+      ));
+
+      print("Here is Error ${(setError as PlatformException).message}");
     });
   }
 
@@ -385,6 +395,7 @@ class _CartDetailState extends State<CartDetail> {
         child: WillPopScope(
           onWillPop: backPress,
           child: Scaffold(
+            key: _scaffoldKey,
             floatingActionButton: cardFormShow == false
                 ? FloatingActionButton(
                     onPressed: () {

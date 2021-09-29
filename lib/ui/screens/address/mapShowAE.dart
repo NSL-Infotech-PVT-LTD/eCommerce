@@ -415,51 +415,51 @@ class PlacePickerBState extends State<PlacePickerB> {
             //   child:
 
 
-            // GoogleMap(
-            //   initialCameraPosition: CameraPosition(
-            //     target: widget.typeAE == 2
-            //         ? LatLng(widget.latE ?? 0.0, widget.lngE ?? 0.0)
-            //         : widget.displayLocation ?? LatLng(5.6037, 0.1870),
-            //     zoom: 15,
-            //   ),
-            //   myLocationButtonEnabled: true,
-            //   myLocationEnabled: true,
-            //   onMapCreated: onMapCreated,
-            //   onCameraIdle: () async {
-            //     setAddressFromLatLng(latL, lngL);
-            //     // clearOverlay();
-            //     // moveToLocation(LatLng(latL, lngL));
-            //     // setState(() {
-            //     //   moovingTrue = false;
-            //     // });
-            //   },
-            //   onCameraMove: (v) {
-            //     if (drage == false) {
-            //       setState(() {
-            //         drage = true;
-            //       });
-            //     }
-            //     // setState(() {
-            //     //   moovingTrue = true;
-            //     // });
-            //     // print("address : ${v.target.latitude}");
-            //     latL = v.target.latitude;
-            //     lngL = v.target.longitude;
-            //
-            //     _pc.close();
-            //
-            //     // setAddressFromLatLng(v.target.latitude, v.target.longitude);
-            //   },
-            //   onTap: (latLng) async {
-            //     latL = latLng.latitude;
-            //     lngL = latLng.longitude;
-            //
-            //     clearOverlay();
-            //     moveToLocation(latLng);
-            //     setAddressFromLatLng(latLng.latitude, latLng.longitude);
-            //   },
-            //   markers: markers,
-            // ),
+            GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: widget.typeAE == 2
+                    ? LatLng(widget.latE ?? 0.0, widget.lngE ?? 0.0)
+                    : widget.displayLocation ?? LatLng(5.6037, 0.1870),
+                zoom: 15,
+              ),
+              myLocationButtonEnabled: true,
+              myLocationEnabled: true,
+              onMapCreated: onMapCreated,
+              onCameraIdle: () async {
+                setAddressFromLatLng(latL, lngL);
+                // clearOverlay();
+                // moveToLocation(LatLng(latL, lngL));
+                // setState(() {
+                //   moovingTrue = false;
+                // });
+              },
+              onCameraMove: (v) {
+                if (drage == false) {
+                  setState(() {
+                    drage = true;
+                  });
+                }
+                // setState(() {
+                //   moovingTrue = true;
+                // });
+                // print("address : ${v.target.latitude}");
+                latL = v.target.latitude;
+                lngL = v.target.longitude;
+
+                _pc.close();
+
+                // setAddressFromLatLng(v.target.latitude, v.target.longitude);
+              },
+              onTap: (latLng) async {
+                latL = latLng.latitude;
+                lngL = latLng.longitude;
+
+                clearOverlay();
+                moveToLocation(latLng);
+                setAddressFromLatLng(latLng.latitude, latLng.longitude);
+              },
+              markers: markers,
+            ),
 
             moovingTrue
                 ? Center(
