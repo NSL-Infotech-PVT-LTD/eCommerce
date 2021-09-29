@@ -59,7 +59,7 @@ dependencies:
   stripe_payment: ^1.1.4
   flutter_swipe_button: ^1.1.0
   flash: ^2.0.1
-  google_maps_flutter: ^2.0.1
+  google_maps_flutter: ^2.0.6
   google_maps_place_picker: ^2.0.0-nullsafety.3
   place_picker: ^0.9.19-nullsafety
   sliding_up_panel: ^2.0.0+1
