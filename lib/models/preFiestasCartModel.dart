@@ -62,6 +62,7 @@ class Cart {
     this.price,
     this.shippingCharge,
     this.transferCharge,
+    this.minOrderCharge,
     this.totalPrice,
     this.quantityInCart,
     this.cartItems,
@@ -72,6 +73,7 @@ class Cart {
   String? price;
   String? shippingCharge;
   String? transferCharge;
+  String? minOrderCharge;
   String? totalPrice;
   int? quantityInCart;
   List<CartItem>? cartItems;
@@ -82,6 +84,7 @@ class Cart {
         price: json["price"],
         shippingCharge: json["shipping_charge"],
         transferCharge: json["transfer_charge"],
+        minOrderCharge: json["min_order_charge"],
         totalPrice: json["total_price"],
         quantityInCart: json["quantity_in_cart"],
         cartItems: List<CartItem>.from(
@@ -94,6 +97,7 @@ class Cart {
         "price": price,
         "shipping_charge": shippingCharge,
         "transfer_charge": transferCharge,
+        "min_order_charge": minOrderCharge,
         "total_price": totalPrice,
         "quantity_in_cart": quantityInCart,
         "cart_items": List<dynamic>.from(cartItems!.map((x) => x.toJson())),
@@ -114,7 +118,7 @@ class CartItem {
   int? cartId;
   int? preFiestaId;
   int? quantity;
-  int? price;
+  String? price;
   ParentDetail? preFiesta;
 
   factory CartItem.fromJson(Map<String, dynamic> json) => CartItem(
@@ -140,6 +144,7 @@ class ParentDetail {
   ParentDetail({
     this.id,
     this.name,
+    this.nameEs,
     this.parentId,
     this.image,
     this.price,
@@ -155,6 +160,7 @@ class ParentDetail {
 
   int? id;
   String? name;
+  dynamic nameEs;
   int? parentId;
   String? image;
   String? price;
@@ -170,6 +176,7 @@ class ParentDetail {
   factory ParentDetail.fromJson(Map<String, dynamic> json) => ParentDetail(
         id: json["id"],
         name: json["name"],
+        nameEs: json["name_es"],
         parentId: json["parent_id"],
         image: json["image"],
         price: json["price"],
@@ -187,6 +194,7 @@ class ParentDetail {
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
+        "name_es": nameEs,
         "parent_id": parentId,
         "image": image,
         "price": price,
