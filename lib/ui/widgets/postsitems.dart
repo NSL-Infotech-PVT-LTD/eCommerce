@@ -145,7 +145,8 @@ Widget fiestasItem({context, Datum? postModeldata}) {
                           height: size.height * 0.004,
                         ),
                         Text(
-                          "${postModeldata?.distanceMiles}",
+                          "${postModeldata?.distanceMiles}" +
+                              " ${getTranslated(context, 'milesAway')}",
                           style: TextStyle(
                               fontSize: size.width * 0.03,
                               fontFamily: Fonts.dmSansMedium,

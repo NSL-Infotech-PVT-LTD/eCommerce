@@ -152,7 +152,7 @@ class Datum {
   var leftVipTicket;
   bool? isFavourite;
   String? distanceKm;
-  String? distanceMiles;
+  var distanceMiles;
   ClubDetail? clubDetail;
   List<FiestaImage>? fiestaImages;
 

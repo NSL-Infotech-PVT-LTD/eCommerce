@@ -16,6 +16,7 @@ import 'package:funfy/utils/Constants.dart';
 import 'package:funfy/utils/strings.dart';
 import 'package:funfy/utils/urls.dart';
 import 'package:http/http.dart' as http;
+import 'dart:developer' as dev;
 
 Future<FiestasModel?> fiestasPostGet(
     {context,
@@ -27,13 +28,14 @@ Future<FiestasModel?> fiestasPostGet(
   // print("here is date filter");
 
   // print("$dateFilter");
+
   var headers = {
-    "X-localization": "es",
+    "X-localization": '${Constants.prefs?.getString("language")}',
     "Authorization": "Bearer ${UserData.userToken}",
   };
 
-  print("Res $headers");
-  print("Res ${Urls.fiestasPostUrl}");
+  // print("Res $headers");
+  // print("Res ${Urls.fiestasPostUrl}");
 
   var body = {
     // type == null ? "" :
@@ -64,6 +66,8 @@ Future<FiestasModel?> fiestasPostGet(
       // },
       body: body);
 
+  // print("f ${res.body}");
+
   if (res.statusCode == 401) {
     userSessionExpired(context);
   }
@@ -93,6 +97,8 @@ Future<PrefiestasModel?> prefiestasPostGet(
       body: body, headers: headers);
 
   // print(res.body);
+
+  // dev.log(res.body);
 
   if (res.statusCode == 401) {
     userSessionExpired(context);

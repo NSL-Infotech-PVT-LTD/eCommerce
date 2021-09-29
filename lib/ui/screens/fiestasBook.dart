@@ -242,6 +242,12 @@ class _FiestasBookState extends State<FiestasBook> {
       UserData.tiketList[0]["max"] =
           int.parse('${fiestasDetailModel?.data?.leftNormalTicket}');
 
+      // data
+
+      UserData.tiketList[0]["name"] = "${getTranslated(context, 'ticket')}";
+      UserData.tiketList[0]["description"] =
+          "${getTranslated(context, 'ticketDescription')}";
+
       UserData.tiketList[0]["tickets"] =
           int.parse('${fiestasDetailModel?.data?.totalNormalTickets}');
 
@@ -254,6 +260,12 @@ class _FiestasBookState extends State<FiestasBook> {
       UserData.tiketList[1]["tickets"] =
           int.parse('${fiestasDetailModel?.data?.totalStandardTickets}');
 
+      // data
+
+      UserData.tiketList[1]["name"] = "${getTranslated(context, 'standard')}";
+      UserData.tiketList[1]["description"] =
+          "${getTranslated(context, 'standardDescription')}";
+
       UserData.tiketList[2]["price"] =
           double.parse('${fiestasDetailModel?.data?.ticketPriceVip}');
 
@@ -262,6 +274,11 @@ class _FiestasBookState extends State<FiestasBook> {
 
       UserData.tiketList[2]["tickets"] =
           int.parse('${fiestasDetailModel?.data?.totalVipTickets}');
+      // data
+
+      UserData.tiketList[1]["name"] = "${getTranslated(context, 'vipTable')}";
+      UserData.tiketList[1]["description"] =
+          "${getTranslated(context, 'vipTableDescription')}";
     });
   }
 
