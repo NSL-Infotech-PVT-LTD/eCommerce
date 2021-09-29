@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:funfy/components/dialogs.dart';
@@ -62,15 +63,35 @@ Widget fiestasItem({context, Datum? postModeldata}) {
           margin: EdgeInsets.only(top: size.width * 0.04),
           width: size.width,
           height: size.height * 0.28,
-          decoration: BoxDecoration(
-              image: postModeldata?.fiestaImages?.length != 0
-                  ? DecorationImage(
-                      image: NetworkImage(
-                          '${postModeldata?.fiestaImages![0].image}'),
-                      fit: BoxFit.cover)
-                  : DecorationImage(
-                      image: AssetImage("assets/AuthenticationIcon/BG_2.png"),
-                      fit: BoxFit.cover)),
+          child: CachedNetworkImage(
+            imageUrl: postModeldata?.fiestaImages?.length != 0
+                ? '${postModeldata?.fiestaImages![0].image}'
+                : '',
+            fit: BoxFit.cover,
+            imageBuilder: (context, imageProvider) => Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: imageProvider,
+                  fit: BoxFit.cover,
+                  // colorFilter:
+                  //     ColorFilter.mode(Colors.red, BlendMode.colorBurn)
+                ),
+              ),
+            ),
+            errorWidget: (context, url, error) => Container(
+                margin: EdgeInsets.only(top: size.width * 0.04),
+                width: size.width,
+                height: size.height * 0.28,
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage("assets/AuthenticationIcon/BG_2.png"),
+                        fit: BoxFit.cover))),
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(top: size.width * 0.04),
+          width: size.width,
+          height: size.height * 0.28,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -404,6 +425,35 @@ Widget preFiestasItem({context, int? index, ProductInfo? prefiestasdata}) {
 
                 // right image
 
+                // Container(
+                //   margin: EdgeInsets.only(right: size.width * 0.02),
+                //   padding: EdgeInsets.only(
+                //       top: size.height * 0.02, bottom: size.height * 0.013),
+                //   width: size.width * 0.25,
+                //   child: CachedNetworkImage(
+                //     imageUrl: Strings.catImageUrl + "l",
+                //     fit: BoxFit.cover,
+                //     imageBuilder: (context, imageProvider) => Container(
+                //       decoration: BoxDecoration(
+                //         image: DecorationImage(
+                //           image: imageProvider,
+                //           fit: BoxFit.cover,
+                //           // colorFilter:
+                //           //     ColorFilter.mode(Colors.red, BlendMode.colorBurn)
+                //         ),
+                //       ),
+                //     ),
+                //     errorWidget: (context, url, error) => Container(
+                //         width: size.width,
+                //         // height: size.height * 0.28,
+                //         decoration: BoxDecoration(
+                //             image: DecorationImage(
+                //                 image: AssetImage(
+                //                     "assets/AuthenticationIcon/BG_2.png"),
+                //                 fit: BoxFit.cover))),
+                //   ),
+                // ),
+
                 Container(
                   margin: EdgeInsets.only(right: size.width * 0.02),
                   padding: EdgeInsets.only(
@@ -414,14 +464,6 @@ Widget preFiestasItem({context, int? index, ProductInfo? prefiestasdata}) {
                     "${index == 0 ? 'assets/pngicons/pre1.png' : index == 1 ? 'assets/pngicons/pre2.png' : 'assets/pngicons/pre3.png'}",
                     fit: BoxFit.cover,
                   ),
-
-                  // Image.network(
-                  //   // Images.beerNetwork
-                  //   prefiestasdata?.image != "" && prefiestasdata?.image != null
-                  //       ? "${prefiestasdata?.image}"
-                  //       : Images.beerNetwork,
-                  //   fit: BoxFit.cover,
-                  // ),
                 )
               ],
             ),

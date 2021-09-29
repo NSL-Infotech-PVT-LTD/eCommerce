@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:funfy/apis/bookingApi.dart';
@@ -510,7 +511,7 @@ class _CartpageState extends State<Cartpage> {
                   SizedBox(
                     width: size.width * 0.03,
                   ),
-                  GestureDetector(
+                  InkWell(
                     onTap: () {
                       if (Constants.prefs?.getString("addres") != null &&
                           Constants.prefs?.getString("addres") != '' &&
@@ -540,19 +541,27 @@ class _CartpageState extends State<Cartpage> {
                             });
                       }
                     },
-                    child: Text(
-                      "${getTranslated(context, "change")}",
-                      //Strings.change,
-                      style: TextStyle(
-                          color: AppColors.siginbackgrond,
-                          decoration: TextDecoration.underline,
-                          fontFamily: Fonts.dmSansBold,
-                          fontSize: size.width * 0.03),
+                    child: Container(
+                      padding: EdgeInsets.only(
+                        top: size.height * 0.013,
+                        bottom: size.height * 0.013,
+                        // right: size.width * 0.012,
+                        // left: size.width * 0.02
+                      ),
+                      child: Text(
+                        "${getTranslated(context, "change")}",
+                        //Strings.change,
+                        style: TextStyle(
+                            color: AppColors.siginbackgrond,
+                            decoration: TextDecoration.underline,
+                            fontFamily: Fonts.dmSansBold,
+                            fontSize: size.width * 0.03),
+                      ),
                     ),
                   ),
                 ],
               ),
-              GestureDetector(
+              InkWell(
                 // String? ncountNunber =  cart!.containsKey(index)
                 //                       ? "${cart[index]["preticketCount"]}"
                 //                       : count.toString();
@@ -565,10 +574,18 @@ class _CartpageState extends State<Cartpage> {
                       id: pid,
                       type: type);
                 },
-                child: Icon(
-                  Icons.close,
-                  size: size.width * 0.06,
-                  color: AppColors.tagBorder,
+                child: Container(
+                  // color: Colors.blue,
+                  padding: EdgeInsets.only(
+                      top: size.height * 0.013,
+                      bottom: size.height * 0.013,
+                      right: size.width * 0.02,
+                      left: size.width * 0.02),
+                  child: Icon(
+                    Icons.close,
+                    size: size.width * 0.06,
+                    color: AppColors.tagBorder,
+                  ),
                 ),
               )
             ],
@@ -615,23 +632,30 @@ class _CartpageState extends State<Cartpage> {
                                   itemType: itemTypes);
                             },
                             child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.transparent,
-                                border: Border.all(color: AppColors.white),
-                                borderRadius: BorderRadius.all(
-                                    Radius.circular(size.width * 0.01)),
-                              ),
-                              height: SizeConfig.screenHeight * 0.035,
-                              width: SizeConfig.screenWidth * 0.075,
-                              child: Center(
-                                  child: Text(
-                                "-",
-                                style: TextStyle(
-                                  color: AppColors.white,
-                                  fontFamily: "DM Sans Medium",
-                                  fontSize: size.width * 0.04,
+                              padding: EdgeInsets.only(
+                                  top: size.height * 0.013,
+                                  bottom: size.height * 0.013,
+                                  right: size.width * 0.012,
+                                  left: size.width * 0.02),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.transparent,
+                                  border: Border.all(color: AppColors.white),
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(size.width * 0.01)),
                                 ),
-                              )),
+                                height: SizeConfig.screenHeight * 0.035,
+                                width: SizeConfig.screenWidth * 0.075,
+                                child: Center(
+                                    child: Text(
+                                  "-",
+                                  style: TextStyle(
+                                    color: AppColors.white,
+                                    fontFamily: "DM Sans Medium",
+                                    fontSize: size.width * 0.04,
+                                  ),
+                                )),
+                              ),
                             ),
                           ),
                           SizedBox(
@@ -661,21 +685,29 @@ class _CartpageState extends State<Cartpage> {
                                   cart: cart);
                             },
                             child: Container(
-                              decoration: BoxDecoration(
-                                color: AppColors.skin,
-                                borderRadius: BorderRadius.all(
-                                    Radius.circular(size.width * 0.01)),
+                              // color: Colors.blue,
+                              padding: EdgeInsets.only(
+                                  top: size.height * 0.013,
+                                  bottom: size.height * 0.013,
+                                  right: size.width * 0.02,
+                                  left: size.width * 0.012),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: AppColors.skin,
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(size.width * 0.01)),
+                                ),
+                                height: SizeConfig.screenHeight * 0.035,
+                                width: SizeConfig.screenWidth * 0.075,
+                                child: Center(
+                                    child: Text(
+                                  "+",
+                                  style: TextStyle(
+                                      fontFamily: "DM Sans Medium",
+                                      fontSize: size.width * 0.04,
+                                      color: AppColors.homeBackground),
+                                )),
                               ),
-                              height: SizeConfig.screenHeight * 0.035,
-                              width: SizeConfig.screenWidth * 0.075,
-                              child: Center(
-                                  child: Text(
-                                "+",
-                                style: TextStyle(
-                                    fontFamily: "DM Sans Medium",
-                                    fontSize: size.width * 0.04,
-                                    color: AppColors.homeBackground),
-                              )),
                             ),
                           ),
                         ],
@@ -927,14 +959,53 @@ class _CartpageState extends State<Cartpage> {
                                                         ),
                                                         Spacer(),
                                                         Container(
-                                                            height:
-                                                                size.height *
-                                                                    0.09,
-                                                            width: size.width *
-                                                                0.2,
-                                                            child: Image.network(
-                                                                "${UserData.myCartModel?.data?.parentDetail?.image}"))
+                                                          height: size.height *
+                                                              0.09,
+                                                          width:
+                                                              size.width * 0.2,
+                                                          child:
+                                                              CachedNetworkImage(
+                                                            imageUrl:
+                                                                "${UserData.myCartModel?.data?.parentDetail?.image}",
+                                                            fit: BoxFit.cover,
+                                                            imageBuilder: (context,
+                                                                    imageProvider) =>
+                                                                Container(
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                image:
+                                                                    DecorationImage(
+                                                                  image:
+                                                                      imageProvider,
+                                                                  // fit: BoxFit.cover,
+                                                                  // colorFilter:
+                                                                  //     ColorFilter.mode(Colors.red, BlendMode.colorBurn)
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            errorWidget: (context,
+                                                                    url,
+                                                                    error) =>
+                                                                Container(
+                                                                    // width: size.width,
+                                                                    height:
+                                                                        size.height *
+                                                                            0.1,
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                            image:
+                                                                                DecorationImage(
+                                                                      image: AssetImage(
+                                                                          'assets/pngicons/pre1.png'),
+                                                                      // fit: BoxFit.cover
+                                                                    ))),
+                                                          ),
+                                                        )
                                                       ],
+                                                    ),
+                                                    SizedBox(
+                                                      height:
+                                                          size.height * 0.03,
                                                     ),
                                                     Column(
                                                       children: [
@@ -948,7 +1019,7 @@ class _CartpageState extends State<Cartpage> {
                                                               SizedBox(
                                                                 height:
                                                                     size.height *
-                                                                        0.03,
+                                                                        0.015,
                                                               ),
                                                               listItem(
                                                                   index: i,
@@ -1474,13 +1545,19 @@ Widget ordernow(context) {
                   SizedBox(
                     height: size.height * 0.025,
                   ),
-                  Text(
-                    "${getTranslated(context, "nothingshowincartrightnow")}",
-                    //  Strings.nothingshowincartrightnow,
-                    style: TextStyle(
-                        fontFamily: Fonts.dmSansBold,
-                        color: AppColors.white,
-                        fontSize: size.width * 0.04),
+                  Container(
+                    alignment: Alignment.center,
+                    width: size.width * 0.8,
+                    child: Text(
+                      "${getTranslated(context, "nothingshowincartrightnow")}",
+                      //  Strings.nothingshowincartrightnow,
+                      // overflow: TextOverflow.visible,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontFamily: Fonts.dmSansBold,
+                          color: AppColors.white,
+                          fontSize: size.width * 0.04),
+                    ),
                   ),
                 ],
               ),

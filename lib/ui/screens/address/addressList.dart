@@ -131,339 +131,342 @@ class _AddressListState extends State<AddressList> {
 
     return SafeArea(
         child: WillPopScope(
-          onWillPop: () async {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => Home(
+      onWillPop: () async {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => Home(
                   pageIndexNum: 0,
                 )));
 
-            return false;
-          },
-          child: Scaffold(
-              backgroundColor: AppColors.blackBackground,
-              body: Column(
-                children: [
-                  // appBar
-                  Container(
-                    width: size.width,
-                    height: size.height * 0.08,
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage(Images.homeTopBannerPng),
-                            fit: BoxFit.cover)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                            onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => Home(
+        return false;
+      },
+      child: Scaffold(
+          backgroundColor: AppColors.blackBackground,
+          body: Column(
+            children: [
+              // appBar
+              Container(
+                width: size.width,
+                height: size.height * 0.08,
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage(Images.homeTopBannerPng),
+                        fit: BoxFit.cover)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => Home(
                                     pageIndexNum: 0,
                                   )));
-                            },
-                            icon: Icon(
-                              Icons.arrow_back,
-                              color: AppColors.white,
-                            )),
-                        Text(
-                          "${getTranslated(context, 'chooseaplace')}",
-                          style: TextStyle(
-                              fontFamily: Fonts.dmSansBold,
-                              color: AppColors.white,
-                              fontSize: size.width * 0.05),
-                        ),
-                        addressListModel?.data?.length == 0 ||
-                            addressListModel == null
-                            ? SizedBox(
-                          width: size.width * 0.13,
-                        )
-                            : _edit == false
-                            ? InkWell(
-                          onTap: () {
-                            setState(() {
-                              _edit = true;
-                            });
-                          },
-                          child: Row(
-                            children: [
-                              roundedBoxBorder(
-                                  context: context,
-                                  radius: size.width * 0.025,
-                                  backgroundColor: Colors.transparent,
-                                  borderColor: AppColors.white,
-                                  borderSize: size.width * 0.004,
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: size.width * 0.008,
-                                        horizontal: size.height * 0.012),
-                                    child: Text(
-                                      "${getTranslated(context, 'edit')}",
-                                      style: TextStyle(
-                                          fontFamily: Fonts.dmSansBold,
-                                          color: AppColors.white,
-                                          fontSize: size.width * 0.04),
-                                    ),
-                                  )),
-                              SizedBox(
-                                width: size.width * 0.04,
-                              )
-                            ],
-                          ),
-                        )
-                            : SizedBox(
-                          width: size.width * 0.17,
-                          child: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  _edit = false;
-                                });
-                              },
-                              icon: Icon(
-                                Icons.check,
-                                color: AppColors.white,
-                              )),
-                        )
-                      ],
-                    ),
-                  ),
-
-                  SizedBox(
-                    height: size.height * 0.025,
-                  ),
-
-                  // recent
-
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    margin: EdgeInsets.symmetric(horizontal: size.width * 0.05),
-                    child: Text(
-                      "${getTranslated(context, 'recent')?.toUpperCase()}",
+                        },
+                        icon: Icon(
+                          Icons.arrow_back,
+                          color: AppColors.white,
+                        )),
+                    Text(
+                      "${getTranslated(context, 'chooseaplace')}",
                       style: TextStyle(
-                          fontFamily: Fonts.dmSansMedium,
-                          color: AppColors.descriptionfirst,
-                          fontSize: size.width * 0.04),
+                          fontFamily: Fonts.dmSansBold,
+                          color: AppColors.white,
+                          fontSize: size.width * 0.05),
                     ),
-                  ),
-                  SizedBox(
-                    height: size.height * 0.025,
-                  ),
+                    addressListModel?.data?.length == 0 ||
+                            addressListModel == null
+                        ? SizedBox(
+                            width: size.width * 0.13,
+                          )
+                        : _edit == false
+                            ? InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    _edit = true;
+                                  });
+                                },
+                                child: Row(
+                                  children: [
+                                    roundedBoxBorder(
+                                        context: context,
+                                        radius: size.width * 0.025,
+                                        backgroundColor: Colors.transparent,
+                                        borderColor: AppColors.white,
+                                        borderSize: size.width * 0.004,
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: size.width * 0.008,
+                                              horizontal: size.height * 0.012),
+                                          child: Text(
+                                            "${getTranslated(context, 'edit')}",
+                                            style: TextStyle(
+                                                fontFamily: Fonts.dmSansBold,
+                                                color: AppColors.white,
+                                                fontSize: size.width * 0.04),
+                                          ),
+                                        )),
+                                    SizedBox(
+                                      width: size.width * 0.04,
+                                    )
+                                  ],
+                                ),
+                              )
+                            : SizedBox(
+                                width: size.width * 0.17,
+                                child: IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        _edit = false;
+                                      });
+                                    },
+                                    icon: Icon(
+                                      Icons.check,
+                                      color: AppColors.white,
+                                    )),
+                              )
+                  ],
+                ),
+              ),
 
-                  // current loaction
-                  Container(
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.symmetric(
-                        horizontal: size.width * 0.04,
-                        vertical: size.height * 0.02),
-                    width: size.width,
-                    height: size.height * 0.2,
-                    color: HexColor("#24211E"),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            // Navigator.of(context).push(MaterialPageRoute(
-                            //     builder: (context) => AddressAdd()));
-                          },
-                          child: Row(
+              SizedBox(
+                height: size.height * 0.025,
+              ),
+
+              // recent
+
+              Container(
+                alignment: Alignment.centerLeft,
+                margin: EdgeInsets.symmetric(horizontal: size.width * 0.05),
+                child: Text(
+                  "${getTranslated(context, 'recent')?.toUpperCase()}",
+                  style: TextStyle(
+                      fontFamily: Fonts.dmSansMedium,
+                      color: AppColors.descriptionfirst,
+                      fontSize: size.width * 0.04),
+                ),
+              ),
+              SizedBox(
+                height: size.height * 0.025,
+              ),
+
+              // current loaction
+              Container(
+                alignment: Alignment.center,
+                padding: EdgeInsets.symmetric(
+                    horizontal: size.width * 0.04,
+                    vertical: size.height * 0.02),
+                width: size.width,
+                height: size.height * 0.2,
+                color: HexColor("#24211E"),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        // Navigator.of(context).push(MaterialPageRoute(
+                        //     builder: (context) => AddressAdd()));
+                      },
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            // width: size.width * 0.04,
+                            // height: size.width * 0.04,
+                            child: Image.asset(
+                              "assets/pngicons/currentLocation.png",
+                              width: size.width * 0.07,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          SizedBox(
+                            width: size.width * 0.03,
+                          ),
+                          Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
-                                // width: size.width * 0.04,
-                                // height: size.width * 0.04,
-                                child: Image.asset(
-                                  "assets/pngicons/currentLocation.png",
-                                  width: size.width * 0.07,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              SizedBox(
-                                width: size.width * 0.03,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "${getTranslated(context, 'currentLocation')}",
-                                    style: TextStyle(
-                                        fontFamily: Fonts.dmSansBold,
-                                        color: AppColors.siginbackgrond,
-                                        fontSize: size.width * 0.048),
-                                  ),
-                                  Container(
-                                    width: size.width * 0.8,
-                                    child: Text(
-                                      Constants.prefs?.getString("addres") !=
-                                          null &&
-                                          Constants.prefs
-                                              ?.getString("addres") !=
-                                              ''
-                                          ? "${Constants.prefs?.getString("addres")}"
-                                          : "${getTranslated(context, "addLoacation")}",
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                          fontFamily: Fonts.dmSansMedium,
-                                          color: AppColors.descriptionfirst,
-                                          fontSize: size.width * 0.038),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          height: size.height * 0.01,
-                        ),
-
-                        // divider
-
-                        Divider(
-                          color: AppColors.blackBackground,
-                          thickness: size.height * 0.001,
-                        ),
-
-                        SizedBox(
-                          height: size.height * 0.01,
-                        ),
-
-                        InkWell(
-                          onTap: () async {
-                            print("location....");
-                            await LocationPermissions()
-                                .requestPermissions()
-                                .then((permission) {
-                              print("value is here A$permission");
-
-                              if (permission == PermissionStatus.denied) {
-                                Dialogs.singleButtonAlertDialog(
-                                    context: context,
-                                    title: "${getTranslated(
-                                      context,
-                                      'alert!',
-                                    )}",
-                                    content: "${getTranslated(
-                                      context,
-                                      'AllowPermissionFromYourMobilesettings',
-                                    )}",
-                                    buttonContent: "${getTranslated(
-                                      context,
-                                      'goToPhoneSettings',
-                                    )}",
-                                    func: () async {
-                                      Navigator.of(context).pop();
-                                      bool isOpened = await LocationPermissions()
-                                          .openAppSettings();
-                                      print("here is bool $isOpened");
-                                    });
-                              } else {
-                                print("here is permission $permission");
-
-                                return Navigator.of(context)
-                                    .push(MaterialPageRoute(builder: (context) {
-                                  return PlacePickerB(
-                                    Strings.mapKey,
-                                    typeAE: 1,
-                                  );
-                                }));
-                              }
-                              return permission;
-                            });
-                          },
-                          child: Row(
-                            children: [
-                              roundedBoxBorder(
-                                  context: context,
-                                  radius: size.width * 0.015,
-                                  backgroundColor: Colors.transparent,
-                                  borderColor: AppColors.white,
-                                  borderSize: size.width * 0.002,
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: size.width * 0.008,
-                                        horizontal: size.height * 0.012),
-                                    child: Text(
-                                      "+",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: AppColors.white,
-                                          fontSize: size.width * 0.04),
-                                    ),
-                                  )),
-                              SizedBox(width: size.width * 0.03),
                               Text(
-                                "${getTranslated(context, 'addAddress')}",
+                                "${getTranslated(context, 'currentLocation')}",
                                 style: TextStyle(
                                     fontFamily: Fonts.dmSansBold,
-                                    color: AppColors.white,
+                                    color: AppColors.siginbackgrond,
                                     fontSize: size.width * 0.048),
+                              ),
+                              Container(
+                                width: size.width * 0.8,
+                                child: Text(
+                                  Constants.prefs?.getString("addres") !=
+                                              null &&
+                                          Constants.prefs
+                                                  ?.getString("addres") !=
+                                              ''
+                                      ? "${Constants.prefs?.getString("addres")}"
+                                      : "${getTranslated(context, "addLoacation")}",
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontFamily: Fonts.dmSansMedium,
+                                      color: AppColors.descriptionfirst,
+                                      fontSize: size.width * 0.038),
+                                ),
                               ),
                             ],
                           ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: size.height * 0.01,
+                    ),
+
+                    // divider
+
+                    Divider(
+                      color: AppColors.blackBackground,
+                      thickness: size.height * 0.001,
+                    ),
+
+                    SizedBox(
+                      height: size.height * 0.01,
+                    ),
+
+                    InkWell(
+                      onTap: () async {
+                        print("location....");
+                        await LocationPermissions()
+                            .requestPermissions()
+                            .then((permission) {
+                          print("value is here A$permission");
+
+                          if (permission == PermissionStatus.denied) {
+                            Dialogs.singleButtonAlertDialog(
+                                context: context,
+                                title: "${getTranslated(
+                                  context,
+                                  'alert!',
+                                )}",
+                                content: "${getTranslated(
+                                  context,
+                                  'AllowPermissionFromYourMobilesettings',
+                                )}",
+                                buttonContent: "${getTranslated(
+                                  context,
+                                  'goToPhoneSettings',
+                                )}",
+                                func: () async {
+                                  Navigator.of(context).pop();
+                                  bool isOpened = await LocationPermissions()
+                                      .openAppSettings();
+                                  print("here is bool $isOpened");
+                                });
+                          } else {
+                            print("here is permission $permission");
+
+                            return Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (context) {
+                              return PlacePickerB(
+                                Strings.mapKey,
+                                typeAE: 1,
+                              );
+                            }));
+                          }
+                          return permission;
+                        });
+                      },
+                      child: Row(
+                        children: [
+                          roundedBoxBorder(
+                              context: context,
+                              radius: size.width * 0.015,
+                              backgroundColor: Colors.transparent,
+                              borderColor: AppColors.white,
+                              borderSize: size.width * 0.002,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: size.width * 0.008,
+                                    horizontal: size.height * 0.012),
+                                child: Text(
+                                  "+",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.white,
+                                      fontSize: size.width * 0.04),
+                                ),
+                              )),
+                          SizedBox(width: size.width * 0.03),
+                          Text(
+                            "${getTranslated(context, 'addAddress')}",
+                            style: TextStyle(
+                                fontFamily: Fonts.dmSansBold,
+                                color: AppColors.white,
+                                fontSize: size.width * 0.048),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+
+              // others
+
+              SizedBox(
+                height: size.height * 0.025,
+              ),
+
+              // recent
+
+              Container(
+                alignment: Alignment.centerLeft,
+                margin: EdgeInsets.symmetric(horizontal: size.width * 0.05),
+                child: Text(
+                  "${getTranslated(context, 'others')?.toUpperCase()}",
+                  style: TextStyle(
+                      fontFamily: Fonts.dmSansMedium,
+                      color: AppColors.descriptionfirst,
+                      fontSize: size.width * 0.04),
+                ),
+              ),
+              SizedBox(
+                height: size.height * 0.025,
+              ),
+
+              Expanded(
+                  child: _loading
+                      ? Center(
+                          child: CircularProgressIndicator(),
                         )
-                      ],
-                    ),
-                  ),
-
-                  // others
-
-                  SizedBox(
-                    height: size.height * 0.025,
-                  ),
-
-                  // recent
-
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    margin: EdgeInsets.symmetric(horizontal: size.width * 0.05),
-                    child: Text(
-                      "${getTranslated(context, 'others')?.toUpperCase()}",
-                      style: TextStyle(
-                          fontFamily: Fonts.dmSansMedium,
-                          color: AppColors.descriptionfirst,
-                          fontSize: size.width * 0.04),
-                    ),
-                  ),
-                  SizedBox(
-                    height: size.height * 0.025,
-                  ),
-
-                  Expanded(
-                      child: _loading
+                      : addressListModel?.data?.length == 0 &&
+                                  _loading == false ||
+                              addressListModel == null
                           ? Center(
-                        child: CircularProgressIndicator(),
-                      )
-                          : addressListModel?.data?.length == 0 &&
-                          _loading == false ||
-                          addressListModel == null
-                          ? Center(
-                        child: Text(
-                          "${getTranslated(context, "listisEmpty")}",
-                          //     Strings.PostsEmpty,
-                          style: TextStyle(
-                              color: AppColors.white,
-                              fontSize: size.width * 0.04),
-                        ),
-                      )
+                              child: Text(
+                                "${getTranslated(context, "listisEmpty")}",
+                                //     Strings.PostsEmpty,
+                                style: TextStyle(
+                                    color: AppColors.white,
+                                    fontSize: size.width * 0.04),
+                              ),
+                            )
                           : ListView.builder(
-                          itemCount: addressListModel?.data?.length ?? 0,
-                          itemBuilder: (context, index) {
-                            var address = addressListModel?.data![index];
-                            return addressIitem(
-                                size: size,
-                                address:
-                                "${address?.streetAddress}, ${address?.city}, ${address?.state}, ${address?.country}, ${address?.zip}",
-                                model: address);
-                          }))
-                ],
-              )),
-        ));
+                              itemCount: addressListModel?.data?.length ?? 0,
+                              itemBuilder: (context, index) {
+                                var address = addressListModel?.data![index];
+                                return addressIitem(
+                                    size: size,
+                                    address:
+                                        "${address?.streetAddress}, ${address?.city}, ${address?.state}, ${address?.country}, ${address?.zip}",
+                                    model: address);
+                              }))
+            ],
+          )),
+    ));
   }
 
   Widget addressIitem({size, String? address, Addressdata? model}) {
     return InkWell(
       onTap: () async {
+        setState(() {
+          _loading = true;
+        });
         if (_edit) {
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
             return PlacePickerB(
@@ -473,7 +476,7 @@ class _AddressListState extends State<AddressList> {
               lngE: double.parse("${model?.longitude}"),
               address: model,
             );
-          }));
+          })).then((value) {});
         } else {
           print("location....");
           await LocationPermissions().requestPermissions().then((permission) {
@@ -497,7 +500,7 @@ class _AddressListState extends State<AddressList> {
                   func: () async {
                     Navigator.of(context).pop();
                     bool isOpened =
-                    await LocationPermissions().openAppSettings();
+                        await LocationPermissions().openAppSettings();
                     print("here is bool $isOpened");
                   });
             } else {
@@ -507,7 +510,7 @@ class _AddressListState extends State<AddressList> {
                   context: context,
                   title: "${getTranslated(context, 'changeAddress')}",
                   content:
-                  "${getTranslated(context, 'Dowanttoselectthisaddress')}",
+                      "${getTranslated(context, 'Dowanttoselectthisaddress')}",
                   func: () {
                     setState(() {
                       Constants.prefs?.setString("addres", "$address");
@@ -536,36 +539,36 @@ class _AddressListState extends State<AddressList> {
             // icon
             _edit
                 ? InkWell(
-              onTap: () {
-                Dialogs.simpleAlertDialog(
-                    context: context,
-                    title: "${getTranslated(context, 'delete')}",
-                    content:
-                    "${getTranslated(context, 'Dowanttodeletethisaddress')}",
-                    func: () {
-                      navigatePopFun(context);
-                      deleteAddressFun(id: model?.id.toString());
-                    });
-              },
-              child: Container(
-                // width: size.width * 0.05,
-                // height: size.height * 0.03,
-                child: Image.asset(
-                  "assets/pngicons/locationDelete.png",
-                  width: size.width * 0.07,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            )
+                    onTap: () {
+                      Dialogs.simpleAlertDialog(
+                          context: context,
+                          title: "${getTranslated(context, 'delete')}",
+                          content:
+                              "${getTranslated(context, 'Dowanttodeletethisaddress')}",
+                          func: () {
+                            navigatePopFun(context);
+                            deleteAddressFun(id: model?.id.toString());
+                          });
+                    },
+                    child: Container(
+                      // width: size.width * 0.05,
+                      // height: size.height * 0.03,
+                      child: Image.asset(
+                        "assets/pngicons/locationDelete.png",
+                        width: size.width * 0.07,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  )
                 : Container(
-              // width: size.width * 0.05,
-              // height: size.height * 0.03,
-              child: Image.asset(
-                "assets/pngicons/addBookMark.png",
-                width: size.width * 0.07,
-                fit: BoxFit.cover,
-              ),
-            ),
+                    // width: size.width * 0.05,
+                    // height: size.height * 0.03,
+                    child: Image.asset(
+                      "assets/pngicons/addBookMark.png",
+                      width: size.width * 0.07,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
 
             SizedBox(
               width: size.width * 0.03,
@@ -623,7 +626,7 @@ class _AddressListState extends State<AddressList> {
                 color: Colors.green,
                 duration: Duration(seconds: 1),
                 content:
-                "${getTranslated(context, 'addresssuccessfullyDeleted')}");
+                    "${getTranslated(context, 'addresssuccessfullyDeleted')}");
             getAddresApiCall();
           } else {
             Dialogs.showBasicsFlash(

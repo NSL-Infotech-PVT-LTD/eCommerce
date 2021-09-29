@@ -225,9 +225,12 @@ class Strings {
   static String garyadams = "Gary F. Adams";
   static String madridspain = "Madrid, Spain";
   static const String appName = 'Payment Card Demo';
-  static const String fieldReq = 'This field is required';
+  static const String fieldReq = 'The field is Required';
   static const String numberIsInvalid = 'Card is invalid';
   static const String pay = 'Validate';
+
+  static String catImageUrl =
+      "https://cdn.mos.cms.futurecdn.net/uge4wQz8rUy72UjWgsL8YL-1024-80.jpg.webp";
 
   // dummy
 

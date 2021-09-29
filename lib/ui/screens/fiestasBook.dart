@@ -244,7 +244,7 @@ class _FiestasBookState extends State<FiestasBook> {
 
       // data
 
-      UserData.tiketList[0]["name"] = "${getTranslated(context, 'ticket')}";
+      UserData.tiketList[0]["name"] = "${getTranslated(context, 'Ticket')}";
       UserData.tiketList[0]["description"] =
           "${getTranslated(context, 'ticketDescription')}";
 
@@ -276,8 +276,8 @@ class _FiestasBookState extends State<FiestasBook> {
           int.parse('${fiestasDetailModel?.data?.totalVipTickets}');
       // data
 
-      UserData.tiketList[1]["name"] = "${getTranslated(context, 'vipTable')}";
-      UserData.tiketList[1]["description"] =
+      UserData.tiketList[2]["name"] = "${getTranslated(context, 'vipTable')}";
+      UserData.tiketList[2]["description"] =
           "${getTranslated(context, 'vipTableDescription')}";
     });
   }
@@ -406,6 +406,7 @@ class _FiestasBookState extends State<FiestasBook> {
                   )
                 : AppBar(
                     toolbarHeight: 0,
+                    // backgroundColor: Colors.blue,
                   ),
             backgroundColor: AppColors.homeBackground,
             body: Stack(
@@ -425,7 +426,8 @@ class _FiestasBookState extends State<FiestasBook> {
                                     collapsedHeight: 150.0,
                                     expandedHeight: 200.0,
                                     floating: true,
-                                    pinned: true,
+                                    // pinned: true,
+                                    backgroundColor: AppColors.blackBackground,
                                     snap: true,
                                     actionsIconTheme:
                                         IconThemeData(opacity: 0.0),

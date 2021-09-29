@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/cupertino.dart';
@@ -362,17 +363,53 @@ class _YourOrderSumState extends State<YourOrderSum> {
                                       )),
                                   // Spacer(),
                                   Container(
-                                      height: size.height * 0.08,
-                                      width: size.width * 0.18,
-                                      // color: Colors.blue,
-                                      child: prefiestasOrderDetailModel
-                                                  ?.data?.parentDetail?.image ==
-                                              null
-                                          ? Image.asset(Images.appLogo)
-                                          : Image.network(
-                                              "${prefiestasOrderDetailModel?.data?.parentDetail?.image}",
-                                              // Images.beerNetwork,
-                                            ))
+                                    height: size.height * 0.1,
+                                    width: size.width * 0.18,
+                                    // color: Colors.blue,
+                                    child: Container(
+                                      margin: EdgeInsets.only(
+                                          right: size.width * 0.02),
+                                      padding: EdgeInsets.only(
+                                          top: size.height * 0.02,
+                                          bottom: size.height * 0.013),
+                                      width: size.width * 0.25,
+                                      child: CachedNetworkImage(
+                                        imageUrl:
+                                            "${prefiestasOrderDetailModel?.data?.parentDetail?.image}",
+                                        fit: BoxFit.cover,
+                                        imageBuilder:
+                                            (context, imageProvider) =>
+                                                Container(
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                              image: imageProvider,
+                                              // fit: BoxFit.cover,
+                                              // colorFilter:
+                                              //     ColorFilter.mode(Colors.red, BlendMode.colorBurn)
+                                            ),
+                                          ),
+                                        ),
+                                        errorWidget: (context, url, error) =>
+                                            Container(
+                                                // width: size.width,
+                                                height: size.height * 0.1,
+                                                decoration: BoxDecoration(
+                                                    image: DecorationImage(
+                                                  image: AssetImage(
+                                                      'assets/pngicons/pre1.png'),
+                                                  // fit: BoxFit.cover
+                                                ))),
+                                      ),
+                                    ),
+                                    //  prefiestasOrderDetailModel
+                                    //             ?.data?.parentDetail?.image ==
+                                    //         null
+                                    //     ? Image.asset(Images.appLogo)
+                                    //     : Image.network(
+                                    //         "${prefiestasOrderDetailModel?.data?.parentDetail?.image}",
+                                    //         // Images.beerNetwork,
+                                    //       )
+                                  )
                                 ],
                               ),
                               Column(

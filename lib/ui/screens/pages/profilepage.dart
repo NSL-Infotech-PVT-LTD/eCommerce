@@ -263,7 +263,7 @@ class _ProfilepageState extends State<Profilepage> {
                           height: size.height * 0.085,
                           child: CachedNetworkImage(
                             imageUrl:
-                                "${Constants.prefs?.getString('profileImage')}",
+                                "${Constants.prefs?.getString('profileImage')}k",
                             imageBuilder: (context, imageProvider) => Container(
                               // width: size.width * 0.1,
                               // height: 60.0,
@@ -285,6 +285,11 @@ class _ProfilepageState extends State<Profilepage> {
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: AppColors.white,
+                              ),
+                              child: Icon(
+                                Icons.person,
+                                color: Colors.grey,
+                                size: size.height * 0.06,
                               ),
                             ),
                           ),
