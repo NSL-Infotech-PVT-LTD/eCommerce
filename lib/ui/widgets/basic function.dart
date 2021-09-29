@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -20,14 +21,38 @@ class SlidingBannerProviderDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     // print("fjd $image");
     return Container(
-      child: FadeInImage(
-        width: SizeConfig.screenWidth,
-        placeholder: NetworkImage(bannerImage),
-        image: NetworkImage(image ?? bannerImage),
+      height: size.height,
+      child: CachedNetworkImage(
+        imageUrl: image,
         fit: BoxFit.cover,
+        imageBuilder: (context, imageProvider) => Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: imageProvider,
+              fit: BoxFit.cover,
+              // colorFilter:
+              //     ColorFilter.mode(Colors.red, BlendMode.colorBurn)
+            ),
+          ),
+        ),
+        errorWidget: (context, url, error) => Container(
+            width: size.width,
+            // height: size.height * 0.28,
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage("assets/AuthenticationIcon/BG_2.png"),
+                    fit: BoxFit.cover))),
       ),
+
+      // FadeInImage(
+      //   width: SizeConfig.screenWidth,
+      //   placeholder: NetworkImage(bannerImage),
+      //   image: NetworkImage(image ?? bannerImage),
+      //   fit: BoxFit.cover,
+      // ),
     );
   }
 }

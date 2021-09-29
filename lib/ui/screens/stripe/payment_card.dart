@@ -1,3 +1,4 @@
+import 'package:funfy/utils/langauge_constant.dart';
 import 'package:funfy/utils/strings.dart';
 import 'package:flutter/material.dart';
 
@@ -31,9 +32,9 @@ enum CardType {
 }
 
 class CardUtils {
-  static String? validateCVV(String? value) {
+  static String? validateCVV(String? value, context) {
     if (value == null || value.isEmpty) {
-      return Strings.fieldReq;
+      return "${getTranslated(context, 'thefieldisRequired')}";
     }
 
     if (value.length < 3 || value.length > 4) {
@@ -42,9 +43,9 @@ class CardUtils {
     return null;
   }
 
-  static String? validateDate(String? value) {
+  static String? validateDate(String? value, context) {
     if (value == null || value.isEmpty) {
-      return Strings.fieldReq;
+      return "${getTranslated(context, 'thefieldisRequired')}"; // Strings.fieldReq;
     }
 
     int year;
@@ -65,18 +66,18 @@ class CardUtils {
 
     if ((month < 1) || (month > 12)) {
       // A valid month is between 1 (January) and 12 (December)
-      return 'Expiry month is invalid';
+      return "${getTranslated(context, 'expiryMonthIsInvalid')}";
     }
 
     var fourDigitsYear = convertYearTo4Digits(year);
     if ((fourDigitsYear < 1) || (fourDigitsYear > 2099)) {
       // We are assuming a valid should be between 1 and 2099.
       // Note that, it's valid doesn't mean that it has not expired.
-      return 'Expiry year is invalid';
+      return "${getTranslated(context, 'expiryYearIsInvalid')}";
     }
 
     if (!hasDateExpired(month, year)) {
-      return "Card has expired";
+      return "${getTranslated(context, 'cardHasExpired')}";
     }
     return null;
   }
@@ -183,9 +184,9 @@ class CardUtils {
 
   /// With the card number with Luhn Algorithm
   /// https://en.wikipedia.org/wiki/Luhn_algorithm
-  static String? validateCardNum(String? input) {
+  static String? validateCardNum(String? input, context) {
     if (input == null || input.isEmpty) {
-      return Strings.fieldReq;
+      return "${getTranslated(context, 'thefieldisRequired')}";
     }
 
     input = getCleanedNumber(input);

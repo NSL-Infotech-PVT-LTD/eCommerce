@@ -684,7 +684,8 @@ class _HomeMPageState extends State<HomeMPage> {
                             vertical: size.height * 0.01,
                             horizontal: size.width * 0.04),
                         width: size.width,
-                        height: size.height * 0.055,
+                        height: size.height * 0.07,
+                        // color: Colors.orange,
                         child:
                             // tags
                             Row(
@@ -720,13 +721,17 @@ class _HomeMPageState extends State<HomeMPage> {
                                   } else {
                                     filterBottomSheet();
                                   }
-                                  ;
                                 },
                                 // child: Icon(Icons.filter_alt_outlined,
                                 //     color: Colors.white)
                                 child: Container(
-                                    margin: EdgeInsets.only(
-                                        right: size.width * 0.01),
+                                    // margin: EdgeInsets.only(
+                                    //     right: size.width * 0.01),
+
+                                    // color: Colors.blue,
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: size.height * 0.001,
+                                        horizontal: size.width * 0.02),
                                     alignment: Alignment.centerRight,
                                     child: Image.asset(
                                         "assets/pngicons/filterImage.png",
@@ -969,6 +974,9 @@ class _HomeMPageState extends State<HomeMPage> {
                                     },
                                     child: Container(
                                       // color: Colors.blue,
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: size.height * 0.004,
+                                          horizontal: size.width * 0.02),
                                       child: Text(
                                         "${getTranslated(context, "seeall")}",
                                         //   Strings.seeall,

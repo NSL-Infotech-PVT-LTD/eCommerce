@@ -365,9 +365,10 @@ class _AddressListState extends State<AddressList> {
                             return Navigator.of(context)
                                 .push(MaterialPageRoute(builder: (context) {
                               return PlacePickerB(
-                                Platform.isAndroid
+          Platform.isAndroid
                                     ? Strings.mapKey
                                     : "AIzaSyC8RvY96hm7l5MnPJdCq6b0wCPv4GLDGHo",
+
                                 typeAE: 1,
                               );
                             }));
@@ -468,6 +469,9 @@ class _AddressListState extends State<AddressList> {
   Widget addressIitem({size, String? address, Addressdata? model}) {
     return InkWell(
       onTap: () async {
+        setState(() {
+          _loading = true;
+        });
         if (_edit) {
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
             return PlacePickerB(
@@ -479,7 +483,7 @@ class _AddressListState extends State<AddressList> {
               lngE: double.parse("${model?.longitude}"),
               address: model,
             );
-          }));
+          })).then((value) {});
         } else {
           print("location....");
           await LocationPermissions().requestPermissions().then((permission) {

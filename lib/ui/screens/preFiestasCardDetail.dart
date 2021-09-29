@@ -699,16 +699,25 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
                                                           width:
                                                               size.width * 0.02,
                                                         ),
-                                                        Text(
-                                                          "${getTranslated(context, "addCreditDebitCard")}",
-                                                          style: TextStyle(
-                                                              fontSize:
-                                                                  size.width *
-                                                                      0.045,
-                                                              fontFamily: Fonts
-                                                                  .dmSansMedium,
-                                                              color: AppColors
-                                                                  .white),
+                                                        Container(
+                                                          width:
+                                                              size.width * 0.65,
+                                                          // color: Colors.blue,
+                                                          child: Text(
+                                                            "${getTranslated(context, "addCreditDebitCard")}",
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            maxLines: 2,
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                    size.width *
+                                                                        0.045,
+                                                                fontFamily: Fonts
+                                                                    .dmSansMedium,
+                                                                color: AppColors
+                                                                    .white),
+                                                          ),
                                                         ),
                                                       ],
                                                     ),
@@ -953,7 +962,9 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
       onSaved: (String? value) {
         _paymentCard.number = CardUtils.getCleanedNumber(value!);
       },
-      validator: CardUtils.validateCardNum,
+      validator: (v) {
+        return CardUtils.validateCardNum(v, context);
+      },
       decoration: InputDecoration(
           fillColor: HexColor("#3e332b"),
           filled: true,
@@ -1004,7 +1015,9 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
         new LengthLimitingTextInputFormatter(4),
         new CardMonthInputFormatter()
       ],
-      validator: CardUtils.validateDate,
+      validator: (v) {
+        return CardUtils.validateDate(v, context);
+      },
       onSaved: (value) {
         List<int> expiryDate = CardUtils.getExpiryDate(value!);
         _paymentCard.month = expiryDate[0];
@@ -1033,7 +1046,9 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
         FilteringTextInputFormatter.digitsOnly,
         new LengthLimitingTextInputFormatter(4),
       ],
-      validator: CardUtils.validateCVV,
+      validator: (v) {
+        return CardUtils.validateCVV(v, context);
+      },
       onSaved: (value) {
         _paymentCard.cvv = int.parse(value!);
       },
@@ -1119,7 +1134,7 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
                             Container(
                               width: SizeConfig.screenWidth * 0.40,
                               child: Text(
-                                "Expire on : ${model?.expMonth ?? '--'}/${model?.expYear ?? '--'}",
+                                "${getTranslated(context, 'expireOn')} : ${model?.expMonth ?? '--'}/${model?.expYear ?? '--'}",
                                 textAlign: TextAlign.start,
                                 maxLines: 2,
                                 softWrap: true,

@@ -157,7 +157,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
     return Container(
       child: Row(
         children: [
-          GestureDetector(
+          InkWell(
             onTap: () {
               remove(
                   index: index,
@@ -167,23 +167,31 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                   itemType: itemType);
             },
             child: Container(
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-                border: Border.all(color: AppColors.white),
-                borderRadius:
-                    BorderRadius.all(Radius.circular(size.width * 0.01)),
-              ),
-              height: SizeConfig.screenHeight * 0.035,
-              width: SizeConfig.screenWidth * 0.075,
-              child: Center(
-                  child: Text(
-                "-",
-                style: TextStyle(
-                  color: AppColors.white,
-                  fontFamily: "DM Sans Medium",
-                  fontSize: size.width * 0.04,
+              // color: Colors.blue,
+              padding: EdgeInsets.only(
+                  top: size.height * 0.013,
+                  bottom: size.height * 0.013,
+                  right: size.width * 0.012,
+                  left: size.width * 0.02),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  border: Border.all(color: AppColors.white),
+                  borderRadius:
+                      BorderRadius.all(Radius.circular(size.width * 0.01)),
                 ),
-              )),
+                height: SizeConfig.screenHeight * 0.035,
+                width: SizeConfig.screenWidth * 0.075,
+                child: Center(
+                    child: Text(
+                  "-",
+                  style: TextStyle(
+                    color: AppColors.white,
+                    fontFamily: "DM Sans Medium",
+                    fontSize: size.width * 0.04,
+                  ),
+                )),
+              ),
             ),
           ),
           SizedBox(
@@ -203,7 +211,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
           SizedBox(
             width: SizeConfig.screenWidth * 0.03,
           ),
-          GestureDetector(
+          InkWell(
             onTap: () {
               if ((Constants.prefs?.getString("alcohol") == null ||
                       Constants.prefs?.getString("alcohol") == "") &&
@@ -222,21 +230,29 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
               }
             },
             child: Container(
-              decoration: BoxDecoration(
-                color: AppColors.skin,
-                borderRadius:
-                    BorderRadius.all(Radius.circular(size.width * 0.01)),
+              // color: Colors.orange,
+              padding: EdgeInsets.only(
+                  top: size.height * 0.013,
+                  bottom: size.height * 0.013,
+                  right: size.width * 0.02,
+                  left: size.width * 0.012),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: AppColors.skin,
+                  borderRadius:
+                      BorderRadius.all(Radius.circular(size.width * 0.01)),
+                ),
+                height: SizeConfig.screenHeight * 0.035,
+                width: SizeConfig.screenWidth * 0.075,
+                child: Center(
+                    child: Text(
+                  "+",
+                  style: TextStyle(
+                      fontFamily: "DM Sans Medium",
+                      fontSize: size.width * 0.04,
+                      color: AppColors.homeBackground),
+                )),
               ),
-              height: SizeConfig.screenHeight * 0.035,
-              width: SizeConfig.screenWidth * 0.075,
-              child: Center(
-                  child: Text(
-                "+",
-                style: TextStyle(
-                    fontFamily: "DM Sans Medium",
-                    fontSize: size.width * 0.04,
-                    color: AppColors.homeBackground),
-              )),
             ),
           ),
         ],
@@ -289,7 +305,7 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
         ),
         trailing: Container(
           // color: Colors.blue,
-          width: size.width * 0.3,
+          width: size.width * 0.37,
           child: Row(
             children: [
               Spacer(),
@@ -955,7 +971,8 @@ class _PreFistaOrderState extends State<PreFistaOrder> {
                             //
                             //     ),
                             SliverPadding(
-                              padding: EdgeInsets.only(left:16.0,right: 16.0,bottom:16.0),
+                              padding: EdgeInsets.only(
+                                  left: 16.0, right: 16.0, bottom: 16.0),
                               sliver: SliverList(
                                 delegate: SliverChildListDelegate([
                                   Container(
