@@ -392,7 +392,7 @@ Future notificatiListApi({int? notificationNum, int? pageCount}) async {
 Future<FliterListModel?> filterList() async {
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
-    'X-localization': 'es'
+    'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   var res = await http.get(
