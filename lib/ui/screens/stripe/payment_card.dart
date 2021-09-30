@@ -246,6 +246,8 @@ class CardUtils {
     CardType cardType;
     if (input == "Master") {
       cardType = CardType.Master;
+    } else if (input == "MasterCard") {
+      cardType = CardType.Master;
     } else if (input == "Visa") {
       cardType = CardType.Visa;
     } else if (input == "Verve") {

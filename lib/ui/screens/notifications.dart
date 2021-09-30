@@ -180,6 +180,19 @@ class _NotificationsState extends State<Notifications> {
                           controller: notificationScrollController,
                           itemCount: notificationDataList.length,
                           itemBuilder: (context, index) {
+                            String notiImage = '';
+                            try {
+                              if (notificationDataList[index]['booking_detail']
+                                      ['image'] !=
+                                  null) {
+                                notiImage = notificationDataList[index]
+                                    ['booking_detail']['image'];
+                              } else {
+                                notiImage = '';
+                              }
+                            } catch (e) {
+                              notiImage = '';
+                            }
                             DateTime dateCreated = DateTime.parse(
                                 "${notificationDataList[index]['created_at']}"
                                 // "${notificationListModel?.data?.data?.elementAt(index).createdAt}"
@@ -213,9 +226,7 @@ class _NotificationsState extends State<Notifications> {
                                     //         .targetByDetail
                                     //         ?.image ??
 
-                                    notificationDataList[index]
-                                            ['booking_detail']['image'] ??
-                                        Images.beerNetwork,
+                                    notiImage,
                                 title: notificationDataList[index]['body']
                                     .toString(),
                                 // "${notificationListModel?.data?.data?.elementAt(index).body}",
@@ -287,13 +298,21 @@ Widget notificationItem(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          CircleAvatar(
-            backgroundColor: AppColors.white,
-            radius: size.width * 0.08,
-            backgroundImage: NetworkImage(
-              "$imageUrl",
-            ),
-          ),
+          imageUrl != ''
+              ? CircleAvatar(
+                  backgroundColor: AppColors.white,
+                  radius: size.width * 0.08,
+                  backgroundImage: NetworkImage(
+                    "$imageUrl",
+                  ),
+                )
+              : CircleAvatar(
+                  backgroundColor: AppColors.blackBackground,
+                  radius: size.width * 0.08,
+                  backgroundImage: AssetImage(
+                    "assets/AuthenticationIcon/LOGO.png",
+                  ),
+                ),
           SizedBox(
             width: size.width * 0.03,
           ),

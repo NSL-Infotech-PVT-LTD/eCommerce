@@ -99,6 +99,8 @@ class Datum {
   Datum({
     this.id,
     this.name,
+    this.nameEs,
+    this.image,
     this.clubId,
     this.timestamp,
     this.description,
@@ -129,6 +131,8 @@ class Datum {
 
   int? id;
   String? name;
+  String? nameEs;
+  dynamic image;
   int? clubId;
   DateTime? timestamp;
   String? description;
@@ -145,9 +149,9 @@ class Datum {
   String? totalStandardTickets;
   String? totalVipTickets;
   double? clubRating;
+  var leftNormalTicket;
   var leftStandardTicket;
   var leftVipTicket;
-  var leftNormalTicket;
   bool? isFavourite;
   String? distanceMiles;
   Filter? filterLocal;
@@ -159,6 +163,8 @@ class Datum {
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
         id: json["id"],
         name: json["name"],
+        nameEs: json["name_es"],
+        image: json["image"],
         clubId: json["club_id"],
         timestamp: DateTime.parse(json["timestamp"]),
         description: json["description"],
@@ -174,8 +180,7 @@ class Datum {
         totalNormalTickets: json["total_normal_tickets"],
         totalStandardTickets: json["total_standard_tickets"],
         totalVipTickets: json["total_vip_tickets"],
-        clubRating:
-            json["club_rating"] == null ? null : json["club_rating"].toDouble(),
+        clubRating: json["club_rating"].toDouble(),
         leftNormalTicket: json["left_normal_ticket"],
         leftStandardTicket: json["left_standard_ticket"],
         leftVipTicket: json["left_vip_ticket"],
@@ -191,6 +196,8 @@ class Datum {
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
+        "name_es": nameEs,
+        "image": image,
         "club_id": clubId,
         "timestamp": timestamp?.toIso8601String(),
         "description": description,
@@ -206,7 +213,7 @@ class Datum {
         "total_normal_tickets": totalNormalTickets,
         "total_standard_tickets": totalStandardTickets,
         "total_vip_tickets": totalVipTickets,
-        "club_rating": clubRating == null ? null : clubRating,
+        "club_rating": clubRating,
         "left_normal_ticket": leftNormalTicket,
         "left_standard_ticket": leftStandardTicket,
         "left_vip_ticket": leftVipTicket,
