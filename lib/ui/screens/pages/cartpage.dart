@@ -90,8 +90,6 @@ class _CartpageState extends State<Cartpage> {
           _loading = false;
           UserData.myCartModel = null;
         });
-        print("error in my cart $UserData.myCartModel");
-        print(e);
       }
     }
   }

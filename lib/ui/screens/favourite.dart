@@ -115,7 +115,7 @@ class _FavouriteState extends State<Favourite> {
         return;
       }
 
-      if (fiestasPage > int.parse('${fiestasFavModel?.data?.lastPage}')) {
+      if (fiestasPage > (fiestasFavModel?.data?.lastPage ?? 1) ) {
         print('No More Products');
 
         return;
@@ -276,10 +276,10 @@ class _FavouriteState extends State<Favourite> {
                                   itemBuilder: (context, index) {
                                     // fiestasPageLoading
 
-                                    if (index ==
+                                    if ((index ==
                                             int.parse(
                                                     "${fiestasFavModel?.data?.data?.length}") -
-                                                1 &&
+                                                1) &&
                                         fiestasPageLoading) {
                                       return Container(
                                         height: size.height * 0.08,
@@ -356,7 +356,7 @@ fiestasItemFav({context, int? index, FiestasFavouriteModel? model, funcRun}) {
 
   String month = DateFormat('MMM').format(date);
 
-  String price = k_m_b_generator(int.parse("${data?.ticketPriceNormal}"));
+  String price = k_m_b_generator(double.parse("${data?.ticketPriceNormal}"));
 
   return InkWell(
     onTap: () {

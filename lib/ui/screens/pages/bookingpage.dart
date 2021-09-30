@@ -105,10 +105,11 @@ class _BookingPageState extends State<BookingPage> {
         }
       });
     } catch (e) {
-      print("error --------- $e");
       setState(() {
         _preFiestasLoading = false;
       });
+      print("error --------- $e");
+
     }
   }
 

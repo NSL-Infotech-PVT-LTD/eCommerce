@@ -812,35 +812,35 @@ class _FiestasBookState extends State<FiestasBook> {
                                             ),
                                             Stack(
                                               children: [
-                                                Container(
-                                                  height: 200,
-                                                  child: GoogleMap(
-                                                    zoomControlsEnabled: false,
-                                                    onTap: (latLng) {
-                                                      print(
-                                                          "Current Value ==> $latLng");
-                                                    },
-                                                    onMapCreated: _onMapCreated,
-                                                    initialCameraPosition:
-                                                        CameraPosition(
-                                                      target: LatLng(
-                                                          double.parse(
-                                                              fiestasDetailModel
-                                                                      ?.data
-                                                                      ?.clubDetail
-                                                                      ?.latitude ??
-                                                                  "0.0"),
-                                                          double.parse(
-                                                              fiestasDetailModel
-                                                                      ?.data
-                                                                      ?.clubDetail
-                                                                      ?.longitude ??
-                                                                  "0.0")),
-                                                      zoom: 10.0,
-                                                    ),
-                                                    markers: _markers,
-                                                  ),
-                                                ),
+                                                // Container(
+                                                //   height: 200,
+                                                //   child: GoogleMap(
+                                                //     zoomControlsEnabled: false,
+                                                //     onTap: (latLng) {
+                                                //       print(
+                                                //           "Current Value ==> $latLng");
+                                                //     },
+                                                //     onMapCreated: _onMapCreated,
+                                                //     initialCameraPosition:
+                                                //         CameraPosition(
+                                                //       target: LatLng(
+                                                //           double.parse(
+                                                //               fiestasDetailModel
+                                                //                       ?.data
+                                                //                       ?.clubDetail
+                                                //                       ?.latitude ??
+                                                //                   "0.0"),
+                                                //           double.parse(
+                                                //               fiestasDetailModel
+                                                //                       ?.data
+                                                //                       ?.clubDetail
+                                                //                       ?.longitude ??
+                                                //                   "0.0")),
+                                                //       zoom: 10.0,
+                                                //     ),
+                                                //     markers: _markers,
+                                                //   ),
+                                                // ),
                                                 Positioned(
                                                   bottom: 0,
                                                   left: 5,

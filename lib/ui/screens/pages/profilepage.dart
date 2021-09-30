@@ -263,7 +263,7 @@ class _ProfilepageState extends State<Profilepage> {
                           height: size.height * 0.085,
                           child: CachedNetworkImage(
                             imageUrl:
-                                "${Constants.prefs?.getString('profileImage')}k",
+                                "${Constants.prefs?.getString('profileImage')}",
                             imageBuilder: (context, imageProvider) => Container(
                               // width: size.width * 0.1,
                               // height: 60.0,

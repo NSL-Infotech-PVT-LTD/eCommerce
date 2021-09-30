@@ -30,14 +30,6 @@
           }
         },
         {
-          "client_id": "562684267034-to0c5fqm27ior0q71l2ata2sfi0dosqk.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.funfy.funfy",
-            "certificate_hash": "0c1f6e982a4549620c431d9fc904354d67f33e84"
-          }
-        },
-        {
           "client_id": "562684267034-suqn5sqae76ikaopjupiu1qbhbpbrguc.apps.googleusercontent.com",
           "client_type": 3
         }
