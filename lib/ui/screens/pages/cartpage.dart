@@ -1274,7 +1274,7 @@ class _CartpageState extends State<Cartpage> {
                                                               // price
 
                                                               Text(
-                                                                " ${Strings.euro} ${_totalPrice != "0" && _totalPrice != "null" ? _totalPrice : UserData.myCartModel?.data?.cart?.totalPrice}",
+                                                                " ${Strings.euro} ${_totalPrice != "0" && _totalPrice != "null" ? double.parse(_totalPrice).toStringAsFixed(2) : double.parse('${UserData.myCartModel?.data?.cart?.totalPrice}').toStringAsFixed(2)}",
                                                                 style: TextStyle(
                                                                     fontFamily:
                                                                         Fonts

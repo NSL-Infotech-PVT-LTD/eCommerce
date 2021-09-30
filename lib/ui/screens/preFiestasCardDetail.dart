@@ -530,7 +530,7 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
                                               MainAxisAlignment.center,
                                           children: [
                                             Text(
-                                                "${Strings.euro} ${UserData.myCartModel?.data?.cart?.totalPrice}",
+                                                "${Strings.euro} ${double.parse('${UserData.myCartModel?.data?.cart?.totalPrice}').toStringAsFixed(2)}",
                                                 style: TextStyle(
                                                     fontSize: size.width * 0.07,
                                                     fontFamily:

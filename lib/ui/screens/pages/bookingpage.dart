@@ -109,7 +109,6 @@ class _BookingPageState extends State<BookingPage> {
         _preFiestasLoading = false;
       });
       print("error --------- $e");
-
     }
   }
 
@@ -393,7 +392,7 @@ class _BookingPageState extends State<BookingPage> {
                                       fiestasBookingListRes.length == 0
                                   ? Center(
                                       child: Text(
-                                      "${Strings.listEmpty}",
+                                      "${getTranslated(context, 'listisEmpty')}",
                                       style: TextStyle(
                                           color: AppColors.white,
                                           fontSize: size.width * 0.05),
@@ -447,7 +446,7 @@ class _BookingPageState extends State<BookingPage> {
                                       prifiestasBookingList == []
                                   ? Center(
                                       child: Text(
-                                      "${Strings.listEmpty}",
+                                      "${getTranslated(context, 'listisEmpty')}",
                                       style: TextStyle(
                                           color: AppColors.white,
                                           fontSize: size.width * 0.05),
@@ -500,6 +499,8 @@ Widget preFiestasOrderItemsNew({context, List? model, index}) {
   var size = MediaQuery.of(context).size;
 
   var modeldata = model![index];
+
+  print("Look here ${modeldata["order_statuss"]}");
 
   return InkWell(
     onTap: () {

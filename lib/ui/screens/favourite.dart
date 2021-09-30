@@ -115,7 +115,7 @@ class _FavouriteState extends State<Favourite> {
         return;
       }
 
-      if (fiestasPage > (fiestasFavModel?.data?.lastPage ?? 1) ) {
+      if (fiestasPage > (fiestasFavModel?.data?.lastPage ?? 1)) {
         print('No More Products');
 
         return;
@@ -264,7 +264,7 @@ class _FavouriteState extends State<Favourite> {
                                   (_loading == false && fiestasFavModel == null)
                               ? Center(
                                   child: Text(
-                                  "${Strings.listEmpty}",
+                                  "${getTranslated(context, 'listisEmpty')}",
                                   style: TextStyle(
                                       color: AppColors.white,
                                       fontSize: size.width * 0.05),
@@ -320,7 +320,7 @@ class _FavouriteState extends State<Favourite> {
                                       preFiestasFavModel == null)
                               ? Center(
                                   child: Text(
-                                  "${Strings.listEmpty}",
+                                  "${getTranslated(context, 'listisEmpty')}",
                                   style: TextStyle(
                                       color: AppColors.white,
                                       fontSize: size.width * 0.05),

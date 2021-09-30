@@ -503,7 +503,7 @@ class _CartDetailState extends State<CartDetail> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                          "${Strings.euro} ${widget.totalPrice}",
+                                          "${Strings.euro} ${double.parse(widget.totalPrice.toString()).toStringAsFixed(2)}",
                                           style: TextStyle(
                                               fontSize: size.width * 0.07,
                                               fontFamily: Fonts.dmSansMedium,
