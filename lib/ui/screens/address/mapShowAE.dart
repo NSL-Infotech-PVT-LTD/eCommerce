@@ -346,39 +346,39 @@ class PlacePickerBState extends State<PlacePickerB> {
   setAddressFromLatLng(double ln, double lo) async {
     // if (widget.typeAE == 2) {
     // print("latlng==> $ln : $lo");
-    if (ln != 0.0) {
-      List<locationG.Placemark> placemarks =
-          await locationG.placemarkFromCoordinates(ln, lo);
-      print("place marke $placemarks");
+    // if (ln != 0.0) {
+    List<locationG.Placemark> placemarks =
+        await locationG.placemarkFromCoordinates(ln, lo);
+    print("place marke $placemarks");
 
-      var placemark = placemarks[0];
+    var placemark = placemarks[0];
 
-      String address =
-          "${placemark.street}, ${placemark.locality},${placemark.administrativeArea}, ${placemark.country}";
+    String address =
+        "${placemark.street}, ${placemark.locality},${placemark.administrativeArea}, ${placemark.country}";
 
-      setState(() {
-        if (widget.typeAE == 2) {
-          addressNameController.text = widget.address!.name.toString();
+    setState(() {
+      if (widget.typeAE == 2) {
+        addressNameController.text = widget.address!.name.toString();
 
-          zipController.text = widget.address!.zip.toString();
-        } else {
-          print("Edit");
-        }
+        zipController.text = widget.address!.zip.toString();
+      } else {
+        print("Edit");
+      }
 
-        if (drage == true || widget.typeAE != 2) {
-          zipController.text = placemark.postalCode.toString();
-        }
-        street = placemark.street.toString();
-        city = placemark.locality.toString();
-        stateA = placemark.administrativeArea.toString();
-        // zip = placemark.postalCode.toString();
-        // zipController.text = "000000";
-        country = placemark.country.toString();
+      if (drage == true || widget.typeAE != 2) {
+        zipController.text = placemark.postalCode.toString();
+      }
+      street = placemark.street.toString();
+      city = placemark.locality.toString();
+      stateA = placemark.administrativeArea.toString();
+      // zip = placemark.postalCode.toString();
+      // zipController.text = "000000";
+      country = placemark.country.toString();
 
-        _pc.open();
-        addressController.text = address;
-      });
-    }
+      _pc.open();
+      addressController.text = address;
+    });
+    // }
     // }
   }
 
@@ -414,51 +414,51 @@ class PlacePickerBState extends State<PlacePickerB> {
             // Expanded(
             //   child:
 
-            // GoogleMap(
-            //   initialCameraPosition: CameraPosition(
-            //     target: widget.typeAE == 2
-            //         ? LatLng(widget.latE ?? 0.0, widget.lngE ?? 0.0)
-            //         : widget.displayLocation ?? LatLng(5.6037, 0.1870),
-            //     zoom: 15,
-            //   ),
-            //   myLocationButtonEnabled: true,
-            //   myLocationEnabled: true,
-            //   onMapCreated: onMapCreated,
-            //   onCameraIdle: () async {
-            //     setAddressFromLatLng(latL, lngL);
-            //     // clearOverlay();
-            //     // moveToLocation(LatLng(latL, lngL));
-            //     // setState(() {
-            //     //   moovingTrue = false;
-            //     // });
-            //   },
-            //   onCameraMove: (v) {
-            //     if (drage == false) {
-            //       setState(() {
-            //         drage = true;
-            //       });
-            //     }
-            //     // setState(() {
-            //     //   moovingTrue = true;
-            //     // });
-            //     // print("address : ${v.target.latitude}");
-            //     latL = v.target.latitude;
-            //     lngL = v.target.longitude;
-            //
-            //     _pc.close();
-            //
-            //     // setAddressFromLatLng(v.target.latitude, v.target.longitude);
-            //   },
-            //   onTap: (latLng) async {
-            //     latL = latLng.latitude;
-            //     lngL = latLng.longitude;
-            //
-            //     clearOverlay();
-            //     moveToLocation(latLng);
-            //     setAddressFromLatLng(latLng.latitude, latLng.longitude);
-            //   },
-            //   markers: markers,
-            // ),
+            GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: widget.typeAE == 2
+                    ? LatLng(widget.latE ?? 0.0, widget.lngE ?? 0.0)
+                    : widget.displayLocation ?? LatLng(5.6037, 0.1870),
+                zoom: 15,
+              ),
+              myLocationButtonEnabled: true,
+              myLocationEnabled: true,
+              onMapCreated: onMapCreated,
+              onCameraIdle: () async {
+                setAddressFromLatLng(latL, lngL);
+                // clearOverlay();
+                // moveToLocation(LatLng(latL, lngL));
+                // setState(() {
+                //   moovingTrue = false;
+                // });
+              },
+              onCameraMove: (v) {
+                if (drage == false) {
+                  setState(() {
+                    drage = true;
+                  });
+                }
+                // setState(() {
+                //   moovingTrue = true;
+                // });
+                // print("address : ${v.target.latitude}");
+                latL = v.target.latitude;
+                lngL = v.target.longitude;
+
+                _pc.close();
+
+                // setAddressFromLatLng(v.target.latitude, v.target.longitude);
+              },
+              onTap: (latLng) async {
+                latL = latLng.latitude;
+                lngL = latLng.longitude;
+
+                clearOverlay();
+                moveToLocation(latLng);
+                setAddressFromLatLng(latLng.latitude, latLng.longitude);
+              },
+              markers: markers,
+            ),
 
             moovingTrue
                 ? Center(

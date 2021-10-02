@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -24,6 +25,7 @@ import 'package:funfy/utils/colors.dart';
 import 'package:funfy/utils/fontsname.dart';
 import 'package:funfy/utils/imagesIcons.dart';
 import 'package:funfy/utils/langauge_constant.dart';
+import 'package:funfy/utils/strings.dart';
 import 'package:intl/intl.dart';
 
 class HomeMPage extends StatefulWidget {
@@ -48,6 +50,8 @@ class _HomeMPageState extends State<HomeMPage> {
 
   String tagType = "";
   String dateFilterFiestas = "";
+
+  String preBennerImageUrl = "";
 
   DateTime nowdate = DateTime.now();
   String? filterDate = "";
@@ -139,6 +143,7 @@ class _HomeMPageState extends State<HomeMPage> {
       setState(() {
         _prefiestasPostLoading = true;
       });
+      bennerApi();
       await prefiestasPostGet(
               context: context,
               pageCount: prefiestasPageCount.toString(),
@@ -305,6 +310,23 @@ class _HomeMPageState extends State<HomeMPage> {
     preFiestasPostget();
     determinePosition();
     getFilterData();
+  }
+
+  // benner Api
+
+  bennerApi() async {
+    var net = await Internetcheck.check();
+
+    if (net == false) {
+      Internetcheck.showdialog(context: context);
+    }
+    {
+      preFiestasBennerApi().then((value) {
+        setState(() {
+          preBennerImageUrl = value!;
+        });
+      });
+    }
   }
 
   //pagination
@@ -1081,6 +1103,40 @@ class _HomeMPageState extends State<HomeMPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Container(
+                        margin: EdgeInsets.symmetric(
+                            horizontal: size.width * 0.03,
+                            vertical: size.height * 0.01),
+                        width: size.width,
+                        height: size.height * 0.17,
+                        child: CachedNetworkImage(
+                          imageUrl: "$preBennerImageUrl",
+                          fit: BoxFit.cover,
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
+                                // colorFilter:
+                                //     ColorFilter.mode(Colors.red, BlendMode.colorBurn)
+                              ),
+                            ),
+                          ),
+                          placeholder: (context, url) => Center(
+                              child: CircularProgressIndicator(
+                            color: Colors.white,
+                          )),
+                          errorWidget: (context, url, error) => Container(
+                              margin: EdgeInsets.only(top: size.width * 0.04),
+                              width: size.width,
+                              height: size.height * 0.28,
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image: AssetImage(
+                                          "assets/AuthenticationIcon/BG_2.png"),
+                                      fit: BoxFit.cover))),
+                        ),
+                      ),
                       // Container(
                       //     margin: EdgeInsets.symmetric(
                       //         horizontal: size.width * 0.03,

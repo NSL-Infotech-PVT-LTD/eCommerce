@@ -732,21 +732,49 @@ Widget preFiestasItem(
                 // right image
 
                 Container(
-                  margin: EdgeInsets.only(right: size.width * 0.01),
+                  margin: EdgeInsets.only(right: size.width * 0.02),
                   padding: EdgeInsets.only(
                       top: size.height * 0.02, bottom: size.height * 0.013),
                   width: size.width * 0.25,
-                  decoration: BoxDecoration(),
-                  child: Image.asset(
-                    "${data?.preFiestaDetail?.id == 1 ? 'assets/pngicons/pre1.png' : data?.preFiestaDetail?.id == 2 ? 'assets/pngicons/pre2.png' : data?.preFiestaDetail?.id == 3 ? 'assets/pngicons/pre3.png' : 'assets/pngicons/pre1.png'}",
+                  child: CachedNetworkImage(
+                    imageUrl: "${data?.preFiestaDetail?.image}",
                     fit: BoxFit.cover,
+                    imageBuilder: (context, imageProvider) => Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.cover,
+                          // colorFilter:
+                          //     ColorFilter.mode(Colors.red, BlendMode.colorBurn)
+                        ),
+                      ),
+                    ),
+                    errorWidget: (context, url, error) => Container(
+                        width: size.width,
+                        // height: size.height * 0.28,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage('assets/pngicons/pre1.png'),
+                                fit: BoxFit.cover))),
                   ),
-                  // Image.network(
-                  //     "${data?.preFiestaDetail?.image ?? Images.beerNetwork}"
+                ),
 
-                  //     // fit: BoxFit.cover,
-                  //     ),
-                )
+                // Container(
+                //   margin: EdgeInsets.only(right: size.width * 0.01),
+                //   padding: EdgeInsets.only(
+                //       top: size.height * 0.02, bottom: size.height * 0.013),
+                //   width: size.width * 0.25,
+                //   decoration: BoxDecoration(),
+                //   child: Image.asset(
+                //     "${data?.preFiestaDetail?.id == 1 ? 'assets/pngicons/pre1.png' : data?.preFiestaDetail?.id == 2 ? 'assets/pngicons/pre2.png' : data?.preFiestaDetail?.id == 3 ? 'assets/pngicons/pre3.png' : 'assets/pngicons/pre1.png'}",
+                //     fit: BoxFit.cover,
+                //   ),
+                //   // Image.network(
+                //   //     "${data?.preFiestaDetail?.image ?? Images.beerNetwork}"
+
+                //   //     // fit: BoxFit.cover,
+                //   //     ),
+                // )
               ],
             ),
           )),

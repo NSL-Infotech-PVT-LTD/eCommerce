@@ -62,4 +62,5 @@ class Urls {
   static String privacyPolUrl = baseUrl + "config/privacy_policy";
   static String paymentConfig = baseUrl + "payment-config";
   static String zipCodeChackUrl = baseUrl + "customer/address/checkpostalCode";
+  static String preFiestasBennerUrl = baseUrl + "config/delivery_banner_image";
 }

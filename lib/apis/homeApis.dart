@@ -479,3 +479,26 @@ Future paymentconfigApi({context}) async {
         });
   }
 }
+
+//fiestas filter List api
+
+Future<String?> preFiestasBennerApi() async {
+  var headers = {
+    'Authorization': 'Bearer ${UserData.userToken}',
+    // 'X-localization': '${Constants.prefs?.getString("language")}'
+  };
+
+  var res = await http.get(
+      Uri.parse(
+        Urls.preFiestasBennerUrl,
+      ),
+      headers: headers);
+
+  var jsonData = json.decode(res.body);
+
+  if (res.statusCode == 200) {
+    return jsonData["data"]["config"];
+  } else {
+    // print(res.body);
+  }
+}

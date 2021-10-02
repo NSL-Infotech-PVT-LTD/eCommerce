@@ -25,6 +25,7 @@ class UserData {
   static PrefiestasCartModel? myCartModel;
   static String deviceToken = '';
   static String language = "${Constants.prefs?.getString("language")}";
+  static String preBennerImageUrl = "";
 
   // static CardListModel? cardList;
 
