@@ -305,5 +305,11 @@
     "YourTotalPriceshouldbemorethan": "Su precio total debe ser más de",
     "readMode": "Lee mas",
     "leerMenos": "Leer menos",
-    "youHaveTopayOnlyCategoryPriceForTheFirstPurchaseOfAlcoholMix": "Solo debe pagar el precio de categoría por la primera compra de alcohol & mix."
+    "youHaveTopayOnlyCategoryPriceForTheFirstPurchaseOfAlcoholMix": "Solo debe pagar el precio de categoría por la primera compra de alcohol & mix.",
+    "local": "Local",
+    "environment": "Ambiente",
+    "music": "Música",
+    "schedule": "Horario",
+    "clothing": "Vestimenta",
+    "ageGroup": "ageGroup"
 }

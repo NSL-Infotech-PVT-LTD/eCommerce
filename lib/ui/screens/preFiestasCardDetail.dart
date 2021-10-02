@@ -575,6 +575,9 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
                                                   index: i)
                                           ],
                                         ),
+                                        SizedBox(
+                                          height: size.height * 0.02,
+                                        ),
                                         groupValue != -1 &&
                                                 swipebuttonShowBool &&
                                                 int.parse(
@@ -646,7 +649,10 @@ class _PrefiestasCardDetailState extends State<PrefiestasCardDetail> {
                                                       ],
                                                     )),
                                                   )
-                                                : SizedBox()
+                                                : SizedBox(),
+                                        SizedBox(
+                                          height: size.height * 0.25,
+                                        ),
                                       ],
                                     )
                                   : Column(

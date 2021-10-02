@@ -373,7 +373,13 @@ class _YourOrderSumState extends State<YourOrderSum> {
                                           top: size.height * 0.02,
                                           bottom: size.height * 0.013),
                                       width: size.width * 0.25,
-                                      child: CachedNetworkImage(
+                                      child:
+
+                                          //  Image.asset(
+                                          //   "${prefiestasOrderDetailModel?.data?.parentDetail?.id == 1 ? 'assets/pngicons/pre1.png' : prefiestasOrderDetailModel?.data?.parentDetail?.id == 2 ? 'assets/pngicons/pre2.png' : prefiestasOrderDetailModel?.data?.parentDetail?.id == 3 ? 'assets/pngicons/pre3.png' : 'assets/pngicons/pre1.png'}",
+                                          //   fit: BoxFit.cover,
+                                          // ),
+                                          CachedNetworkImage(
                                         imageUrl:
                                             "${prefiestasOrderDetailModel?.data?.parentDetail?.image}",
                                         fit: BoxFit.cover,

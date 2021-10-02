@@ -420,6 +420,8 @@ class _CartDetailState extends State<CartDetail> {
               centerTitle: true,
               backgroundColor: AppColors.blackBackground,
             ),
+
+            /// sliver
             body: SingleChildScrollView(
               child: Column(
                 children: [
@@ -514,45 +516,10 @@ class _CartDetailState extends State<CartDetail> {
                               ),
                             ),
                           ),
-                          //tax
-
-                          // SizedBox(height: size.height * 0.02),
-
-                          // Container(
-                          //   margin: EdgeInsets.symmetric(
-                          //       horizontal: size.width * 0.01),
-                          //   // width: SizeConfig.screenWidth * 0.80,
-                          //   child: Row(
-                          //     children: [
-                          //       Text(
-                          //         "${getTranslated(context, "bookingCharges")}",
-                          //         //   "Other Taxes",
-                          //         style: TextStyle(
-                          //             color: AppColors.white,
-                          //             fontSize: size.width * 0.04,
-                          //             fontFamily: Fonts.dmSansMedium),
-                          //       ),
-                          //       Spacer(),
-                          //       Text(
-                          //         "  ${Strings.euro} ${((double.parse(tottalAmount.toString()) * 2.9) / 100 + 0.30).toStringAsFixed(2)}",
-                          //         style: TextStyle(
-                          //             color: AppColors.white,
-                          //             fontSize: size.width * 0.045,
-                          //             fontFamily: Fonts.dmSansBold),
-                          //       )
-                          //     ],
-                          //   ),
-                          // ),
-
-                          // SizedBox(
-                          //   height: SizeConfig.screenHeight * 0.04,
-                          // ),
 
                           SizedBox(
                             height: SizeConfig.screenHeight * 0.03,
                           ),
-
-                          //tax
 
                           //center content
 
@@ -575,12 +542,25 @@ class _CartDetailState extends State<CartDetail> {
                                                     int.parse(
                                                         "${cardList?.data?.data?.length}");
                                                 i++)
+                                              // i ==
+                                              //         int.parse(
+                                              //             "${cardList?.data?.data?.length}")
+                                              //     ? Text(
+                                              //         "Hello",
+                                              //         style: TextStyle(
+                                              //             color: Colors.white),
+                                              //       )
+                                              //     :
+
                                               ticket(
                                                   context: context,
                                                   model:
                                                       cardList?.data?.data![i],
                                                   index: i)
                                           ],
+                                        ),
+                                        SizedBox(
+                                          height: size.height * 0.02,
                                         ),
                                         groupValue != -1 &&
                                                 swipebuttonShowBool &&
@@ -616,32 +596,6 @@ class _CartDetailState extends State<CartDetail> {
                                                   fiestasBookingApi(
                                                       cardid: cardId);
                                                 })
-
-                                            //  SwipeButton(
-                                            //     thumb: SvgPicture.asset(
-                                            //       Images.swipeButtonSvg,
-                                            //       fit: BoxFit.cover,
-                                            //     ),
-                                            //     borderRadius:
-                                            //         BorderRadius.circular(8),
-                                            //     activeTrackColor:
-                                            //         AppColors.siginbackgrond,
-                                            //     height: size.height * 0.07,
-                                            //     elevation: 10,
-                                            //     child: Text(
-                                            //         "${getTranslated(context, "swipetopay")}",
-                                            //         style: TextStyle(
-                                            //             color: AppColors.white,
-                                            //             fontFamily:
-                                            //                 Fonts.dmSansBold,
-                                            //             fontSize:
-                                            //                 size.width * 0.05)),
-                                            //     onSwipeEnd: () {
-                                            //       print("Swipe.........");
-                                            //       fiestasBookingApi(
-                                            //           cardid: cardId);
-                                            //     },
-                                            //   )
                                             : payLoading &&
                                                     swipebuttonShowBool == false
                                                 ? roundedBoxR(
@@ -685,7 +639,10 @@ class _CartDetailState extends State<CartDetail> {
                                                       ],
                                                     )),
                                                   )
-                                                : SizedBox()
+                                                : SizedBox(),
+                                        SizedBox(
+                                          height: size.height * 0.25,
+                                        ),
                                       ],
                                     )
 

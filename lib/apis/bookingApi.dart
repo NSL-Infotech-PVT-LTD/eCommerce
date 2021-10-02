@@ -214,7 +214,7 @@ Future<PrefiestasOrderDetailModel?> prefiestasShowOrderDetail(
   print("here is id of prefiestas - $orderId");
   var headers = {
     'Authorization': 'Bearer ${UserData.userToken}',
-    // 'X-localization': '${Constants.prefs?.getString("language")}'
+    'X-localization': '${Constants.prefs?.getString("language")}'
   };
 
   // print("token is here - ${UserData.userToken}");
@@ -228,7 +228,7 @@ Future<PrefiestasOrderDetailModel?> prefiestasShowOrderDetail(
 
   // print("data is here ");
 
-  // print(res.body);
+  dev.log(res.body);
 
   if (res.statusCode == 200) {
     print(res.body);
@@ -328,6 +328,8 @@ Future storePaymentCard({String? cardToken}) async {
 
   var res = await http.post(Uri.parse(Urls.addPaymentCardUrl),
       body: body, headers: headers);
+
+  print("card Body here ${res.body}");
 
   if (res.statusCode == 201) {
     return json.decode(res.body);

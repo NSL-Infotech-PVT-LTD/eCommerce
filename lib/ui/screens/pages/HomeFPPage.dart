@@ -1081,18 +1081,18 @@ class _HomeMPageState extends State<HomeMPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                          margin: EdgeInsets.symmetric(
-                              horizontal: size.width * 0.03,
-                              vertical: size.height * 0.01),
-                          width: size.width,
-                          height: size.height * 0.17,
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  // image: NetworkImage(bannerImage),
-                                  image:
-                                      AssetImage('assets/pngicons/banner.png'),
-                                  fit: BoxFit.cover))),
+                      // Container(
+                      //     margin: EdgeInsets.symmetric(
+                      //         horizontal: size.width * 0.03,
+                      //         vertical: size.height * 0.01),
+                      //     width: size.width,
+                      //     height: size.height * 0.17,
+                      //     decoration: BoxDecoration(
+                      //         image: DecorationImage(
+                      //             // image: NetworkImage(bannerImage),
+                      //             image:
+                      //                 AssetImage('assets/pngicons/banner.png'),
+                      //             fit: BoxFit.cover))),
                       SizedBox(
                         height: size.height * 0.03,
                       ),
@@ -1303,12 +1303,16 @@ class _HomeMPageState extends State<HomeMPage> {
                         child: ListView.builder(
                             itemCount: filterModel?.data?.toJson().length ?? 0,
                             itemBuilder: (context, index) {
+                              var keydata = filterModel?.data
+                                  ?.toJson()
+                                  .keys
+                                  .toList()[index];
+
+                              // print("here is key Data = $keydata");
                               return itemFilter(
                                   context,
-                                  filterModel?.data
-                                      ?.toJson()
-                                      .keys
-                                      .toList()[index],
+                                  "${getTranslated(context, '$keydata') ?? keydata}",
+                                  // "ageGroup",
                                   filterModel?.data
                                       ?.toJson()
                                       .values

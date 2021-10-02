@@ -425,46 +425,45 @@ Widget preFiestasItem({context, int? index, ProductInfo? prefiestasdata}) {
 
                 // right image
 
-                // Container(
-                //   margin: EdgeInsets.only(right: size.width * 0.02),
-                //   padding: EdgeInsets.only(
-                //       top: size.height * 0.02, bottom: size.height * 0.013),
-                //   width: size.width * 0.25,
-                //   child: CachedNetworkImage(
-                //     imageUrl: Strings.catImageUrl + "l",
-                //     fit: BoxFit.cover,
-                //     imageBuilder: (context, imageProvider) => Container(
-                //       decoration: BoxDecoration(
-                //         image: DecorationImage(
-                //           image: imageProvider,
-                //           fit: BoxFit.cover,
-                //           // colorFilter:
-                //           //     ColorFilter.mode(Colors.red, BlendMode.colorBurn)
-                //         ),
-                //       ),
-                //     ),
-                //     errorWidget: (context, url, error) => Container(
-                //         width: size.width,
-                //         // height: size.height * 0.28,
-                //         decoration: BoxDecoration(
-                //             image: DecorationImage(
-                //                 image: AssetImage(
-                //                     "assets/AuthenticationIcon/BG_2.png"),
-                //                 fit: BoxFit.cover))),
-                //   ),
-                // ),
-
                 Container(
                   margin: EdgeInsets.only(right: size.width * 0.02),
                   padding: EdgeInsets.only(
                       top: size.height * 0.02, bottom: size.height * 0.013),
                   width: size.width * 0.25,
-                  decoration: BoxDecoration(),
-                  child: Image.asset(
-                    "${index == 0 ? 'assets/pngicons/pre1.png' : index == 1 ? 'assets/pngicons/pre2.png' : 'assets/pngicons/pre3.png'}",
+                  child: CachedNetworkImage(
+                    imageUrl: "${prefiestasdata?.image}",
                     fit: BoxFit.cover,
+                    imageBuilder: (context, imageProvider) => Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.cover,
+                          // colorFilter:
+                          //     ColorFilter.mode(Colors.red, BlendMode.colorBurn)
+                        ),
+                      ),
+                    ),
+                    errorWidget: (context, url, error) => Container(
+                        width: size.width,
+                        // height: size.height * 0.28,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage('assets/pngicons/pre1.png'),
+                                fit: BoxFit.cover))),
                   ),
-                )
+                ),
+
+                // Container(
+                //   margin: EdgeInsets.only(right: size.width * 0.02),
+                //   padding: EdgeInsets.only(
+                //       top: size.height * 0.02, bottom: size.height * 0.013),
+                //   width: size.width * 0.25,
+                //   decoration: BoxDecoration(),
+                //   child: Image.asset(
+                //     "${index == 0 ? 'assets/pngicons/pre1.png' : index == 1 ? 'assets/pngicons/pre2.png' : 'assets/pngicons/pre3.png'}",
+                //     fit: BoxFit.cover,
+                //   ),
+                // )
               ],
             ),
           )),

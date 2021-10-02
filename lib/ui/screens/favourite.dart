@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:funfy/apis/homeApis.dart';
@@ -367,175 +368,210 @@ fiestasItemFav({context, int? index, FiestasFavouriteModel? model, funcRun}) {
         funcRun();
       });
     },
-    child: Container(
-      margin: EdgeInsets.only(top: size.width * 0.04),
-      width: size.width,
-      height: size.height * 0.28,
-      decoration: BoxDecoration(
-          image: DecorationImage(
-              image: NetworkImage(
-                Images.beerNetwork,
+    child: Stack(
+      children: [
+        Container(
+          margin: EdgeInsets.only(top: size.width * 0.04),
+          width: size.width,
+          height: size.height * 0.28,
+          child: CachedNetworkImage(
+            imageUrl: "${data?.image}",
+            fit: BoxFit.cover,
+            imageBuilder: (context, imageProvider) => Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: imageProvider,
+                  fit: BoxFit.cover,
+                  // colorFilter:
+                  //     ColorFilter.mode(Colors.red, BlendMode.colorBurn)
+                ),
               ),
-              // "${data?.image}"),
+            ),
+            errorWidget: (context, url, error) => Container(
+                margin: EdgeInsets.only(top: size.width * 0.04),
+                width: size.width,
+                height: size.height * 0.28,
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage("assets/AuthenticationIcon/BG_2.png"),
+                        fit: BoxFit.cover))),
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(top: size.width * 0.04),
+          width: size.width,
+          height: size.height * 0.28,
+          // decoration: BoxDecoration(
+          //     image: DecorationImage(
+          //         image: NetworkImage(
+          //           Images.beerNetwork,
+          //         ),
+          //         // "${data?.image}"),
 
-              fit: BoxFit.cover)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-              padding: EdgeInsets.symmetric(vertical: size.height * 0.0035),
-              color: AppColors.homeBackground.withOpacity(0.4),
-              width: size.width * 0.1,
-              height: size.height * 0.055,
-              child: Container(
-                height: size.height * 0.047,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        "${date.day}",
-                        style: TextStyle(
-                            fontSize: size.width * 0.043,
-                            fontFamily: Fonts.dmSansBold,
-                            color: AppColors.white),
-                      ),
-                    ),
-                    Text(
-                      "${month.toUpperCase()}",
-                      style: TextStyle(
-                          fontSize: size.width * 0.027,
-                          fontFamily: Fonts.dmSansMedium,
-                          color: AppColors.white),
-                    ),
-                  ],
-                ),
-              )),
-          Container(
-            padding: EdgeInsets.symmetric(
-                horizontal: size.width * 0.03, vertical: size.height * 0.01),
-            height: size.height * 0.15,
-            decoration: BoxDecoration(
-                color: AppColors.homeBackground,
-                border: Border(
-                  left: BorderSide(
-                      width: size.height * 0.001, color: AppColors.tagBorder),
-                  right: BorderSide(
-                      width: size.height * 0.001, color: AppColors.tagBorder),
-                  bottom: BorderSide(
-                      width: size.height * 0.001, color: AppColors.tagBorder),
-                )),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "${data?.name}",
-                      style: TextStyle(
-                          fontSize: size.width * 0.045,
-                          fontFamily: Fonts.dmSansBold,
-                          color: AppColors.white),
-                    ),
-                    SizedBox(
-                      height: size.height * 0.004,
-                    ),
-                    Text(
-                      "${data?.distanceMiles}",
-                      style: TextStyle(
-                          fontSize: size.width * 0.03,
-                          fontFamily: Fonts.dmSansMedium,
-                          color: AppColors.white),
-                    ),
-                    SizedBox(
-                      height: size.height * 0.005,
-                    ),
-                    Container(
-                        // width: size.width * 0.3,
-                        child: ratingstars(
-                            size: size.width * 0.05,
-                            ittempading: size.width * 0.0001,
-                            color: AppColors.tagBorder,
-                            rating: 4))
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      Strings.startingfrom,
-                      style: TextStyle(
-                          fontSize: size.width * 0.025,
-                          fontFamily: Fonts.dmSansMedium,
-                          color: AppColors.white),
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.end,
+          //         fit: BoxFit.cover)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                  padding: EdgeInsets.symmetric(vertical: size.height * 0.0035),
+                  color: AppColors.homeBackground.withOpacity(0.4),
+                  width: size.width * 0.1,
+                  height: size.height * 0.055,
+                  child: Container(
+                    height: size.height * 0.047,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          Strings.euro,
-                          style: TextStyle(
-                              fontSize: size.width * 0.04,
-                              fontFamily: Fonts.dmSansBold,
-                              color: AppColors.white),
+                        Expanded(
+                          child: Text(
+                            "${date.day}",
+                            style: TextStyle(
+                                fontSize: size.width * 0.043,
+                                fontFamily: Fonts.dmSansBold,
+                                color: AppColors.white),
+                          ),
                         ),
                         Text(
-                          // data?.fiestaDetail?.ticketPrice?.length > 9
-                          //     ? "${postModeldata.ticketPrice?.substring(0, 9)}"
-                          //     : "${postModeldata.ticketPrice}",
-
-                          "$price",
-                          maxLines: 1,
-                          overflow: TextOverflow.clip,
+                          "${month.toUpperCase()}",
                           style: TextStyle(
-                              fontSize: size.width * 0.068,
-                              fontFamily: Fonts.dmSansBold,
+                              fontSize: size.width * 0.027,
+                              fontFamily: Fonts.dmSansMedium,
                               color: AppColors.white),
                         ),
                       ],
                     ),
-                    SizedBox(
-                      height: size.height * 0.01,
+                  )),
+              Container(
+                padding: EdgeInsets.symmetric(
+                    horizontal: size.width * 0.03,
+                    vertical: size.height * 0.01),
+                height: size.height * 0.15,
+                decoration: BoxDecoration(
+                    color: AppColors.homeBackground,
+                    border: Border(
+                      left: BorderSide(
+                          width: size.height * 0.001,
+                          color: AppColors.tagBorder),
+                      right: BorderSide(
+                          width: size.height * 0.001,
+                          color: AppColors.tagBorder),
+                      bottom: BorderSide(
+                          width: size.height * 0.001,
+                          color: AppColors.tagBorder),
+                    )),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "${data?.name}",
+                          style: TextStyle(
+                              fontSize: size.width * 0.045,
+                              fontFamily: Fonts.dmSansBold,
+                              color: AppColors.white),
+                        ),
+                        SizedBox(
+                          height: size.height * 0.004,
+                        ),
+                        Text(
+                          "${data?.distanceMiles}",
+                          style: TextStyle(
+                              fontSize: size.width * 0.03,
+                              fontFamily: Fonts.dmSansMedium,
+                              color: AppColors.white),
+                        ),
+                        SizedBox(
+                          height: size.height * 0.005,
+                        ),
+                        Container(
+                            // width: size.width * 0.3,
+                            child: ratingstars(
+                                size: size.width * 0.05,
+                                ittempading: size.width * 0.0001,
+                                color: AppColors.tagBorder,
+                                rating: 4))
+                      ],
                     ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(
-                                builder: (context) =>
-                                    FiestasBook(fiestasID: data?.id)))
-                            .then((value) {
-                          funcRun();
-                        });
-
-                        // navigatorPushFun(
-                        //     context, BookNowBeta(fiestasModel: data));
-                      },
-                      child: roundedBoxR(
-                          width: size.width * 0.23,
-                          height: size.height * 0.033,
-                          radius: 3.0,
-                          backgroundColor: AppColors.siginbackgrond,
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              Strings.booknow,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          Strings.startingfrom,
+                          style: TextStyle(
+                              fontSize: size.width * 0.025,
+                              fontFamily: Fonts.dmSansMedium,
+                              color: AppColors.white),
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              Strings.euro,
                               style: TextStyle(
-                                  fontSize: size.width * 0.03,
+                                  fontSize: size.width * 0.04,
                                   fontFamily: Fonts.dmSansBold,
                                   color: AppColors.white),
                             ),
-                          )),
+                            Text(
+                              // data?.fiestaDetail?.ticketPrice?.length > 9
+                              //     ? "${postModeldata.ticketPrice?.substring(0, 9)}"
+                              //     : "${postModeldata.ticketPrice}",
+
+                              "$price",
+                              maxLines: 1,
+                              overflow: TextOverflow.clip,
+                              style: TextStyle(
+                                  fontSize: size.width * 0.068,
+                                  fontFamily: Fonts.dmSansBold,
+                                  color: AppColors.white),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: size.height * 0.01,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        FiestasBook(fiestasID: data?.id)))
+                                .then((value) {
+                              funcRun();
+                            });
+
+                            // navigatorPushFun(
+                            //     context, BookNowBeta(fiestasModel: data));
+                          },
+                          child: roundedBoxR(
+                              width: size.width * 0.23,
+                              height: size.height * 0.033,
+                              radius: 3.0,
+                              backgroundColor: AppColors.siginbackgrond,
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  Strings.booknow,
+                                  style: TextStyle(
+                                      fontSize: size.width * 0.03,
+                                      fontFamily: Fonts.dmSansBold,
+                                      color: AppColors.white),
+                                ),
+                              )),
+                        )
+                      ],
                     )
                   ],
-                )
-              ],
-            ),
-          )
-        ],
-      ),
+                ),
+              )
+            ],
+          ),
+        ),
+      ],
     ),
   );
 }
@@ -569,60 +605,61 @@ Widget preFiestasItem(
           borderColor: AppColors.tagBorder,
           borderSize: size.width * 0.0025,
           child: Container(
+            padding: EdgeInsets.symmetric(horizontal: size.width * 0.03),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 //left Image
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Positioned(
-                      child: SvgPicture.asset(
-                        Images.offeryellowBackgroundSvg,
-                        fit: BoxFit.cover,
-                        width: size.width * 0.11,
-                      ),
-                    ),
-                    Container(
-                      height: size.height * 0.055,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Container(
-                            child: Text(
-                              Strings.from,
-                              style: TextStyle(
-                                  fontSize: size.width * 0.027,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                          Container(
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                  Strings.euro,
-                                  style: TextStyle(
-                                      fontSize: size.width * 0.03,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                                Text(
-                                  "29",
-                                  style: TextStyle(
-                                      fontSize: size.width * 0.06,
-                                      fontWeight: FontWeight.w700),
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                // Stack(
+                //   alignment: Alignment.center,
+                //   children: [
+                //     Positioned(
+                //       child: SvgPicture.asset(
+                //         Images.offeryellowBackgroundSvg,
+                //         fit: BoxFit.cover,
+                //         width: size.width * 0.11,
+                //       ),
+                //     ),
+                //     Container(
+                //       height: size.height * 0.055,
+                //       child: Column(
+                //         mainAxisAlignment: MainAxisAlignment.center,
+                //         crossAxisAlignment: CrossAxisAlignment.end,
+                //         children: [
+                //           Container(
+                //             child: Text(
+                //               Strings.from,
+                //               style: TextStyle(
+                //                   fontSize: size.width * 0.027,
+                //                   fontWeight: FontWeight.w600),
+                //             ),
+                //           ),
+                //           Container(
+                //             child: Row(
+                //               crossAxisAlignment: CrossAxisAlignment.start,
+                //               mainAxisAlignment: MainAxisAlignment.end,
+                //               children: [
+                //                 Text(
+                //                   Strings.euro,
+                //                   style: TextStyle(
+                //                       fontSize: size.width * 0.03,
+                //                       fontWeight: FontWeight.w600),
+                //                 ),
+                //                 Text(
+                //                   "29",
+                //                   style: TextStyle(
+                //                       fontSize: size.width * 0.06,
+                //                       fontWeight: FontWeight.w700),
+                //                 )
+                //               ],
+                //             ),
+                //           )
+                //         ],
+                //       ),
+                //     ),
+                //   ],
+                // ),
 
                 // center content
                 Container(
@@ -700,11 +737,15 @@ Widget preFiestasItem(
                       top: size.height * 0.02, bottom: size.height * 0.013),
                   width: size.width * 0.25,
                   decoration: BoxDecoration(),
-                  child: Image.network(
-                      "${data?.preFiestaDetail?.image ?? Images.beerNetwork}"
+                  child: Image.asset(
+                    "${data?.preFiestaDetail?.id == 1 ? 'assets/pngicons/pre1.png' : data?.preFiestaDetail?.id == 2 ? 'assets/pngicons/pre2.png' : data?.preFiestaDetail?.id == 3 ? 'assets/pngicons/pre3.png' : 'assets/pngicons/pre1.png'}",
+                    fit: BoxFit.cover,
+                  ),
+                  // Image.network(
+                  //     "${data?.preFiestaDetail?.image ?? Images.beerNetwork}"
 
-                      // fit: BoxFit.cover,
-                      ),
+                  //     // fit: BoxFit.cover,
+                  //     ),
                 )
               ],
             ),
