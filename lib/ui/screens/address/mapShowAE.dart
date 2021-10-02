@@ -414,7 +414,6 @@ class PlacePickerBState extends State<PlacePickerB> {
             // Expanded(
             //   child:
 
-
             // GoogleMap(
             //   initialCameraPosition: CameraPosition(
             //     target: widget.typeAE == 2

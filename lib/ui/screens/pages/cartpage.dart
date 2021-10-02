@@ -964,46 +964,47 @@ class _CartpageState extends State<Cartpage> {
                                                               0.09,
                                                           width:
                                                               size.width * 0.2,
-                                                          child: Image.asset(
-                                                            "${UserData.myCartModel?.data?.parentDetail?.id == 1 ? 'assets/pngicons/pre1.png' : UserData.myCartModel?.data?.parentDetail?.id == 2 ? 'assets/pngicons/pre2.png' : UserData.myCartModel?.data?.parentDetail?.id == 3 ? 'assets/pngicons/pre3.png' : 'assets/pngicons/pre1.png'}",
-                                                            fit: BoxFit.cover,
-                                                          ),
-                                                          //     CachedNetworkImage(
-                                                          //   imageUrl:
-                                                          //       "${UserData.myCartModel?.data?.parentDetail?.image}",
+                                                          //                                         child: Image.asset(
+                                                          //   "${UserData.myCartModel?.data?.parentDetail?.id == 1 ? 'assets/pngicons/pre1.png' : UserData.myCartModel?.data?.parentDetail?.id == 2 ? 'assets/pngicons/pre2.png' : UserData.myCartModel?.data?.parentDetail?.id == 3?'assets/pngicons/pre3.png': 'assets/pngicons/pre1.png'}",
                                                           //   fit: BoxFit.cover,
-                                                          //   imageBuilder: (context,
-                                                          //           imageProvider) =>
-                                                          //       Container(
-                                                          //     decoration:
-                                                          //         BoxDecoration(
-                                                          //       image:
-                                                          //           DecorationImage(
-                                                          //         image:
-                                                          //             imageProvider,
-                                                          //         // fit: BoxFit.cover,
-                                                          //         // colorFilter:
-                                                          //         //     ColorFilter.mode(Colors.red, BlendMode.colorBurn)
-                                                          //       ),
-                                                          //     ),
-                                                          //   ),
-                                                          //   errorWidget: (context,
-                                                          //           url,
-                                                          //           error) =>
-                                                          //       Container(
-                                                          //           // width: size.width,
-                                                          //           height:
-                                                          //               size.height *
-                                                          //                   0.1,
-                                                          //           decoration:
-                                                          //               BoxDecoration(
-                                                          //                   image:
-                                                          //                       DecorationImage(
-                                                          //             image: AssetImage(
-                                                          //                 'assets/pngicons/pre1.png'),
-                                                          //             // fit: BoxFit.cover
-                                                          //           ))),
                                                           // ),
+                                                          child:
+                                                              CachedNetworkImage(
+                                                            imageUrl:
+                                                                "${UserData.myCartModel?.data?.parentDetail?.image}",
+                                                            fit: BoxFit.cover,
+                                                            imageBuilder: (context,
+                                                                    imageProvider) =>
+                                                                Container(
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                image:
+                                                                    DecorationImage(
+                                                                  image:
+                                                                      imageProvider,
+                                                                  // fit: BoxFit.cover,
+                                                                  // colorFilter:
+                                                                  //     ColorFilter.mode(Colors.red, BlendMode.colorBurn)
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            errorWidget: (context,
+                                                                    url,
+                                                                    error) =>
+                                                                Container(
+                                                                    // width: size.width,
+                                                                    height:
+                                                                        size.height *
+                                                                            0.1,
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                            image:
+                                                                                DecorationImage(
+                                                                      image: AssetImage(
+                                                                          'assets/pngicons/pre1.png'),
+                                                                      // fit: BoxFit.cover
+                                                                    ))),
+                                                          ),
                                                         )
                                                       ],
                                                     ),
